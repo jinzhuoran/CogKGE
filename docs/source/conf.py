@@ -40,7 +40,6 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
-    'sphinx_copybutton',
 ]
 
 autodoc_default_options = {
