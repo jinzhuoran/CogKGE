@@ -1,51 +1,49 @@
-cogktr.core package
-===================
+cogktr.core
+===========
 
-Submodules
-----------
 
-cogktr.core.evaluator module
-----------------------------
+
+cogktr.core.evaluator
+---------------------
 
 .. automodule:: cogktr.core.evaluator
    :members:
    :undoc-members:
    :show-inheritance:
 
-cogktr.core.loss module
------------------------
+cogktr.core.loss
+----------------
 
 .. automodule:: cogktr.core.loss
    :members:
    :undoc-members:
    :show-inheritance:
 
-cogktr.core.metric module
--------------------------
+cogktr.core.metric
+------------------
 
 .. automodule:: cogktr.core.metric
    :members:
    :undoc-members:
    :show-inheritance:
 
-cogktr.core.sampler module
---------------------------
+cogktr.core.sampler
+-------------------
 
 .. automodule:: cogktr.core.sampler
    :members:
    :undoc-members:
    :show-inheritance:
 
-cogktr.core.trainer module
---------------------------
+cogktr.core.trainer
+-------------------
 
 .. automodule:: cogktr.core.trainer
    :members:
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.core
    :members:

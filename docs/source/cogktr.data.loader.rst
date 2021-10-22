@@ -1,8 +1,7 @@
-cogktr.data.loader package
-==========================
+cogktr.data.loader
+==================
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.data.loader
    :members:

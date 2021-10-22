@@ -7,10 +7,10 @@ Welcome to CogKTR's documentation!
 ==================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
-
+   cogktr
 
 Indices and tables
 ==================

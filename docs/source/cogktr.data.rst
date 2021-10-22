@@ -1,8 +1,7 @@
-cogktr.data package
-===================
+cogktr.data
+===========
 
-Subpackages
------------
+
 
 .. toctree::
    :maxdepth: 4
@@ -10,43 +9,41 @@ Subpackages
    cogktr.data.loader
    cogktr.data.processor
 
-Submodules
-----------
 
-cogktr.data.datable module
---------------------------
+
+cogktr.data.datable
+-------------------
 
 .. automodule:: cogktr.data.datable
    :members:
    :undoc-members:
    :show-inheritance:
 
-cogktr.data.dataset module
---------------------------
+cogktr.data.dataset
+-------------------
 
 .. automodule:: cogktr.data.dataset
    :members:
    :undoc-members:
    :show-inheritance:
 
-cogktr.data.lut module
-----------------------
+cogktr.data.lut
+---------------
 
 .. automodule:: cogktr.data.lut
    :members:
    :undoc-members:
    :show-inheritance:
 
-cogktr.data.vocabulary module
------------------------------
+cogktr.data.vocabulary
+----------------------
 
 .. automodule:: cogktr.data.vocabulary
    :members:
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.data
    :members:

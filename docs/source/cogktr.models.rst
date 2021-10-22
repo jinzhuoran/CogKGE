@@ -1,8 +1,7 @@
-cogktr.models package
-=====================
+cogktr.models
+=============
 
-Subpackages
------------
+
 
 .. toctree::
    :maxdepth: 4
@@ -10,8 +9,7 @@ Subpackages
    cogktr.models.kr
    cogktr.models.tr
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.models
    :members:

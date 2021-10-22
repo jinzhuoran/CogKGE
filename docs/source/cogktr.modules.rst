@@ -1,16 +1,14 @@
-cogktr.modules package
-======================
+cogktr.modules
+==============
 
-Subpackages
------------
+
 
 .. toctree::
    :maxdepth: 4
 
    cogktr.modules.gnn
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.modules
    :members:

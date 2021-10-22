@@ -1,8 +1,7 @@
-cogktr.utils package
-====================
+cogktr.utils
+============
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.utils
    :members:

@@ -1,8 +1,7 @@
-cogktr.modules.gnn package
-==========================
+cogktr.modules.gnn
+==================
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.modules.gnn
    :members:

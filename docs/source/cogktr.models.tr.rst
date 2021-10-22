@@ -1,8 +1,7 @@
-cogktr.models.tr package
-========================
+cogktr.models.tr
+================
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.models.tr
    :members:

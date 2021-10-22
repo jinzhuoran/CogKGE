@@ -1,8 +1,7 @@
-cogktr.data.processor package
-=============================
+cogktr.data.processor
+=====================
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.data.processor
    :members:

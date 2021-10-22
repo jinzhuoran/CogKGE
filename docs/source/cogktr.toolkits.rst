@@ -1,8 +1,7 @@
-cogktr.toolkits package
-=======================
+cogktr.toolkits
+===============
 
-Module contents
----------------
+
 
 .. automodule:: cogktr.toolkits
    :members:
