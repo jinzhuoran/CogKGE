@@ -3,6 +3,6 @@ from .tr import *
 from .ktr import *
 
 __all__=[
-    #kr package
+    #kr
     "FB15K237Loader"
 ]
