@@ -9,4 +9,4 @@ class HitTen:
         self.sample_num=sample_num
         self.test_epoch=test_epoch
     def start_metric(self):
-        pass#
+        pass
