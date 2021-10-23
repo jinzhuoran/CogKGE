@@ -37,4 +37,4 @@ class MarginLoss(nn.Module):
         negtive_item_distance=model.distance(negtive_item_head+negtive_item_relation,negtive_item_tail)
 
         output=torch.sum(F.relu(model.margin+positive_item_distance-negtive_item_distance))/(positive_item.shape[0])
-        return output
+        return output#
