@@ -1,4 +1,4 @@
-import os
+import os#
 class FB15K237Loader:
     def __init__(self,path):
         self.path=path
