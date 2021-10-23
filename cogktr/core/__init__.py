@@ -1,5 +1,10 @@
-from .trainer import *
-__all__ = [
-    'Trainer',
-]
+from .loss import *
+from .metric import *
+__all__=[
+    #loss
+    "MarginLoss",
 
+    #metric
+    "MeanRank",
+    "HitTen"
+]
