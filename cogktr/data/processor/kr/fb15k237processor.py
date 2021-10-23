@@ -1,5 +1,5 @@
 from ...loader import *
-import numpy as np
+import numpy as np#
 
 class FB15K237Processor:
     def __init__(self,path):
