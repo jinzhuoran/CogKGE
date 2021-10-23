@@ -6,7 +6,7 @@ from .toolkits import *
 from .utils import *
 
 __all__=[
-    #data
+    #data#
     "FB15K237Loader",
     "FB15K237Processor",
 
