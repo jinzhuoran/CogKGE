@@ -2,10 +2,10 @@ from .loader import *
 from .processor import *
 
 __all__=[
-    #loader package
+    #loader
     "FB15K237Loader",
 
-    #processor package
+    #processor
     "FB15K237Processor"
 
 ]
