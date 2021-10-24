@@ -14,6 +14,7 @@ __all__=[
     "MarginLoss",
     "MeanRank",
     "HitTen",
+    "Trainer",
 
     #models
     "TransE"
