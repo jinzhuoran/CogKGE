@@ -9,6 +9,7 @@ class TransE(nn.Module):
         self.embedding_dim=embedding_dim
         self.margin=margin
         self.L=L
+        self.name="TransE"
         self.square=embedding_dim**0.5
         self.entity_embedding=nn.Embedding(num_embeddings=self.entity_dict_len, embedding_dim=self.embedding_dim)
         self.entity_embedding.weight.data = torch.FloatTensor(self.entity_dict_len, self.embedding_dim).uniform_(-6/self.square, 6/self.square)
