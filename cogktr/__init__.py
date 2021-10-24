@@ -11,6 +11,7 @@ __all__=[
     "FB15K237Processor",
 
     #core
+    "Evaluator",
     "MarginLoss",
     "MeanRank",
     "HitTen",
