@@ -47,9 +47,11 @@ test_dataset=Data.DataLoader(dataset=test_datable,batch_size=BATCH_SIZE,shuffle=
 #RandomSampler()还未写
 
 model=TransE(entity_dict_len=len(entity2idx),relation_dict_len=len(relation2idx),embedding_dim=EMBEDDING_DIM,margin=MARGIN,L=L)
-metric_1 =MeanRank(METRIC_SAMPLE_NUM,METRIC_TEST_EPOCH)
-metric_2 =HitTen(METRIC_SAMPLE_NUM,METRIC_TEST_EPOCH)
-loss =MarginLoss(len(entity2idx))
+metric_1 =MeanRank(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH)
+metric_2 =HitTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH)
+loss =MarginLoss(entity_dict_len=len(entity2idx))
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
 # trainer = Trainer()
 # trainer.train()
+# evaluator=Evaluator()
+# evaluator.evaluate()
