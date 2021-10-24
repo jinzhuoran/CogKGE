@@ -10,8 +10,7 @@ __all__=[
     "MarginLoss",
 
     #metric
-    "MeanRank",
-    "HitTen",
+    "MeanRank_HitAtTen",
 
     #trainer
     "Trainer"

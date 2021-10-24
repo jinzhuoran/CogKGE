@@ -13,8 +13,7 @@ __all__=[
     #core
     "Evaluator",
     "MarginLoss",
-    "MeanRank",
-    "HitTen",
+    "MeanRank_HitAtTen",
     "Trainer",
 
     #models
