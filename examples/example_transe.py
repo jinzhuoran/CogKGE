@@ -48,18 +48,18 @@ metric =MeanRank_HitAtTen(sample_num=BATCH_SIZE_TEST,test_epoch=METRIC_TEST_EPOC
 loss =MarginLoss(entity_dict_len=len(entity2idx))
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
 
-#训练部分
-trainer = Trainer(
-    train_dataset=train_dataset,
-    valid_dataset=valid_dataset,
-    model=model,
-    metric=metric,
-    loss=loss,
-    optimizer=optimizer,
-    epoch=EPOCH
-)
-trainer.train()
-trainer.show()
+# #训练部分
+# trainer = Trainer(
+#     train_dataset=train_dataset,
+#     valid_dataset=valid_dataset,
+#     model=model,
+#     metric=metric,
+#     loss=loss,
+#     optimizer=optimizer,
+#     epoch=EPOCH
+# )
+# trainer.train()
+# trainer.show()
 
 #测试部分
 evaluator=Evaluator(
