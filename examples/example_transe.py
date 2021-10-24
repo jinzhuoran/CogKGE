@@ -50,6 +50,8 @@ metric_1 =MeanRank(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH)
 metric_2 =HitTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH)
 loss =MarginLoss(entity_dict_len=len(entity2idx))
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
+
+#训练部分
 trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
