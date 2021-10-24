@@ -18,7 +18,7 @@ EMBEDDING_DIM=100            #形成的embedding维数
 MARGIN=1.0                   #margin大小
 L=2                          #范数类型
 LR=0.001                     #学习率
-EPOCH=50                     #训练的轮数
+EPOCH=10                     #训练的轮数
 BATCH_SIZE=2048              #批量大小
 WEIGHT_DECAY=0.0001          #正则化系数
 MODEL="transe"               #选择模型
@@ -26,7 +26,6 @@ METRIC_SAMPLE_NUM=100        #评价采样个数
 METRIC_TEST_EPOCH=1000       #评价重复轮数
 
 #指定GPU
-device = torch.device('cuda:0')
 
 #加载原始数据集
 loader = FB15K237Loader("../dataset/Fb15k-237")
@@ -51,7 +50,16 @@ metric_1 =MeanRank(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH)
 metric_2 =HitTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH)
 loss =MarginLoss(entity_dict_len=len(entity2idx))
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
-# trainer = Trainer()
-# trainer.train()
+trainer = Trainer(
+    train_dataset=train_dataset,
+    valid_dataset=valid_dataset,
+    model=model,
+    metric=metric_1,
+    loss=loss,
+    optimizer=optimizer,
+    epoch=EPOCH
+)
+trainer.train()
+trainer.show()
 # evaluator=Evaluator()
 # evaluator.evaluate()
