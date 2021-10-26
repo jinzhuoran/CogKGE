@@ -11,7 +11,7 @@ class Trainer:
                  loss,
                  optimizer,
                  epoch,
-                 save_step
+                 save_step=None
                  ):
         self.train_dataset=train_dataset
         self.valid_dataset=valid_dataset
@@ -56,9 +56,12 @@ class Trainer:
                           '| train loss: %.4f' % train_loss.data.cpu().numpy(),
                           '| valid loss: %.4f' % valid_loss.data.cpu().numpy())
 
-            if epoch % self.save_step == 0:
-                torch.save(self.model,"TransE_Model_%depochs.pkl"%(epoch))
-                logger.info("The model named \"%s_Model_%depochs.pkl\" has been saved!"%(self.model.name,epoch))
+            if self.save_step==None:
+                pass
+            else:
+                if epoch % self.save_step == 0:
+                    torch.save(self.model,"TransE_Model_%depochs.pkl"%(epoch))
+                    logger.info("The model named \"%s_Model_%depochs.pkl\" has been saved!"%(self.model.name,epoch))
 
         torch.save(self.model,"TransE_Model_%depochs.pkl"%(self.epoch))
         logger.info("The model named \"%s_Model_%depochs.pkl\" has been saved!"%(self.model.name,self.epoch))

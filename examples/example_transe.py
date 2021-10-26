@@ -22,7 +22,7 @@ BATCH_SIZE_TRAIN=2048        #训练批量大小
 BATCH_SIZE_TEST=100          #测试批量大小
 WEIGHT_DECAY=0.0001          #正则化系数
 METRIC_TEST_EPOCH=200        #评价重复轮数
-SAVE_STEP=5                  #每隔几轮保存一次模型
+SAVE_STEP=None               #每隔几轮保存一次模型
 
 #指定GPU
 
