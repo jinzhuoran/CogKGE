@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
+from .log import *
 class Trainer:
     def __init__(self,
                  train_dataset,
@@ -54,7 +55,8 @@ class Trainer:
                           '| valid loss: %.4f' % valid_loss.data.cpu().numpy())
 
         torch.save(self.model,"TransE_Model_%depochs.pkl"%(self.epoch))
-        print("The model named \"%s_Model_%depochs.pkl\" has been saved!"%(self.model.name,self.epoch))
+        # print("The model named \"%s_Model_%depochs.pkl\" has been saved!"%(self.model.name,self.epoch))
+        logger.info("The model named \"%s_Model_%depochs.pkl\" has been saved!"%(self.model.name,self.epoch))
 
         print("The training process is finished!")
 
@@ -75,7 +77,8 @@ class Trainer:
         plt.xlabel("step")
         plt.ylabel("loss")
         plt.savefig(fname="%s_Model_%depochs_loss.png"%(self.model.name,self.epoch))
-        print("The picture named \"%s_Model_%depochs_loss.png\" has been saved!"%(self.model.name,self.epoch))
+        # print("The picture named \"%s_Model_%depochs_loss.png\" has been saved!"%(self.model.name,self.epoch))
+        logger.info("The picture named \"%s_Model_%depochs_loss.png\" has been saved!"%(self.model.name,self.epoch))
 
         plt.show()
 
