@@ -18,14 +18,14 @@ LOGGING_DIC = {
     'handlers': {
 
         'stream': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
 
         'file': {
 
-            'level': 'DEBUG',
+            'level': 20,
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'standard',
             'filename': None,
@@ -38,7 +38,7 @@ LOGGING_DIC = {
     'loggers': {
         '': {
             'handlers': ['stream', 'file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
     },
