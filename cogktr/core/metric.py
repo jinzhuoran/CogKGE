@@ -13,14 +13,18 @@ class MeanRank_HitAtTen(nn.Module):
         self.mean_rank=None
         self.hit_at_ten=None
     def forward(self,data,model):
+        #刷新self.result_rank_list，否则会累积
+        self.result_rank_list=list()
         for epoch in range(self.test_epoch):
 
             random_test_batch_idx=np.random.randint(len(data)-1)
 
             for step_test,test_batch_temp in enumerate(data):
                 if step_test==random_test_batch_idx:
-                    test_batch=test_batch_temp
+                    test_batch_temp=test_batch_temp
                     break
+
+            test_batch=test_batch_temp[:self.sample_num,:]
 
 
             for i in range(self.sample_num-1):
