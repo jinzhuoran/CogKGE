@@ -13,14 +13,13 @@ class Evaluator:
         self.metric = metric
 
     def evaluate(self):
-        logger.info("The evaluating process is beginning!")
+        print("The evaluating process is beginning!")
         model = torch.load(self.model_path)
         logger.info("The model named \"%s\" has been loaded!" % (self.model_path))
         print("Model structure:\n", model)
         self.metric(self.test_dataset, model)
         print("result_rank_numpy:\n", self.metric.result_rank_numpy)
         logger.info("mean_rank(total_sample_num_is_%d):%f%%" % (self.metric.sample_num, self.metric.mean_rank))
-        logger.info("hit_at_ten(total_epoch_num_is_%d):%f%%" % (
-        self.metric.test_epoch, self.metric.hit_at_ten / self.metric.test_epoch * 100))
-        logger.info("The evaluating process is finished!")
+        logger.info("hit_at_ten(total_epoch_num_is_%d):%f%%" % (self.metric.test_epoch, self.metric.hit_at_ten / self.metric.test_epoch * 100))
+        print("The evaluating process is finished!")
         return 0
