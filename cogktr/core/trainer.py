@@ -27,6 +27,9 @@ class Trainer:
 
         self.train_loss_list=list()
         self.valid_loss_list=list()
+        self.step_metric_list=list()
+        self.train_metric_list=list()
+        self.valid_metric_list=list()
 
     def train(self):
         print("The training process is beginning!")
@@ -84,6 +87,10 @@ class Trainer:
                         metric=self.metric
                     )
                     evaluator_valid.evaluate()
+
+                    self.step_metric_list.append(epoch)
+                    self.train_metric_list.append(evaluator_train.mean_rank )
+                    self.valid_metric_list.append(evaluator_valid.mean_rank )
 
 
         torch.save(self.model,"TransE_Model_%depochs.pkl"%(self.epoch))
