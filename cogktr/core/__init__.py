@@ -3,6 +3,7 @@ from .log import *
 from .loss import *
 from .metric import *
 from .trainer import *
+from .datableset import *
 __all__=[
     #evaluate
     "Evaluator",
@@ -15,6 +16,9 @@ __all__=[
 
     #metric
     "MeanRank_HitAtTen",
+
+    # DataTableSet
+    "DataTableSet",
 
     #trainer
     "Trainer"
