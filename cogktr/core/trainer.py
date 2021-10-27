@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 from .log import *
+from .evaluator import *
 class Trainer:
     def __init__(self,
                  train_dataset,
@@ -11,7 +12,8 @@ class Trainer:
                  loss,
                  optimizer,
                  epoch,
-                 save_step
+                 save_step=None,
+                 metric_step=None
                  ):
         self.train_dataset=train_dataset
         self.valid_dataset=valid_dataset
@@ -21,9 +23,13 @@ class Trainer:
         self.optimizer=optimizer
         self.epoch=epoch
         self.save_step=save_step
+        self.metric_step=metric_step
 
         self.train_loss_list=list()
         self.valid_loss_list=list()
+        self.step_metric_list=list()
+        self.train_metric_list=list()
+        self.valid_metric_list=list()
 
     def train(self):
         print("The training process is beginning!")
@@ -56,9 +62,36 @@ class Trainer:
                           '| train loss: %.4f' % train_loss.data.cpu().numpy(),
                           '| valid loss: %.4f' % valid_loss.data.cpu().numpy())
 
-            if epoch % self.save_step == 0:
-                torch.save(self.model,"TransE_Model_%depochs.pkl"%(epoch))
-                logger.info("The model named \"%s_Model_%depochs.pkl\" has been saved!"%(self.model.name,epoch))
+            if self.save_step==None:
+                pass
+            else:
+                if epoch % self.save_step == 0:
+                    torch.save(self.model,"TransE_Model_%depochs.pkl"%(epoch))
+                    logger.info("The model named \"%s_Model_%depochs.pkl\" has been saved!"%(self.model.name,epoch))
+
+            if self.metric_step==None:
+                pass
+            else:
+                if epoch % self.metric_step == 0:
+                    torch.save(self.model,"TransE_Model_temp.pkl")
+
+                    evaluator_train=Evaluator(
+                        test_dataset=self.train_dataset,
+                        model_path="TransE_Model_temp.pkl",
+                        metric=self.metric
+                    )
+                    evaluator_train.evaluate()
+                    evaluator_valid=Evaluator(
+                        test_dataset=self.valid_dataset,
+                        model_path="TransE_Model_temp.pkl",
+                        metric=self.metric
+                    )
+                    evaluator_valid.evaluate()
+
+                    self.step_metric_list.append(epoch)
+                    self.train_metric_list.append(evaluator_train.mean_rank )
+                    self.valid_metric_list.append(evaluator_valid.mean_rank )
+
 
         torch.save(self.model,"TransE_Model_%depochs.pkl"%(self.epoch))
         logger.info("The model named \"%s_Model_%depochs.pkl\" has been saved!"%(self.model.name,self.epoch))
@@ -82,7 +115,6 @@ class Trainer:
         plt.xlabel("step")
         plt.ylabel("loss")
         plt.savefig(fname="%s_Model_%depochs_loss.png"%(self.model.name,self.epoch))
-        # print("The picture named \"%s_Model_%depochs_loss.png\" has been saved!"%(self.model.name,self.epoch))
         logger.info("The picture named \"%s_Model_%depochs_loss.png\" has been saved!"%(self.model.name,self.epoch))
 
         plt.show()
