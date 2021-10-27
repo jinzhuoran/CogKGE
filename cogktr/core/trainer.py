@@ -3,6 +3,7 @@ import torch
 import matplotlib.pyplot as plt
 from .log import *
 from .evaluator import *
+import math
 class Trainer:
     def __init__(self,
                  train_dataset,
@@ -28,8 +29,12 @@ class Trainer:
         self.train_loss_list=list()
         self.valid_loss_list=list()
         self.step_metric_list=list()
-        self.train_metric_list=list()
-        self.valid_metric_list=list()
+        self.train_metric_result_rank_numpy_list=list()
+        self.valid_metric_result_rank_numpy_list=list()
+        self.train_metric_mean_rank_list=list()
+        self.valid_metric_mean_rank_list=list()
+        self.train_metric_hit_at_ten_list=list()
+        self.valid_metric_hit_at_ten_list=list()
 
     def train(self):
         print("The training process is beginning!")
@@ -89,8 +94,12 @@ class Trainer:
                     evaluator_valid.evaluate()
 
                     self.step_metric_list.append(epoch)
-                    self.train_metric_list.append(evaluator_train.mean_rank )
-                    self.valid_metric_list.append(evaluator_valid.mean_rank )
+                    self.train_metric_result_rank_numpy_list.append(evaluator_train.result_rank_numpy)
+                    self.valid_metric_result_rank_numpy_list.append(evaluator_valid.result_rank_numpy)
+                    self.train_metric_mean_rank_list.append(evaluator_train.mean_rank )
+                    self.valid_metric_mean_rank_list.append(evaluator_valid.mean_rank )
+                    self.train_metric_hit_at_ten_list.append(evaluator_train.hit_at_ten )
+                    self.valid_metric_hit_at_ten_list.append(evaluator_valid.hit_at_ten )
 
 
         torch.save(self.model,"TransE_Model_%depochs.pkl"%(self.epoch))
@@ -104,18 +113,45 @@ class Trainer:
         print("The show process is beginning!")
         x=np.arange(0,len(self.train_loss_list))
 
-        plt.figure()
+        plt.figure(figsize=(10,10))
 
+        plt.subplot(2,2,1)
         plt.plot(x,self.train_loss_list,color="red",linewidth=4,linestyle="-",label="train_loss")
         plt.legend(loc="upper right")
         plt.plot(x,self.valid_loss_list,color="blue",linewidth=4,linestyle="-",label="valid_loss")
         plt.legend(loc="upper right")
-
         plt.title("%s_loss_figure"%(self.model.name))
         plt.xlabel("step")
         plt.ylabel("loss")
-        plt.savefig(fname="%s_Model_%depochs_loss.png"%(self.model.name,self.epoch))
-        logger.info("The picture named \"%s_Model_%depochs_loss.png\" has been saved!"%(self.model.name,self.epoch))
+
+        plt.subplot(2,2,2)
+        plt.plot(self.step_metric_list,self.train_metric_mean_rank_list,color="red",linewidth=4,linestyle="-",label="train_mean_rank")
+        plt.legend(loc="upper right")
+        plt.plot(self.step_metric_list,self.valid_metric_mean_rank_list,color="blue",linewidth=4,linestyle="-",label="valid_mean_rank")
+        plt.legend(loc="upper right")
+        plt.title("%s_mean_rank_figure"%(self.model.name))
+        plt.xlabel("epoch")
+        plt.ylabel("rank")
+
+        plt.subplot(2,2,3)
+        plt.plot(self.step_metric_list,self.train_metric_hit_at_ten_list,color="red",linewidth=4,linestyle="-",label="train_hit_at_ten")
+        plt.legend(loc="upper right")
+        plt.plot(self.step_metric_list,self.valid_metric_hit_at_ten_list,color="blue",linewidth=4,linestyle="-",label="valid_hit_at_ten")
+        plt.legend(loc="upper right")
+        plt.title("%s_hit_at_ten_figure"%(self.model.name))
+        plt.xlabel("epoch")
+        plt.ylabel("rank percent(%%)")
+
+        plt.subplot(2,2,4)
+
+        length_result_rank_numpy=len(self.train_metric_result_rank_numpy_list[-1])
+        length_new=math.floor(length_result_rank_numpy**0.5)
+        plt.imshow(self.train_metric_result_rank_numpy_list[-1][0:length_new**2].reshape((length_new,length_new)),cmap="Blues",origin="upper")
+        plt.colorbar(shrink=0.9)
+        plt.title("%s_rank_array_figure"%(self.model.name))
+
+        plt.savefig(fname="%s_Model_%depochs_figure.png"%(self.model.name,self.epoch))
+        logger.info("The picture named \"%s_Model_%depochs_figure.png\" has been saved!"%(self.model.name,self.epoch))
 
         plt.show()
 
