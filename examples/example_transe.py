@@ -17,13 +17,13 @@ EMBEDDING_DIM=100            #形成的embedding维数
 MARGIN=1.0                   #margin大小
 L=2                          #范数类型
 LR=0.001                     #学习率
-EPOCH=10                     #训练的轮数
+EPOCH=50                     #训练的轮数
 BATCH_SIZE_TRAIN=2048        #训练批量大小
 BATCH_SIZE_TEST=100          #测试批量大小
 WEIGHT_DECAY=0.0001          #正则化系数
-SAVE_STEP=None               #每隔几轮保存一次模型
-METRIC_STEP=2                #每隔几轮验证一次
-METRIC_TEST_EPOCH=10         #评价重复轮数
+SAVE_STEP=10                 #每隔几轮保存一次模型
+METRIC_STEP=1                #每隔几轮验证一次
+METRIC_TEST_EPOCH=50         #评价重复轮数
 METRIC_SAMPLE_NUM=100        #评价时采样的个数
 
 #指定GPU
