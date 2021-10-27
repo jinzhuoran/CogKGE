@@ -16,6 +16,8 @@ __all__=[
     "MarginLoss",
     "MeanRank_HitAtTen",
     "Trainer",
+
+    # data
     "DataTableSet",
 
     #models
