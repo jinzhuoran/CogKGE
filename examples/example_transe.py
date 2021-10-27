@@ -21,8 +21,10 @@ EPOCH=10                     #训练的轮数
 BATCH_SIZE_TRAIN=2048        #训练批量大小
 BATCH_SIZE_TEST=100          #测试批量大小
 WEIGHT_DECAY=0.0001          #正则化系数
-METRIC_TEST_EPOCH=200        #评价重复轮数
-SAVE_STEP=5                  #每隔几轮保存一次模型
+SAVE_STEP=None               #每隔几轮保存一次模型
+METRIC_STEP=2                #每隔几轮验证一次
+METRIC_TEST_EPOCH=10         #评价重复轮数
+METRIC_SAMPLE_NUM=100        #评价时采样的个数
 
 #指定GPU
 
@@ -45,7 +47,7 @@ test_dataset=Data.DataLoader(dataset=test_datable,batch_size=BATCH_SIZE_TEST,shu
 #RandomSampler()还未写
 
 model=TransE(entity_dict_len=len(entity2idx),relation_dict_len=len(relation2idx),embedding_dim=EMBEDDING_DIM,margin=MARGIN,L=L)
-metric =MeanRank_HitAtTen(sample_num=BATCH_SIZE_TEST,test_epoch=METRIC_TEST_EPOCH,entity2idx_len=len(entity2idx))
+metric=MeanRank_HitAtTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH,entity2idx_len=len(entity2idx))
 loss =MarginLoss(entity_dict_len=len(entity2idx))
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
 
@@ -58,7 +60,8 @@ trainer = Trainer(
     loss=loss,
     optimizer=optimizer,
     epoch=EPOCH,
-    save_step=SAVE_STEP
+    save_step=SAVE_STEP,
+    metric_step=METRIC_STEP
 )
 trainer.train()
 trainer.show()
