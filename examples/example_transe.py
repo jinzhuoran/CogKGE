@@ -21,10 +21,10 @@ EPOCH=10                     #训练的轮数
 BATCH_SIZE_TRAIN=2048        #训练批量大小
 BATCH_SIZE_TEST=100          #测试批量大小
 WEIGHT_DECAY=0.0001          #正则化系数
-SAVE_STEP=None               #每隔几轮保存一次模型
-METRIC_STEP=2                #每隔几轮验证一次
-METRIC_TEST_EPOCH=10         #评价重复轮数
-METRIC_SAMPLE_NUM=100        #评价时采样的个数
+SAVE_STEP=10                 #每隔几轮保存一次模型
+METRIC_STEP=1                #每隔几轮验证一次
+METRIC_TEST_EPOCH=9          #评价重复轮数
+METRIC_SAMPLE_NUM=10         #评价时采样的个数
 
 #指定GPU
 
