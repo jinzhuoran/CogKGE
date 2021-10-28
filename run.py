@@ -42,6 +42,13 @@ METRIC_TEST_EPOCH=10         #评价重复轮数
 METRIC_SAMPLE_NUM=100        #评价时采样的个数
 
 #指定GPU
+print(torch.__version__)                         #查看cuda版本
+os.environ["CUDA_VISIBLE_DEVICES"] = '7'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
+print(torch.cuda.is_available())                 #查看cuda是否能运行
+cuda = torch.device('cuda:0')                    #指定GPU序号
+print(torch.cuda.device_count())                 #可供使用的GPU数量
+print(torch.cuda.get_device_name(0))             #使用的GPU名字
+print(torch.cuda.current_device())               #目前使用的GPU的序号
 
 # Construct the corresponding dataset
 print("Currently working on dir ",os.getcwd())

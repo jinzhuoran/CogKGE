@@ -1,4 +1,4 @@
-#导入基本模块
+# 导入基本模块
 import torch
 import numpy as np
 import random
@@ -6,11 +6,12 @@ import torch.utils.data as Data
 import torch.nn as nn
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
+import os
 
 #导入cogktr模块
 from cogktr import *
 
-#设置超参数
+# #设置超参数
 random.seed(1)               #随机数种子
 np.random.seed(1)            #随机数种子
 EMBEDDING_DIM=100            #形成的embedding维数
@@ -18,23 +19,27 @@ MARGIN=1.0                   #margin大小
 L=2                          #范数类型
 LR=0.001                     #学习率
 EPOCH=10                     #训练的轮数
-BATCH_SIZE_TRAIN=2048        #训练批量大小
+BATCH_SIZE_TRAIN=10000       #训练批量大小
 BATCH_SIZE_TEST=100          #测试批量大小
 WEIGHT_DECAY=0.0001          #正则化系数
-SAVE_STEP=10                 #每隔几轮保存一次模型
+SAVE_STEP=None               #每隔几轮保存一次模型
 METRIC_STEP=1                #每隔几轮验证一次
 METRIC_TEST_EPOCH=9          #评价重复轮数
-METRIC_SAMPLE_NUM=10         #评价时采样的个数
+METRIC_SAMPLE_NUM=100        #评价时采样的个数
 
-#指定GPU
+print(torch.__version__)                         #查看cuda版本
+os.environ["CUDA_VISIBLE_DEVICES"] = '7'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
+print(torch.cuda.is_available())                 #查看cuda是否能运行
+cuda = torch.device('cuda:0')                    #指定GPU序号
+print(torch.cuda.get_device_name(0))             #使用的GPU名字
 
 #加载原始数据集
-loader = FB15K237Loader("../dataset/Fb15k-237")
+loader = FB15K237Loader("../dataset/FB15k-237")
 train_data,valid_data,test_data=loader.load_all_data()
 entity2idx,relation2idx=loader.load_all_dict()
 
 #数据处理
-processor=FB15K237Processor("../dataset/Fb15k-237")
+processor=FB15K237Processor("../dataset/FB15k-237")
 train_datable=processor.process(train_data)
 valid_datable=processor.process(valid_data)
 test_datable=processor.process(test_data)
