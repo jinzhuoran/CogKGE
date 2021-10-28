@@ -6,6 +6,7 @@ import torch.utils.data as Data
 import torch.nn as nn
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
+import os
 
 #导入cogktr模块
 from cogktr import *
@@ -27,6 +28,9 @@ METRIC_TEST_EPOCH=9          #评价重复轮数
 METRIC_SAMPLE_NUM=10         #评价时采样的个数
 
 #指定GPU
+os.environ["CUDA_VISIBLE_DEVICES"] = '7'
+print(torch.cuda.is_available())
+cuda = torch.device('cuda:0')
 
 #加载原始数据集
 loader = FB15K237Loader("../dataset/Fb15k-237")
