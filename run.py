@@ -23,7 +23,7 @@ from cogktr import *
 #     if not mod.endswith("__"):
 #         print(mod)
 
-#设置超参数
+#设置超参数#
 random.seed(1)               #随机数种子
 np.random.seed(1)            #随机数种子
 EMBEDDING_DIM=100            #形成的embedding维数
