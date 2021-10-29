@@ -1,6 +1,10 @@
 import os
+from ...lut import LUT 
 class FB15K237Loader:
     def __init__(self,path):
+        """
+        load FB15K-237 dataset according to the given raw data path
+        """
         self.path=path
 
     def _load_data(self,path):
@@ -31,6 +35,9 @@ class FB15K237Loader:
         return test_data
 
     def load_all_data(self):
+        """
+        data are all lists of strings which can be further converted to id arrays using processor.process()
+        """
         train_data=self._load_data("train.txt")
         valid_data=self._load_data("valid.txt")
         test_data=self._load_data("test.txt")
@@ -60,3 +67,7 @@ class FB15K237Loader:
         entity2idx=self._load_dict("entities.dict")
         relation2idx=self._load_dict("relations.dict")
         return entity2idx,relation2idx
+
+    def createLUT(self):
+        return LUT(self.load_entity_dict(),self.load_relation_dict())
+

@@ -141,3 +141,5 @@ cython_debug/
 # vscode configurations
 .vscode/*
 
+# ignore the output log files
+experiment_output/*

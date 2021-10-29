@@ -11,11 +11,9 @@ import torch.utils.data as Data
 import torch.nn as nn
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
-from torch.utils.data import dataloader
-from torch.utils.data import DataLoader
-import os
+import datetime
 
-from torch.utils.data import dataset
+import os
 
 #导入cogktr模块
 from cogktr import *
@@ -45,49 +43,31 @@ METRIC_SAMPLE_NUM=100        #评价时采样的个数
 
 # Construct the corresponding dataset
 print("Currently working on dir ",os.getcwd())
-data_path = './dataset/FB15k-237'
+
+data_path = './dataset/kr/FB15k-237/raw_data'
+output_path = os.path.join(*data_path.split("/")[:-1],"experimental_output/"+str(datetime.datetime.now()))
+print("the output path is {}.".format(output_path))
+
 
 loader = FB15K237Loader(data_path)
-entity2idx,relation2idx=loader.load_all_dict()
+lookUpTable = loader.createLUT()
+processor = FB15K237Processor(lookUpTable)
 
-train_loader = DataLoader(dataset=DataTableSet(data_path,"train"),
-                          batch_size=BATCH_SIZE_TRAIN,
-                          shuffle=True)
-valid_loader = DataLoader(dataset=DataTableSet(data_path,"valid"),
-                          batch_size=BATCH_SIZE_TRAIN,
-                          shuffle=True)
-test_loader = DataLoader(dataset=DataTableSet(data_path,"test"),
-                          batch_size=BATCH_SIZE_TEST,
-                          shuffle=True)
+train_data,valid_data,test_data = loader.load_all_data()
+train_dataset = processor.process(train_data)
+valid_dataset = processor.process(valid_data)
+test_dataset = processor.process(test_data)
  
-
-# #加载原始数据集
-# loader = FB15K237Loader("../dataset/Fb15k-237")
-# train_data,valid_data,test_data=loader.load_all_data()
-# entity2idx,relation2idx=loader.load_all_dict()
-
-# #数据处理
-# processor=FB15K237Processor("../dataset/Fb15k-237")
-# train_datable=processor.process(train_data)
-# valid_datable=processor.process(valid_data)
-# test_datable=processor.process(test_data)
-
-# #DataTableSet()暂时用如下替代
-# train_dataset=Data.DataLoader(dataset=train_datable,batch_size=BATCH_SIZE_TRAIN,shuffle=True)
-# valid_dataset=Data.DataLoader(dataset=valid_datable,batch_size=BATCH_SIZE_TRAIN,shuffle=True)
-# test_dataset=Data.DataLoader(dataset=test_datable,batch_size=BATCH_SIZE_TEST,shuffle=True)
-
-# #RandomSampler()还未写
-
-model=TransE(entity_dict_len=len(entity2idx),relation_dict_len=len(relation2idx),embedding_dim=EMBEDDING_DIM,margin=MARGIN,L=L)
-metric=MeanRank_HitAtTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH,entity2idx_len=len(entity2idx))
-loss =MarginLoss(entity_dict_len=len(entity2idx))
+ 
+model=TransE(entity_dict_len=lookUpTable.num_entity(),relation_dict_len=lookUpTable.num_relation(),embedding_dim=EMBEDDING_DIM,margin=MARGIN,L=L)
+metric=MeanRank_HitAtTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH,entity2idx_len=lookUpTable.num_entity())
+loss =MarginLoss(entity_dict_len=lookUpTable.num_entity())
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
 
 #训练部分
 trainer = Trainer(
-    train_dataset=train_loader,
-    valid_dataset=valid_loader,
+    train_dataset=train_dataset,
+    valid_dataset=valid_dataset,
     model=model,
     metric=metric,
     loss=loss,
@@ -101,7 +81,7 @@ trainer.show()
 
 #测试部分
 evaluator=Evaluator(
-    test_dataset=test_loader,
+    test_dataset=test_dataset,
     model_path="TransE_Model_10epochs.pkl",
     metric=metric
 )

@@ -1,6 +1,7 @@
 from .loader import *
 from .processor import *
 from .dataset import *
+from .lut import *
 
 __all__=[
     #loader
@@ -9,5 +10,7 @@ __all__=[
     #processor
     "FB15K237Processor",
 
-    "DataTableSet"
+    "Feeder",
+
+    "LUT"
 ]

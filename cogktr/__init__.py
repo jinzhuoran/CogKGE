@@ -17,9 +17,6 @@ __all__=[
     "MeanRank_HitAtTen",
     "Trainer",
 
-    # data
-    "DataTableSet",
-
     #models
     "TransE"
 ]
