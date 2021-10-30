@@ -18,5 +18,5 @@ __all__=[
 #     "MeanRank_HitAtTen",
 #
     #trainer
-    "Trainer"
+    "Kr_Trainer"
 ]

@@ -45,23 +45,13 @@ import random
 import torch
 import torch.nn.functional as F
 class MarginLoss:
-    def __init__(self,entity_dict_len):
-        self.entity_dict_len=entity_dict_len
+    def __init__(self):
+        pass
 
-    def create_negtive_batch(self,positive_batch):
-        negtive_batch=positive_batch.clone().detach()
-        for i in range(len(negtive_batch[:,0])):
-            if(random.random()<0.5):
-                negtive_batch[i][0]=np.random.randint(0,self.entity_dict_len)
-            else:
-                negtive_batch[i][2]=np.random.randint(0,self.entity_dict_len)
-        return negtive_batch
-
-    def __call__(self,output,positive_batch,model):
-        negtive_batch=self.create_negtive_batch(positive_batch)
-        positive_embedding_head=output[:,0]
-        positive_embedding_relation=output[:,1]
-        positive_embedding_tail=output[:,2]
+    def __call__(self,positive_batch,negtive_batch,model):
+        positive_embedding_head=torch.unsqueeze(model.entity_embedding(positive_batch[:,0]), 1)
+        positive_embedding_relation=torch.unsqueeze(model.relation_embedding(positive_batch[:,1]), 1)
+        positive_embedding_tail=torch.unsqueeze(model.entity_embedding(positive_batch[:,2]), 1)
         negtive_embedding_head=torch.unsqueeze(model.entity_embedding(negtive_batch[:,0]), 1)
         negtive_embedding_relation=torch.unsqueeze(model.relation_embedding(negtive_batch[:,1]), 1)
         negtive_embedding_tail=torch.unsqueeze(model.entity_embedding(negtive_batch[:,2]), 1)
