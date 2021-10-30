@@ -48,7 +48,6 @@ data_path = './dataset/kr/FB15k-237/raw_data'
 output_path = os.path.join(*data_path.split("/")[:-1],"experimental_output/"+str(datetime.datetime.now()))
 print("the output path is {}.".format(output_path))
 
-
 loader = FB15K237Loader(data_path)
 lookUpTable = loader.createLUT()
 processor = FB15K237Processor(lookUpTable)
