@@ -160,9 +160,13 @@
 
 
 ########################################################################################################################
+import torch
 import torch.utils.data as Data
 from tqdm import tqdm
-class Trainer:
+import random
+import os
+import numpy as np
+class Kr_Trainer:
     def __init__(self,
                  train_dataset,
                  valid_dataset,
@@ -172,7 +176,8 @@ class Trainer:
                  model,
                  loss,
                  optimizer,
-                 epoch
+                 epoch,
+                 output_path
                  ):
         self.train_dataset=train_dataset
         self.valid_dataset=valid_dataset
@@ -183,6 +188,19 @@ class Trainer:
         self.loss=loss
         self.optimizer=optimizer
         self.epoch=epoch
+        self.output_path=output_path
+
+    def create_negative(self,train_pos):
+        train_neg=None
+        if self.model.negative_sample_method=="Random_Negative_Sampling":
+            train_neg=train_pos.clone().detach()
+            for i in range(len(train_neg[:,0])):
+                if(random.random()<0.5):
+                    train_neg[i][0]=np.random.randint(0,self.model.entity_dict_len)
+                else:
+                    train_neg[i][2]=np.random.randint(0,self.model.entity_dict_len)
+        return train_neg
+
 
 
     def train(self):
@@ -192,10 +210,10 @@ class Trainer:
 
         for epoch in range(self.epoch):
             with tqdm(train_loader) as t:
-                for step,train_batch in enumerate(t):
-                    train_batch=train_batch.cuda()
-                    output=self.model(train_batch)
-                    loss=self.loss(output,train_batch,self.model)
+                for step,train_positive in enumerate(t):
+                    train_positive=train_positive.cuda()
+                    train_negative=self.create_negative(train_positive)
+                    loss=self.loss(train_positive,train_negative,self.model)
                     self.optimizer.zero_grad()
                     loss.backward()
                     self.optimizer.step()
@@ -205,8 +223,12 @@ class Trainer:
                     t.set_description("epoch %d|step %d"%(epoch,step))
                     t.set_postfix({'train loss: ' : '%.2f'%(loss),
                            'test accuracy: ':'%.2f'%(1)})
-                    pass
         t.close()
 
+        if not os.path.exists(self.output_path):
+            os.makedirs(self.output_path)
+            print (self.output_path+' created successfully')
+        torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)))
+        print(os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)),"saved successfully")
         pass
 

@@ -38,13 +38,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 class TransE(nn.Module):
-    def __init__(self,entity_dict_len,relation_dict_len,embedding_dim,margin,L):
+    def __init__(self,entity_dict_len,relation_dict_len,embedding_dim,margin,L,negative_sample_method):
         super(TransE, self).__init__()
         self.entity_dict_len=entity_dict_len
         self.relation_dict_len=relation_dict_len
         self.embedding_dim=embedding_dim
         self.margin=margin
         self.L=L
+        self.negative_sample_method=negative_sample_method
         self.name="TransE"
         self.square=embedding_dim**0.5
         self.entity_embedding=nn.Embedding(num_embeddings=self.entity_dict_len, embedding_dim=self.embedding_dim)

@@ -101,7 +101,7 @@ TRAINR_BATCH_SIZE=20000        #训练批量大小
 EMBEDDING_DIM=100            #形成的embedding维数
 MARGIN=1.0                   #margin大小
 L=2                          #范数类型
-EPOCH=10                     #训练的轮数
+EPOCH=1                     #训练的轮数
 LR=0.001                     #学习率
 WEIGHT_DECAY=0.0001          #正则化系数
 # BATCH_SIZE_TEST=100          #测试批量大小
@@ -111,7 +111,7 @@ WEIGHT_DECAY=0.0001          #正则化系数
 # METRIC_SAMPLE_NUM=100        #评价时采样的个数
 
 #指定GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = '7'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
 print(torch.cuda.is_available())                 #查看cuda是否能运行
 cuda = torch.device('cuda:0')                    #指定GPU序号
 
@@ -119,7 +119,7 @@ cuda = torch.device('cuda:0')                    #指定GPU序号
 print("Currently working on dir ",os.getcwd())
 
 data_path = '../dataset/kr/FB15k-237/raw_data'
-output_path = os.path.join(*data_path.split("/")[:-1],"experimental_output/"+str(datetime.datetime.now()))
+output_path = os.path.join(*data_path.split("/")[:-1],"experimental_output/"+str(datetime.datetime.now())).replace(':', '-')
 print("the output path is {}.".format(output_path))
 
 
@@ -140,12 +140,13 @@ model=TransE(entity_dict_len=lookUpTable.num_entity(),
              relation_dict_len=lookUpTable.num_relation(),
              embedding_dim=EMBEDDING_DIM,
              margin=MARGIN,
-             L=L)
-loss =MarginLoss(entity_dict_len=lookUpTable.num_entity())
+             L=L,
+             negative_sample_method="Random_Negative_Sampling")
+loss =MarginLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
 # metric=MeanRank_HitAtTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH,entity2idx_len=len(entity2idx))
 
-trainer = Trainer(
+trainer = Kr_Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -154,6 +155,7 @@ trainer = Trainer(
     model=model,
     loss=loss,
     optimizer=optimizer,
-    epoch=EPOCH
+    epoch=EPOCH,
+    output_path=output_path
 )
 trainer.train()
