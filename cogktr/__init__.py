@@ -10,11 +10,11 @@ __all__=[
     "FB15K237Loader",
     "FB15K237Processor",
 
-    #core
-    "Evaluator",
-    "logger",
+    # #core
+    # "Evaluator",
+    # "logger",
     "MarginLoss",
-    "MeanRank_HitAtTen",
+    # "MeanRank_HitAtTen",
     "Trainer",
 
     #models
