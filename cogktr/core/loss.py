@@ -1,40 +1,78 @@
-import random
-import torch.nn as nn
+# import random
+# import torch.nn as nn
+# import numpy as np
+# import torch
+# import torch.nn.functional as F
+# class MarginLoss(nn.Module):
+#     def __init__(self,entity_dict_len):
+#         super(MarginLoss, self).__init__()
+#         self.entity_dict_len=entity_dict_len
+#         pass
+#
+#     def create_negtive_sample(self,batch_sample):
+#         batch_sample_negtive=batch_sample.clone().detach()
+#         for i in range(len(batch_sample_negtive[:,0])):
+#             if(random.random()<0.5):
+#                 batch_sample_negtive[i][0]=np.random.randint(0,self.entity_dict_len)
+#             else:
+#                 batch_sample_negtive[i][2]=np.random.randint(0,self.entity_dict_len)
+#         return batch_sample_negtive
+#
+#     def forward(self,positive_item,model):
+#         negtive_item=self.create_negtive_sample(positive_item)
+#
+#         positive_item_head=torch.unsqueeze(model.entity_embedding(positive_item[:,0]), 1)
+#         positive_item_relation=torch.unsqueeze(model.relation_embedding(positive_item[:,1]), 1)
+#         positive_item_tail=torch.unsqueeze(model.entity_embedding(positive_item[:,2]), 1)
+#         negtive_item_head=torch.unsqueeze(model.entity_embedding(negtive_item[:,0]), 1)
+#         negtive_item_relation=torch.unsqueeze(model.relation_embedding(negtive_item[:,1]), 1)
+#         negtive_item_tail=torch.unsqueeze(model.entity_embedding(negtive_item[:,2]), 1)
+#
+#         positive_item_head= F.normalize(positive_item_head, p=model.L, dim=2)
+#         positive_item_tail= F.normalize(positive_item_tail, p=model.L, dim=2)
+#         negtive_item_head= F.normalize(negtive_item_head, p=model.L, dim=2)
+#         negtive_item_tail= F.normalize(negtive_item_tail, p=model.L, dim=2)
+#
+#         positive_item_distance=model.distance(positive_item_head+positive_item_relation,positive_item_tail)
+#         negtive_item_distance=model.distance(negtive_item_head+negtive_item_relation,negtive_item_tail)
+#
+#         output=torch.sum(F.relu(model.margin+positive_item_distance-negtive_item_distance))/(positive_item.shape[0])
+#         return output
+
+########################################################################################################################
 import numpy as np
+import random
 import torch
 import torch.nn.functional as F
-class MarginLoss(nn.Module):
+class MarginLoss:
     def __init__(self,entity_dict_len):
-        super(MarginLoss, self).__init__()
         self.entity_dict_len=entity_dict_len
-        pass
 
-    def create_negtive_sample(self,batch_sample):
-        batch_sample_negtive=batch_sample.clone().detach()
-        for i in range(len(batch_sample_negtive[:,0])):
+    def create_negtive_batch(self,positive_batch):
+        negtive_batch=positive_batch.clone().detach()
+        for i in range(len(negtive_batch[:,0])):
             if(random.random()<0.5):
-                batch_sample_negtive[i][0]=np.random.randint(0,self.entity_dict_len)
+                negtive_batch[i][0]=np.random.randint(0,self.entity_dict_len)
             else:
-                batch_sample_negtive[i][2]=np.random.randint(0,self.entity_dict_len)
-        return batch_sample_negtive
+                negtive_batch[i][2]=np.random.randint(0,self.entity_dict_len)
+        return negtive_batch
 
-    def forward(self,positive_item,model):
-        negtive_item=self.create_negtive_sample(positive_item)
+    def __call__(self,output,positive_batch,model):
+        negtive_batch=self.create_negtive_batch(positive_batch)
+        positive_embedding_head=output[:,0]
+        positive_embedding_relation=output[:,1]
+        positive_embedding_tail=output[:,2]
+        negtive_embedding_head=torch.unsqueeze(model.entity_embedding(negtive_batch[:,0]), 1)
+        negtive_embedding_relation=torch.unsqueeze(model.relation_embedding(negtive_batch[:,1]), 1)
+        negtive_embedding_tail=torch.unsqueeze(model.entity_embedding(negtive_batch[:,2]), 1)
 
-        positive_item_head=torch.unsqueeze(model.entity_embedding(positive_item[:,0]), 1)
-        positive_item_relation=torch.unsqueeze(model.relation_embedding(positive_item[:,1]), 1)
-        positive_item_tail=torch.unsqueeze(model.entity_embedding(positive_item[:,2]), 1)
-        negtive_item_head=torch.unsqueeze(model.entity_embedding(negtive_item[:,0]), 1)
-        negtive_item_relation=torch.unsqueeze(model.relation_embedding(negtive_item[:,1]), 1)
-        negtive_item_tail=torch.unsqueeze(model.entity_embedding(negtive_item[:,2]), 1)
+        positive_embedding_head= F.normalize(positive_embedding_head, p=model.L, dim=2)
+        positive_embedding_tail= F.normalize(positive_embedding_tail, p=model.L, dim=2)
+        negtive_embedding_head= F.normalize(negtive_embedding_head, p=model.L, dim=2)
+        negtive_embedding_tail= F.normalize(negtive_embedding_tail, p=model.L, dim=2)
 
-        positive_item_head= F.normalize(positive_item_head, p=model.L, dim=2)
-        positive_item_tail= F.normalize(positive_item_tail, p=model.L, dim=2)
-        negtive_item_head= F.normalize(negtive_item_head, p=model.L, dim=2)
-        negtive_item_tail= F.normalize(negtive_item_tail, p=model.L, dim=2)
+        positive_distance=model.distance(positive_embedding_head+positive_embedding_relation,positive_embedding_tail)
+        negtive_distance=model.distance(negtive_embedding_head+negtive_embedding_relation,negtive_embedding_tail)
 
-        positive_item_distance=model.distance(positive_item_head+positive_item_relation,positive_item_tail)
-        negtive_item_distance=model.distance(negtive_item_head+negtive_item_relation,negtive_item_tail)
-
-        output=torch.sum(F.relu(model.margin+positive_item_distance-negtive_item_distance))/(positive_item.shape[0])
+        output=torch.sum(F.relu(model.margin+positive_distance-negtive_distance))/(positive_batch.shape[0])
         return output
