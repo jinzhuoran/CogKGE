@@ -244,22 +244,22 @@ class Kr_Trainer:
                                    'hat:':'%.1f%%'%(hitatten)})
 
             #每隔几步保存模型
-            if self.save_final_model==True:
-                if self.save_step!=None and epoch%self.save_step==0:
-                    if not os.path.exists(self.output_path):
-                        os.makedirs(self.output_path)
-                    torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,epoch)))
-                t.set_description("epoch %d|step %d"%(epoch,step))
+            if self.save_step!=None and epoch%self.save_step==0:
+                if not os.path.exists(self.output_path):
+                    os.makedirs(self.output_path)
+                torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,epoch)))
+            t.set_description("epoch %d|step %d"%(epoch,step))
 
         t.close()
 
 
         #保存最终模型
-        # if not os.path.exists(self.output_path):
-        #     os.makedirs(self.output_path)
-        #     print (self.output_path+' created successfully')
-        # torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)))
-        # print(os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)),"saved successfully")
+        if self.save_final_model==True:
+            if not os.path.exists(self.output_path):
+                os.makedirs(self.output_path)
+                print (self.output_path+' created successfully')
+            torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)))
+            print(os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)),"saved successfully")
 
         pass
 
