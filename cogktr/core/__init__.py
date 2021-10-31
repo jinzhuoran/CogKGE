@@ -1,7 +1,7 @@
 # from .evaluator import *
 # from .log import *
 from .loss import *
-# from .metric import *
+from .metric import *
 from .trainer import *
 #
 __all__=[
@@ -14,8 +14,8 @@ __all__=[
     #loss
     "MarginLoss",
 #
-#     #metric
-#     "MeanRank_HitAtTen",
+    #metric
+    "Link_Prediction",
 #
     #trainer
     "Kr_Trainer"

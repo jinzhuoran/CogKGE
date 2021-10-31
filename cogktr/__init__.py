@@ -14,7 +14,7 @@ __all__=[
     # "Evaluator",
     # "logger",
     "MarginLoss",
-    # "MeanRank_HitAtTen",
+    "Link_Prediction",
     "Kr_Trainer",
 
     #models

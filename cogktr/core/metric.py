@@ -48,3 +48,42 @@
 #         self.mean_rank=np.mean(self.result_rank_numpy)
 #         self.hit_at_ten=np.sum(self.result_rank_numpy<=10)
 #         return 0
+########################################################################################################################
+import torch
+import torch.utils.data as Data
+import torch.nn.functional as F
+import numpy as np
+from torch.utils.data import RandomSampler
+class Link_Prediction:
+    def __init__(self,entity_dict_len,sample_num,repeat_epoch):
+        self.entity_dict_len=entity_dict_len
+        self.sample_num=sample_num
+        self.repeat_epoch=repeat_epoch
+        self.name="Link_Prediction"
+        self.total_rank_numpy=None
+        self.meanrank=None
+        self.hitatten=None
+
+    def __call__(self,model,metric_dataset):
+        metric_sampler  = RandomSampler(metric_dataset)
+        metric_loader = Data.DataLoader(dataset=metric_dataset,sampler=metric_sampler,batch_size=self.sample_num)
+        self.total_rank=list()
+        for epoch in range(self.repeat_epoch):
+            for step,metric_batch in enumerate(metric_loader):
+                if step==0:
+                    metric_batch=metric_batch.cuda()
+                else:
+                    break
+
+                for i in range(self.sample_num-1):
+                    metric_batch[i+1][2]=torch.tensor(np.random.randint(0,self.entity_dict_len))
+                metric_batch_embedding=model(metric_batch)
+                metric_distance=F.pairwise_distance(metric_batch_embedding[:,0]+metric_batch_embedding[:,1],
+                                                    metric_batch_embedding[:,2],p=2)
+                metric_total_matrix= np.argsort(metric_distance.data.cpu().numpy())
+                rank=np.where(metric_total_matrix==0)[0][0]
+                self.total_rank.append(rank)
+        self.total_rank_numpy=np.array(self.total_rank)
+        self.meanrank=np.mean(self.total_rank_numpy)
+        self.hitatten=np.sum(self.total_rank_numpy<=9)/self.repeat_epoch*100
+        pass

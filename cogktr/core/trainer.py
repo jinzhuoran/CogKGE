@@ -176,10 +176,12 @@ class Kr_Trainer:
                  model,
                  loss,
                  optimizer,
+                 metric,
                  epoch,
                  output_path,
                  save_step=None,
-                 metric_step=None
+                 metric_step=None,
+                 save_final_model=None
                  ):
         self.train_dataset=train_dataset
         self.valid_dataset=valid_dataset
@@ -189,10 +191,12 @@ class Kr_Trainer:
         self.model=model
         self.loss=loss
         self.optimizer=optimizer
+        self.metric=metric
         self.epoch=epoch
         self.output_path=output_path
         self.save_step=save_step
         self.metric_step=metric_step
+        self.save_final_model=save_final_model
 
     def create_negative(self,train_pos):
         train_neg=None
@@ -225,21 +229,27 @@ class Kr_Trainer:
                     self.optimizer.zero_grad()
                     loss.backward()
                     self.optimizer.step()
-                    t.set_description("epoch %d|step %d"%(epoch,step))
-                    t.set_postfix({'train loss: ' : '%.4f'%(loss),
-                                   'train accuracy: ':'%.2f'%(1)})
 
-                #每隔几步保存模型
+                    #每隔几步评价模型
+                    if self.metric_step!=None and epoch%self.metric_step==0 and step==0:
+                        if self.metric.name=="Link_Prediction":
+                            self.metric(self.model,self.train_dataset)
+                            meanrank=self.metric.meanrank
+                            hitatten=self.metric.hitatten
+
+
+                    t.set_description("ep%d|st%d"%(epoch,step))
+                    t.set_postfix({'ls:' : '%.2f'%(loss),
+                                   'mr:':'%.2f'%(meanrank),
+                                   'hat:':'%.1f%%'%(hitatten)})
+
+            #每隔几步保存模型
+            if self.save_final_model==True:
                 if self.save_step!=None and epoch%self.save_step==0:
                     if not os.path.exists(self.output_path):
                         os.makedirs(self.output_path)
                     torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,epoch)))
-
-
-
-                #每隔几步评价模型
-                if self.metric_step!=None and epoch%self.metric_step==0:
-                    pass
+                t.set_description("epoch %d|step %d"%(epoch,step))
 
         t.close()
 
