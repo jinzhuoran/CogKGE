@@ -240,8 +240,8 @@ class Kr_Trainer:
 
                     t.set_description("ep%d|st%d"%(epoch,step))
                     t.set_postfix({'ls:' : '%.2f'%(loss),
-                                   'mr:':'%.2f'%(meanrank),
-                                   'hat:':'%.1f%%'%(hitatten)})
+                                   'mr:':'%.1f'%(meanrank),
+                                   'hat:':'%.0f%%'%(hitatten)})
 
             #每隔几步保存模型
             if self.save_step!=None and epoch%self.save_step==0:
