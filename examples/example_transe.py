@@ -98,15 +98,15 @@ from cogktr import *
 # random.seed(1)               #随机数种子
 # np.random.seed(1)            #随机数种子
 TRAINR_BATCH_SIZE=20000        #训练批量大小
-EMBEDDING_DIM=100            #形成的embedding维数
+EMBEDDING_DIM=5            #形成的embedding维数
 MARGIN=1.0                   #margin大小
 L=2                          #范数类型
-EPOCH=1                     #训练的轮数
+EPOCH=10                     #训练的轮数
 LR=0.001                     #学习率
 WEIGHT_DECAY=0.0001          #正则化系数
+SAVE_STEP=None              #每隔几轮保存一次模型
+METRIC_STEP=None                #每隔几轮验证一次
 # BATCH_SIZE_TEST=100          #测试批量大小
-# SAVE_STEP=None               #每隔几轮保存一次模型
-# METRIC_STEP=2                #每隔几轮验证一次
 # METRIC_TEST_EPOCH=10         #评价重复轮数
 # METRIC_SAMPLE_NUM=100        #评价时采样的个数
 
@@ -139,10 +139,8 @@ test_sampler  = RandomSampler(test_dataset)
 model=TransE(entity_dict_len=lookUpTable.num_entity(),
              relation_dict_len=lookUpTable.num_relation(),
              embedding_dim=EMBEDDING_DIM,
-             margin=MARGIN,
-             L=L,
              negative_sample_method="Random_Negative_Sampling")
-loss =MarginLoss()
+loss =MarginLoss(margin=MARGIN)
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
 # metric=MeanRank_HitAtTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH,entity2idx_len=len(entity2idx))
 
@@ -156,6 +154,8 @@ trainer = Kr_Trainer(
     loss=loss,
     optimizer=optimizer,
     epoch=EPOCH,
-    output_path=output_path
+    output_path=output_path,
+    save_step=SAVE_STEP,
+    metric_step=METRIC_STEP
 )
 trainer.train()

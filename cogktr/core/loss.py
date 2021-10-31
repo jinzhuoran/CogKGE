@@ -45,24 +45,12 @@ import random
 import torch
 import torch.nn.functional as F
 class MarginLoss:
-    def __init__(self):
+    def __init__(self,margin):
+        self.margin=margin
         pass
 
-    def __call__(self,positive_batch,negtive_batch,model):
-        positive_embedding_head=torch.unsqueeze(model.entity_embedding(positive_batch[:,0]), 1)
-        positive_embedding_relation=torch.unsqueeze(model.relation_embedding(positive_batch[:,1]), 1)
-        positive_embedding_tail=torch.unsqueeze(model.entity_embedding(positive_batch[:,2]), 1)
-        negtive_embedding_head=torch.unsqueeze(model.entity_embedding(negtive_batch[:,0]), 1)
-        negtive_embedding_relation=torch.unsqueeze(model.relation_embedding(negtive_batch[:,1]), 1)
-        negtive_embedding_tail=torch.unsqueeze(model.entity_embedding(negtive_batch[:,2]), 1)
-
-        positive_embedding_head= F.normalize(positive_embedding_head, p=model.L, dim=2)
-        positive_embedding_tail= F.normalize(positive_embedding_tail, p=model.L, dim=2)
-        negtive_embedding_head= F.normalize(negtive_embedding_head, p=model.L, dim=2)
-        negtive_embedding_tail= F.normalize(negtive_embedding_tail, p=model.L, dim=2)
-
-        positive_distance=model.distance(positive_embedding_head+positive_embedding_relation,positive_embedding_tail)
-        negtive_distance=model.distance(negtive_embedding_head+negtive_embedding_relation,negtive_embedding_tail)
-
-        output=torch.sum(F.relu(model.margin+positive_distance-negtive_distance))/(positive_batch.shape[0])
+    def __call__(self,positive_batch,negtive_batch):
+        positive_distance=F.pairwise_distance(positive_batch[:,0]+positive_batch[:,1],positive_batch[:,2],p=2)
+        negtive_distance=F.pairwise_distance(negtive_batch[:,0]+negtive_batch[:,1],negtive_batch[:,2],p=2)
+        output=torch.sum(F.relu(self.margin+positive_distance-negtive_distance))/(positive_batch.shape[0])
         return output

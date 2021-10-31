@@ -177,7 +177,9 @@ class Kr_Trainer:
                  loss,
                  optimizer,
                  epoch,
-                 output_path
+                 output_path,
+                 save_step=None,
+                 metric_step=None
                  ):
         self.train_dataset=train_dataset
         self.valid_dataset=valid_dataset
@@ -189,6 +191,8 @@ class Kr_Trainer:
         self.optimizer=optimizer
         self.epoch=epoch
         self.output_path=output_path
+        self.save_step=save_step
+        self.metric_step=metric_step
 
     def create_negative(self,train_pos):
         train_neg=None
@@ -213,22 +217,39 @@ class Kr_Trainer:
                 for step,train_positive in enumerate(t):
                     train_positive=train_positive.cuda()
                     train_negative=self.create_negative(train_positive)
-                    loss=self.loss(train_positive,train_negative,self.model)
+
+                    train_positive_embedding=self.model(train_positive)
+                    train_negative_embedding=self.model(train_negative)
+
+                    loss=self.loss(train_positive_embedding,train_negative_embedding)
                     self.optimizer.zero_grad()
                     loss.backward()
                     self.optimizer.step()
-
-
-
                     t.set_description("epoch %d|step %d"%(epoch,step))
-                    t.set_postfix({'train loss: ' : '%.2f'%(loss),
-                           'test accuracy: ':'%.2f'%(1)})
+                    t.set_postfix({'train loss: ' : '%.4f'%(loss),
+                                   'train accuracy: ':'%.2f'%(1)})
+
+                #每隔几步保存模型
+                if self.save_step!=None and epoch%self.save_step==0:
+                    if not os.path.exists(self.output_path):
+                        os.makedirs(self.output_path)
+                    torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,epoch)))
+
+
+
+                #每隔几步评价模型
+                if self.metric_step!=None and epoch%self.metric_step==0:
+                    pass
+
         t.close()
 
-        if not os.path.exists(self.output_path):
-            os.makedirs(self.output_path)
-            print (self.output_path+' created successfully')
-        torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)))
-        print(os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)),"saved successfully")
+
+        #保存最终模型
+        # if not os.path.exists(self.output_path):
+        #     os.makedirs(self.output_path)
+        #     print (self.output_path+' created successfully')
+        # torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)))
+        # print(os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)),"saved successfully")
+
         pass
 
