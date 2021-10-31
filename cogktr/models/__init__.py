@@ -4,5 +4,6 @@ from .ktr import *
 
 __all__=[
     #kr
-    "TransE"
+    "TransE",
+    "TransH"
 ]
