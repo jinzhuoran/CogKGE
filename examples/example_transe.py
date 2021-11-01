@@ -101,17 +101,17 @@ TRAINR_BATCH_SIZE=20000        #训练批量大小
 EMBEDDING_DIM=5            #形成的embedding维数
 MARGIN=1.0                   #margin大小
 L=2                          #范数类型
-EPOCH=50                     #训练的轮数
+EPOCH=10                     #训练的轮数
 LR=0.001                     #学习率
 WEIGHT_DECAY=0.0001          #正则化系数
 METRIC_SAMPLE_NUM=100          #一轮评价时采样的个数
 METRIC_REPEAT_EPOCH=10        #重复次数
-SAVE_STEP=None              #每隔几轮保存一次模型
+SAVE_STEP=2              #每隔几轮保存一次模型
 METRIC_STEP=1                #每隔几轮验证一次
 # BATCH_SIZE_TEST=100          #测试批量大小
 
 #指定GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = '7'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
 print(torch.cuda.is_available())                 #查看cuda是否能运行
 cuda = torch.device('cuda:0')                    #指定GPU序号
 
@@ -119,7 +119,7 @@ cuda = torch.device('cuda:0')                    #指定GPU序号
 print("Currently working on dir ",os.getcwd())
 
 data_path = '../dataset/kr/FB15k-237/raw_data'
-output_path = os.path.join(*data_path.split("/")[:-1],"experimental_output/"+str(datetime.datetime.now())).replace(':', '-')
+output_path = os.path.join(*data_path.split("/")[:-1],"experimental_output/"+str(datetime.datetime.now())).replace(':', '-').replace(' ', '。')
 print("the output path is {}.".format(output_path))
 
 
@@ -159,6 +159,7 @@ trainer = Kr_Trainer(
     output_path=output_path,
     save_step=SAVE_STEP,
     metric_step=METRIC_STEP,
-    save_final_model=False
+    save_final_model=True,
+    visualization=True
 )
 trainer.train()

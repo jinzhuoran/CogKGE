@@ -166,6 +166,7 @@ from tqdm import tqdm
 import random
 import os
 import numpy as np
+from torch.utils.tensorboard import SummaryWriter
 class Kr_Trainer:
     def __init__(self,
                  train_dataset,
@@ -181,7 +182,8 @@ class Kr_Trainer:
                  output_path,
                  save_step=None,
                  metric_step=None,
-                 save_final_model=None
+                 save_final_model=False,
+                 visualization=False
                  ):
         self.train_dataset=train_dataset
         self.valid_dataset=valid_dataset
@@ -197,6 +199,7 @@ class Kr_Trainer:
         self.save_step=save_step
         self.metric_step=metric_step
         self.save_final_model=save_final_model
+        self.visualization=visualization
 
     def create_negative(self,train_pos):
         train_neg=None
@@ -215,6 +218,13 @@ class Kr_Trainer:
         train_loader = Data.DataLoader(dataset=self.train_dataset,sampler=self.train_sampler,batch_size=self.trainer_batch_size)
         valid_loader = Data.DataLoader(dataset=self.valid_dataset,sampler=self.valid_sampler,batch_size=self.trainer_batch_size)
         self.model=self.model.cuda()
+
+        if self.visualization==True:
+            if not os.path.exists(os.path.join(self.output_path,"visualization",self.model.name)):
+                os.makedirs(os.path.join(self.output_path,"visualization",self.model.name))
+            writer=SummaryWriter(os.path.join(self.output_path,"visualization",self.model.name))
+            print("本次可视化的保存路径为",os.path.join(self.output_path,"visualization",self.model.name).replace('\\', '/'))
+            print("cd到FB15k-237目录后，请输入","tensorboard --logdir=experimental_output","然后把网站地址输入浏览器")
 
         for epoch in range(self.epoch):
             with tqdm(train_loader) as t:
@@ -243,23 +253,29 @@ class Kr_Trainer:
                                    'mr:':'%.1f'%(meanrank),
                                    'hat:':'%.0f%%'%(hitatten)})
 
+            #每轮的可视化
+            if self.visualization==True:
+                if self.metric.name=="Link_Prediction":
+                    writer.add_scalars("1_loss",{"train_loss":loss},epoch)
+                    writer.add_scalars("2_meanrank",{"train_meanrank":meanrank},epoch)
+                    writer.add_scalars("3_hitatten",{"train_hitatten":hitatten},epoch)
+
             #每隔几步保存模型
             if self.save_step!=None and epoch%self.save_step==0:
-                if not os.path.exists(self.output_path):
-                    os.makedirs(self.output_path)
-                torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,epoch)))
-            t.set_description("epoch %d|step %d"%(epoch,step))
+                if not os.path.exists(os.path.join(self.output_path,"checkpoints")):
+                    os.makedirs(os.path.join(self.output_path,"checkpoints"))
+                torch.save(self.model,os.path.join(self.output_path,"checkpoints","%s_Model_%depochs.pkl"%(self.model.name,epoch)))
 
         t.close()
 
 
         #保存最终模型
         if self.save_final_model==True:
-            if not os.path.exists(self.output_path):
-                os.makedirs(self.output_path)
-                print (self.output_path+' created successfully')
-            torch.save(self.model,os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)))
-            print(os.path.join(self.output_path,"%s_Model_%depochs.pkl"%(self.model.name,self.epoch)),"saved successfully")
+            if not os.path.exists(os.path.join(self.output_path,"checkpoints")):
+                os.makedirs(os.path.join(self.output_path,"checkpoints"))
+                print (os.path.join(self.output_path,"checkpoints")+' created successfully')
+            torch.save(self.model,os.path.join(self.output_path,"checkpoints","%s_Model_%depochs.pkl"%(self.model.name,self.epoch)))
+            print(os.path.join(self.output_path,"checkpoints","%s_Model_%depochs.pkl"%(self.model.name,self.epoch)),"saved successfully")
 
         pass
 
