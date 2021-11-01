@@ -98,20 +98,20 @@ from cogktr import *
 # random.seed(1)               #随机数种子
 # np.random.seed(1)            #随机数种子
 TRAINR_BATCH_SIZE=20000        #训练批量大小
-EMBEDDING_DIM=100            #形成的embedding维数
+EMBEDDING_DIM=50           #形成的embedding维数
 MARGIN=1.0                   #margin大小
 L=2                          #范数类型
-EPOCH=1                     #训练的轮数
+EPOCH=50                     #训练的轮数
 LR=0.001                     #学习率
 WEIGHT_DECAY=0.0001          #正则化系数
+METRIC_SAMPLE_NUM=100          #一轮评价时采样的个数
+METRIC_REPEAT_EPOCH=10        #重复次数
+SAVE_STEP=None              #每隔几轮保存一次模型
+METRIC_STEP=1                #每隔几轮验证一次
 # BATCH_SIZE_TEST=100          #测试批量大小
-# SAVE_STEP=None               #每隔几轮保存一次模型
-# METRIC_STEP=2                #每隔几轮验证一次
-# METRIC_TEST_EPOCH=10         #评价重复轮数
-# METRIC_SAMPLE_NUM=100        #评价时采样的个数
 
 #指定GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
+os.environ["CUDA_VISIBLE_DEVICES"] = '2'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
 print(torch.cuda.is_available())                 #查看cuda是否能运行
 cuda = torch.device('cuda:0')                    #指定GPU序号
 
@@ -136,16 +136,20 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler  = RandomSampler(test_dataset)
 
-model=TransE(entity_dict_len=lookUpTable.num_entity(),
+# model=TransH(entity_dict_len=lookUpTable.num_entity(),
+#              relation_dict_len=lookUpTable.num_relation(),
+#              embedding_dim=EMBEDDING_DIM,
+#              negative_sample_method="Random_Negative_Sampling")
+model = TransD(entity_dict_len=lookUpTable.num_entity(),
              relation_dict_len=lookUpTable.num_relation(),
-             embedding_dim=EMBEDDING_DIM,
-             margin=MARGIN,
-             L=L,
+             dim_entity=EMBEDDING_DIM*2,
+             dim_relation=EMBEDDING_DIM,
              negative_sample_method="Random_Negative_Sampling")
-loss =MarginLoss()
+loss =MarginLoss(margin=MARGIN)
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
-# metric=MeanRank_HitAtTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH,entity2idx_len=len(entity2idx))
-
+metric=Link_Prediction(entity_dict_len=lookUpTable.num_entity(),
+                       sample_num=METRIC_SAMPLE_NUM,
+                       repeat_epoch=METRIC_REPEAT_EPOCH)
 trainer = Kr_Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
@@ -155,7 +159,11 @@ trainer = Kr_Trainer(
     model=model,
     loss=loss,
     optimizer=optimizer,
+    metric=metric,
     epoch=EPOCH,
-    output_path=output_path
+    output_path=output_path,
+    save_step=SAVE_STEP,
+    metric_step=METRIC_STEP,
+    save_final_model=False
 )
 trainer.train()

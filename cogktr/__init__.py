@@ -18,5 +18,8 @@ __all__=[
     "Kr_Trainer",
 
     #models
-    "TransE"
+    "TransE",
+    "TransH",
+    "TransR",
+    "TransD"
 ]
