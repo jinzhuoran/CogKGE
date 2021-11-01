@@ -7,4 +7,5 @@ __all__=[
     "TransE",
     "TransH",
     "TransR",
+    "TransD"
 ]

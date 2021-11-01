@@ -3,9 +3,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class TransR(nn.Module):
+class TransD(nn.Module):
     def __init__(self, entity_dict_len, relation_dict_len, dim_entity,dim_relation,negative_sample_method):
-        super(TransR, self).__init__()
+        super(TransD, self).__init__()
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.negative_sample_method = negative_sample_method
@@ -14,16 +14,29 @@ class TransR(nn.Module):
 
         self.entity_embedding = nn.Embedding(entity_dict_len, dim_entity)
         self.relation_embedding = nn.Embedding(relation_dict_len, dim_relation)
-        self.transfer_matrix = nn.Embedding(relation_dict_len,dim_entity * dim_relation)
+        self.entity_transfer = nn.Embedding(entity_dict_len,dim_entity)
+        self.relation_transfer = nn.Embedding(relation_dict_len,dim_relation)
 
         nn.init.xavier_uniform_(self.entity_embedding.weight.data)
         nn.init.xavier_uniform_(self.relation_embedding.weight.data)
+        nn.init.xavier_uniform_(self.entity_transfer.weight.data)
+        nn.init.xavier_uniform_(self.relation_transfer.weight.data)
 
-    def transfer(self,e,r_transfer):
-        r_transfer = r_transfer.view(-1,self.dim_entity,self.dim_relation)
-        e = torch.unsqueeze(e,1)
+    def transfer(self,e,e_transfer,r_transfer):
+        return F.normalize(torch.sum(e * e_transfer,-1,True) * r_transfer + self.resize(e),
+                          p=2,
+                          dim=-1)
 
-        return torch.squeeze(torch.bmm(e,r_transfer))
+
+    def resize(self,e):
+        if self.dim_entity == self.dim_relation:
+            return e
+        if self.dim_entity > self.dim_relation:
+            return torch.narrow(e,-1,0,self.dim_relation)
+        paddings = [0,0,0,self.dim_relation - self.dim_entity]
+        return F.pad(e,paddings=paddings,mode="constant",value=0)
+
+
 
     def forward(self, sample):  # sample:(batch,3)
         batch_h,batch_r,batch_t =  sample[:, 0], sample[:, 1], sample[:, 2]
@@ -31,10 +44,12 @@ class TransR(nn.Module):
         r = self.relation_embedding(batch_r)
         t = self.entity_embedding(batch_t)
 
-        r_transfer = self.transfer_matrix(batch_r)
+        h_transfer = self.entity_transfer(batch_h)
+        r_transfer = self.relation_transfer(batch_r)
+        t_transfer = self.entity_transfer(batch_t)
 
-        h = self.transfer(h,r_transfer)
-        t = self.transfer(t,r_transfer)
+        h = self.transfer(h,h_transfer,r_transfer)
+        t = self.transfer(t,t_transfer,r_transfer)
 
         h = F.normalize(h, p=2.0,dim=-1)
         r = F.normalize(r, p=2.0, dim=-1)

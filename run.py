@@ -140,7 +140,7 @@ test_sampler  = RandomSampler(test_dataset)
 #              relation_dict_len=lookUpTable.num_relation(),
 #              embedding_dim=EMBEDDING_DIM,
 #              negative_sample_method="Random_Negative_Sampling")
-model = TransR(entity_dict_len=lookUpTable.num_entity(),
+model = TransD(entity_dict_len=lookUpTable.num_entity(),
              relation_dict_len=lookUpTable.num_relation(),
              dim_entity=EMBEDDING_DIM*2,
              dim_relation=EMBEDDING_DIM,
