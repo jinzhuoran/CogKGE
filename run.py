@@ -98,7 +98,7 @@ from cogktr import *
 # random.seed(1)               #随机数种子
 # np.random.seed(1)            #随机数种子
 TRAINR_BATCH_SIZE=20000        #训练批量大小
-EMBEDDING_DIM=5            #形成的embedding维数
+EMBEDDING_DIM=50           #形成的embedding维数
 MARGIN=1.0                   #margin大小
 L=2                          #范数类型
 EPOCH=50                     #训练的轮数
@@ -136,9 +136,14 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler  = RandomSampler(test_dataset)
 
-model=TransH(entity_dict_len=lookUpTable.num_entity(),
+# model=TransH(entity_dict_len=lookUpTable.num_entity(),
+#              relation_dict_len=lookUpTable.num_relation(),
+#              embedding_dim=EMBEDDING_DIM,
+#              negative_sample_method="Random_Negative_Sampling")
+model = TransR(entity_dict_len=lookUpTable.num_entity(),
              relation_dict_len=lookUpTable.num_relation(),
-             embedding_dim=EMBEDDING_DIM,
+             dim_entity=EMBEDDING_DIM*2,
+             dim_relation=EMBEDDING_DIM,
              negative_sample_method="Random_Negative_Sampling")
 loss =MarginLoss(margin=MARGIN)
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)

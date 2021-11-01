@@ -19,5 +19,6 @@ __all__=[
 
     #models
     "TransE",
-    "TransH"
+    "TransH",
+    "TransR"
 ]
