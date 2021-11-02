@@ -98,16 +98,15 @@ from cogktr import *
 # random.seed(1)               #随机数种子
 # np.random.seed(1)            #随机数种子
 TRAINR_BATCH_SIZE=20000        #训练批量大小
-EMBEDDING_DIM=5            #形成的embedding维数
+EMBEDDING_DIM=50            #形成的embedding维数
 MARGIN=1.0                   #margin大小
-L=2                          #范数类型
-EPOCH=10                     #训练的轮数
+EPOCH=200                     #训练的轮数
 LR=0.001                     #学习率
 WEIGHT_DECAY=0.0001          #正则化系数
 METRIC_SAMPLE_NUM=100          #一轮评价时采样的个数
 METRIC_REPEAT_EPOCH=10        #重复次数
-SAVE_STEP=2              #每隔几轮保存一次模型
-METRIC_STEP=1                #每隔几轮验证一次
+SAVE_STEP=None              #每隔几轮保存一次模型
+METRIC_STEP=2                #每隔几轮验证一次
 # BATCH_SIZE_TEST=100          #测试批量大小
 
 #指定GPU
@@ -142,9 +141,8 @@ model=TransE(entity_dict_len=lookUpTable.num_entity(),
              negative_sample_method="Random_Negative_Sampling")
 loss =MarginLoss(margin=MARGIN)
 optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
-metric=Link_Prediction(entity_dict_len=lookUpTable.num_entity(),
-                       sample_num=METRIC_SAMPLE_NUM,
-                       repeat_epoch=METRIC_REPEAT_EPOCH)
+metric=Link_Prediction(entity_dict_len=lookUpTable.num_entity())
+
 trainer = Kr_Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
@@ -159,7 +157,7 @@ trainer = Kr_Trainer(
     output_path=output_path,
     save_step=SAVE_STEP,
     metric_step=METRIC_STEP,
-    save_final_model=True,
+    save_final_model=False,
     visualization=True
 )
 trainer.train()
