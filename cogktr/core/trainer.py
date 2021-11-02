@@ -166,7 +166,7 @@ from tqdm import tqdm
 import random
 import os
 import numpy as np
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 class Kr_Trainer:
     def __init__(self,
                  train_dataset,
@@ -226,11 +226,11 @@ class Kr_Trainer:
             print("本次可视化的保存路径为",os.path.join(self.output_path,"visualization",self.model.name).replace('\\', '/'))
             print("cd到FB15k-237目录后，请输入","tensorboard --logdir=experimental_output","然后把网站地址输入浏览器")
 
-        raw_meanrank=0
-        raw_hitatten=0
+        raw_meanrank=-1
+        raw_hitatten=-1
 
         for epoch in range(self.epoch):
-            with tqdm(train_loader) as t:
+            with tqdm(train_loader,ncols=150) as t:
                 for step,train_positive in enumerate(t):
                     train_positive=train_positive.cuda()
                     train_negative=self.create_negative(train_positive)
@@ -239,8 +239,8 @@ class Kr_Trainer:
                     train_loss=self.loss(train_positive_embedding,train_negative_embedding)
 
                     valid_loader = Data.DataLoader(dataset=self.valid_dataset,sampler=self.valid_sampler,batch_size=self.trainer_batch_size)
-                    for step,valid_positive in enumerate(valid_loader):
-                        if step==0:
+                    for step_valid,valid_positive in enumerate(valid_loader):
+                        if step_valid==0:
                             pass
                         else:
                             break
@@ -256,8 +256,8 @@ class Kr_Trainer:
                     self.optimizer.step()
 
                     t.set_description("ep%d|st%d"%(epoch,step))
-                    t.set_postfix({'tr_ls:' : '%.2f'%(train_loss),
-                                   'va_ls:' : '%.2f'%(valid_loss),
+                    t.set_postfix({'train_loss:' : '%.2f'%(train_loss),
+                                   'valid_loss:' : '%.2f'%(valid_loss),
                                    'mr:':'%.1f'%(raw_meanrank),
                                    'hat:':'%.0f%%'%(raw_hitatten)})
 

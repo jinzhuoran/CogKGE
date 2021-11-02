@@ -98,7 +98,7 @@ from cogktr import *
 # random.seed(1)               #随机数种子
 # np.random.seed(1)            #随机数种子
 TRAINR_BATCH_SIZE=20000        #训练批量大小
-EMBEDDING_DIM=50            #形成的embedding维数
+EMBEDDING_DIM=100            #形成的embedding维数
 MARGIN=1.0                   #margin大小
 EPOCH=200                     #训练的轮数
 LR=0.001                     #学习率
@@ -110,7 +110,7 @@ METRIC_STEP=2                #每隔几轮验证一次
 # BATCH_SIZE_TEST=100          #测试批量大小
 
 #指定GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
+os.environ["CUDA_VISIBLE_DEVICES"] = '7'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
 print(torch.cuda.is_available())                 #查看cuda是否能运行
 cuda = torch.device('cuda:0')                    #指定GPU序号
 
@@ -158,6 +158,6 @@ trainer = Kr_Trainer(
     save_step=SAVE_STEP,
     metric_step=METRIC_STEP,
     save_final_model=False,
-    visualization=True
+    visualization=False
 )
 trainer.train()
