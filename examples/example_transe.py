@@ -110,7 +110,7 @@ METRIC_STEP=2                #每隔几轮验证一次
 # BATCH_SIZE_TEST=100          #测试批量大小
 
 #指定GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = '7'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
 print(torch.cuda.is_available())                 #查看cuda是否能运行
 cuda = torch.device('cuda:0')                    #指定GPU序号
 
@@ -158,6 +158,6 @@ trainer = Kr_Trainer(
     save_step=SAVE_STEP,
     metric_step=METRIC_STEP,
     save_final_model=False,
-    visualization=False
+    visualization=True
 )
 trainer.train()

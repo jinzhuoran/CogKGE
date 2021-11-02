@@ -166,7 +166,7 @@ from tqdm import tqdm
 import random
 import os
 import numpy as np
-# from torch.utils.tensorboard import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 class Kr_Trainer:
     def __init__(self,
                  train_dataset,
@@ -271,10 +271,21 @@ class Kr_Trainer:
 
             #每轮的可视化
             if self.visualization==True:
+                writer.add_scalars("1_loss",{"train_loss":train_loss,
+                                             "valid_loss":valid_loss},epoch)
                 if self.metric.name=="Link_Prediction":
-                    writer.add_scalars("1_loss",{"train_loss":train_loss},epoch)
                     writer.add_scalars("2_meanrank",{"valid_raw_meanrank":raw_meanrank},epoch)
                     writer.add_scalars("3_hitatten",{"valid_raw_hitatten":raw_hitatten},epoch)
+                if epoch==0:
+                    fake_data=torch.zeros((len(self.train_dataset),3)).long().cuda()
+                    writer.add_graph(self.model,fake_data)
+                for name, param in self.model.named_parameters():
+                    writer.add_histogram(name + '_grad', param.grad, epoch)
+                    writer.add_histogram(name + '_data', param, epoch)
+                if epoch==0:
+                    embedding_data=torch.rand(10,20)
+                    embedding_label=["篮球","足球","乒乓球","羽毛球","保龄球","游泳","爬山","旅游","赛车","写代码"]
+                    writer.add_embedding(mat=embedding_data,metadata=embedding_label)
 
             #每隔几步保存模型
             if self.save_step!=None and epoch%self.save_step==0:
