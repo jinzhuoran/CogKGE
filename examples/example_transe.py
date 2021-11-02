@@ -10,7 +10,7 @@
 #
 # #导入cogktr模块
 # from cogktr import *
-#
+##
 # #设置超参数
 # random.seed(1)               #随机数种子
 # np.random.seed(1)            #随机数种子
