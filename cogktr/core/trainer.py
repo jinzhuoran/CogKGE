@@ -5,6 +5,7 @@ import random
 import os
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
+from .log import *
 
 
 class Kr_Trainer:
@@ -20,6 +21,7 @@ class Kr_Trainer:
                  metric,
                  epoch,
                  output_path,
+                 device,
                  save_step=None,
                  metric_step=None,
                  save_final_model=False,
@@ -36,6 +38,7 @@ class Kr_Trainer:
         self.metric = metric
         self.epoch = epoch
         self.output_path = output_path
+        self.device=device
         self.save_step = save_step
         self.metric_step = metric_step
         self.save_final_model = save_final_model
@@ -55,14 +58,15 @@ class Kr_Trainer:
     def train(self):
         train_loader = Data.DataLoader(dataset=self.train_dataset, sampler=self.train_sampler,
                                        batch_size=self.trainer_batch_size)
-        self.model = self.model.cuda()
+        self.model = self.model.to(self.device)
 
         if self.visualization == True:
             if not os.path.exists(os.path.join(self.output_path, "visualization", self.model.name)):
                 os.makedirs(os.path.join(self.output_path, "visualization", self.model.name))
             writer = SummaryWriter(os.path.join(self.output_path, "visualization", self.model.name))
-            print("本次可视化的保存路径为", os.path.join(self.output_path, "visualization", self.model.name).replace('\\', '/'))
-            print("cd到FB15k-237目录后，请输入", "tensorboard --logdir=experimental_output", "然后把网站地址输入浏览器")
+            logger.info("The visualization path is"+os.path.join(self.output_path, "visualization", self.model.name).replace('\\', '/'))
+            logger.info("After cd FB15k-237 dir，please enter tensorboard --logdir=experimental_output")
+            logger.info("Enter the website address into the browser")
 
         raw_meanrank = -1
         raw_hitatten = -1
@@ -70,7 +74,7 @@ class Kr_Trainer:
         for epoch in range(self.epoch):
             with tqdm(train_loader, ncols=150) as t:
                 for step, train_positive in enumerate(t):
-                    train_positive = train_positive.cuda()
+                    train_positive = train_positive.to(self.device)
                     train_negative = self.create_negative(train_positive)
                     train_positive_embedding = self.model(train_positive)
                     train_negative_embedding = self.model(train_negative)
@@ -83,7 +87,7 @@ class Kr_Trainer:
                             pass
                         else:
                             break
-                    valid_positive = valid_positive.cuda()
+                    valid_positive = valid_positive.to(self.device)
                     valid_negative = self.create_negative(valid_positive)
                     valid_positive_embedding = self.model(valid_positive)
                     valid_negative_embedding = self.model(valid_negative)
@@ -102,7 +106,7 @@ class Kr_Trainer:
                 # 每隔几步评价模型
                 if self.metric_step != None and epoch % self.metric_step == 0:
                     if self.metric.name == "Link_Prediction":
-                        self.metric(self.model, self.valid_dataset)
+                        self.metric(self.model, self.valid_dataset,self.device)
                         raw_meanrank = self.metric.raw_meanrank
                         raw_hitatten = self.metric.raw_hitatten
 
@@ -114,8 +118,9 @@ class Kr_Trainer:
                     writer.add_scalars("2_meanrank", {"valid_raw_meanrank": raw_meanrank}, epoch)
                     writer.add_scalars("3_hitatten", {"valid_raw_hitatten": raw_hitatten}, epoch)
                 if epoch == 0:
-                    fake_data = torch.zeros((len(self.train_dataset), 3)).long().cuda()
-                    writer.add_graph(self.model, fake_data)
+                    fake_data = torch.zeros((len(self.train_dataset), 3)).long()
+                    writer.add_graph(self.model.cpu(), fake_data)
+                    self.model.to(self.device)
                 for name, param in self.model.named_parameters():
                     writer.add_histogram(name + '_grad', param.grad, epoch)
                     writer.add_histogram(name + '_data', param, epoch)
@@ -137,11 +142,11 @@ class Kr_Trainer:
         if self.save_final_model == True:
             if not os.path.exists(os.path.join(self.output_path, "checkpoints")):
                 os.makedirs(os.path.join(self.output_path, "checkpoints"))
-                print(os.path.join(self.output_path, "checkpoints") + ' created successfully')
+                logger.info(os.path.join(self.output_path, "checkpoints") + ' created successfully')
             torch.save(self.model, os.path.join(self.output_path, "checkpoints",
                                                 "%s_Model_%depochs.pkl" % (self.model.name, self.epoch)))
-            print(
-                os.path.join(self.output_path, "checkpoints", "%s_Model_%depochs.pkl" % (self.model.name, self.epoch)),
+            logger.info(
+                os.path.join(self.output_path, "checkpoints", "%s_Model_%depochs.pkl" % (self.model.name, self.epoch))+
                 "saved successfully")
 
         pass

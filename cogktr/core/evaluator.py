@@ -19,6 +19,5 @@ class Kr_Evaluator:
             self.metric(self.model, self.test_dataset)
             raw_meanrank = self.metric.raw_meanrank
             raw_hitatten = self.metric.raw_hitatten
-            print("raw_meanrank:%.2f" % raw_meanrank, "raw_hitatten:%.2f%%" % raw_hitatten)
-            logger.info(123)
+            logger.info("raw_meanrank:%.2f" % raw_meanrank +"raw_hitatten:%.2f%%" % raw_hitatten)
         pass

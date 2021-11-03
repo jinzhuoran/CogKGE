@@ -13,7 +13,7 @@ class Link_Prediction:
         self.raw_meanrank = None
         self.raw_hitatten = None
 
-    def __call__(self, model, metric_dataset):
+    def __call__(self, model, metric_dataset,device):
         metric_loader = Data.DataLoader(dataset=metric_dataset, batch_size=1, shuffle=False)
         self.total_rank = list()
         for step, metric_single in enumerate(metric_loader):
@@ -22,7 +22,7 @@ class Link_Prediction:
             metric_single = metric_single[:, :2]
             new_tail = torch.unsqueeze(torch.arange(0, self.entity_dict_len), dim=1)
             metric_single = torch.hstack((metric_single, new_tail))
-            metric_single = metric_single.cuda()
+            metric_single = metric_single.to(device)
             metric_embedding = model(metric_single)
             metric_distance = F.pairwise_distance(metric_embedding[:, 0] + metric_embedding[:, 1],
                                                   metric_embedding[:, 2], p=2)
