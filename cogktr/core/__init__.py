@@ -1,22 +1,22 @@
 from .evaluator import *
-# from .log import *
+from .log import *
 from .loss import *
 from .metric import *
 from .trainer import *
-#
-__all__=[
-#     #evaluate
+
+__all__ = [
+    # evaluate
     "Kr_Evaluator",
-#
-#     #log
-#     "logger",
-#
-    #loss
+
+    # log
+    "logger",
+
+    # loss
     "MarginLoss",
-#
-    #metric
+
+    # metric
     "Link_Prediction",
-#
-    #trainer
+
+    # trainer
     "Kr_Trainer"
 ]
