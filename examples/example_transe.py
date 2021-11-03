@@ -13,7 +13,7 @@ random.seed(1)                     # 随机数种子
 np.random.seed(1)                  # 随机数种子
 torch.manual_seed(1)               # 随机数种子
 torch.cuda.manual_seed_all(1)      # 随机数种子
-EPOCH = 10                         # 训练的轮数
+EPOCH = 200                         # 训练的轮数
 LR = 0.001                         # 学习率
 WEIGHT_DECAY = 0.0001              # 正则化系数
 TRAINR_BATCH_SIZE = 20000          # 训练批量大小
@@ -23,7 +23,7 @@ SAVE_STEP = None                   # 每隔几轮保存一次模型
 METRIC_STEP = 2                    # 每隔几轮验证一次
 
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+os.environ["CUDA_VISIBLE_DEVICES"] = '7'
 device = torch.device('cuda:0' if torch.cuda.is_available()==True else "cpu")
 logger.info("Currently working on device {}".format(device))
 
