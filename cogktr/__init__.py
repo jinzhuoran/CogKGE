@@ -11,7 +11,7 @@ __all__=[
     "FB15K237Processor",
 
     # #core
-    # "Evaluator",
+    "Kr_Evaluator",
     # "logger",
     "MarginLoss",
     "Link_Prediction",

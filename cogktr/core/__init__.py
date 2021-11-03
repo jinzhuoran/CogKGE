@@ -1,4 +1,4 @@
-# from .evaluator import *
+from .evaluator import *
 # from .log import *
 from .loss import *
 from .metric import *
@@ -6,7 +6,7 @@ from .trainer import *
 #
 __all__=[
 #     #evaluate
-#     "Evaluator",
+    "Kr_Evaluator",
 #
 #     #log
 #     "logger",
