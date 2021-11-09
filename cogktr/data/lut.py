@@ -185,6 +185,7 @@ class LookUpTable:
     def __init__(self):
         self.columns=list()
         self.datas=dict()
+        self.str_dic=None
 
     def create_table(self,create_dic,str_dic=None,item_list=None):
         self.create_dic = create_dic
@@ -217,8 +218,11 @@ class LookUpTable:
         key_list=list(mydict.keys())
         for i in key_list:
             mydict[self.str_dic[i]]=mydict.pop(i)
-        for i in range(len(mydict.keys())):
-            mylist.append(mydict[i])
+        for i in range(len(self.str_dic)):
+            try:
+                mylist.append(mydict[i])
+            except Exception as e:
+                mylist.append(None)
         return mylist
 
     def _add_data(self, head_name, data):
@@ -318,16 +322,26 @@ if __name__=="__main__":
     print("realtion_aliases:\n",relation_aliases)
     print("relation_type:\n",relation_type)
 
+    #建立空表
     lookuptable_E=LookUpTable()
+    #表的初始化
     lookuptable_E.create_table(create_dic=True,item_list=entity_name_list)
+    #增加列
     lookuptable_E("aliases",entity_aliases)
     lookuptable_E("type", entity_type)
     lookuptable_E("text", entity_text)
+    #打印整个表
     lookuptable_E.print_table()
+    #表长
     print(len(lookuptable_E))
+    #访问行
     print(lookuptable_E[3])
+    #访问列
     print(lookuptable_E["aliases"])
+    #同时访问行列
     print(lookuptable_E["text"][4])
+    #名字转索引
+    print(lookuptable_E.str_dic["E_2"])
 
     #以下是LookUpTable规划的完整形式
     #     ########################################################################################################
