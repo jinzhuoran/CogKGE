@@ -24,9 +24,12 @@ class Datable:
     def _add_data(self, head_name, data):
         if head_name not in self.columns:
             self.columns.append(head_name)
-            self.datas[head_name] = data
+            self.datas[head_name]=list()#
+            # self.datas[head_name] = data
+            self.datas[head_name]= self.datas[head_name]+data
         if head_name in self.columns:
-            self.datas[head_name] = data
+            self.datas[head_name]= self.datas[head_name]+data
+            # self.datas[head_name] = data
 
     def _add_datas(self, head_name, data):
         count = 0
@@ -91,6 +94,7 @@ class Datable:
         max_length = self._get_max_length()
         if "index" not in self.columns:
             self.columns.insert(0, "index")
+            self.datas["index"]=list()
             self._add_data("index", list(range(max_length)))
         else:
             self._add_data("index", list(range(len(self.datas["index"]), max_length)))
@@ -133,3 +137,4 @@ if __name__ == "__main__":
     # print(datable.search("aaaa","head","tail"))                             # 错误跨类查询方式一
     # print_table
     datable.print_table()                                                     # 标准打印datable方式
+    datable.print_table()
