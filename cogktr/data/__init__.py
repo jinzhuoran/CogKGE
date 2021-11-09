@@ -10,7 +10,7 @@ __all__=[
     #processor
     "FB15K237Processor",
 
-    "Feeder",
+    "Cog_Dataset",
 
-    "LUT"
+    "LookUpTable"
 ]

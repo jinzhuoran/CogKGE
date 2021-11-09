@@ -262,10 +262,13 @@ class LookUpTable:
         else:
             raise ValueError("There is no corresponding column name %s!" % (index))
 
-    def print_table(self):
+    def print_table(self,num=None):
         self._update_index_column()
         table = pt.PrettyTable(self.columns)
-        max_length = self._get_max_length()
+        if num==None:
+            max_length = self._get_max_length()
+        else:
+            max_length=num
         for i in range(max_length):
             table.add_row(self._get_row(i))
         print(table)
@@ -276,7 +279,7 @@ class LookUpTable:
             self.columns.insert(0, "index")
             self._add_data("index", list(range(max_length)))
         else:
-            self._add_data("index", list(range(len(self.datas["index"]), max_length)))
+            self._add_data("index", list(range(max_length)))
 
     def _get_max_length(self):
         max = 0
@@ -332,6 +335,7 @@ if __name__=="__main__":
     lookuptable_E("text", entity_text)
     #打印整个表
     lookuptable_E.print_table()
+    lookuptable_E.print_table(2)
     #表长
     print(len(lookuptable_E))
     #访问行

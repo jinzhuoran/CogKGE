@@ -37,9 +37,16 @@ logger.info("The output path is {}.".format(output_path))
 
 loader = FB15K237Loader(data_path)
 train_data, valid_data, test_data = loader.load_all_data()
-lookUpTable = loader.createLUT()
+lookuptable_E, lookuptable_R      = loader.load_all_lut()
+train_data.print_table(5)
+valid_data.print_table(5)
+test_data.print_table(5)
+lookuptable_E.print_table(5)
+lookuptable_R.print_table(5)
+print("data_length:\n",len(train_data),len(valid_data),len(test_data))
+print("table_length:\n",len(lookuptable_E),len(lookuptable_R))
 
-processor = FB15K237Processor(lookUpTable)
+processor = FB15K237Processor(lookuptable_E,lookuptable_R)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
@@ -48,13 +55,13 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE(entity_dict_len=lookUpTable.num_entity(),
-               relation_dict_len=lookUpTable.num_relation(),
+model = TransE(entity_dict_len=len(lookuptable_E),
+               relation_dict_len=len(lookuptable_R),
                embedding_dim=EMBEDDING_DIM,
                negative_sample_method="Random_Negative_Sampling")
 loss = MarginLoss(margin=MARGIN)
 optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
-metric = Link_Prediction(entity_dict_len=lookUpTable.num_entity())
+metric = Link_Prediction(entity_dict_len=len(lookuptable_E))
 
 trainer = Kr_Trainer(
     train_dataset=train_dataset,
@@ -75,10 +82,10 @@ trainer = Kr_Trainer(
     visualization=False
 )
 trainer.train()
-
-evaluator = Kr_Evaluator(
-    test_dataset=test_dataset,
-    metric=metric,
-    model_path="..\dataset\kr\FB15k-237\experimental_output/2021-11-03--16-39-49.138287\checkpoints\TransE_Model_10epochs.pkl"
-)
+#
+# evaluator = Kr_Evaluator(
+#     test_dataset=test_dataset,
+#     metric=metric,
+#     model_path="..\dataset\kr\FB15k-237\experimental_output/2021-11-03--16-39-49.138287\checkpoints\TransE_Model_10epochs.pkl"
+# )
 # evaluator.evaluate()
