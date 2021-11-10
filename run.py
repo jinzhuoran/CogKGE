@@ -1,156 +1,74 @@
-# #导入基本模块
-# import torch
-# import numpy as np
-# import random
-# import torch.utils.data as Data
-# import torch.nn as nn
-# import torch.nn.functional as F
-# import matplotlib.pyplot as plt
-# import os
-#
-# #导入cogktr模块
-# from cogktr import *
-#
-# #设置超参数
-# random.seed(1)               #随机数种子
-# np.random.seed(1)            #随机数种子
-# EMBEDDING_DIM=100            #形成的embedding维数
-# MARGIN=1.0                   #margin大小
-# L=2                          #范数类型
-# LR=0.001                     #学习率
-# EPOCH=10                     #训练的轮数
-# BATCH_SIZE_TRAIN=2048        #训练批量大小
-# BATCH_SIZE_TEST=100          #测试批量大小
-# WEIGHT_DECAY=0.0001          #正则化系数
-# SAVE_STEP=10                 #每隔几轮保存一次模型
-# METRIC_STEP=1                #每隔几轮验证一次
-# METRIC_TEST_EPOCH=9          #评价重复轮数
-# METRIC_SAMPLE_NUM=10         #评价时采样的个数
-#
-# #指定GPU
-# os.environ["CUDA_VISIBLE_DEVICES"] = '7'
-# print(torch.cuda.is_available())
-# cuda = torch.device('cuda:0')
-#
-# #加载原始数据集
-# loader = FB15K237Loader("../dataset/FB15k-237")
-# train_data,valid_data,test_data=loader.load_all_data()
-# entity2idx,relation2idx=loader.load_all_dict()
-#
-# #数据处理
-# processor=FB15K237Processor("../dataset/FB15k-237")
-# train_datable=processor.process(train_data)
-# valid_datable=processor.process(valid_data)
-# test_datable=processor.process(test_data)
-#
-# #DataTableSet()暂时用如下替代
-# train_dataset=Data.DataLoader(dataset=train_datable,batch_size=BATCH_SIZE_TRAIN,shuffle=True)
-# valid_dataset=Data.DataLoader(dataset=valid_datable,batch_size=BATCH_SIZE_TRAIN,shuffle=True)
-# test_dataset=Data.DataLoader(dataset=test_datable,batch_size=BATCH_SIZE_TEST,shuffle=True)
-#
-# #RandomSampler()还未写
-#
-# model=TransE(entity_dict_len=len(entity2idx),relation_dict_len=len(relation2idx),embedding_dim=EMBEDDING_DIM,margin=MARGIN,L=L)
-# metric=MeanRank_HitAtTen(sample_num=METRIC_SAMPLE_NUM,test_epoch=METRIC_TEST_EPOCH,entity2idx_len=len(entity2idx))
-# loss =MarginLoss(entity_dict_len=len(entity2idx))
-# optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
-#
-# #训练部分
-# trainer = Trainer(
-#     train_dataset=train_dataset,
-#     valid_dataset=valid_dataset,
-#     model=model,
-#     metric=metric,
-#     loss=loss,
-#     optimizer=optimizer,
-#     epoch=EPOCH,
-#     save_step=SAVE_STEP,
-#     metric_step=METRIC_STEP
-# )
-# trainer.train()
-# trainer.show()
-#
-# #测试部分
-# evaluator=Evaluator(
-#     test_dataset=test_dataset,
-#     model_path="TransE_Model_10epochs.pkl",
-#     metric=metric
-# )
-# evaluator.evaluate()
-
-########################################################################################################################
-#导入基本模块
-import torch
-# import numpy as np
-# import random
-# import torch.utils.data as Data
-# import torch.nn as nn
-# import torch.nn.functional as F
-# import matplotlib.pyplot as plt
-import datetime
+# 基本模块
 import os
+import torch
+import random
+import datetime
+import numpy as np
 from torch.utils.data import RandomSampler
-
-#导入cogktr模块
+# cogktr模块
 from cogktr import *
+from cogktr.core.log import save_logger
 
-#设置超参数#
-# random.seed(1)               #随机数种子
-# np.random.seed(1)            #随机数种子
-TRAINR_BATCH_SIZE=20000        #训练批量大小
-EMBEDDING_DIM=50           #形成的embedding维数
-MARGIN=1.0                   #margin大小
-L=2                          #范数类型
-EPOCH=50                     #训练的轮数
-LR=0.001                     #学习率
-WEIGHT_DECAY=0.0001          #正则化系数
-METRIC_SAMPLE_NUM=100          #一轮评价时采样的个数
-METRIC_REPEAT_EPOCH=10        #重复次数
-SAVE_STEP=None              #每隔几轮保存一次模型
-METRIC_STEP=1                #每隔几轮验证一次
-# BATCH_SIZE_TEST=100          #测试批量大小
+# 超参数
+random.seed(1)                     # 随机数种子
+np.random.seed(1)                  # 随机数种子
+torch.manual_seed(1)               # 随机数种子
+torch.cuda.manual_seed_all(1)      # 随机数种子
+EPOCH = 200                        # 训练的轮数
+LR = 0.001                         # 学习率
+WEIGHT_DECAY = 0.0001              # 正则化系数
+TRAINR_BATCH_SIZE = 20000          # 训练批量大小
+EMBEDDING_DIM = 100                # 形成的embedding维数
+MARGIN = 1.0                       # margin大小
+SAVE_STEP = None                   # 每隔几轮保存一次模型
+METRIC_STEP = 5                    # 每隔几轮验证一次
 
-#指定GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = '2'     #指定可用的GPU序号，将这个序列重新编号，编为0，1，2，3，后面调用的都是编号
-print(torch.cuda.is_available())                 #查看cuda是否能运行
-cuda = torch.device('cuda:0')                    #指定GPU序号
+logger = save_logger("./dataset/cogktr.log")
+os.environ["CUDA_VISIBLE_DEVICES"] = '3'
+device = torch.device('cuda:0' if torch.cuda.is_available()==True else "cpu")
+# logger.info("Currently working on device {}".format(device))
 
 # Construct the corresponding dataset
-print("Currently working on dir ",os.getcwd())
+# logger.info("Currently working on dir {}".format(os.getcwd()))
 
 data_path = './dataset/kr/FB15k-237/raw_data'
-output_path = os.path.join(*data_path.split("/")[:-1],"experimental_output/"+str(datetime.datetime.now())).replace(':', '-')
-print("the output path is {}.".format(output_path))
-
+output_path = os.path.join(*data_path.split("/")[:-1], "experimental_output/" + str(datetime.datetime.now())).replace(
+    ':', '-').replace(' ', '--')
+# logger.info("The output path is {}.".format(output_path))
 
 loader = FB15K237Loader(data_path)
-train_data,valid_data,test_data = loader.load_all_data()
-lookUpTable = loader.createLUT()
+train_data, valid_data, test_data = loader.load_all_data()
+lookuptable_E, lookuptable_R      = loader.load_all_lut()
+train_data.print_table(5)
+valid_data.print_table(5)
+test_data.print_table(5)
+lookuptable_E.print_table(5)
+lookuptable_R.print_table(5)
+print("data_length:\n",len(train_data),len(valid_data),len(test_data))
+print("table_length:\n",len(lookuptable_E),len(lookuptable_R))
 
-processor = FB15K237Processor(lookUpTable)
+processor = FB15K237Processor(lookuptable_E,lookuptable_R)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
 
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
-test_sampler  = RandomSampler(test_dataset)
+test_sampler = RandomSampler(test_dataset)
 
-# model=TransH(entity_dict_len=lookUpTable.num_entity(),
-#              relation_dict_len=lookUpTable.num_relation(),
-#              embedding_dim=EMBEDDING_DIM,
-#              negative_sample_method="Random_Negative_Sampling")
-model = TransD(entity_dict_len=lookUpTable.num_entity(),
-             relation_dict_len=lookUpTable.num_relation(),
-             dim_entity=EMBEDDING_DIM*2,
-             dim_relation=EMBEDDING_DIM,
-             negative_sample_method="Random_Negative_Sampling")
-loss =MarginLoss(margin=MARGIN)
-optimizer = torch.optim.Adam(model.parameters(), lr=LR,weight_decay=WEIGHT_DECAY)
-metric=Link_Prediction(entity_dict_len=lookUpTable.num_entity(),
-                       sample_num=METRIC_SAMPLE_NUM,
-                       repeat_epoch=METRIC_REPEAT_EPOCH)
+model = TransE(entity_dict_len=len(lookuptable_E),
+               relation_dict_len=len(lookuptable_R),
+               embedding_dim=EMBEDDING_DIM,
+               negative_sample_method="Random_Negative_Sampling")
+# loss = MarginLoss(margin=MARGIN)
+loss = RotatELoss(MARGIN)
+
+optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
+# metric = Link_Prediction(entity_dict_len=len(lookuptable_E))
+metric = LinkRotatePrediction(entity_dict_len=len(lookuptable_E))
+
 trainer = Kr_Trainer(
+    logger=logger,
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -162,8 +80,17 @@ trainer = Kr_Trainer(
     metric=metric,
     epoch=EPOCH,
     output_path=output_path,
+    device=device,
     save_step=SAVE_STEP,
     metric_step=METRIC_STEP,
-    save_final_model=False
+    save_final_model=False,
+    visualization=False,
 )
 trainer.train()
+#
+# evaluator = Kr_Evaluator(
+#     test_dataset=test_dataset,
+#     metric=metric,
+#     model_path="..\dataset\kr\FB15k-237\experimental_output/2021-11-03--16-39-49.138287\checkpoints\TransE_Model_10epochs.pkl"
+# )
+# evaluator.evaluate()

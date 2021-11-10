@@ -22,6 +22,7 @@ MARGIN = 1.0                       # margin大小
 SAVE_STEP = None                   # 每隔几轮保存一次模型
 METRIC_STEP = 2                    # 每隔几轮验证一次
 
+logger = save_logger()
 
 os.environ["CUDA_VISIBLE_DEVICES"] = '7'
 device = torch.device('cuda:0' if torch.cuda.is_available()==True else "cpu")

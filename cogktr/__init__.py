@@ -8,9 +8,12 @@ from .utils import *
 __all__ = [
     # core
     "Kr_Evaluator",
-    "logger",
+    # "logger",
+    "save_logger",
     "MarginLoss",
+    "RotatELoss",
     "Link_Prediction",
+    "LinkRotatePrediction",
     "Kr_Trainer",
 
     # data

@@ -9,13 +9,16 @@ __all__ = [
     "Kr_Evaluator",
 
     # log
-    "logger",
+    # "logger",
+    "save_logger",
 
     # loss
     "MarginLoss",
+    "RotatELoss",
 
     # metric
     "Link_Prediction",
+    "LinkRotatePrediction",
 
     # trainer
     "Kr_Trainer"
