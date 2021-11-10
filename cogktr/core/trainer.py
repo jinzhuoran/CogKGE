@@ -89,7 +89,7 @@ class Kr_Trainer:
                 epoch_loss = epoch_loss + train_loss.item()
                 self.optimizer.step()
 
-            print("Epoch{}/{}   Train Loss:".format(epoch+1,self.epoch),epoch_loss/self.epoch)
+            print("Epoch{}/{}   Train Loss:".format(epoch+1,self.epoch),epoch_loss/(step+1))
             # 每隔几步评价模型
             if self.metric_step != None and (epoch+1) % self.metric_step == 0:
                 if self.metric.name == "Link_Prediction":
