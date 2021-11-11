@@ -12,6 +12,7 @@ __all__ = [
     "save_logger",
     "MarginLoss",
     "RotatELoss",
+    "TransALoss",
     "Link_Prediction",
     "LinkRotatePrediction",
     "Kr_Trainer",

@@ -1,5 +1,6 @@
 from numpy import positive
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 
 
@@ -35,4 +36,35 @@ class RotatELoss:
         # print(positive_batch[:,0])
         # print(output.item())
         return output
+
+# Stil working on this TransALoss...
+class TransALoss(nn.Module):
+    def __init__(self,margin,relation_dict_len,embedding_dim):
+        super(TransALoss,self).__init__()
+        self.margin = margin
+        self.relation_dict_len = relation_dict_len
+        self.embedding_dim = embedding_dim
+        self.relation_embedding = nn.Embedding(self.relation_dict_len,embedding_dim * embedding_dim)
+
+    def get_score(self,h,r,t,Wr):
+        """
+        h,r,t:(batch,embedding_size)
+        Wr:(batch,embedding_size,embedding_size)
+        """
+        tmp_first = torch.unsqueeze(torch.abs(h+r-t),dim=1) # (batch,1,embedding_size)
+        tmp_last = torch.unsqueeze(torch.abs(h+r-t),dim=-1) # (batch,embedding_size,1)
+        return torch.squeeze(torch.bmm(torch.bmm(tmp_first,Wr),tmp_last))  # (batch,1,1) -> (batch,)
+        
+
+    def forward(self,positive_batch,negative_batch):
+        h,r,t = positive_batch[:,0],positive_batch[:,1],positive_batch[:,2] # (batch,embedding_size)
+        h_,r_,t_ = negative_batch[:,0],negative_batch[:,1],negative_batch[:,2]
+        Wr = self.relation_embedding(r).view(-1,self.embedding_size,self.embedding_size)
+        positive_distance = self.get_score(h,r,t,Wr)
+        negative_distance = self.get_score(h_,r_,t_,Wr)
+        output = torch.mean(F.relu(self.margin + positive_distance - negative_distance))
+        return output
+
+
+        
 

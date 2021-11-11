@@ -15,6 +15,7 @@ __all__ = [
     # loss
     "MarginLoss",
     "RotatELoss",
+    "TransALoss",
 
     # metric
     "Link_Prediction",

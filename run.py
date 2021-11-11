@@ -61,7 +61,8 @@ model = TransE(entity_dict_len=len(lookuptable_E),
                embedding_dim=EMBEDDING_DIM,
                negative_sample_method="Random_Negative_Sampling")
 # loss = MarginLoss(margin=MARGIN)
-loss = RotatELoss(MARGIN)
+# loss = RotatELoss(MARGIN)
+loss =TransALoss(margin=MARGIN,relation_dict_len=len(lookuptable_R),embedding_dim=EMBEDDING_DIM)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 # metric = Link_Prediction(entity_dict_len=len(lookuptable_E))
