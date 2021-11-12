@@ -24,9 +24,10 @@ class Link_Prediction:
             # metric_single = torch.hstack((metric_single, new_tail))
             metric_single = torch.cat([metric_single,new_tail],dim=1)
             metric_single = metric_single.to(device)
-            metric_embedding = model(metric_single)
-            metric_distance = F.pairwise_distance(metric_embedding[:, 0] + metric_embedding[:, 1],
-                                                  metric_embedding[:, 2], p=2)
+            # metric_embedding = model(metric_single)
+            # metric_distance = F.pairwise_distance(metric_embedding[:, 0] + metric_embedding[:, 1],
+            #                                       metric_embedding[:, 2], p=2)
+            metric_distance = model.get_score(metric_single)
             metric_total_matrix = np.argsort(metric_distance.data.cpu().numpy())
             rank = np.where(metric_total_matrix == x)[0][0]
             self.total_rank.append(rank)
@@ -35,6 +36,7 @@ class Link_Prediction:
         self.raw_hitatten = np.sum(self.total_rank_numpy <= 9) / len(metric_dataset) * 100
         pass
 
+# need to be modified!
 class LinkRotatePrediction:
     def __init__(self, entity_dict_len):
         self.entity_dict_len = entity_dict_len

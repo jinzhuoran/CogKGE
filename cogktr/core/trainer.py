@@ -80,9 +80,11 @@ class Kr_Trainer:
             for step, train_positive in enumerate(tqdm(train_loader)):
                 train_positive = train_positive.to(self.device)
                 train_negative = self.create_negative(train_positive)
-                train_positive_embedding = self.model(train_positive)
-                train_negative_embedding = self.model(train_negative)
-                train_loss = self.loss(train_positive_embedding, train_negative_embedding)
+                # train_positive_embedding = self.model(train_positive)
+                # train_negative_embedding = self.model(train_negative)
+                train_positive_score = self.model.get_score(train_positive)
+                train_negative_score = self.model.get_score(train_negative)
+                train_loss = self.loss(train_positive_score, train_negative_score)
                 
                 self.optimizer.zero_grad()
                 train_loss.backward()
