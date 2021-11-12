@@ -2,6 +2,8 @@ from .transe import *
 from .transh import *
 from .transr import *
 from .transd import *
+from .transa import *
+from .rotate import *
 
 __all__=[
     #transe
@@ -11,5 +13,9 @@ __all__=[
 
     "TransR",
 
-    "TransD"
+    "TransD",
+
+    "TransA",
+
+    "RotatE"
 ]

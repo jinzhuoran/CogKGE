@@ -6,6 +6,7 @@ import torch.nn.functional as F
 class TransR(nn.Module):
     def __init__(self, entity_dict_len, relation_dict_len, dim_entity,dim_relation,negative_sample_method):
         super(TransR, self).__init__()
+        self.name = "TransR"
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.negative_sample_method = negative_sample_method
@@ -24,6 +25,14 @@ class TransR(nn.Module):
         e = torch.unsqueeze(e,1)
 
         return torch.squeeze(torch.bmm(e,r_transfer))
+
+    def get_score(self,sample):
+        output = self.forward(sample)
+        score = F.pairwise_distance(output[:, 0] + output[:, 1], output[:, 2], p=2)
+        return score  # (batch,) 
+
+    def get_embedding(self,sample):
+        return self.forward(sample)
 
     def forward(self, sample):  # sample:(batch,3)
         batch_h,batch_r,batch_t =  sample[:, 0], sample[:, 1], sample[:, 2]

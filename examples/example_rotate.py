@@ -1,3 +1,10 @@
+import sys
+from pathlib import Path
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[0].parents[0]  # CogKTR root directory
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add CogKTR root directory to PATH
+
 # 基本模块
 import os
 import torch
@@ -7,34 +14,34 @@ import numpy as np
 from torch.utils.data import RandomSampler
 # cogktr模块
 from cogktr import *
-from cogktr.core.log import save_logger
 
 # 超参数
 random.seed(1)                     # 随机数种子
 np.random.seed(1)                  # 随机数种子
 torch.manual_seed(1)               # 随机数种子
 torch.cuda.manual_seed_all(1)      # 随机数种子
-EPOCH = 200                        # 训练的轮数
+EPOCH = 200                         # 训练的轮数
 LR = 0.001                         # 学习率
 WEIGHT_DECAY = 0.0001              # 正则化系数
 TRAINR_BATCH_SIZE = 20000          # 训练批量大小
 EMBEDDING_DIM = 100                # 形成的embedding维数
 MARGIN = 1.0                       # margin大小
 SAVE_STEP = None                   # 每隔几轮保存一次模型
-METRIC_STEP = 1                    # 每隔几轮验证一次
+METRIC_STEP = 2                    # 每隔几轮验证一次
 
-logger = save_logger("./dataset/cogktr.log")
-os.environ["CUDA_VISIBLE_DEVICES"] = '3'
+logger = save_logger()
+
+os.environ["CUDA_VISIBLE_DEVICES"] = '7'
 device = torch.device('cuda:0' if torch.cuda.is_available()==True else "cpu")
-# logger.info("Currently working on device {}".format(device))
+logger.info("Currently working on device {}".format(device))
 
 # Construct the corresponding dataset
-# logger.info("Currently working on dir {}".format(os.getcwd()))
+logger.info("Currently working on dir {}".format(os.getcwd()))
 
-data_path = './dataset/kr/FB15k-237/raw_data'
+data_path = '../dataset/kr/FB15k-237/raw_data'
 output_path = os.path.join(*data_path.split("/")[:-1], "experimental_output/" + str(datetime.datetime.now())).replace(
     ':', '-').replace(' ', '--')
-# logger.info("The output path is {}.".format(output_path))
+logger.info("The output path is {}.".format(output_path))
 
 loader = FB15K237Loader(data_path)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -56,18 +63,13 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransH(entity_dict_len=len(lookuptable_E),
+model = RotatE(entity_dict_len=len(lookuptable_E),
                relation_dict_len=len(lookuptable_R),
                embedding_dim=EMBEDDING_DIM,
                negative_sample_method="Random_Negative_Sampling")
-
 loss = MarginLoss(margin=MARGIN)
-# loss = RotatELoss(MARGIN)
-# loss =TransALoss(margin=MARGIN,relation_dict_len=len(lookuptable_R),embedding_dim=EMBEDDING_DIM)
-
 optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 metric = Link_Prediction(entity_dict_len=len(lookuptable_E))
-# metric = LinkRotatePrediction(entity_dict_len=len(lookuptable_E))
 
 trainer = Kr_Trainer(
     logger=logger,
@@ -86,7 +88,7 @@ trainer = Kr_Trainer(
     save_step=SAVE_STEP,
     metric_step=METRIC_STEP,
     save_final_model=False,
-    visualization=False,
+    visualization=False
 )
 trainer.train()
 #
