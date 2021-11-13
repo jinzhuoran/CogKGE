@@ -1,3 +1,11 @@
+import sys
+from pathlib import Path
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[0].parents[0]  # CogKTR root directory
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add CogKTR root directory to PATH
+# print(sys.path)
+
 # 基本模块
 import os
 import torch
@@ -5,6 +13,7 @@ import random
 import datetime
 import numpy as np
 from torch.utils.data import RandomSampler
+import argparse
 # cogktr模块
 from cogktr import *
 
@@ -16,15 +25,28 @@ torch.cuda.manual_seed_all(1)      # 随机数种子
 EPOCH = 200                         # 训练的轮数
 LR = 0.001                         # 学习率
 WEIGHT_DECAY = 0.0001              # 正则化系数
-TRAINR_BATCH_SIZE = 20000          # 训练批量大小
+TRAINR_BATCH_SIZE = 2048 * 8             # 训练批量大小
 EMBEDDING_DIM = 100                # 形成的embedding维数
 MARGIN = 1.0                       # margin大小
 SAVE_STEP = None                   # 每隔几轮保存一次模型
 METRIC_STEP = 2                    # 每隔几轮验证一次
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+# parser.add_argument('--local_rank', type=int, default=-1, help='DDP parameter, do not modify')
+args = parser.parse_args()
+device = str(args.device).strip().lower().replace('cuda:', '')
+cpu = device == 'cpu'
+if cpu:
+    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # force torch.cuda.is_available() = False
+elif device:  # non-cpu device requested
+    os.environ['CUDA_VISIBLE_DEVICES'] = device  # set environment variable
+    assert torch.cuda.is_available(), f'CUDA unavailable, invalid device {device} requested'  # check availability
+
+
 logger = save_logger()
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '7'
+# os.environ["CUDA_VISIBLE_DEVICES"] = '0,1,2,3'
 device = torch.device('cuda:0' if torch.cuda.is_available()==True else "cpu")
 logger.info("Currently working on device {}".format(device))
 
@@ -39,13 +61,13 @@ logger.info("The output path is {}.".format(output_path))
 loader = FB15K237Loader(data_path)
 train_data, valid_data, test_data = loader.load_all_data()
 lookuptable_E, lookuptable_R      = loader.load_all_lut()
-train_data.print_table(5)
-valid_data.print_table(5)
-test_data.print_table(5)
-lookuptable_E.print_table(5)
-lookuptable_R.print_table(5)
-print("data_length:\n",len(train_data),len(valid_data),len(test_data))
-print("table_length:\n",len(lookuptable_E),len(lookuptable_R))
+# train_data.print_table(5)
+# valid_data.print_table(5)
+# test_data.print_table(5)
+# lookuptable_E.print_table(5)
+# lookuptable_R.print_table(5)
+# print("data_length:\n",len(train_data),len(valid_data),len(test_data))
+# print("table_length:\n",len(lookuptable_E),len(lookuptable_R))
 
 processor = FB15K237Processor(lookuptable_E,lookuptable_R)
 train_dataset = processor.process(train_data)
@@ -65,6 +87,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECA
 metric = Link_Prediction(entity_dict_len=len(lookuptable_E))
 
 trainer = Kr_Trainer(
+    logger=logger,
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,

@@ -5,6 +5,8 @@ from tqdm import tqdm
 import random
 import os
 import numpy as np
+
+from cogktr.data import dataset
 # from torch.utils.tensorboard import SummaryWriter
 from .log import *
 
@@ -61,7 +63,14 @@ class Kr_Trainer:
     def train(self):
         train_loader = Data.DataLoader(dataset=self.train_dataset, sampler=self.train_sampler,
                                        batch_size=self.trainer_batch_size)
+        valid_loader = Data.DataLoader(dataset=self.valid_dataset,sampler=self.valid_sampler,
+                                        batch_size=self.trainer_batch_size)
+
+        
         self.model = self.model.to(self.device)
+        # parallel_model = torch.nn.DataParallel(self.model,device_ids=[0,1])
+        print("Available cuda devices:",torch.cuda.device_count())
+        parallel_model = torch.nn.DataParallel(self.model)
 
         if self.visualization == True:
             if not os.path.exists(os.path.join(self.output_path, "visualization", self.model.name)):
@@ -77,21 +86,34 @@ class Kr_Trainer:
         for epoch in range(self.epoch):
             # Training Progress
             epoch_loss = 0.0
-            for step, train_positive in enumerate(tqdm(train_loader)):
+            for train_step, train_positive in enumerate(tqdm(train_loader)):
                 train_positive = train_positive.to(self.device)
                 train_negative = self.create_negative(train_positive)
                 # train_positive_embedding = self.model(train_positive)
                 # train_negative_embedding = self.model(train_negative)
-                train_positive_score = self.model.get_score(train_positive)
-                train_negative_score = self.model.get_score(train_negative)
+                # train_positive_score = parallel_model.module.get_score(train_positive)
+                # train_negative_score = parallel_model.module.get_score(train_negative)
+                train_positive_score = parallel_model(train_positive)
+                train_negative_score = parallel_model(train_negative)
                 train_loss = self.loss(train_positive_score, train_negative_score)
                 
                 self.optimizer.zero_grad()
                 train_loss.backward()
                 epoch_loss = epoch_loss + train_loss.item()
                 self.optimizer.step()
+            valid_epoch_loss = 0.0
+            with torch.no_grad():
+                for valid_step,valid_positive in enumerate(valid_loader):
+                    valid_positive = valid_positive.to(self.device)
+                    valid_negative = self.create_negative(valid_positive)
+                    valid_positive_score = self.model.get_score(valid_positive)
+                    valid_negative_score = self.model.get_score(valid_negative)
+                    valid_loss = self.loss(valid_positive_score,valid_negative_score)
 
-            print("Epoch{}/{}   Train Loss:".format(epoch+1,self.epoch),epoch_loss/(step+1))
+                    valid_epoch_loss = valid_epoch_loss + valid_loss.item()
+
+            print("Epoch{}/{}   Train Loss:".format(epoch+1,self.epoch),epoch_loss/(train_step+1),
+                                                    " Valid Loss:",valid_epoch_loss/(valid_step+1))
             # 每隔几步评价模型
             if self.metric_step != None and (epoch+1) % self.metric_step == 0:
                 if self.metric.name == "Link_Prediction":
