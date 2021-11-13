@@ -22,15 +22,17 @@ class RotatE(nn.Module):
         self.relation_embedding.weight.data = F.normalize(self.relation_embedding.weight.data, p=2, dim=1)
 
     def get_score(self,triplet_idx):
-        output = self.forward(triplet_idx)  # (batch,3,embedding_dim)
+        output = self._forward(triplet_idx)  # (batch,3,embedding_dim)
         score = F.pairwise_distance(output[:, 0] * output[:, 1], output[:, 2], p=2)
         return score  # (batch,) 
 
     def get_embedding(self,triplet_idx):
-        return self.forward(triplet_idx)
+        return self._forward(triplet_idx)
 
+    def forward(self,triplet_idx):
+        return self.get_score(triplet_idx)
 
-    def forward(self, triplet_idx):
+    def _forward(self, triplet_idx):
         head_embeddiing = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 0]), 1)
         relation_embeddiing = torch.unsqueeze(self.relation_embedding(triplet_idx[:, 1]), 1)
         tail_embeddiing = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 2]), 1)

@@ -38,14 +38,17 @@ class TransD(nn.Module):
         return F.pad(e,paddings=paddings,mode="constant",value=0)
 
     def get_score(self,sample):
-        output = self.forward(sample)
+        output = self._forward(sample)
         score = F.pairwise_distance(output[:, 0] + output[:, 1], output[:, 2], p=2)
         return score  # (batch,) 
+    
+    def forward(self,sample):
+        return self.get_score(sample)
 
     def get_embedding(self,sample):
-        return self.forward(sample)
+        return self._forward(sample)
 
-    def forward(self, sample):  # sample:(batch,3)
+    def _forward(self, sample):  # sample:(batch,3)
         batch_h,batch_r,batch_t =  sample[:, 0], sample[:, 1], sample[:, 2]
         h = self.entity_embedding(batch_h)
         r = self.relation_embedding(batch_r)

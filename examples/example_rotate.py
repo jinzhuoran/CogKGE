@@ -9,6 +9,7 @@ if str(ROOT) not in sys.path:
 import os
 import torch
 import random
+import argparse
 import datetime
 import numpy as np
 from torch.utils.data import RandomSampler
@@ -27,11 +28,24 @@ TRAINR_BATCH_SIZE = 20000          # 训练批量大小
 EMBEDDING_DIM = 100                # 形成的embedding维数
 MARGIN = 1.0                       # margin大小
 SAVE_STEP = None                   # 每隔几轮保存一次模型
-METRIC_STEP = 2                    # 每隔几轮验证一次
+METRIC_STEP = 5                    # 每隔几轮验证一次
 
-logger = save_logger()
+parser = argparse.ArgumentParser()
+parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
+# parser.add_argument('--local_rank', type=int, default=-1, help='DDP parameter, do not modify')
+args = parser.parse_args()
+device = str(args.device).strip().lower().replace('cuda:', '')
+cpu = device == 'cpu'
+if cpu:
+    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # force torch.cuda.is_available() = False
+elif device:  # non-cpu device requested
+    os.environ['CUDA_VISIBLE_DEVICES'] = device  # set environment variable
+    assert torch.cuda.is_available(), f'CUDA unavailable, invalid device {device} requested'  # check availability
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '7'
+
+logger = save_logger("../dataset/cogktr.log")
+
+# os.environ["CUDA_VISIBLE_DEVICES"] = '7'
 device = torch.device('cuda:0' if torch.cuda.is_available()==True else "cpu")
 logger.info("Currently working on device {}".format(device))
 

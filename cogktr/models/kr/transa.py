@@ -20,7 +20,7 @@ class TransA(nn.Module):
         nn.init.xavier_uniform_(self.relation_embedding.weight.data)
 
     def get_score(self,sample):
-        sample = self.forward(sample)
+        sample = self._forward(sample)
         h,r,t = sample[:,0],sample[:,1],sample[:,2]
         # Wr = self.relation_loss_embedding(r).view(-1,self.embedding_dim,self.embedding_dim)
 
@@ -28,12 +28,14 @@ class TransA(nn.Module):
         tmp_last = torch.unsqueeze(torch.abs(h+r-t),dim=-1) # (batch,embedding_size,1)
         return torch.squeeze(torch.bmm(torch.bmm(tmp_first,self.Wr),tmp_last))  # (batch,1,1) -> (batch,)
 
-        
+    def forward(self,sample):
+        return self.get_score(sample)    
+    
     def get_embedding(self,sample):
-        return self.forward(sample)
+        return self._forward(sample)
         
 
-    def forward(self,sample): # sample:(batch,3)
+    def _forward(self,sample): # sample:(batch,3)
         batch_h,batch_r,batch_t = sample[:,0],sample[:,1],sample[:,2]
 
         h = self.entity_embedding(batch_h)
