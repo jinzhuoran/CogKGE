@@ -7,7 +7,7 @@ import os
 import numpy as np
 
 from cogktr.data import dataset
-# from torch.utils.tensorboard import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 from .log import *
 
 
@@ -117,12 +117,15 @@ class Kr_Trainer:
             # 每隔几步评价模型
             if self.metric_step != None and (epoch+1) % self.metric_step == 0:
                 if self.metric.name == "Link_Prediction":
-                    print("Evaluating the model...")
+                    print("Evaluating Model {}...".format(self.model.name))
                     self.metric(self.model, self.valid_dataset,self.device)
                     raw_meanrank = self.metric.raw_meanrank
                     raw_hitatten = self.metric.raw_hitatten
                     print("mean rank:{}     hit@10:{}".format(raw_meanrank,raw_hitatten))
                     print("-----------------------------------------------------------------------")
+                    if self.visualization == True:
+                        writer.add_scalars("2_meanrank", {"valid_raw_meanrank": raw_meanrank}, epoch+1)
+                        writer.add_scalars("3_hitatten", {"valid_raw_hitatten": raw_hitatten}, epoch+1)
 
 
 
@@ -174,12 +177,12 @@ class Kr_Trainer:
             
             # 每轮的可视化
             if self.visualization == True:
-                writer.add_scalars("1_loss", {"train_loss": train_loss}, epoch)
-                # writer.add_scalars("1_loss", {"train_loss": train_loss,
-                #                               "valid_loss": valid_loss}, epoch)
-                if self.metric.name == "Link_Prediction":
-                    writer.add_scalars("2_meanrank", {"valid_raw_meanrank": raw_meanrank}, epoch)
-                    writer.add_scalars("3_hitatten", {"valid_raw_hitatten": raw_hitatten}, epoch)
+                # writer.add_scalars("1_loss", {"train_loss": train_loss}, epoch)
+                writer.add_scalars("1_loss", {"train_loss": train_loss,
+                                              "valid_loss": valid_loss}, epoch+1)
+                # if self.metric.name == "Link_Prediction":
+                #     writer.add_scalars("2_meanrank", {"valid_raw_meanrank": raw_meanrank}, epoch)
+                #     writer.add_scalars("3_hitatten", {"valid_raw_hitatten": raw_hitatten}, epoch)
                 if epoch == 0:
                     fake_data = torch.zeros((len(self.train_dataset), 3)).long()
                     writer.add_graph(self.model.cpu(), fake_data)

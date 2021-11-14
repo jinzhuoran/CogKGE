@@ -27,5 +27,10 @@ __all__ = [
     "TransR",
     "TransD",
     "TransA",
-    "RotatE"
+    "RotatE",
+
+    # utils
+    "import_class",
+    'cal_output_path',
+   
 ]

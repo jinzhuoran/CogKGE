@@ -143,3 +143,6 @@ cython_debug/
 
 # ignore the output log files
 experimental_output/*
+visualization/*
+checkpoints/*
+experimental_output

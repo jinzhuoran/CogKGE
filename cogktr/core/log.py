@@ -4,7 +4,8 @@ def save_logger(logfile_path="../dataset/cogktr.log"):
 
     standard_format = '[%(asctime)s][%(threadName)s:%(thread)d][task_id:%(name)s][%(filename)s:%(lineno)d]' \
                     '[%(levelname)s][%(message)s]'
-    simple_format = '[%(asctime)s] - [%(name)s] - [%(levelname)s] - [%(message)s]'
+    # simple_format = '[%(asctime)s] - [%(name)s] - [%(levelname)s] - [%(message)s]'
+    simple_format = '[%(asctime)s] - [%(message)s]'
     LOGGING_DIC = {
         'version': 1,
         'disable_existing_loggers': False,
