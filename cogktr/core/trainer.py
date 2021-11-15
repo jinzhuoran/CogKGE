@@ -81,6 +81,9 @@ class Kr_Trainer:
 
         raw_meanrank = -1
         raw_hitatten = -1
+        
+        mean_ranks = []
+        hitattens = []
 
         for epoch in range(self.epoch):
             # Training Progress
@@ -117,6 +120,8 @@ class Kr_Trainer:
                     raw_meanrank = self.metric.raw_meanrank
                     raw_hitatten = self.metric.raw_hitatten
                     print("mean rank:{}     hit@10:{}".format(raw_meanrank,raw_hitatten))
+                    mean_ranks.append([[raw_meanrank,epoch+1]])
+                    hitattens.append([[raw_hitatten,epoch+1]])
                     print("-----------------------------------------------------------------------")
                     if self.visualization == True:
                         writer.add_scalars("2_meanrank", {"valid_raw_meanrank": raw_meanrank}, epoch+1)
@@ -143,11 +148,20 @@ class Kr_Trainer:
                     writer.add_embedding(mat=embedding_data, metadata=embedding_label)
 
             # 每隔几步保存模型
-            if self.save_step != None and epoch % self.save_step == 0:
+            if self.save_step != None and (epoch+1) % self.save_step == 0:
                 if not os.path.exists(os.path.join(self.output_path, "checkpoints")):
                     os.makedirs(os.path.join(self.output_path, "checkpoints"))
                 torch.save(self.model, os.path.join(self.output_path, "checkpoints",
-                                                    "%s_Model_%depochs.pkl" % (self.model.name, epoch)))
+                                                    "%s_Model_%depochs.pkl" % (self.model.name, epoch+1)))
+
+        # Record the top5 mean_rank and hit@10 in the log file:
+        mean_ranks.sort(key=lambda x:x[0], reverse=False) # 1->2->3
+        hitattens.sort(key=lambda x:x[0],reverse=True) # 3->2->1
+        mean_ranks = mean_ranks if len(mean_ranks) < 5 else mean_ranks[:5]
+        hitattens = hitattens if len(hitattens) < 5 else hitattens[:5]
+        self.logger.info("Top Mean Rank: {}".format(mean_ranks))  
+        self.logger.info("Top Hit@10: {}".format(hitattens))  
+     
 
         # 保存最终模型
         if self.save_final_model == True:
@@ -160,7 +174,7 @@ class Kr_Trainer:
                 os.path.join(self.output_path, "checkpoints", "%s_Model_%depochs.pkl" % (self.model.name, self.epoch))+
                 "saved successfully")
 
-        pass
+        
 
 
 

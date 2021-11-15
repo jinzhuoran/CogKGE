@@ -11,8 +11,8 @@ def import_class(name):
     return mod
 
 # compute the output path from the data path
-def cal_output_path(data_path):
-    output_path = os.path.join(*data_path.split("/")[:-1], "experimental_output/" + str(datetime.datetime.now())).replace(
+def cal_output_path(data_path,model_name):
+    output_path = os.path.join(*data_path.split("/")[:-1], "experimental_output",model_name + str(datetime.datetime.now())[:-4]).replace(
     ':', '-').replace(' ', '--')
     return output_path
 

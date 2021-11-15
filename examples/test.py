@@ -51,7 +51,7 @@ elif device:  # non-cpu device requested
 device = torch.device('cuda:0' if torch.cuda.is_available()==True else "cpu")
 
 # construct the output path and log file
-output_path = cal_output_path(args.data_path)
+output_path = cal_output_path(args.data_path,args.model_name)
 if not os.path.exists(output_path):
     os.makedirs(output_path)
 logger = save_logger(os.path.join(output_path,"run.log"))
