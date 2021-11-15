@@ -26,6 +26,7 @@ class Kr_Trainer:
                  epoch,
                  output_path,
                  device,
+                 lr_scheduler,
                  save_step=None,
                  metric_step=None,
                  save_final_model=False,
@@ -48,6 +49,7 @@ class Kr_Trainer:
         self.metric_step = metric_step
         self.save_final_model = save_final_model
         self.visualization = visualization
+        self.lr_scheduler = lr_scheduler
 
     def create_negative(self, train_pos):
         train_neg = None
@@ -112,6 +114,9 @@ class Kr_Trainer:
 
             print("Epoch{}/{}   Train Loss:".format(epoch+1,self.epoch),epoch_loss/(train_step+1),
                                                     " Valid Loss:",valid_epoch_loss/(valid_step+1))
+            
+            # self.lr_scheduler.step(valid_epoch_loss/(valid_step+1))
+            self.lr_scheduler.step()
             # 每隔几步评价模型
             if self.metric_step != None and (epoch+1) % self.metric_step == 0:
                 if self.metric.name == "Link_Prediction":
@@ -161,7 +166,7 @@ class Kr_Trainer:
         hitattens = hitattens if len(hitattens) < 5 else hitattens[:5]
         self.logger.info("Top Mean Rank: {}".format(mean_ranks))  
         self.logger.info("Top Hit@10: {}".format(hitattens))  
-     
+    
 
         # 保存最终模型
         if self.save_final_model == True:
@@ -169,9 +174,9 @@ class Kr_Trainer:
                 os.makedirs(os.path.join(self.output_path, "checkpoints"))
                 self.logger.info(os.path.join(self.output_path, "checkpoints") + ' created successfully')
             torch.save(self.model, os.path.join(self.output_path, "checkpoints",
-                                                "%s_Model_%depochs.pkl" % (self.model.name, self.epoch)))
+                                                "%s_Model_%depochs.pkl" % (self.model.name, self.epoch+1)))
             self.logger.info(
-                os.path.join(self.output_path, "checkpoints", "%s_Model_%depochs.pkl" % (self.model.name, self.epoch))+
+                os.path.join(self.output_path, "checkpoints", "%s_Model_%depochs.pkl" % (self.model.name, self.epoch+1))+
                 "saved successfully")
 
         

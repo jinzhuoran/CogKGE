@@ -4,7 +4,7 @@ data_loader: FB15K237Loader
 data_processor: FB15K237Processor
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 0,1,2,3
+device: 2,3
 
 # choose the model
 model_name: TransE

@@ -2,12 +2,12 @@
 from logging import config
 import sys
 from pathlib import Path
-def add_path():
-    FILE = Path(__file__).resolve()
-    ROOT = FILE.parents[0].parents[0]  # CogKTR root directory
-    if str(ROOT) not in sys.path:
-        sys.path.append(str(ROOT))  # add CogKTR root directory to PATH
-add_path()
+ 
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[0].parents[0]  # CogKTR root directory
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add CogKTR root directory to PATH
+
 
 # 基本模块
 import os
@@ -17,6 +17,7 @@ import argparse
 import datetime
 import numpy as np
 import yaml
+import shutil
 from torch.utils.data import RandomSampler
 
 # cogktr模块
@@ -58,6 +59,10 @@ logger = save_logger(os.path.join(output_path,"run.log"))
 logger.info("Data Path:{}".format(args.data_path))
 logger.info("Output Path:{}".format(output_path))
 
+# copy the configuration and main file to experimental_output
+shutil.copy(cmd_args.config,output_path)
+shutil.copy(FILE,output_path)
+
 # load the dataset
 get_class = lambda name : globals()[name]
 MyLoader = get_class(args.data_loader)
@@ -95,6 +100,14 @@ optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.w
 Metric = get_class(args.metric_name)
 metric = Metric(entity_dict_len=len(lookuptable_E))
 
+# Learning Rate Scheduler:
+# lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+#     optimizer,mode='min',patience=10,factor=0.1,min_lr=1e-6,verbose=True
+# )
+lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
+    optimizer,milestones=[30,60,90],gamma=0.5
+)
+
 Trainer = get_class(args.trainer_name)
 trainer = Trainer(
     logger=logger,
@@ -108,6 +121,7 @@ trainer = Trainer(
     metric=metric,
     output_path=output_path,
     device=device,
+    lr_scheduler = lr_scheduler,
     **args.trainer_args
 )
 trainer.train()
