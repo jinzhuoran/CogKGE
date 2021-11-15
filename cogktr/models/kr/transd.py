@@ -6,7 +6,7 @@ import torch.nn.functional as F
 class TransD(nn.Module):
     def __init__(self, entity_dict_len, relation_dict_len, dim_entity,dim_relation,negative_sample_method):
         super(TransD, self).__init__()
-        self.name = "TransR"
+        self.name = "TransD"
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.negative_sample_method = negative_sample_method

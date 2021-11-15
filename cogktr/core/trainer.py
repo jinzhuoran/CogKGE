@@ -68,7 +68,6 @@ class Kr_Trainer:
 
         
         self.model = self.model.to(self.device)
-        # parallel_model = torch.nn.DataParallel(self.model,device_ids=[0,1])
         print("Available cuda devices:",torch.cuda.device_count())
         parallel_model = torch.nn.DataParallel(self.model)
 
@@ -89,10 +88,6 @@ class Kr_Trainer:
             for train_step, train_positive in enumerate(tqdm(train_loader)):
                 train_positive = train_positive.to(self.device)
                 train_negative = self.create_negative(train_positive)
-                # train_positive_embedding = self.model(train_positive)
-                # train_negative_embedding = self.model(train_negative)
-                # train_positive_score = parallel_model.module.get_score(train_positive)
-                # train_negative_score = parallel_model.module.get_score(train_negative)
                 train_positive_score = parallel_model(train_positive)
                 train_negative_score = parallel_model(train_negative)
                 train_loss = self.loss(train_positive_score, train_negative_score)
@@ -126,6 +121,46 @@ class Kr_Trainer:
                     if self.visualization == True:
                         writer.add_scalars("2_meanrank", {"valid_raw_meanrank": raw_meanrank}, epoch+1)
                         writer.add_scalars("3_hitatten", {"valid_raw_hitatten": raw_hitatten}, epoch+1)
+
+            
+            # Evaluation Process
+
+            
+            # 每轮的可视化
+            if self.visualization == True:
+                writer.add_scalars("1_loss", {"train_loss": train_loss,
+                                              "valid_loss": valid_loss}, epoch+1)
+                if epoch == 0:
+                    fake_data = torch.zeros((len(self.train_dataset), 3)).long()
+                    writer.add_graph(self.model.cpu(), fake_data)
+                    self.model.to(self.device)
+                for name, param in self.model.named_parameters():
+                    writer.add_histogram(name + '_grad', param.grad, epoch)
+                    writer.add_histogram(name + '_data', param, epoch)
+                if epoch == 0:
+                    embedding_data = torch.rand(10, 20)
+                    embedding_label = ["篮球", "足球", "乒乓球", "羽毛球", "保龄球", "游泳", "爬山", "旅游", "赛车", "写代码"]
+                    writer.add_embedding(mat=embedding_data, metadata=embedding_label)
+
+            # 每隔几步保存模型
+            if self.save_step != None and epoch % self.save_step == 0:
+                if not os.path.exists(os.path.join(self.output_path, "checkpoints")):
+                    os.makedirs(os.path.join(self.output_path, "checkpoints"))
+                torch.save(self.model, os.path.join(self.output_path, "checkpoints",
+                                                    "%s_Model_%depochs.pkl" % (self.model.name, epoch)))
+
+        # 保存最终模型
+        if self.save_final_model == True:
+            if not os.path.exists(os.path.join(self.output_path, "checkpoints")):
+                os.makedirs(os.path.join(self.output_path, "checkpoints"))
+                self.logger.info(os.path.join(self.output_path, "checkpoints") + ' created successfully')
+            torch.save(self.model, os.path.join(self.output_path, "checkpoints",
+                                                "%s_Model_%depochs.pkl" % (self.model.name, self.epoch)))
+            self.logger.info(
+                os.path.join(self.output_path, "checkpoints", "%s_Model_%depochs.pkl" % (self.model.name, self.epoch))+
+                "saved successfully")
+
+        pass
 
 
 
@@ -170,47 +205,3 @@ class Kr_Trainer:
             #             self.metric(self.model, self.valid_dataset,self.device)
             #             raw_meanrank = self.metric.raw_meanrank
             #             raw_hitatten = self.metric.raw_hitatten
-
-            
-            # Evaluation Process
-
-            
-            # 每轮的可视化
-            if self.visualization == True:
-                # writer.add_scalars("1_loss", {"train_loss": train_loss}, epoch)
-                writer.add_scalars("1_loss", {"train_loss": train_loss,
-                                              "valid_loss": valid_loss}, epoch+1)
-                # if self.metric.name == "Link_Prediction":
-                #     writer.add_scalars("2_meanrank", {"valid_raw_meanrank": raw_meanrank}, epoch)
-                #     writer.add_scalars("3_hitatten", {"valid_raw_hitatten": raw_hitatten}, epoch)
-                if epoch == 0:
-                    fake_data = torch.zeros((len(self.train_dataset), 3)).long()
-                    writer.add_graph(self.model.cpu(), fake_data)
-                    self.model.to(self.device)
-                for name, param in self.model.named_parameters():
-                    writer.add_histogram(name + '_grad', param.grad, epoch)
-                    writer.add_histogram(name + '_data', param, epoch)
-                if epoch == 0:
-                    embedding_data = torch.rand(10, 20)
-                    embedding_label = ["篮球", "足球", "乒乓球", "羽毛球", "保龄球", "游泳", "爬山", "旅游", "赛车", "写代码"]
-                    writer.add_embedding(mat=embedding_data, metadata=embedding_label)
-
-            # 每隔几步保存模型
-            if self.save_step != None and epoch % self.save_step == 0:
-                if not os.path.exists(os.path.join(self.output_path, "checkpoints")):
-                    os.makedirs(os.path.join(self.output_path, "checkpoints"))
-                torch.save(self.model, os.path.join(self.output_path, "checkpoints",
-                                                    "%s_Model_%depochs.pkl" % (self.model.name, epoch)))
-
-        # 保存最终模型
-        if self.save_final_model == True:
-            if not os.path.exists(os.path.join(self.output_path, "checkpoints")):
-                os.makedirs(os.path.join(self.output_path, "checkpoints"))
-                self.logger.info(os.path.join(self.output_path, "checkpoints") + ' created successfully')
-            torch.save(self.model, os.path.join(self.output_path, "checkpoints",
-                                                "%s_Model_%depochs.pkl" % (self.model.name, self.epoch)))
-            self.logger.info(
-                os.path.join(self.output_path, "checkpoints", "%s_Model_%depochs.pkl" % (self.model.name, self.epoch))+
-                "saved successfully")
-
-        pass
