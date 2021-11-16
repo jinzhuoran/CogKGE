@@ -18,6 +18,7 @@ __all__ = [
     "Kr_Trainer",
 
     # data
+    "FB15KLoader",
     "FB15K237Loader",
     "FB15K237Processor",
 

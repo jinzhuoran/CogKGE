@@ -5,6 +5,7 @@ from .lut import *
 
 __all__=[
     #loader
+    "FB15KLoader",
     "FB15K237Loader",
 
     #processor

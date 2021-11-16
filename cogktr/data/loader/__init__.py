@@ -4,5 +4,6 @@ from .ktr import *
 
 __all__=[
     #kr
+    "FB15KLoader",
     "FB15K237Loader"
 ]
