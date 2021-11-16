@@ -4,18 +4,52 @@ data_loader: FB15K237Loader
 data_processor: FB15K237Processor
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 2,3
+device: 1,2,3
 
 # choose the model
+
+#TransE
 model_name: TransE
 model_args:
-  embedding_dim: 100
+  embedding_dim: 50
   negative_sample_method: Random_Negative_Sampling
+
+# #TransR:
+# model_name: TransR
+# model_args:
+#   dim_entity: 100
+#   dim_relation: 50
+#   negative_sample_method: Random_Negative_Sampling
+
+# # #TransD
+# model_name: TransD
+# model_args:
+#   dim_entity: 200
+#   dim_relation: 100
+#   negative_sample_method: Random_Negative_Sampling
+
+# # #TransH
+# model_name: TransH
+# model_args:
+#   embedding_dim: 128
+#   negative_sample_method: Random_Negative_Sampling
+
+# # TransA
+# model_name: TransA
+# model_args:
+#   embedding_dim: 128
+#   negative_sample_method: Random_Negative_Sampling  
+
+# #RotatE
+# model_name: RotatE
+# model_args:
+#   embedding_dim: 512
+#   negative_sample_method: Random_Negative_Sampling  
 
 # loss function
 loss_name: MarginLoss
 loss_args:
-  margin: 1.0
+  margin: 2.0
 
 # metric function
 metric_name: Link_Prediction
@@ -25,10 +59,10 @@ weight_decay: 0.0001
 
 trainer_name: Kr_Trainer
 trainer_args:
-  trainer_batch_size: 20000 
-  epoch: 100
-  save_step: 10
-  metric_step: 1
+  trainer_batch_size: 128
+  epoch: 200
+  save_step: 20
+  metric_step: 5
   save_final_model: 0 # False 
   visualization: 1 # False
 

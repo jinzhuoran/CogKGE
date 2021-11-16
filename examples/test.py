@@ -58,6 +58,8 @@ if not os.path.exists(output_path):
 logger = save_logger(os.path.join(output_path,"run.log"))
 logger.info("Data Path:{}".format(args.data_path))
 logger.info("Output Path:{}".format(output_path))
+print("Data Path:{}".format(args.data_path))
+print("Output Path:{}".format(output_path))
 
 # copy the configuration and main file to experimental_output
 shutil.copy(cmd_args.config,output_path)
@@ -105,7 +107,7 @@ metric = Metric(entity_dict_len=len(lookuptable_E))
 #     optimizer,mode='min',patience=10,factor=0.1,min_lr=1e-6,verbose=True
 # )
 lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
-    optimizer,milestones=[30,60,90],gamma=0.5
+    optimizer,milestones=[50,100,150],gamma=0.5
 )
 
 Trainer = get_class(args.trainer_name)
