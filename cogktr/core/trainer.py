@@ -165,7 +165,9 @@ class Kr_Trainer:
         mean_ranks = mean_ranks if len(mean_ranks) < 5 else mean_ranks[:5]
         hitattens = hitattens if len(hitattens) < 5 else hitattens[:5]
         self.logger.info("Top Mean Rank: {}".format(mean_ranks))  
-        self.logger.info("Top Hit@10: {}".format(hitattens))  
+        self.logger.info("Top Hit@10: {}".format(hitattens)) 
+        print("Top Mean Rank: {}".format(mean_ranks))
+        print("Top Hit@10: {}".format(hitattens)) 
     
 
         # 保存最终模型
