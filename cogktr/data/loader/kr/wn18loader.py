@@ -5,7 +5,7 @@ from ....utils.download_utils import Download_Data
 import json
 
 
-class FB15KLoader:
+class WN18Loader:
     def __init__(self, path,download=False,download_path=None):
         self.path = path
         self.download = download
@@ -14,10 +14,10 @@ class FB15KLoader:
         self.relation_list = list()
         if self.download == True:
             downloader = Download_Data(dataset_path=self.download_path)
-            downloader.FB15K()
-        self.train_name="freebase_mtr100_mte100-train.txt"
-        self.valid_name="freebase_mtr100_mte100-valid.txt"
-        self.test_name="freebase_mtr100_mte100-test.txt"
+            downloader.WN18()
+        self.train_name="wordnet-mlj12-train.txt"
+        self.valid_name="wordnet-mlj12-valid.txt"
+        self.test_name="wordnet-mlj12-test.txt"
 
 
     def _load_data(self, path):

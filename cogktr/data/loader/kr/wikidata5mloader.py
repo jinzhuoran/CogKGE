@@ -5,7 +5,7 @@ from ....utils.download_utils import Download_Data
 import json
 
 
-class FB15KLoader:
+class WIKIDATA5MLoader:
     def __init__(self, path,download=False,download_path=None):
         self.path = path
         self.download = download
@@ -14,10 +14,10 @@ class FB15KLoader:
         self.relation_list = list()
         if self.download == True:
             downloader = Download_Data(dataset_path=self.download_path)
-            downloader.FB15K()
-        self.train_name="freebase_mtr100_mte100-train.txt"
-        self.valid_name="freebase_mtr100_mte100-valid.txt"
-        self.test_name="freebase_mtr100_mte100-test.txt"
+            downloader.WIKIDATA5M()
+        self.train_name="wikidata5m_inductive_train.txt"
+        self.valid_name="wikidata5m_inductive_valid.txt"
+        self.test_name="wikidata5m_inductive_test.txt"
 
 
     def _load_data(self, path):
@@ -62,7 +62,7 @@ class FB15KLoader:
             if category == "entity":
                 print("Creating entities.json...")
                 entity_name_list = list(set(list(self.entity_list)))
-                entity_name_list.sort(key=list(self.entity_list).index)
+                # entity_name_list.sort(key=list(self.entity_list).index)
                 lookuptable = LookUpTable()
                 lookuptable.create_table(create_dic=True, item_list=entity_name_list)
                 entities_dict = dict()
@@ -73,7 +73,7 @@ class FB15KLoader:
             if category == "relation":
                 print("Creating relations.json...")
                 relation_name_list = list(set(list(self.relation_list)))
-                relation_name_list.sort(key=list(self.relation_list).index)
+                # relation_name_list.sort(key=list(self.relation_list).index)
                 lookuptable = LookUpTable()
                 lookuptable.create_table(create_dic=True, item_list=relation_name_list)
                 relations_dict = dict()

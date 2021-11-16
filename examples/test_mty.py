@@ -72,46 +72,51 @@ lookuptable_R.print_table(5)
 print("data_length:\n",len(train_data),len(valid_data),len(test_data))
 print("table_length:\n",len(lookuptable_E),len(lookuptable_R))
 
-# Processor = get_class(args.data_processor)
-# processor = Processor(lookuptable_E,lookuptable_R)
-# train_dataset = processor.process(train_data)
-# valid_dataset = processor.process(valid_data)
-# test_dataset = processor.process(test_data)
-#
-# train_sampler = RandomSampler(train_dataset)
-# valid_sampler = RandomSampler(valid_dataset)
-# test_sampler = RandomSampler(test_dataset)
-#
-# Model = get_class(args.model_name)
-# model = Model(entity_dict_len=len(lookuptable_E),
-#               relation_dict_len=len(lookuptable_R),
-#               **args.model_args)
-#
-# Loss = get_class(args.loss_name)
-# loss = Loss(**args.loss_args)
-#
-# optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-#
-# Metric = get_class(args.metric_name)
-# metric = Metric(entity_dict_len=len(lookuptable_E))
-#
-# Trainer = get_class(args.trainer_name)
-# trainer = Trainer(
-#     logger=logger,
-#     train_dataset=train_dataset,
-#     valid_dataset=valid_dataset,
-#     train_sampler=train_sampler,
-#     valid_sampler=valid_sampler,
-#     model=model,
-#     loss=loss,
-#     optimizer=optimizer,
-#     metric=metric,
-#     output_path=output_path,
-#     device=device,
-#     **args.trainer_args
-# )
-# trainer.train()
-#
+Processor = get_class(args.data_processor)
+processor = Processor(lookuptable_E,lookuptable_R)
+train_dataset = processor.process(train_data)
+valid_dataset = processor.process(valid_data)
+test_dataset = processor.process(test_data)
+
+train_sampler = RandomSampler(train_dataset)
+valid_sampler = RandomSampler(valid_dataset)
+test_sampler = RandomSampler(test_dataset)
+
+Model = get_class(args.model_name)
+model = Model(entity_dict_len=len(lookuptable_E),
+              relation_dict_len=len(lookuptable_R),
+              **args.model_args)
+
+Loss = get_class(args.loss_name)
+loss = Loss(**args.loss_args)
+
+optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+
+Metric = get_class(args.metric_name)
+metric = Metric(entity_dict_len=len(lookuptable_E))
+
+lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
+    optimizer,milestones=[50,100,150],gamma=0.5
+)
+
+Trainer = get_class(args.trainer_name)
+trainer = Trainer(
+    logger=logger,
+    train_dataset=train_dataset,
+    valid_dataset=valid_dataset,
+    train_sampler=train_sampler,
+    valid_sampler=valid_sampler,
+    model=model,
+    loss=loss,
+    optimizer=optimizer,
+    metric=metric,
+    output_path=output_path,
+    device=device,
+    lr_scheduler = lr_scheduler,
+    **args.trainer_args
+)
+trainer.train()
+
 
 
 
