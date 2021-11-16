@@ -2,7 +2,6 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from models.BasicModel import BasicModule
 from torch.nn.parameter import Parameter
 
 
