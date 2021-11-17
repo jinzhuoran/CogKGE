@@ -18,8 +18,16 @@ __all__ = [
     "Kr_Trainer",
 
     # data
+    "FB15KLoader",
     "FB15K237Loader",
+    "WN18Loader",
+    "WN18RRLoader",
+    "WIKIDATA5MLoader",
+    "FB15KProcessor",
     "FB15K237Processor",
+    "WN18Processor",
+    "WN18RRProcessor",
+    "WIKIDATA5MProcessor",
 
     # models
     "TransE",
@@ -30,6 +38,7 @@ __all__ = [
     "RotatE",
 
     # utils
+    "Download_Data",
     "import_class",
     'cal_output_path',
 
