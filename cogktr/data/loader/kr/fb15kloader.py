@@ -106,3 +106,4 @@ class FB15KLoader:
         entity2idx = self._load_lut(path="entities.json", category="entity")
         relation2idx = self._load_lut(path="relations.json", category="relation")
         return entity2idx, relation2idx
+
