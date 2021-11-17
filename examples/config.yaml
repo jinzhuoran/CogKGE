@@ -11,7 +11,7 @@ device: 1,2,3
 #TransE
 model_name: TransE
 model_args:
-  embedding_dim: 50
+  embedding_dim: 100
   negative_sample_method: Random_Negative_Sampling
 
 # #TransR:
@@ -49,13 +49,16 @@ model_args:
 # loss function
 loss_name: MarginLoss
 loss_args:
-  margin: 2.0
+  margin: 1.0
 
 # metric function
 metric_name: Link_Prediction
 
 lr: 0.001
 weight_decay: 0.0001
+
+negative_sampler_name: UnifNegativeSampler
+# negative_sampler_name: BernNegativeSampler
 
 trainer_name: Kr_Trainer
 trainer_args:

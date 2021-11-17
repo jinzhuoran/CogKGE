@@ -18,6 +18,7 @@ class Kr_Trainer:
                  valid_dataset,
                  train_sampler,
                  valid_sampler,
+                 negative_sampler,
                  trainer_batch_size,
                  model,
                  loss,
@@ -37,6 +38,7 @@ class Kr_Trainer:
         self.valid_dataset = valid_dataset
         self.train_sampler = train_sampler
         self.valid_sampler = valid_sampler
+        self.negative_sampler = negative_sampler
         self.trainer_batch_size = trainer_batch_size
         self.model = model
         self.loss = loss
@@ -51,16 +53,16 @@ class Kr_Trainer:
         self.visualization = visualization
         self.lr_scheduler = lr_scheduler
 
-    def create_negative(self, train_pos):
-        train_neg = None
-        if self.model.negative_sample_method == "Random_Negative_Sampling":
-            train_neg = train_pos.clone().detach()
-            for i in range(len(train_neg[:, 0])):
-                if (random.random() < 0.5):
-                    train_neg[i][0] = np.random.randint(0, self.model.entity_dict_len)
-                else:
-                    train_neg[i][2] = np.random.randint(0, self.model.entity_dict_len)
-        return train_neg
+    # def create_negative(self, train_pos):
+    #     train_neg = None
+    #     if self.model.negative_sample_method == "Random_Negative_Sampling":
+    #         train_neg = train_pos.clone().detach()
+    #         for i in range(len(train_neg[:, 0])):
+    #             if (random.random() < 0.5):
+    #                 train_neg[i][0] = np.random.randint(0, self.model.entity_dict_len)
+    #             else:
+    #                 train_neg[i][2] = np.random.randint(0, self.model.entity_dict_len)
+    #     return train_neg
 
     def train(self):
         train_loader = Data.DataLoader(dataset=self.train_dataset, sampler=self.train_sampler,
@@ -92,7 +94,8 @@ class Kr_Trainer:
             epoch_loss = 0.0
             for train_step, train_positive in enumerate(tqdm(train_loader)):
                 train_positive = train_positive.to(self.device)
-                train_negative = self.create_negative(train_positive)
+                train_negative = self.negative_sampler.create_negative(train_positive)
+                # train_negative = self.create_negative(train_positive)
                 train_positive_score = parallel_model(train_positive)
                 train_negative_score = parallel_model(train_negative)
                 train_loss = self.loss(train_positive_score, train_negative_score)
@@ -105,7 +108,8 @@ class Kr_Trainer:
             with torch.no_grad():
                 for valid_step,valid_positive in enumerate(valid_loader):
                     valid_positive = valid_positive.to(self.device)
-                    valid_negative = self.create_negative(valid_positive)
+                    valid_negative = self.negative_sampler.create_negative(valid_positive)
+                    # valid_negative = self.create_negative(valid_positive)
                     valid_positive_score = self.model.get_score(valid_positive)
                     valid_negative_score = self.model.get_score(valid_negative)
                     valid_loss = self.loss(valid_positive_score,valid_negative_score)

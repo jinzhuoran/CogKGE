@@ -3,6 +3,7 @@ from .log import *
 from .loss import *
 from .metric import *
 from .trainer import *
+from .sampler import *
 
 __all__ = [
     # evaluate
@@ -22,5 +23,10 @@ __all__ = [
     "LinkRotatePrediction",
 
     # trainer
-    "Kr_Trainer"
+    "Kr_Trainer",
+
+    # sampler
+    "UnifNegativeSampler",
+    "BernNegativeSampler",
+
 ]

@@ -85,6 +85,8 @@ train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
 
+# load sampler
+
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
@@ -109,6 +111,12 @@ metric = Metric(entity_dict_len=len(lookuptable_E))
 lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
     optimizer,milestones=[50,100,150],gamma=0.5
 )
+ 
+Negative_sampler = get_class(args.negative_sampler_name)
+negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
+                                    entity_dict_len=len(lookuptable_E),
+                                    relation_dict_len=len(lookuptable_R))
+
 
 Trainer = get_class(args.trainer_name)
 trainer = Trainer(
@@ -117,6 +125,7 @@ trainer = Trainer(
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
     valid_sampler=valid_sampler,
+    negative_sampler=negative_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
