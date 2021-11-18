@@ -1,10 +1,17 @@
 # raw data of one dataset
-data_path: ../dataset/kr/FB15k-237/raw_data
-data_loader: FB15K237Loader
-data_processor: FB15K237Processor
+# data_path: ../dataset/kr/FB15k-237/raw_data
+# data_loader: FB15K237Loader
+# data_processor: FB15K237Processor
+data_path: ../dataset/kr/FB15K/raw_data
+data_loader: FB15KLoader
+data_processor: FB15KProcessor
+
+#download data
+download: True
+download_path: "CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 1,2,3
+device: 0,1,2
 
 # choose the model
 
@@ -63,7 +70,7 @@ negative_sampler_name: UnifNegativeSampler
 trainer_name: Kr_Trainer
 trainer_args:
   trainer_batch_size: 128
-  epoch: 200
+  epoch: 500
   save_step: 20
   metric_step: 5
   save_final_model: 0 # False 

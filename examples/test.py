@@ -68,7 +68,8 @@ shutil.copy(FILE,output_path)
 # load the dataset
 get_class = lambda name : globals()[name]
 MyLoader = get_class(args.data_loader)
-loader = MyLoader(args.data_path)
+loader = MyLoader(args.data_path,args.download,args.download_path)
+# loader = MyLoader(args.data_path)
 train_data, valid_data, test_data = loader.load_all_data()
 lookuptable_E, lookuptable_R      = loader.load_all_lut()
 train_data.print_table(5)
@@ -109,7 +110,7 @@ metric = Metric(entity_dict_len=len(lookuptable_E))
 #     optimizer,mode='min',patience=10,factor=0.1,min_lr=1e-6,verbose=True
 # )
 lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
-    optimizer,milestones=[50,100,150],gamma=0.5
+    optimizer,milestones=[150,300,450],gamma=0.5
 )
  
 Negative_sampler = get_class(args.negative_sampler_name)

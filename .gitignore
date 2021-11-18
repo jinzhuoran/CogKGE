@@ -146,3 +146,6 @@ experimental_output/*
 visualization/*
 checkpoints/*
 experimental_output
+
+# ignore the raw data files
+raw_data/*
