@@ -9,5 +9,6 @@ __all__=[
     "TransR",
     "TransD",
     "TransA",
-    "RotatE"
+    "RotatE",
+    "Rescal",
 ]

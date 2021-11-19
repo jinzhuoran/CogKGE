@@ -33,7 +33,7 @@ def init_seed(seed):
 init_seed(1)
 parser = argparse.ArgumentParser(description="konwledge embedding toolkit")
 parser.add_argument('--config',
-                    default='./config.yaml',
+                    default='./examples/config.yaml',
                     help='path to the configuration file')
 cmd_args = parser.parse_args()
 
@@ -110,7 +110,7 @@ metric = Metric(entity_dict_len=len(lookuptable_E))
 #     optimizer,mode='min',patience=10,factor=0.1,min_lr=1e-6,verbose=True
 # )
 lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
-    optimizer,milestones=[150,300,450],gamma=0.5
+    optimizer,milestones=[30,60,90],gamma=0.5
 )
  
 Negative_sampler = get_class(args.negative_sampler_name)

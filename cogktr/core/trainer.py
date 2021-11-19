@@ -103,7 +103,9 @@ class Kr_Trainer:
                 self.optimizer.zero_grad()
                 train_loss.backward()
                 epoch_loss = epoch_loss + train_loss.item()
+                # print(train_loss.item())
                 self.optimizer.step()
+                # break
             valid_epoch_loss = 0.0
             with torch.no_grad():
                 for valid_step,valid_positive in enumerate(valid_loader):
