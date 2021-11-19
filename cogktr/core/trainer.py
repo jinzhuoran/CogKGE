@@ -131,7 +131,7 @@ class Kr_Trainer:
                     raw_meanrank = self.metric.raw_meanrank
                     raw_hitatten = self.metric.raw_hitatten
                     print("mean rank:{}     hit@10:{}".format(raw_meanrank,raw_hitatten))
-                    self.logger("Epoch {}/{}  mean_rank:{}   hit@10:{}".format(
+                    self.logger.info("Epoch {}/{}  mean_rank:{}   hit@10:{}".format(
                         epoch+1,self.epoch,raw_meanrank,raw_hitatten
                     ))
                     self.lr_scheduler.step(raw_meanrank)
