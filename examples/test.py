@@ -33,7 +33,7 @@ def init_seed(seed):
 init_seed(1)
 parser = argparse.ArgumentParser(description="konwledge embedding toolkit")
 parser.add_argument('--config',
-                    default='./examples/config.yaml',
+                    default='./config.yaml',
                     help='path to the configuration file')
 cmd_args = parser.parse_args()
 
@@ -106,12 +106,13 @@ Metric = get_class(args.metric_name)
 metric = Metric(entity_dict_len=len(lookuptable_E))
 
 # Learning Rate Scheduler:
-# lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-#     optimizer,mode='min',patience=10,factor=0.1,min_lr=1e-6,verbose=True
-# )
-lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
-    optimizer,milestones=[30,60,90],gamma=0.5
+lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer,mode='min',patience=2,threshold_mode='abs',threshold=5, # mean rank!
+    factor=0.5,min_lr=1e-6,verbose=True
 )
+# lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
+#     optimizer,milestones=[30,60,90],gamma=0.5
+# )
  
 Negative_sampler = get_class(args.negative_sampler_name)
 negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,

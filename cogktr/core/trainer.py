@@ -120,9 +120,9 @@ class Kr_Trainer:
 
             print("Epoch{}/{}   Train Loss:".format(epoch+1,self.epoch),epoch_loss/(train_step+1),
                                                     " Valid Loss:",valid_epoch_loss/(valid_step+1))
-            
+
             # self.lr_scheduler.step(valid_epoch_loss/(valid_step+1))
-            self.lr_scheduler.step()
+            # self.lr_scheduler.step()
             # 每隔几步评价模型
             if self.metric_step != None and (epoch+1) % self.metric_step == 0:
                 if self.metric.name == "Link_Prediction":
@@ -131,6 +131,10 @@ class Kr_Trainer:
                     raw_meanrank = self.metric.raw_meanrank
                     raw_hitatten = self.metric.raw_hitatten
                     print("mean rank:{}     hit@10:{}".format(raw_meanrank,raw_hitatten))
+                    self.logger("Epoch {}/{}  mean_rank:{}   hit@10:{}".format(
+                        epoch+1,self.epoch,raw_meanrank,raw_hitatten
+                    ))
+                    self.lr_scheduler.step(raw_meanrank)
                     mean_ranks.append([[raw_meanrank,epoch+1]])
                     hitattens.append([[raw_hitatten,epoch+1]])
                     print("-----------------------------------------------------------------------")
