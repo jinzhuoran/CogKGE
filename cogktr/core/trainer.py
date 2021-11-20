@@ -87,6 +87,7 @@ class Kr_Trainer:
         raw_hitatten = -1
         
         mean_ranks = []
+        mrrs = []
         hitattens = []
 
         for epoch in range(self.epoch):
@@ -130,17 +131,20 @@ class Kr_Trainer:
                     self.metric(self.model, self.valid_dataset,self.device)
                     raw_meanrank = self.metric.raw_meanrank
                     raw_hitatten = self.metric.raw_hitatten
-                    print("mean rank:{}     hit@10:{}".format(raw_meanrank,raw_hitatten))
-                    self.logger.info("Epoch {}/{}  mean_rank:{}   hit@10:{}".format(
-                        epoch+1,self.epoch,raw_meanrank,raw_hitatten
+                    raw_mrr = self.metric.raw_MRR
+                    print("mean rank:{}     hit@10:{}   MRR:{}".format(raw_meanrank,raw_hitatten,raw_mrr))
+                    self.logger.info("Epoch {}/{}  mean_rank:{}   hit@10:{}   MRR:{}".format(
+                        epoch+1,self.epoch,raw_meanrank,raw_hitatten,raw_mrr
                     ))
                     self.lr_scheduler.step(raw_meanrank)
                     mean_ranks.append([[raw_meanrank,epoch+1]])
                     hitattens.append([[raw_hitatten,epoch+1]])
+                    mrrs.append([[raw_mrr,epoch+1]])
                     print("-----------------------------------------------------------------------")
                     if self.visualization == True:
                         writer.add_scalars("2_meanrank", {"valid_raw_meanrank": raw_meanrank}, epoch+1)
                         writer.add_scalars("3_hitatten", {"valid_raw_hitatten": raw_hitatten}, epoch+1)
+                        writer.add_scalars("4_MRR",{"valid_raw_MRR":raw_mrr},epoch+1)
 
             
             # Evaluation Process
@@ -172,12 +176,18 @@ class Kr_Trainer:
         # Record the top5 mean_rank and hit@10 in the log file:
         mean_ranks.sort(key=lambda x:x[0], reverse=False) # 1->2->3
         hitattens.sort(key=lambda x:x[0],reverse=True) # 3->2->1
+        mrrs.sort(key=lambda x:x[0],reverse=True) # 3->2->1
+
         mean_ranks = mean_ranks if len(mean_ranks) < 5 else mean_ranks[:5]
         hitattens = hitattens if len(hitattens) < 5 else hitattens[:5]
+        mrrs = mrrs if len(mrrs) < 5 else mrrs[:5
+        ]
         self.logger.info("Top Mean Rank: {}".format(mean_ranks))  
         self.logger.info("Top Hit@10: {}".format(hitattens)) 
+        self.logger.info("Top MRR: {}".format(mrrs))
         print("Top Mean Rank: {}".format(mean_ranks))
         print("Top Hit@10: {}".format(hitattens)) 
+        print("Top MRR: {}".format(mrrs))
     
 
         # 保存最终模型
