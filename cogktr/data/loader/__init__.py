@@ -8,5 +8,6 @@ __all__=[
     "FB15K237Loader",
     "WN18Loader",
     "WN18RRLoader",
-    "WIKIDATA5MLoader"
+    "WIKIDATA5MLoader",
+    "MOBILEWIKIDATA5MLoader"
 ]

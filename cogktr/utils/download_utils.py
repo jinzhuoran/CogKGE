@@ -58,6 +58,12 @@ class Download_Data:
                       zip_name="WIKIDATA5M.zip",
                       dataset_path=self.dataset_path,
                       url_path=self.url)
+    def MOBILEWIKIDATA5M(self):
+        download_data(task="kr",
+                      data_name="MOBILEWIKIDATA5M",
+                      zip_name="MOBILEWIKIDATA5M.zip",
+                      dataset_path=self.dataset_path,
+                      url_path=self.url)
 
 # class Download_Visualization:
 #     pass
