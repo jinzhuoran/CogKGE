@@ -37,6 +37,7 @@ __all__ = [
     "TransA",
     "RotatE",
     "Rescal",
+    "SimplE",
 
     # utils
     "Download_Data",

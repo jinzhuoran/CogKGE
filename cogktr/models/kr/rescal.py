@@ -19,8 +19,10 @@ class Rescal(nn.Module):
     def forward(self,sample):
         batch_h,batch_r,batch_t =  sample[:, 0], sample[:, 1], sample[:, 2]
         A = self.entity_embedding(batch_h).view(-1,1,self.embedding_dim) # (batch,1,embedding)
+        A = F.normalize(A,p=2,dim=-1)
         R = self.relation_embedding(batch_r).view(-1,self.embedding_dim,self.embedding_dim) # (batch,embedding,embedding)
         A_T = self.entity_embedding(batch_t).view(-1,self.embedding_dim,1) # (batch,embedding,1)
+        A_T = F.normalize(A_T,p=2,dim=1)
 
         return torch.squeeze(torch.matmul(torch.matmul(A,R),A_T)) # (batch,)
     def get_score(self,sample):

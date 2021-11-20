@@ -5,6 +5,7 @@ from .transd import *
 from .transa import *
 from .rotate import *
 from .rescal import *
+from .simple import *
 
 __all__=[
     #transe
@@ -21,4 +22,6 @@ __all__=[
     "RotatE",
 
     "Rescal",
+
+    "SimplE",
 ]
