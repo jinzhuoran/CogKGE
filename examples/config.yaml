@@ -11,7 +11,7 @@ download: True
 download_path: "CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 0,1,2
+device: 3
 
 # choose the model
 
@@ -22,7 +22,7 @@ device: 0,1,2
 #   negative_sample_method: Random_Negative_Sampling
 
 # Simple
-model_name: SimplE
+model_name: Rescal
 model_args:
   embedding_dim: 100
 
