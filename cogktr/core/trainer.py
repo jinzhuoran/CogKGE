@@ -155,7 +155,7 @@ class Kr_Trainer:
                 writer.add_scalars("1_loss", {"train_loss": train_loss,
                                               "valid_loss": valid_loss}, epoch+1)
                 if epoch == 0:
-                    fake_data = torch.zeros((len(self.train_dataset), 3)).long()
+                    fake_data = torch.zeros(self.trainer_batch_size, 3).long()
                     writer.add_graph(self.model.cpu(), fake_data)
                     self.model.to(self.device)
                 for name, param in self.model.named_parameters():

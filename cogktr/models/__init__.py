@@ -12,4 +12,5 @@ __all__=[
     "RotatE",
     "Rescal",
     "SimplE",
+    "TuckER",
 ]

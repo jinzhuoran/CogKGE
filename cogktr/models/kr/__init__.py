@@ -6,6 +6,7 @@ from .transa import *
 from .rotate import *
 from .rescal import *
 from .simple import *
+from .tucker import *
 
 __all__=[
     #transe
@@ -24,4 +25,6 @@ __all__=[
     "Rescal",
 
     "SimplE",
+
+    "TuckER",
 ]

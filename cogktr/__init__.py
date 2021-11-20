@@ -39,6 +39,7 @@ __all__ = [
     "RotatE",
     "Rescal",
     "SimplE",
+    "TuckER",
 
     # utils
     "Download_Data",
