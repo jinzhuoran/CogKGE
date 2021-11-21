@@ -3,11 +3,13 @@ import torch.utils.data as Data
 import torch.nn.functional as F
 import numpy as np
 import copy
+import math
 from tqdm import tqdm
 
 class Link_Prediction:
-    def __init__(self, entity_dict_len):
+    def __init__(self, entity_dict_len,batch_size):
         self.entity_dict_len = entity_dict_len
+        self.batch_size = batch_size
         self.name = "Link_Prediction"
         self.total_rank = None
         self.total_rank_numpy = None
@@ -32,8 +34,22 @@ class Link_Prediction:
             metric_single = torch.cat([metric_single,new_tail],dim=1)
             metric_single = metric_single.to(device)
             # metric_distance = model.get_score(metric_single)
-            metric_distance = model(metric_single)
-            metric_total_matrix = np.argsort(metric_distance.data.cpu().numpy())
+            # metric_distance = model(metric_single)
+            metric_distance = []
+            for i in range(math.ceil(self.entity_dict_len/self.batch_size)):
+                start = i * self.batch_size
+                end = min((i+1)*self.batch_size,self.entity_dict_len)
+                data_input = metric_single[start:end,:]
+                result = model(data_input).data.cpu().numpy()
+                metric_distance.append(result)
+            
+            # metric_distance = torch.cat([
+            #     model(metric_single[i * self.batch_size:min((i+1)*self.batch_size,self.entity_dict_len),:]) 
+            #         for i in range(math.ceil(self.entity_dict_len/self.batch_size)) 
+            # ])
+            # metric_total_matrix = np.argsort(metric_distance.data.cpu().numpy())
+            # metric_total_matrix = np.argsort(np.array(metric_distance).ravel('C'))
+            metric_total_matrix = np.argsort(np.concatenate([x for x in metric_distance]))
             rank_tail = np.where(metric_total_matrix == x)[0][0]
             self.total_rank.append(rank_tail)
             self.MRR.append(1/(rank_tail+1))
@@ -47,8 +63,21 @@ class Link_Prediction:
             metric_single = torch.cat([new_head,metric_single],dim=1)
             metric_single = metric_single.to(device)
             # metric_distance = model.get_score(metric_single)
-            metric_distance = model(metric_single)
-            metric_total_matrix = np.argsort(metric_distance.data.cpu().numpy())
+            # metric_distance = model(metric_single)
+            # metric_distance = torch.cat([
+            #     model(metric_single[i * self.batch_size:min((i+1)*self.batch_size,self.entity_dict_len)]) 
+            #         for i in range(math.ceil(self.entity_dict_len/self.batch_size)) 
+            # ])
+            metric_distance = []
+            for i in range(math.ceil(self.entity_dict_len/self.batch_size)):
+                start = i * self.batch_size
+                end = min((i+1)*self.batch_size,self.entity_dict_len)
+                data_input = metric_single[start:end,:]
+                result = model(data_input).data.cpu().numpy()
+                metric_distance.append(list(result))
+
+            metric_total_matrix = np.argsort(np.concatenate([x for x in metric_distance]))
+            # metric_total_matrix = np.argsort(np.array(metric_distance).ravel('C'))
             rank_head = np.where(metric_total_matrix == x)[0][0]
             self.total_rank.append(rank_head)
             self.MRR.append(1/(rank_head+1))

@@ -36,13 +36,17 @@ class TuckER(nn.Module):
         r = r.view(-1,1,1,self.dim_relation) # (batch,1,1,dim_relation)
         h = torch.unsqueeze(h,dim=-1) # (batch,dim_entity,1)
         t = torch.unsqueeze(t,dim=1)  # (batch,1,dim_entity)
-    
-        tmp = torch.matmul(r,self.core_tensor) # (batch,dim_entity,1,dim_entity)
-        tmp = torch.squeeze(tmp)               # (batch,dim_entity,dim_etity)
 
+        # print("r.shape:{}   w.shape:{}".format(r.shape,self.core_tensor.shape))
+        tmp = torch.matmul(r,self.core_tensor) # (batch,dim_entity,1,dim_entity)
+        tmp = torch.squeeze(tmp,-2)               # (batch,dim_entity,dim_etity)
+
+        # print("t.shape:{}    tmp.shape:{}".format(t.shape,tmp.shape))
         score = torch.bmm(t,tmp) # (batch,1,dim_entity)
         score = torch.bmm(score,h) # (batch,1,1)
-        return torch.squeeze(score)  # (batch,)
+        score = score.view(score.shape[0]) # (batch,)
+        return score
+        # return torch.squeeze(score)  # (batch,)
  
     def get_score(self,sample):
         return self.forward(sample)
