@@ -36,7 +36,7 @@ class TuckER(nn.Module):
         r = r.view(-1,1,1,self.dim_relation) # (batch,1,1,dim_relation)
         h = torch.unsqueeze(h,dim=-1) # (batch,dim_entity,1)
         t = torch.unsqueeze(t,dim=1)  # (batch,1,dim_entity)
-
+    
         tmp = torch.matmul(r,self.core_tensor) # (batch,dim_entity,1,dim_entity)
         tmp = torch.squeeze(tmp)               # (batch,dim_entity,dim_etity)
 

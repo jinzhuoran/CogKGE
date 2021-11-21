@@ -31,7 +31,8 @@ class Link_Prediction:
             new_tail = torch.unsqueeze(torch.arange(0, self.entity_dict_len), dim=1)
             metric_single = torch.cat([metric_single,new_tail],dim=1)
             metric_single = metric_single.to(device)
-            metric_distance = model.get_score(metric_single)
+            # metric_distance = model.get_score(metric_single)
+            metric_distance = model(metric_single)
             metric_total_matrix = np.argsort(metric_distance.data.cpu().numpy())
             rank_tail = np.where(metric_total_matrix == x)[0][0]
             self.total_rank.append(rank_tail)
@@ -45,7 +46,8 @@ class Link_Prediction:
             new_head = torch.unsqueeze(torch.arange(0, self.entity_dict_len), dim=1)
             metric_single = torch.cat([new_head,metric_single],dim=1)
             metric_single = metric_single.to(device)
-            metric_distance = model.get_score(metric_single)
+            # metric_distance = model.get_score(metric_single)
+            metric_distance = model(metric_single)
             metric_total_matrix = np.argsort(metric_distance.data.cpu().numpy())
             rank_head = np.where(metric_total_matrix == x)[0][0]
             self.total_rank.append(rank_head)

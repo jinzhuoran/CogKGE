@@ -33,7 +33,7 @@ def init_seed(seed):
 init_seed(1)
 parser = argparse.ArgumentParser(description="konwledge embedding toolkit")
 parser.add_argument('--config',
-                    default='./examples/config.yaml',
+                    default='./config.yaml',
                     help='path to the configuration file')
 cmd_args = parser.parse_args()
 

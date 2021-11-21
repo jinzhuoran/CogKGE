@@ -1,5 +1,6 @@
 from logging import Logger
 import torch
+from torch.nn import parallel
 import torch.utils.data as Data
 from tqdm import tqdm
 import random
@@ -113,8 +114,10 @@ class Kr_Trainer:
                     valid_positive = valid_positive.to(self.device)
                     valid_negative = self.negative_sampler.create_negative(valid_positive)
                     # valid_negative = self.create_negative(valid_positive)
-                    valid_positive_score = self.model.get_score(valid_positive)
-                    valid_negative_score = self.model.get_score(valid_negative)
+                    # valid_positive_score = self.model.get_score(valid_positive)
+                    # valid_negative_score = self.model.get_score(valid_negative)
+                    valid_positive_score = parallel_model(valid_positive)
+                    valid_negative_score = parallel_model(valid_negative)
                     valid_loss = self.loss(valid_positive_score,valid_negative_score)
 
                     valid_epoch_loss = valid_epoch_loss + valid_loss.item()
@@ -128,7 +131,8 @@ class Kr_Trainer:
             if self.metric_step != None and (epoch+1) % self.metric_step == 0:
                 if self.metric.name == "Link_Prediction":
                     print("Evaluating Model {}...".format(self.model.name))
-                    self.metric(self.model, self.valid_dataset,self.device)
+                    # self.metric(self.model, self.valid_dataset,self.device)
+                    self.metric(parallel_model,self.valid_dataset,self.device)
                     raw_meanrank = self.metric.raw_meanrank
                     raw_hitatten = self.metric.raw_hitatten
                     raw_mrr = self.metric.raw_MRR
@@ -158,13 +162,13 @@ class Kr_Trainer:
                     fake_data = torch.zeros(self.trainer_batch_size, 3).long()
                     writer.add_graph(self.model.cpu(), fake_data)
                     self.model.to(self.device)
-                for name, param in self.model.named_parameters():
-                    writer.add_histogram(name + '_grad', param.grad, epoch)
-                    writer.add_histogram(name + '_data', param, epoch)
-                if epoch == 0:
-                    embedding_data = torch.rand(10, 20)
-                    embedding_label = ["篮球", "足球", "乒乓球", "羽毛球", "保龄球", "游泳", "爬山", "旅游", "赛车", "写代码"]
-                    writer.add_embedding(mat=embedding_data, metadata=embedding_label)
+                # for name, param in self.model.named_parameters():
+                #     writer.add_histogram(name + '_grad', param.grad, epoch)
+                #     writer.add_histogram(name + '_data', param, epoch)
+                # if epoch == 0:
+                #     embedding_data = torch.rand(10, 20)
+                #     embedding_label = ["篮球", "足球", "乒乓球", "羽毛球", "保龄球", "游泳", "爬山", "旅游", "赛车", "写代码"]
+                #     writer.add_embedding(mat=embedding_data, metadata=embedding_label)
 
             # 每隔几步保存模型
             if self.save_step != None and (epoch+1) % self.save_step == 0:
@@ -180,8 +184,7 @@ class Kr_Trainer:
 
         mean_ranks = mean_ranks if len(mean_ranks) < 5 else mean_ranks[:5]
         hitattens = hitattens if len(hitattens) < 5 else hitattens[:5]
-        mrrs = mrrs if len(mrrs) < 5 else mrrs[:5
-        ]
+        mrrs = mrrs if len(mrrs) < 5 else mrrs[:5]
         self.logger.info("Top Mean Rank: {}".format(mean_ranks))  
         self.logger.info("Top Hit@10: {}".format(hitattens)) 
         self.logger.info("Top MRR: {}".format(mrrs))
