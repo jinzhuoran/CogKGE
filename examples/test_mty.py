@@ -21,7 +21,7 @@ from torch.utils.data import RandomSampler
 
 # cogktr模块
 from cogktr import *
-
+print(torch.cuda.is_available())
 
 # init the random seeds
 def init_seed(seed):
