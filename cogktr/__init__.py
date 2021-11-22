@@ -42,6 +42,7 @@ __all__ = [
     "SimplE",
     "TuckER",
     "KEPLER",
+    "PairRE",
 
     # utils
     "Download_Data",

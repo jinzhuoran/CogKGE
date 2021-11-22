@@ -7,6 +7,7 @@ from .rotate import *
 from .rescal import *
 from .simple import *
 from .tucker import *
+from .pairre import *
 from .kepler import *
 
 __all__=[
@@ -29,5 +30,7 @@ __all__=[
 
     "TuckER",
 
-    "KEPLER"
+    "KEPLER",
+
+    "PairRE",
 ]
