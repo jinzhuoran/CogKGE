@@ -13,5 +13,6 @@ __all__=[
     "Rescal",
     "SimplE",
     "TuckER",
+    "KEPLER",
     "PairRE",
 ]
