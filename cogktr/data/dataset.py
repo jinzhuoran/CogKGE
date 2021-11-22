@@ -35,6 +35,7 @@ class Cog_Dataset(Dataset):
         relation_np = np.array(relation_list)[:,np.newaxis]
         tail_np = np.array(tail_list)[:,np.newaxis]
         self.data_numpy=np.concatenate((head_np,relation_np,tail_np),axis=1)
+        print("######",self.data_numpy.shape)
 
 
 if __name__=="__main__":
