@@ -41,6 +41,7 @@ __all__ = [
     "Rescal",
     "SimplE",
     "TuckER",
+    "PairRE",
 
     # utils
     "Download_Data",

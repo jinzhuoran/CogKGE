@@ -7,6 +7,7 @@ from .rotate import *
 from .rescal import *
 from .simple import *
 from .tucker import *
+from .pairre import *
 
 __all__=[
     #transe
@@ -27,4 +28,6 @@ __all__=[
     "SimplE",
 
     "TuckER",
+
+    "PairRE",
 ]
