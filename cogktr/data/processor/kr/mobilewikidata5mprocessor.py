@@ -2,7 +2,8 @@ from ...dataset import Cog_Dataset
 from tqdm import tqdm
 from transformers import logging
 logging.set_verbosity_error()
-from transformers import RobertaTokenizer,RobertaModel
+from transformers import RobertaTokenizer
+import numpy as np
 
 class MOBILEWIKIDATA5MProcessor:
     def __init__(self,lut_E,lut_R,device):
@@ -11,21 +12,16 @@ class MOBILEWIKIDATA5MProcessor:
         self.device=device
     def process(self,datable):
         datable=self.relation_str2number(datable)
+        datable.print_table(5)
         datable=self.entity_str2descriptions(datable)
         datable.print_table(5)
         datable=self.entity_description_tokenization(datable)
         datable.print_table(5)
-        dataset=Cog_Dataset(data=datable,task="kr")
+        dataset=Cog_Dataset(data=datable,task="kr",add_texts=True)
         return dataset
-    def str2number(self,datable):
-        for i in range(len(datable)):
-            datable["head"][i]=self.lut_E.str_dic[datable["head"][i]]
-            datable["relation"][i]=self.lut_R.str_dic[datable["relation"][i]]
-            datable["tail"][i]=self.lut_E.str_dic[datable["tail"][i]]
-        return datable
     def relation_str2number(self,datable):
         for i in range(len(datable)):
-            datable["relation"][i]=self.lut_R.str_dic[datable["relation"][i]]
+            datable["relation"][i]=np.ones((1,300))*self.lut_R.str_dic[datable["relation"][i]]
         return datable
     def entity_str2descriptions(self,datable):
         for i in range(len(datable)):
@@ -53,8 +49,8 @@ class MOBILEWIKIDATA5MProcessor:
                 truncation=True,
                 return_tensors="pt"
             )
-            datable["head"][i]=encoded_text_head
-            datable["tail"][i]=encoded_text_tail
+            datable["head"][i]=encoded_text_head.data.numpy()
+            datable["tail"][i]=encoded_text_tail.data.numpy()
         return datable
 
 
