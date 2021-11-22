@@ -8,7 +8,7 @@ from .rescal import *
 from .simple import *
 from .tucker import *
 from .pairre import *
-# from .kepler import *
+from .kepler import *
 
 __all__=[
     #transe
