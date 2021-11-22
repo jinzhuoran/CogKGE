@@ -8,5 +8,6 @@ __all__=[
     "FB15K237Processor",
     "WN18Processor",
     "WN18RRProcessor",
-    "WIKIDATA5MProcessor"
+    "WIKIDATA5MProcessor",
+    "MOBILEWIKIDATA5MProcessor"
 ]

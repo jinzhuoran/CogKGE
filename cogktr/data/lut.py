@@ -69,11 +69,24 @@ class LookUpTable:
         else:
             raise ValueError("Index must be number or string!")
 
-    def _get_row(self, index):
-        candidate = list()
-        for column in self.columns:
-            candidate.append(self.datas[column][index])
-        return candidate
+    def _get_row(self, index,visua_descriptions_length=None):
+        # candidate = list()
+        # for column in self.columns:
+        #     candidate.append(self.datas[column][index])
+        # return candidate
+        if visua_descriptions_length==None:
+            candidate = list()
+            for column in self.columns:
+                candidate.append(self.datas[column][index])
+            return candidate
+        else:
+            candidate = list()
+            for column in self.columns:
+                if column=="descriptions":
+                    candidate.append(self.datas[column][index][:visua_descriptions_length]+"..."+"(Show the first %s words)"%(visua_descriptions_length))
+                else:
+                    candidate.append(self.datas[column][index])
+            return candidate
 
     def _get_column(self, index):
         if index in self.columns:
@@ -89,7 +102,7 @@ class LookUpTable:
         else:
             max_length=num
         for i in range(max_length):
-            table.add_row(self._get_row(i))
+            table.add_row(self._get_row(i,visua_descriptions_length=80))
         print(table)
 
     def _update_index_column(self):

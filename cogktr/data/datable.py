@@ -60,11 +60,21 @@ class Datable:
         else:
             raise ValueError("Index must be number or string!")
 
-    def _get_row(self, index):
-        candidate = list()
-        for column in self.columns:
-            candidate.append(self.datas[column][index])
-        return candidate
+    def _get_row(self, index,visua_length=None):
+        if visua_length==None:
+            candidate = list()
+            for column in self.columns:
+                candidate.append(self.datas[column][index])
+            return candidate
+        else:
+            candidate = list()
+            for column in self.columns:
+                if isinstance(self.datas[column][index],str) and len(self.datas[column][index])>visua_length:
+                    candidate.append(self.datas[column][index][:visua_length]+"..."+"(Show the first %s words)"%(visua_length))
+                else:
+                    candidate.append(self.datas[column][index])
+            return candidate
+
 
     def _get_column(self, index):
         if index in self.columns:
@@ -90,7 +100,7 @@ class Datable:
         else:
             max_length=num
         for i in range(max_length):
-            table.add_row(self._get_row(i))
+            table.add_row(self._get_row(i,visua_length=40))
         print(table)
 
     def _update_index_column(self):

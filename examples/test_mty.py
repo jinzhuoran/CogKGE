@@ -51,7 +51,7 @@ elif device:  # non-cpu device requested
 device = torch.device('cuda:0' if torch.cuda.is_available()==True else "cpu")
 
 # construct the output path and log file
-output_path = cal_output_path(args.data_path)
+output_path = cal_output_path(args.data_path,args.model_name)
 if not os.path.exists(output_path):
     os.makedirs(output_path)
 logger = save_logger(os.path.join(output_path,"run.log"))
@@ -95,10 +95,15 @@ optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.w
 Metric = get_class(args.metric_name)
 metric = Metric(entity_dict_len=len(lookuptable_E))
 
-lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
-    optimizer,milestones=[50,100,150],gamma=0.5
+lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer,mode='min',patience=2,threshold_mode='abs',threshold=5, # mean rank!
+    factor=0.5,min_lr=1e-10,verbose=True
 )
 
+Negative_sampler = get_class(args.negative_sampler_name)
+negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
+                                    entity_dict_len=len(lookuptable_E),
+                                    relation_dict_len=len(lookuptable_R))
 Trainer = get_class(args.trainer_name)
 trainer = Trainer(
     logger=logger,
@@ -106,6 +111,7 @@ trainer = Trainer(
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
     valid_sampler=valid_sampler,
+    negative_sampler=negative_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
