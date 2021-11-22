@@ -6,10 +6,9 @@ from transformers import RobertaTokenizer
 import numpy as np
 
 class MOBILEWIKIDATA5MProcessor:
-    def __init__(self,lut_E,lut_R,device):
+    def __init__(self,lut_E,lut_R):
         self.lut_E=lut_E
         self.lut_R=lut_R
-        self.device=device
     def process(self,datable):
         datable=self.relation_str2number(datable)
         datable.print_table(5)

@@ -41,6 +41,7 @@ __all__ = [
     "Rescal",
     "SimplE",
     "TuckER",
+    "KEPLER",
 
     # utils
     "Download_Data",
