@@ -7,11 +7,8 @@ from .rotate import *
 from .rescal import *
 from .simple import *
 from .tucker import *
-<<<<<<< HEAD
 from .pairre import *
-=======
-from .kepler import *
->>>>>>> 0dbc8a388344672719e35b7b9deffdb7431d5ccd
+# from .kepler import *
 
 __all__=[
     #transe
