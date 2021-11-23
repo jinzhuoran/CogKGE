@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-
-
-class MOBILEWIKIDATA5MProcessor:
-    pass
-=======
 from ...dataset import Cog_Dataset
 from tqdm import tqdm
 from transformers import logging
@@ -59,4 +53,3 @@ class MOBILEWIKIDATA5MProcessor:
         return datable
 
 
->>>>>>> 0dbc8a388344672719e35b7b9deffdb7431d5ccd

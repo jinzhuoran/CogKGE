@@ -109,7 +109,7 @@ metric = Metric(entity_dict_len=len(lookuptable_E),batch_size=args.metric_batch_
 # Learning Rate Scheduler:
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=2, threshold_mode='abs', threshold=5,  # mean rank!
-    factor=0.5, min_lr=1e-6, verbose=True
+    factor=0.5, min_lr=1e-9, verbose=True
 )
 # lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
 #     optimizer,milestones=[30,60,90],gamma=0.5
