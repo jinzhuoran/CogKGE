@@ -20,7 +20,7 @@ class MOBILEWIKIDATA5MProcessor:
         return dataset
     def relation_str2number(self,datable):
         for i in range(len(datable)):
-            datable["relation"][i]=np.ones((1,300))*self.lut_R.str_dic[datable["relation"][i]]
+            datable["relation"][i]=np.ones((300,))*self.lut_R.str_dic[datable["relation"][i]]
         return datable
     def entity_str2descriptions(self,datable):
         for i in range(len(datable)):
@@ -48,8 +48,8 @@ class MOBILEWIKIDATA5MProcessor:
                 truncation=True,
                 return_tensors="pt"
             )
-            datable["head"][i]=encoded_text_head.data.numpy()
-            datable["tail"][i]=encoded_text_tail.data.numpy()
+            datable["head"][i]=encoded_text_head[0].data.numpy()
+            datable["tail"][i]=encoded_text_tail[0].data.numpy()
         return datable
 
 
