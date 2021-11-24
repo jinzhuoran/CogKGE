@@ -13,6 +13,8 @@ __all__ = [
     "MarginLoss",
     "RotatELoss",
     "TransALoss",
+    "NegLogLikehoodLoss",
+    
     "Link_Prediction",
     "LinkRotatePrediction",
     "Kr_Trainer",

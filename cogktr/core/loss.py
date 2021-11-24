@@ -24,7 +24,19 @@ class MarginLoss:
         output = torch.mean(F.relu(self.margin + positive_score - negative_score))
         return output
 
+class NegLogLikehoodLoss:
+    def __init__(self,lamda):
+        self.lamda = lamda
     
+    def __call__(self,positive_score,negative_score):
+        """
+        positive_score: (batch,)
+        negative_score: (batch,)
+        """
+        softplus = lambda x:torch.log(1+torch.exp(x))
+        output = softplus(- positive_score) + softplus(negative_score) # (batch,)
+        return torch.mean(output)
+
 # Still working on this...
 class TransALoss:
     def __init__(self,margin):

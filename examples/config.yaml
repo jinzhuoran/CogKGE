@@ -11,7 +11,7 @@ download: True
 download_path: "CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 1,2,3
+device: 0
 
 # choose the model
 
@@ -26,16 +26,19 @@ device: 1,2,3
 # model_args:
 #   dim_entity: 100
 #   dim_relation: 100
-model_name: BoxE
+model_name: SimplE
 model_args:
   embedding_dim: 100
 
 
 
 # loss function
-loss_name: MarginLoss
+# loss_name: MarginLoss
+# loss_args:
+#   margin: 1.0
+loss_name: NegLogLikehoodLoss
 loss_args:
-  margin: 1.0
+  lamda: None
 
 # metric function
 metric_name: Link_Prediction
