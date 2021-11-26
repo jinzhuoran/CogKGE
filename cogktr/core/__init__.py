@@ -18,6 +18,7 @@ __all__ = [
     "RotatELoss",
     "TransALoss",
     "KEPLERLoss",
+    "NegLogLikehoodLoss",
 
     # metric
     "Link_Prediction",

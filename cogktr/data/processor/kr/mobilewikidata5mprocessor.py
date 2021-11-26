@@ -67,3 +67,4 @@ class MOBILEWIKIDATA5MProcessor:
             datable["tail"][i]=self.lut_E.str_dic[datable["tail"][i]]
         return datable
 
+

@@ -14,6 +14,8 @@ __all__ = [
     "RotatELoss",
     "TransALoss",
     "KEPLERLoss",
+    "NegLogLikehoodLoss",
+
     "Link_Prediction",
     "LinkRotatePrediction",
     "Kr_Trainer",
@@ -44,6 +46,7 @@ __all__ = [
     "TuckER",
     "KEPLER",
     "PairRE",
+    "BoxE",
 
     # utils
     "Download_Data",

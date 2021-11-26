@@ -9,6 +9,7 @@ from .simple import *
 from .tucker import *
 from .pairre import *
 from .kepler import *
+from .boxe import *
 
 __all__=[
     #transe
@@ -33,4 +34,6 @@ __all__=[
     "KEPLER",
 
     "PairRE",
+
+    "BoxE",
 ]

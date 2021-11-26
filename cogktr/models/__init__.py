@@ -15,4 +15,5 @@ __all__=[
     "TuckER",
     "KEPLER",
     "PairRE",
+    "BoxE",
 ]
