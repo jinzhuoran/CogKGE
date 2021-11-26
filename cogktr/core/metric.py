@@ -49,7 +49,8 @@ class Link_Prediction:
             # ])
             # metric_total_matrix = np.argsort(metric_distance.data.cpu().numpy())
             # metric_total_matrix = np.argsort(np.array(metric_distance).ravel('C'))
-            metric_total_matrix = np.argsort(np.concatenate([x for x in metric_distance]))[::-1]
+            metric_total_matrix = np.argsort(np.concatenate([x for x in metric_distance]))
+            # metric_total_matrix = np.argsort(np.concatenate([x for x in metric_distance]))[::-1]
             rank_tail = np.where(metric_total_matrix == x)[0][0]
             self.total_rank.append(rank_tail)
             self.MRR.append(1/(rank_tail+1))
@@ -76,7 +77,8 @@ class Link_Prediction:
                 result = model(data_input).data.cpu().numpy()
                 metric_distance.append(list(result))
 
-            metric_total_matrix = np.argsort(np.concatenate([x for x in metric_distance]))[::-1]
+            metric_total_matrix = np.argsort(np.concatenate([x for x in metric_distance]))
+            # metric_total_matrix = np.argsort(np.concatenate([x for x in metric_distance]))[::-1]
             # metric_total_matrix = np.argsort(np.array(metric_distance).ravel('C'))
             rank_head = np.where(metric_total_matrix == x)[0][0]
             self.total_rank.append(rank_head)

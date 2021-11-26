@@ -26,25 +26,25 @@ device: 0
 # model_args:
 #   dim_entity: 100
 #   dim_relation: 100
-model_name: SimplE
+model_name: TransH
 model_args:
-  embedding_dim: 100
+  embedding_dim: 50
 
 
 
 # loss function
-# loss_name: MarginLoss
-# loss_args:
-#   margin: 1.0
-loss_name: NegLogLikehoodLoss
+loss_name: MarginLoss
 loss_args:
-  lamda: None
+  margin: 0.5
+# loss_name: NegLogLikehoodLoss
+# loss_args:
+#   lamda: None
 
 # metric function
 metric_name: Link_Prediction
 metric_batch_size: 5000
 
-lr: 0.001
+lr: 0.005
 weight_decay: 0.0001
 
 negative_sampler_name: UnifNegativeSampler
@@ -52,9 +52,9 @@ negative_sampler_name: UnifNegativeSampler
 
 trainer_name: Kr_Trainer
 trainer_args:
-  trainer_batch_size: 512
-  epoch: 300
-  save_step: 2000
+  trainer_batch_size: 1200
+  epoch: 200
+  save_step: None
   metric_step: 5
   save_final_model: 0 # False
   visualization: 1 # False
