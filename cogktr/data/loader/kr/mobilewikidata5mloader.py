@@ -15,10 +15,10 @@ class MOBILEWIKIDATA5MLoader:
         if self.download == True:
             downloader = Download_Data(dataset_path=self.download_path)
             downloader.MOBILEWIKIDATA5M()
-        self.train_name="mobilewikidata5m50000_transductive_train.txt"
-        self.valid_name="mobilewikidata5m50000_transductive_valid.txt"
-        self.test_name="mobilewikidata5m50000_transductive_test.txt"
-        self.text_name="mobilewikidata5m50000_text"
+        self.train_name="mobilewikidata5m5000_transductive_train.txt"
+        self.valid_name="mobilewikidata5m5000_transductive_valid.txt"
+        self.test_name="mobilewikidata5m5000_transductive_test.txt"
+        self.text_name="mobilewikidata5m5000_text"
 
 
     def _load_data(self, path):

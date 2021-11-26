@@ -69,6 +69,14 @@ class LookUpTable:
         else:
             raise ValueError("Index must be number or string!")
 
+    def _getitem(self, index):
+        if isinstance(index, int):
+            return self._get_row(index)
+        elif isinstance(index, str):
+            return self._get_column(index)
+        else:
+            raise ValueError("Index must be number or string!")
+
     def _get_row(self, index,visua_descriptions_length=None):
         # candidate = list()
         # for column in self.columns:
@@ -119,6 +127,12 @@ class LookUpTable:
             if len(self.datas[column]) > max:
                 max = len(self.datas[column])
         return max
+
+    def batch_index2categort(self,batch_data,category):
+        category_list=list()
+        for i in range(len(batch_data)):
+            category_list.append(self._getitem(category)[batch_data[i]])
+        return category_list
 
     def save_table(self):
         pass
@@ -178,6 +192,11 @@ if __name__=="__main__":
     print(lookuptable_E["text"][4])
     #名字转索引
     print(lookuptable_E.str_dic["E_2"])
+    #批量将idx(实际为一个一维tensor)转为其他类型的数据
+    import torch
+    input_index=torch.tensor([2,1,3])
+    output_category=lookuptable_E.batch_index2categort(batch_data=input_index,category="name")
+    print(output_category)
 
     #以下是LookUpTable规划的完整形式
     #     ########################################################################################################

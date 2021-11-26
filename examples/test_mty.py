@@ -1,3 +1,4 @@
+
 # add cogktr directory to sys.path
 from logging import config
 import sys
@@ -7,6 +8,7 @@ FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0].parents[0]  # CogKTR root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKTR root directory to PATH
+
 
 # 基本模块
 import os
@@ -21,7 +23,6 @@ from torch.utils.data import RandomSampler
 
 # cogktr模块
 from cogktr import *
-print(torch.cuda.is_available())
 
 # init the random seeds
 def init_seed(seed):
@@ -44,6 +45,7 @@ with open(cmd_args.config, 'r') as f:
 
 # configure multi-gpu environment
 device = str(args.device).strip().lower().replace('cuda:', '')
+
 cpu = device == 'cpu'
 if cpu:
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # force torch.cuda.is_available() = False
@@ -104,7 +106,7 @@ loss = Loss(**args.loss_args)
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
 Metric = get_class(args.metric_name)
-metric = Metric(entity_dict_len=len(lookuptable_E), batch_size=args.metric_batch_size)
+metric = Metric(entity_dict_len=len(lookuptable_E),batch_size=args.metric_batch_size)
 
 # Learning Rate Scheduler:
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(

@@ -67,5 +67,5 @@ class WIKIDATA5M_Filter:
 if __name__ == '__main__':
     filter = WIKIDATA5M_Filter(path_wikidata5m="../../dataset/kr/WIKIDATA5M/raw_data",
                                path_mobilewikidata5m="../../dataset/kr/MOBILEWIKIDATA5M/raw_data",
-                               threshold=50000)
+                               threshold=5000)
     filter.create_MOBILEWIKIDATA5M()

@@ -29,6 +29,8 @@ class Kr_Trainer:
                  output_path,
                  device,
                  lr_scheduler,
+                 lookuptable_E=None,
+                 lookuptable_R=None,
                  save_step=None,
                  metric_step=None,
                  save_final_model=False,
@@ -37,6 +39,8 @@ class Kr_Trainer:
         self.logger = logger
         self.train_dataset = train_dataset
         self.valid_dataset = valid_dataset
+        self.lookuptable_E=lookuptable_E
+        self.lookuptable_R=lookuptable_R
         self.train_sampler = train_sampler
         self.valid_sampler = valid_sampler
         self.negative_sampler = negative_sampler
@@ -59,8 +63,8 @@ class Kr_Trainer:
                                        batch_size=self.trainer_batch_size)
         valid_loader = Data.DataLoader(dataset=self.valid_dataset,sampler=self.valid_sampler,
                                         batch_size=self.trainer_batch_size)
-
-        
+        if self.lookuptable_E!=None:
+            self.model.load_lookuotable(self.lookuptable_E,self.lookuptable_R,self.device)
         self.model = self.model.to(self.device)
         print("Available cuda devices:",torch.cuda.device_count())
         parallel_model = torch.nn.DataParallel(self.model)
@@ -80,6 +84,7 @@ class Kr_Trainer:
         mrrs = []
         hitattens = []
 
+
         for epoch in range(self.epoch):
             # Training Progress
             epoch_loss = 0.0
@@ -93,9 +98,8 @@ class Kr_Trainer:
                 self.optimizer.zero_grad()
                 train_loss.backward()
                 epoch_loss = epoch_loss + train_loss.item()
-                # print(train_loss.item())
                 self.optimizer.step()
-                # break
+
             valid_epoch_loss = 0.0
             with torch.no_grad():
                 for valid_step,valid_positive in enumerate(valid_loader):
