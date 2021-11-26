@@ -4,14 +4,14 @@ import torch.nn.functional as F
 
 
 class TransD(nn.Module):
-    def __init__(self, entity_dict_len, relation_dict_len, dim_entity,dim_relation,negative_sample_method):
+    def __init__(self, entity_dict_len, relation_dict_len, dim_entity,dim_relation,p=2.0):
         super(TransD, self).__init__()
         self.name = "TransD"
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
-        self.negative_sample_method = negative_sample_method
         self.dim_entity = dim_entity
         self.dim_relation = dim_relation
+        self.p = p
 
         self.entity_embedding = nn.Embedding(entity_dict_len, dim_entity)
         self.relation_embedding = nn.Embedding(relation_dict_len, dim_relation)
@@ -39,7 +39,7 @@ class TransD(nn.Module):
 
     def get_score(self,sample):
         output = self._forward(sample)
-        score = F.pairwise_distance(output[:, 0] + output[:, 1], output[:, 2], p=2)
+        score = F.pairwise_distance(output[:, 0] + output[:, 1], output[:, 2], p=self.p)
         return score  # (batch,) 
     
     def forward(self,sample):
@@ -54,16 +54,16 @@ class TransD(nn.Module):
         r = self.relation_embedding(batch_r)
         t = self.entity_embedding(batch_t)
 
+        h = F.normalize(h, p=2.0,dim=-1)
+        t = F.normalize(t, p=2.0, dim=-1)  # ||h|| <= 1  ||t|| <= 1
+
         h_transfer = self.entity_transfer(batch_h)
         r_transfer = self.relation_transfer(batch_r)
         t_transfer = self.entity_transfer(batch_t)
 
         h = self.transfer(h,h_transfer,r_transfer)
         t = self.transfer(t,t_transfer,r_transfer)
-
-        h = F.normalize(h, p=2.0,dim=-1)
         r = F.normalize(r, p=2.0, dim=-1)
-        t = F.normalize(t, p=2.0, dim=-1)
 
         h = torch.unsqueeze(h,1)
         r = torch.unsqueeze(r,1)

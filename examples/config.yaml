@@ -11,7 +11,7 @@ download: True
 download_path: "CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 0
+device: 2
 
 # choose the model
 
@@ -26,33 +26,34 @@ device: 0
 # model_args:
 #   dim_entity: 100
 #   dim_relation: 100
-model_name: TransH
+model_name: TransD
 model_args:
-  embedding_dim: 50
-
+  dim_entity: 50
+  dim_relation: 50
+  p: 2.0
 
 
 # loss function
 loss_name: MarginLoss
 loss_args:
-  margin: 0.5
+  margin: 1.0
 # loss_name: NegLogLikehoodLoss
 # loss_args:
 #   lamda: None
 
 # metric function
 metric_name: Link_Prediction
-metric_batch_size: 5000
+metric_batch_size: 50000
 
-lr: 0.005
-weight_decay: 0.0001
+lr: 0.001
+weight_decay: 0.000
 
-negative_sampler_name: UnifNegativeSampler
-# negative_sampler_name: BernNegativeSampler
+# negative_sampler_name: UnifNegativeSampler
+negative_sampler_name: BernNegativeSampler
 
 trainer_name: Kr_Trainer
 trainer_args:
-  trainer_batch_size: 1200
+  trainer_batch_size: 200
   epoch: 200
   save_step: None
   metric_step: 5
