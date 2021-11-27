@@ -57,7 +57,7 @@ trainer_args:
   epoch: 200
   save_step: None
   metric_step: 5
-  save_final_model: 0 # False
+  save_final_model: 1 # False
   visualization: 1 # False
 
 # #TransR:

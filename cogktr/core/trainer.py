@@ -17,8 +17,10 @@ class Kr_Trainer:
                  logger,
                  train_dataset,
                  valid_dataset,
+                 test_dataset,
                  train_sampler,
                  valid_sampler,
+                 test_sampler,
                  negative_sampler,
                  trainer_batch_size,
                  model,
@@ -37,8 +39,10 @@ class Kr_Trainer:
         self.logger = logger
         self.train_dataset = train_dataset
         self.valid_dataset = valid_dataset
+        self.test_dataset = test_dataset
         self.train_sampler = train_sampler
         self.valid_sampler = valid_sampler
+        self.test_sampler = test_sampler
         self.negative_sampler = negative_sampler
         self.trainer_batch_size = trainer_batch_size
         self.model = model
@@ -59,7 +63,8 @@ class Kr_Trainer:
                                        batch_size=self.trainer_batch_size)
         valid_loader = Data.DataLoader(dataset=self.valid_dataset,sampler=self.valid_sampler,
                                         batch_size=self.trainer_batch_size)
-
+        test_loader = Data.DataLoader(dataset=self.test_dataset,sampler=self.test_sampler,
+                                        batch_size=self.trainer_batch_size)
         
         self.model = self.model.to(self.device)
         print("Available cuda devices:",torch.cuda.device_count())
@@ -190,7 +195,17 @@ class Kr_Trainer:
                 "saved successfully")
 
         
-
+        # Running on the test dataset
+        print("Testing Model {}...".format(self.model.name))
+        self.metric(parallel_model,self.test_dataset,self.device)
+        raw_meanrank = self.metric.raw_meanrank
+        raw_hitatten = self.metric.raw_hitatten
+        raw_mrr = self.metric.raw_MRR
+        print("Final test result:")
+        print("mean rank:{}     hit@10:{}   MRR:{}".format(raw_meanrank,raw_hitatten,raw_mrr))
+        self.logger.info("Final test result: \n mean_rank:{}   hit@10:{}   MRR:{}".format(
+            raw_meanrank,raw_hitatten,raw_mrr
+        ))
 
 
             # with tqdm(train_loader, ncols=150) as t:
