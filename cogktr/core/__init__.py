@@ -17,6 +17,7 @@ __all__ = [
     "MarginLoss",
     "RotatELoss",
     "TransALoss",
+    "KEPLERLoss",
     "NegLogLikehoodLoss",
 
     # metric

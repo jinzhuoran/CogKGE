@@ -49,7 +49,8 @@ if cpu:
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # force torch.cuda.is_available() = False
 elif device:  # non-cpu device requested
     os.environ['CUDA_VISIBLE_DEVICES'] = device  # set environment variable
-    assert torch.cuda.is_available(), f'CUDA unavailable, invalid device {device} requested'  # check availability
+    assert torch.cuda.is_available(), f'CUDA unavailable, invalid device {device} requested'
+# torch.cuda.set_device(0)
 device = torch.device('cuda:0' if torch.cuda.is_available() == True else "cpu")
 
 # construct the output path and log file
@@ -95,48 +96,54 @@ test_sampler = RandomSampler(test_dataset)
 Model = get_class(args.model_name)
 model = Model(entity_dict_len=len(lookuptable_E),
               relation_dict_len=len(lookuptable_R),
+              device=device,
               **args.model_args)
-#
-# Loss = get_class(args.loss_name)
-# loss = Loss(**args.loss_args)
-#
+
+Loss = get_class(args.loss_name)
+loss = Loss(**args.loss_args)
+
 # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-#
-# Metric = get_class(args.metric_name)
-# metric = Metric(entity_dict_len=len(lookuptable_E), batch_size=args.metric_batch_size)
-#
-# # Learning Rate Scheduler:
-# lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-#     optimizer, mode='min', patience=2, threshold_mode='abs', threshold=5,  # mean rank!
-#     factor=0.5, min_lr=1e-6, verbose=True
-# )
+#新的优化算法
+from transformers import AdamW
+optimizer=AdamW(model.parameters(),lr=args.lr)
+
+Metric = get_class(args.metric_name)
+metric = Metric(entity_dict_len=len(lookuptable_E), batch_size=args.metric_batch_size)
+
+# Learning Rate Scheduler:
+lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer, mode='min', patience=2, threshold_mode='abs', threshold=5,  # mean rank!
+    factor=0.5, min_lr=1e-6, verbose=True
+)
 # # lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
 # #     optimizer,milestones=[30,60,90],gamma=0.5
 # # )
-#
-# Negative_sampler = get_class(args.negative_sampler_name)
-# negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
-#                                     entity_dict_len=len(lookuptable_E),
-#                                     relation_dict_len=len(lookuptable_R))
-#
-# Trainer = get_class(args.trainer_name)
-# trainer = Trainer(
-#     logger=logger,
-#     train_dataset=train_dataset,
-#     valid_dataset=valid_dataset,
-#     train_sampler=train_sampler,
-#     valid_sampler=valid_sampler,
-#     negative_sampler=negative_sampler,
-#     model=model,
-#     loss=loss,
-#     optimizer=optimizer,
-#     metric=metric,
-#     output_path=output_path,
-#     device=device,
-#     lr_scheduler=lr_scheduler,
-#     **args.trainer_args
-# )
-# trainer.train()
+
+Negative_sampler = get_class(args.negative_sampler_name)
+negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
+                                    entity_dict_len=len(lookuptable_E),
+                                    relation_dict_len=len(lookuptable_R))
+
+Trainer = get_class(args.trainer_name)
+trainer = Trainer(
+    logger=logger,
+    train_dataset=train_dataset,
+    valid_dataset=valid_dataset,
+    lookuptable_E=lookuptable_E,
+    lookuptable_R=lookuptable_R,
+    train_sampler=train_sampler,
+    valid_sampler=valid_sampler,
+    negative_sampler=negative_sampler,
+    model=model,
+    loss=loss,
+    optimizer=optimizer,
+    metric=metric,
+    output_path=output_path,
+    device=device,
+    lr_scheduler=lr_scheduler,
+    **args.trainer_args
+)
+trainer.train()
 
 
 

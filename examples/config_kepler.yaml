@@ -7,47 +7,46 @@ download: True
 download_path: "Research_code/CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 7,6
-
+device: 1
 # choose the model
 #KEPLER
 model_name: KEPLER
 model_args:
-  token_length: 300
+  token_length: 5
   embedding_dim: 768  #此参数暂时不可更改，因为采用的Roberta预训练模型的输出维度是768
 
 
-## loss function
-#loss_name: MarginLoss
-#loss_args:
-#  margin: 1.0
-#
-## metric function
-#metric_name: Link_Prediction
-#metric_batch_size: 8
-#
-#lr: 0.001
-#weight_decay: 0.0001
-#
-#negative_sampler_name: UnifNegativeSampler
-## negative_sampler_name: BernNegativeSampler
-#
-#trainer_name: Kr_Trainer
-#trainer_args:
-#  trainer_batch_size: 128
-#  epoch: 100
-#  save_step: 2000
-#  metric_step: 5
-#  save_final_model: 0 # False
-#  visualization: 1 # False
+# loss function
+loss_name: KEPLERLoss
+loss_args:
+  margin: 1.0
+
+# metric function
+metric_name: Link_Prediction
+metric_batch_size: 500
+
+lr: 0.001
+weight_decay: 0.0001
+
+negative_sampler_name: UnifNegativeSampler
+# negative_sampler_name: BernNegativeSampler
+
+trainer_name: Kr_Trainer
+trainer_args:
+  trainer_batch_size: 500
+  epoch: 100
+  save_step: 2000
+  metric_step: 5
+  save_final_model: 0 # False
+  visualization: 0 # False
 
 
 ########################################################################################################################
 # #TransE
-# model_name: TransE
-# model_args:
-#   embedding_dim: 100
-#   negative_sample_method: Random_Negative_Sampling
+#model_name: TransE
+#model_args:
+#  embedding_dim: 100
+#  negative_sample_method: Random_Negative_Sampling
 
 
 # #TransR:

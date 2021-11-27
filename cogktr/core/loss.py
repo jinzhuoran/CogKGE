@@ -2,6 +2,7 @@ from numpy import positive
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import math
 
 
 # class MarginLoss:
@@ -86,6 +87,27 @@ class TransALoss(nn.Module):
         negative_distance = self.get_score(h_,r_,t_,Wr)
         output = torch.mean(F.relu(self.margin + positive_distance - negative_distance))
         return output
+
+class KEPLERLoss:
+    def __init__(self, margin):
+        self.margin = margin
+
+    def KELoss(self,positive_score,negative_score):
+        positive_loss=(-1)*torch.log(torch.sigmoid(self.margin-positive_score)).type(torch.FloatTensor)
+        negative_loss=(-1)*torch.log(torch.sigmoid(self.margin-negative_score)).type(torch.FloatTensor)
+        keloss=torch.mean(positive_loss+negative_loss)
+
+        return keloss
+
+    # def MLMLoss(self):
+    #     return 0.0
+
+    def __call__(self, positive_score, negative_score):
+        output_mean=self.KELoss(positive_score,negative_score)
+        # output_mean=self.KELoss(positive_score,negative_score)+self.MLMLoss()
+        return output_mean
+
+
 
 
         

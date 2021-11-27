@@ -1,17 +1,52 @@
+# from torch.utils.data import Dataset
+# import torch
+# import numpy as np
+# import torch.utils.data as Data
+# class Cog_Dataset(Dataset):
+#     def __init__(self,data,task,add_texts=False):
+#         self.data=data
+#         self.task=task
+#         self.add_texts=add_texts
+#         self.data_numpy=None
+#         if add_texts==False:
+#             self._datable2numpy()
+#         else:
+#             self._datable2numpy_add_texts()
+#     def __getitem__(self,index):
+#         if self.task=="kr":
+#             #把datable格式的data，在kr任务下是转换成numpy，再转tensor，再编序号
+#             return torch.tensor(self.data_numpy[index],dtype=torch.long)
+#     def __len__(self):
+#         return len(self.data)
+#     def _datable2numpy(self):
+#         head_list=self.data["head"]
+#         relation_list=self.data["relation"]
+#         tail_list=self.data["tail"]
+#         head_np=np.array(head_list)[:,np.newaxis]
+#         relation_np=np.array(relation_list)[:,np.newaxis]
+#         tail_np=np.array(tail_list)[:,np.newaxis]
+#         self.data_numpy=np.hstack((head_np,relation_np,tail_np))
+#
+#     def _datable2numpy_add_texts(self):
+#         head_list = self.data["head"]
+#         relation_list = self.data["relation"]
+#         tail_list = self.data["tail"]
+#         head_np = np.array(head_list)[:,np.newaxis]
+#         relation_np = np.array(relation_list)[:,np.newaxis]
+#         tail_np = np.array(tail_list)[:,np.newaxis]
+#         self.data_numpy=np.concatenate((head_np,relation_np,tail_np),axis=1)
+#         print("######",self.data_numpy.shape)
 from torch.utils.data import Dataset
 import torch
 import numpy as np
 import torch.utils.data as Data
 class Cog_Dataset(Dataset):
-    def __init__(self,data,task,add_texts=False):
+    def __init__(self,data,task):
         self.data=data
         self.task=task
-        self.add_texts=add_texts
         self.data_numpy=None
-        if add_texts==False:
-            self._datable2numpy()
-        else:
-            self._datable2numpy_add_texts()
+        self._datable2numpy()
+
     def __getitem__(self,index):
         if self.task=="kr":
             #把datable格式的data，在kr任务下是转换成numpy，再转tensor，再编序号
@@ -27,15 +62,7 @@ class Cog_Dataset(Dataset):
         tail_np=np.array(tail_list)[:,np.newaxis]
         self.data_numpy=np.hstack((head_np,relation_np,tail_np))
 
-    def _datable2numpy_add_texts(self):
-        head_list = self.data["head"]
-        relation_list = self.data["relation"]
-        tail_list = self.data["tail"]
-        head_np = np.array(head_list)[:,np.newaxis]
-        relation_np = np.array(relation_list)[:,np.newaxis]
-        tail_np = np.array(tail_list)[:,np.newaxis]
-        self.data_numpy=np.concatenate((head_np,relation_np,tail_np),axis=1)
-        print("######",self.data_numpy.shape)
+
 
 
 if __name__=="__main__":

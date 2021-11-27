@@ -77,8 +77,8 @@ if __name__=="__main__":
     #比如我服务器的绝对路径是/home/mentianyi（用户名）/Research_code/CogKTR/dataset
     #那么dataset_path就按如下填写
     downloader = Download_Data(dataset_path="Research_code/CogKTR/dataset")
-    downloader.FB15K()
-    downloader.FB15K237()
-    downloader.WN18()
-    downloader.WN18RR()
+    # downloader.FB15K()
+    # downloader.FB15K237()
+    # downloader.WN18()
+    # downloader.WN18RR()
     downloader.WIKIDATA5M()
