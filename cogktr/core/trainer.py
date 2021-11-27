@@ -160,7 +160,7 @@ class Kr_Trainer:
                 #     writer.add_embedding(mat=embedding_data, metadata=embedding_label)
 
             # 每隔几步保存模型
-            if self.save_step != None and (epoch+1) % self.save_step == 0:
+            if self.save_step != 'None' and (epoch+1) % self.save_step == 0:
                 if not os.path.exists(os.path.join(self.output_path, "checkpoints")):
                     os.makedirs(os.path.join(self.output_path, "checkpoints"))
                 torch.save(self.model, os.path.join(self.output_path, "checkpoints",
