@@ -96,7 +96,6 @@ test_sampler = RandomSampler(test_dataset)
 Model = get_class(args.model_name)
 model = Model(entity_dict_len=len(lookuptable_E),
               relation_dict_len=len(lookuptable_R),
-              device=device,
               **args.model_args)
 
 Loss = get_class(args.loss_name)
@@ -143,6 +142,7 @@ trainer = Trainer(
     lr_scheduler=lr_scheduler,
     **args.trainer_args
 )
+print(123)
 trainer.train()
 
 

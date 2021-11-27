@@ -64,10 +64,10 @@ class Kr_Trainer:
         valid_loader = Data.DataLoader(dataset=self.valid_dataset,sampler=self.valid_sampler,
                                         batch_size=self.trainer_batch_size)
         if self.lookuptable_E!=None:
-            self.model.load_lookuotable(self.lookuptable_E,self.lookuptable_R,self.device)
-        self.model = self.model.to(self.device)
+            self.model.load_lookuotable(self.lookuptable_E,self.lookuptable_R)
         print("Available cuda devices:",torch.cuda.device_count())
         parallel_model = torch.nn.DataParallel(self.model)
+        parallel_model=parallel_model.to(self.device)
 
         if self.visualization == True:
             if not os.path.exists(os.path.join(self.output_path, "visualization", self.model.name)):
