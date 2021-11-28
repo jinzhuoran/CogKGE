@@ -30,11 +30,13 @@ class KEPLER(nn.Module):
         self.lookuptable_E = lookuptable_E
         self.lookuptable_R = lookuptable_R
         # 在lookuptable生成token的字典
-        entity_descriptions_dict=dict()
+        entity_descriptions_id_dict=dict()
+        entity_descriptions_mask_dict=dict()
         print("Descriptions Tokenization ... ")
         tokens_list=list()
+        masks_list=list()
         for i in tqdm(range(len(self.lookuptable_E))):
-            encoded_text = self.tokenizer.encode(
+            encoded_text = self.tokenizer.encode_plus(
                 self.lookuptable_E["descriptions"][i],
                 add_special_tokens=True,
                 max_length=self.token_length,
@@ -42,11 +44,16 @@ class KEPLER(nn.Module):
                 truncation=True,
                 return_tensors="pt"
             )
-            entity_descriptions_dict[self.lookuptable_E["name"][i]]=encoded_text
-            tokens_list.append(encoded_text)
-        self.lookuptable_E("tokens",entity_descriptions_dict)
+            entity_descriptions_id_dict[self.lookuptable_E["name"][i]]=encoded_text["input_ids"]
+            entity_descriptions_mask_dict[self.lookuptable_E["name"][i]]=encoded_text['attention_mask']
+            tokens_list.append(encoded_text["input_ids"])
+            masks_list.append(encoded_text['attention_mask'])
+        self.lookuptable_E("tokens",entity_descriptions_id_dict)
+        self.lookuptable_E("masks",entity_descriptions_mask_dict)
         self.tokens = nn.Embedding(num_embeddings=len(self.lookuptable_E), embedding_dim=self.token_length)
+        self.masks = nn.Embedding(num_embeddings=len(self.lookuptable_E), embedding_dim=self.token_length)
         self.tokens.weight.data = torch.cat(tokens_list, dim=0).type(torch.FloatTensor)
+        self.masks.weight.data = torch.cat(masks_list, dim=0).type(torch.FloatTensor)
         self.lookuptable_E.print_table(2)
 
     def get_score(self,triplet_idx):
@@ -68,12 +75,16 @@ class KEPLER(nn.Module):
         head_tokens_tensor.requires_grad_(False)
         tail_tokens_tensor= self.tokens(triplet_idx[:, 2]).type(torch.LongTensor).to(current_device)
         tail_tokens_tensor.requires_grad_(False)
+        head_masks_tensor=self.masks(triplet_idx[:, 0]).type(torch.LongTensor).to(current_device)
+        head_masks_tensor.requires_grad_(False)
+        tail_masks_tensor= self.masks(triplet_idx[:, 2]).type(torch.LongTensor).to(current_device)
+        tail_masks_tensor.requires_grad_(False)
         head_roberta= self.pre_training_model(head_tokens_tensor.to(current_device),
                                               token_type_ids=None,
-                                              attention_mask=(head_tokens_tensor.to(current_device) > 0)) #head_roberta.pooler_output.shape  （batch_size,768）
+                                              attention_mask=head_masks_tensor) #head_roberta.pooler_output.shape  （batch_size,768）
         tail_roberta = self.pre_training_model(tail_tokens_tensor.to(current_device),
                                                token_type_ids=None,
-                                               attention_mask=(tail_tokens_tensor.to(current_device) > 0))
+                                               attention_mask=tail_masks_tensor)
         # entity的embedding
         head_embedding= torch.unsqueeze(head_roberta.pooler_output,dim=1)                       #(batch_size,1,768)oxiangxia
         tail_embedding= torch.unsqueeze(tail_roberta.pooler_output, dim=1)                      #(batch_size,1,768)
