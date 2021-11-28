@@ -55,7 +55,7 @@ class KEPLERLoss:
 
     def KELoss(self,positive_score,negative_score):
         positive_loss=(-1)*torch.log(torch.sigmoid(self.margin-positive_score)).type(torch.FloatTensor)
-        negative_loss=(-1)*torch.log(torch.sigmoid(self.margin-negative_score)).type(torch.FloatTensor)
+        negative_loss=(-1)*torch.log(torch.sigmoid(negative_score-self.margin)).type(torch.FloatTensor)
         keloss=torch.mean(positive_loss+negative_loss)
 
         return keloss
