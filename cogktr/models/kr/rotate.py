@@ -4,12 +4,11 @@ import torch.nn.functional as F
 
 
 class RotatE(nn.Module):
-    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim, negative_sample_method):
+    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim):
         super(RotatE, self).__init__()
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.embedding_dim = embedding_dim
-        self.negative_sample_method = negative_sample_method
         self.name = "RotatE"
         self.square = embedding_dim ** 0.5
         self.entity_embedding = nn.Embedding(num_embeddings=self.entity_dict_len, embedding_dim=self.embedding_dim)
@@ -37,8 +36,9 @@ class RotatE(nn.Module):
         relation_embeddiing = torch.unsqueeze(self.relation_embedding(triplet_idx[:, 1]), 1)
         tail_embeddiing = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 2]), 1)
 
-        head_embeddiing = F.normalize(head_embeddiing, p=2, dim=2)
-        tail_embeddiing = F.normalize(tail_embeddiing, p=2, dim=2)
+        # head_embeddiing = F.normalize(head_embeddiing, p=2, dim=2)
+        # tail_embeddiing = F.normalize(tail_embeddiing, p=2, dim=2)
+        relation_embeddiing = F.normalize(relation_embeddiing,p=2,dim=2)
 
         triplet_embedding = torch.cat([head_embeddiing, relation_embeddiing, tail_embeddiing], dim=1)
 

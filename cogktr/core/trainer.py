@@ -100,7 +100,8 @@ class Kr_Trainer:
                 train_negative = self.negative_sampler.create_negative(train_positive)
                 train_positive_score = parallel_model(train_positive)
                 train_negative_score = parallel_model(train_negative)
-                train_loss = self.loss(train_positive_score, train_negative_score)
+                penalty = self.model.get_penalty() if hasattr(self.model,'get_penalty') else 0
+                train_loss = self.loss(train_positive_score, train_negative_score,penalty)
                 
                 self.optimizer.zero_grad()
                 train_loss.backward()
@@ -114,8 +115,8 @@ class Kr_Trainer:
                     valid_negative = self.negative_sampler.create_negative(valid_positive)
                     valid_positive_score = parallel_model(valid_positive)
                     valid_negative_score = parallel_model(valid_negative)
-                    valid_loss = self.loss(valid_positive_score,valid_negative_score)
-
+                    penalty = self.model.get_penalty() if hasattr(self.model,'get_penalty') else 0
+                    valid_loss = self.loss(valid_positive_score,valid_negative_score,penalty)
                     valid_epoch_loss = valid_epoch_loss + valid_loss.item()
 
             print("Epoch{}/{}   Train Loss:".format(epoch+1,self.epoch),epoch_loss/(train_step+1),

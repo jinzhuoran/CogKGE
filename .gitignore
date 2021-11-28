@@ -148,4 +148,4 @@ checkpoints/*
 experimental_output
 
 # ignore the raw data files
-raw_data/*
+raw_data/

@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class TransH(nn.Module):
-    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim):
+    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim,p=2.0):
         super(TransH, self).__init__()
         self.name = "TransH"
         self.entity_dict_len = entity_dict_len
@@ -11,6 +11,7 @@ class TransH(nn.Module):
         self.entity_embedding = nn.Embedding(entity_dict_len, embedding_dim)
         self.translation_embedding = nn.Embedding(relation_dict_len, embedding_dim)
         self.norm_vector = nn.Embedding(relation_dict_len,embedding_dim)
+        self.p = p
 
         nn.init.xavier_uniform_(self.entity_embedding.weight.data)
         nn.init.xavier_uniform_(self.translation_embedding.weight.data)
@@ -31,7 +32,7 @@ class TransH(nn.Module):
         h_vertical = F.normalize(h_vertical)
         t_vertical = F.normalize(t_vertical)
 
-        score = torch.norm(h_vertical + d_r - t_vertical,dim=-1)
+        score = torch.norm(h_vertical + d_r - t_vertical,dim=-1,p=self.p)
         return score
 
 
