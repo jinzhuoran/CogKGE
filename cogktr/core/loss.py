@@ -39,6 +39,35 @@ class NegLogLikehoodLoss:
         output = softplus(- positive_score) + softplus(negative_score) # (batch,)
         return torch.mean(output)
 
+class NegSamplingLoss:
+    def __init__(self,margin,alpha,neg_per_pos):
+        self.alpha = alpha
+        self.margin = margin
+        self.neg_per_pos = neg_per_pos
+    
+    def __call__(self,p_score,n_score,empty_penalty):
+        """
+        p_score: (batch,)
+        n_score: (batch * neg_per_pos,)
+        return: tensor form scalar
+        """
+        n_score = torch.cat(
+                            [torch.unsqueeze(n_score[i * self.neg_per_pos:(i+1) * self.neg_per_pos],dim=1) 
+                            for i in range(int(n_score.shape[0]/self.neg_per_pos))]
+                            ,dim=-1
+                            ) # tensor(neg_per_pos,batch)
+                   
+        n_score = n_score.transpose(0,1) # tensor(batch,neg_per_pos)
+        n_log_score = torch.log(torch.sigmoid(n_score - self.margin))
+        n_prob = torch.exp(self.alpha * n_score)/torch.sum(torch.exp(self.alpha * n_score),dim=-1,keepdim=True)#(batch,neg_per_pos)
+        
+        negative_loss = -torch.sum(n_score * n_prob,dim=-1) # (batch,)
+        positive_loss = -torch.log(torch.sigmoid(self.margin - p_score)) # (batch,)
+        return torch.mean(positive_loss + negative_loss)
+
+
+
+
 # Still working on this...
 class TransALoss:
     pass

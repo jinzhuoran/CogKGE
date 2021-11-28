@@ -15,6 +15,7 @@ __all__ = [
     "TransALoss",
     "KEPLERLoss",
     "NegLogLikehoodLoss",
+    "NegSamplingLoss",
 
     "Link_Prediction",
     "LinkRotatePrediction",
@@ -56,6 +57,7 @@ __all__ = [
     # sampler
     "UnifNegativeSampler",
     "BernNegativeSampler",
+    "AdversarialSampler",
 
    
 ]
