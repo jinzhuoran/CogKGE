@@ -7,7 +7,7 @@ download: True
 download_path: "Research_code/CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 1
+device: 1,3
 # choose the model
 #KEPLER
 model_name: KEPLER
