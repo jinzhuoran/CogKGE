@@ -1,6 +1,7 @@
 import random
 import numpy as np
- 
+import torch
+
 class UnifNegativeSampler():
     def __init__(self,triples,entity_dict_len,relation_dict_len):
         # (batch,3)
@@ -54,8 +55,35 @@ class BernNegativeSampler():
 
         return batch_neg
 
+class AdversarialSampler:
+    def __init__(self,triples,entity_dict_len,relation_dict_len,neg_per_pos):
+        # (batch,3)
+        self.triples = triples
+        self.entity_dict_len = entity_dict_len
+        self.relation_dict_len = relation_dict_len
+        self.neg_per_pos = neg_per_pos
 
- 
+    def create_negative(self,batch_pos):
+        """
+        batch_pos:(batch,3)
+        return: batch_neg(batch * neg_per_pos,3)
+        """
+        return torch.cat([self._create_negative(batch_pos) for i in range(self.neg_per_pos)],dim=0)
+        
+
+    def _create_negative(self,batch_pos):
+        batch_neg = batch_pos.clone().detach()
+        for i in range(len(batch_pos)):
+            if(random.random() < 0.5):
+                # corrupt head
+                batch_neg[i][0] = np.random.randint(0,self.entity_dict_len)
+            else:
+                # corrupt tail
+                batch_neg[i][2] = np.random.randint(0,self.entity_dict_len)
+
+        return batch_neg    
+
+    
 
 
 

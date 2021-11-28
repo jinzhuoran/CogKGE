@@ -116,9 +116,18 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
 # )
 
 Negative_sampler = get_class(args.negative_sampler_name)
-negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
-                                    entity_dict_len=len(lookuptable_E),
-                                    relation_dict_len=len(lookuptable_R))
+if args.negative_sampler_name == 'AdversarialSampler':
+    if 'neg_per_pos' not in args.loss_args:
+        assert ValueError("Please configure the neg_per_pos in loss_args if you want to choose AdversarialSampler!")
+    negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
+                                        entity_dict_len=len(lookuptable_E),
+                                        relation_dict_len=len(lookuptable_R),
+                                        neg_per_pos = args.loss_args['neg_per_pos'],)
+else:
+    negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
+                                        entity_dict_len=len(lookuptable_E),
+                                        relation_dict_len=len(lookuptable_R))
+
 
 Trainer = get_class(args.trainer_name)
 trainer = Trainer(
