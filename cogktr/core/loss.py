@@ -61,7 +61,7 @@ class NegSamplingLoss:
         n_log_score = torch.log(torch.sigmoid(n_score - self.margin))
         n_prob = torch.exp(self.alpha * n_score)/torch.sum(torch.exp(self.alpha * n_score),dim=-1,keepdim=True)#(batch,neg_per_pos)
         
-        negative_loss = -torch.sum(n_score * n_prob,dim=-1) # (batch,)
+        negative_loss = -torch.sum(n_log_score * n_prob,dim=-1) # (batch,)
         positive_loss = -torch.log(torch.sigmoid(self.margin - p_score)) # (batch,)
         return torch.mean(positive_loss + negative_loss)
 

@@ -7,7 +7,7 @@ data_processor: FB15KProcessor
 # data_processor: WN18Processor
 
 #download data
-download: True
+download: False
 download_path: "CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
