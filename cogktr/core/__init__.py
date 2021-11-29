@@ -23,7 +23,6 @@ __all__ = [
 
     # metric
     "Link_Prediction",
-    "LinkRotatePrediction",
 
     # trainer
     "Kr_Trainer",

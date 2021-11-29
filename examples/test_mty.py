@@ -1,4 +1,3 @@
-
 # add cogktr directory to sys.path
 from logging import config
 import sys
@@ -8,7 +7,6 @@ FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0].parents[0]  # CogKTR root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKTR root directory to PATH
-
 
 # 基本模块
 import os
@@ -23,6 +21,7 @@ from torch.utils.data import RandomSampler
 
 # cogktr模块
 from cogktr import *
+
 
 # init the random seeds
 def init_seed(seed):
@@ -45,7 +44,6 @@ with open(cmd_args.config, 'r') as f:
 
 # configure multi-gpu environment
 device = str(args.device).strip().lower().replace('cuda:', '')
-
 cpu = device == 'cpu'
 if cpu:
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # force torch.cuda.is_available() = False
@@ -106,29 +104,40 @@ loss = Loss(**args.loss_args)
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
 Metric = get_class(args.metric_name)
-metric = Metric(entity_dict_len=len(lookuptable_E),batch_size=args.metric_batch_size)
+metric = Metric(entity_dict_len=len(lookuptable_E),**args.metric_args)
 
 # Learning Rate Scheduler:
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    optimizer, mode='min', patience=2, threshold_mode='abs', threshold=5,  # mean rank!
-    factor=0.5, min_lr=1e-6, verbose=True
+    optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,  # mean rank!
+    factor=0.5, min_lr=1e-9, verbose=True
 )
 # lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
 #     optimizer,milestones=[30,60,90],gamma=0.5
 # )
 
 Negative_sampler = get_class(args.negative_sampler_name)
-negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
-                                    entity_dict_len=len(lookuptable_E),
-                                    relation_dict_len=len(lookuptable_R))
+if args.negative_sampler_name == 'AdversarialSampler':
+    if 'neg_per_pos' not in args.loss_args:
+        assert ValueError("Please configure the neg_per_pos in loss_args if you want to choose AdversarialSampler!")
+    negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
+                                        entity_dict_len=len(lookuptable_E),
+                                        relation_dict_len=len(lookuptable_R),
+                                        neg_per_pos = args.loss_args['neg_per_pos'],)
+else:
+    negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
+                                        entity_dict_len=len(lookuptable_E),
+                                        relation_dict_len=len(lookuptable_R))
+
 
 Trainer = get_class(args.trainer_name)
 trainer = Trainer(
     logger=logger,
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
+    test_dataset=test_dataset,
     train_sampler=train_sampler,
     valid_sampler=valid_sampler,
+    test_sampler=test_sampler,
     negative_sampler=negative_sampler,
     model=model,
     loss=loss,
