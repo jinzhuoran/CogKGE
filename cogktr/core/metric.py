@@ -150,7 +150,8 @@ class Link_Prediction:
         self.model=model
         self.device=device
         metric_loader = Data.DataLoader(dataset=metric_dataset, batch_size=1, shuffle=False)
-        self.total_rank = list()
+        self.rank = list()
+        self.MRR = list()
         for step, single_sample in enumerate(tqdm(metric_loader)):
             self._change_metric_node(single_sample,"tail")
             self._change_metric_node(single_sample, "head")
@@ -160,3 +161,5 @@ class Link_Prediction:
         self.raw_hitatten = np.sum(self.rank_numpy <= 10) / (2 * len(metric_dataset)) * 100
         self.raw_MRR = np.mean(self.MRR_numpy)
 
+if __name__=="__main__":
+    metric=Link_Prediction()
