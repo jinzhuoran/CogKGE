@@ -162,4 +162,20 @@ class Link_Prediction:
         self.raw_MRR = np.mean(self.MRR_numpy)
 
 if __name__=="__main__":
-    metric=Link_Prediction()
+    metric=Link_Prediction(entity_dict_len=10, batch_size=3,reverse=False)
+    metric_dataset=torch.tensor([[1,3,4],
+                                [9,4,4],
+                                [4,3,2],
+                                [6,2,6],
+                                [3,1,2],
+                                [2,7,8],
+                                [8,2,4],
+                                [1,5,7]])
+    def model(metric_dataset):
+        score=metric_dataset[:,0]*0.1+metric_dataset[:,1]-metric_dataset[:,2]*0.3
+        return score
+    print(model(metric_dataset))
+    metric(model=model, metric_dataset=metric_dataset, device="cuda:0")
+    print(metric.raw_meanrank)
+    print(metric.raw_hitatten)
+    print(metric.raw_MRR)

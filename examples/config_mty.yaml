@@ -1,7 +1,7 @@
 # raw data of one dataset
-data_path: ../dataset/kr/FB15K237/raw_data
-data_loader: FB15K237Loader
-data_processor: FB15K237Processor
+data_path: ../dataset/kr/FB15K/raw_data
+data_loader: FB15KLoader
+data_processor: FB15KProcessor
 # data_path: ../dataset/kr/WN18/raw_data
 # data_loader: WN18Loader
 # data_processor: WN18Processor
@@ -33,19 +33,19 @@ model_args:
 
 
 # loss function
-#loss_name: MarginLoss
-#loss_args:
-#  margin: 2.0
-#  C: 0.001
+loss_name: MarginLoss
+loss_args:
+  margin: 2.0
+  C: 0.001
 # loss_name: NegLogLikehoodLoss
 # loss_args:
 #   lamda: None
 
-loss_name: NegSamplingLoss
-loss_args:
-  margin: 15
-  alpha: 0.5
-  neg_per_pos: 10 # 每个正样本对应的负样本个数
+#loss_name: NegSamplingLoss
+#loss_args:
+#  margin: 15
+#  alpha: 0.5
+#  neg_per_pos: 10 # 每个正样本对应的负样本个数
 
 # metric function
 metric_name: Link_Prediction
@@ -54,11 +54,11 @@ metric_args:
   reverse: False
 
 lr: 0.001
-weight_decay: 0.001
+weight_decay: 0
 
-#negative_sampler_name: UnifNegativeSampler
+negative_sampler_name: UnifNegativeSampler
 # negative_sampler_name: BernNegativeSampler
-negative_sampler_name: AdversarialSampler
+#negative_sampler_name: AdversarialSampler
 
 
 trainer_name: Kr_Trainer
@@ -66,7 +66,7 @@ trainer_args:
   trainer_batch_size: 1024
   epoch: 200
   save_step: None
-  metric_step: 1
+  metric_step: 10
   save_final_model: 1 # False
   visualization: 1 # False
 
