@@ -18,7 +18,6 @@ __all__ = [
     "NegSamplingLoss",
 
     "Link_Prediction",
-    "LinkRotatePrediction",
     "Kr_Trainer",
 
     # data
