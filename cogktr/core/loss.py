@@ -20,24 +20,24 @@ class MarginLoss:
     def __init__(self, margin,C=0):
         self.margin = margin
         self.C = C
-        pass
 
     def __call__(self, positive_score, negative_score,penalty=0.0):
         output = torch.mean(F.relu(self.margin + positive_score - negative_score)) + self.C * penalty
         return output
 
 class NegLogLikehoodLoss:
-    def __init__(self,lamda):
-        self.lamda = lamda
+    def __init__(self,C=0):
+        # self.lamda = lamda
+        self.C = C
     
-    def __call__(self,positive_score,negative_score):
+    def __call__(self,positive_score,negative_score,penalty=0):
         """
         positive_score: (batch,)
         negative_score: (batch,)
         """
         softplus = lambda x:torch.log(1+torch.exp(x))
         output = softplus(- positive_score) + softplus(negative_score) # (batch,)
-        return torch.mean(output)
+        return torch.mean(output) + self.C * penalty
 
 class NegSamplingLoss:
     def __init__(self,margin,alpha,neg_per_pos):
