@@ -28,14 +28,14 @@ device: 0,1
 #   dim_relation: 100
 model_name: TransE
 model_args:
-  embedding_dim: 100
+  embedding_dim: 50
 
 
 
 # loss function
 loss_name: MarginLoss
 loss_args:
-  margin: 2.0
+  margin: 1.0
   C: 0.001
 # loss_name: NegLogLikehoodLoss
 # loss_args:
@@ -53,7 +53,7 @@ metric_args:
   batch_size: 50000
   reverse: False
 
-lr: 0.001
+lr: 0.01
 weight_decay: 0
 
 negative_sampler_name: UnifNegativeSampler

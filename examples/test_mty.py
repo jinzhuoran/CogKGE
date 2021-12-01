@@ -105,6 +105,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.w
 
 Metric = get_class(args.metric_name)
 metric = Metric(entity_dict_len=len(lookuptable_E),**args.metric_args)
+# metric = Metric(entity_dict_len=len(lookuptable_E))
 
 # Learning Rate Scheduler:
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
