@@ -22,13 +22,13 @@ device: 3
 #   negative_sample_method: Random_Negative_Sampling
 
 # SimplE
-# model_name: TuckER
-# model_args:
-#   dim_entity: 100
-#   dim_relation: 100
-model_name: SimplE
+model_name: TuckER
 model_args:
-  embedding_dim: 200
+  dim_entity: 100
+  dim_relation: 100
+# model_name: SimplE
+# model_args:
+#   embedding_dim: 200
 
 
 
@@ -37,14 +37,17 @@ model_args:
 # loss_args:
 #   margin: 1.0
 #   C: 0.03
-loss_name: NegLogLikehoodLoss
-loss_args:
-  C: 0.1
+# loss_name: NegLogLikehoodLoss
+# loss_args:
+#   C: 0.1
 #loss_name: NegSamplingLoss
 #loss_args:
 #  margin: 15
 #  alpha: 0.5
 #  neg_per_pos: 10 # 每个正样本对应的负样本个数
+loss_name: TuckERLoss
+loss_args:
+  margin: None
 
 # metric function
 metric_name: Link_Prediction
@@ -52,7 +55,7 @@ metric_args:
   batch_size: 50000
   reverse: True
 
-lr: 0.01
+lr: 0.001
 weight_decay: 0
 
 negative_sampler_name: UnifNegativeSampler
@@ -62,7 +65,7 @@ negative_sampler_name: UnifNegativeSampler
 
 trainer_name: Kr_Trainer
 trainer_args:
-  trainer_batch_size: 1024
+  trainer_batch_size: 128
   epoch: 200
   save_step: None
   metric_step: 5

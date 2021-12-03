@@ -75,8 +75,15 @@ class TransALoss:
 class RotatELoss:
     pass
 
-class TransALoss:
-    pass
+class TuckERLoss:
+    def __init__(self,margin):
+        pass
+
+    def __call__(self,p_score,n_score,penalty=None):
+        p_score = -torch.mean(torch.log(p_score))
+        n_score = -torch.mean(torch.log(1 - n_score))
+        return (p_score + n_score) / 2
+
 
 class KEPLERLoss:
     def __init__(self, margin):

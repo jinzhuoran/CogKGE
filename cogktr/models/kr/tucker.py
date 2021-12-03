@@ -45,7 +45,8 @@ class TuckER(nn.Module):
         score = torch.bmm(t,tmp) # (batch,1,dim_entity)
         score = torch.bmm(score,h) # (batch,1,1)
         score = score.view(score.shape[0]) # (batch,)
-        return score
+        return torch.sigmoid(score)
+        # return score
         # return torch.squeeze(score)  # (batch,)
  
     def get_score(self,sample):
