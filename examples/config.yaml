@@ -11,7 +11,7 @@ download: True
 download_path: "CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 0
+device: 3
 
 # choose the model
 
@@ -39,7 +39,7 @@ model_args:
 #   C: 0.03
 loss_name: NegLogLikehoodLoss
 loss_args:
-  C: 0
+  C: 0.1
 #loss_name: NegSamplingLoss
 #loss_args:
 #  margin: 15
