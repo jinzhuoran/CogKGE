@@ -1,7 +1,7 @@
 # raw data of one dataset
-data_path: ../dataset/kr/FB15K/raw_data
-data_loader: FB15KLoader
-data_processor: FB15KProcessor
+data_path: ../dataset/kr/EVENTKG/raw_data
+data_loader: EVENTKGLoader
+data_processor: EVENTKGProcessor
 # data_path: ../dataset/kr/WN18/raw_data
 # data_loader: WN18Loader
 # data_processor: WN18Processor
@@ -11,7 +11,7 @@ download: True
 download_path: "Research_code/CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 0,1
+device: 7,6,5,4,3,2,1,0
 
 # choose the model
 
@@ -36,24 +36,24 @@ model_args:
 loss_name: MarginLoss
 loss_args:
   margin: 1.0
-  C: 0.001
+  C: 0
 # loss_name: NegLogLikehoodLoss
 # loss_args:
 #   lamda: None
 
 #loss_name: NegSamplingLoss
 #loss_args:
-#  margin: 15
+#  margin: 3
 #  alpha: 0.5
 #  neg_per_pos: 10 # 每个正样本对应的负样本个数
 
 # metric function
 metric_name: Link_Prediction
 metric_args:
-  batch_size: 50000
+  batch_size: 1
   reverse: False
 
-lr: 0.01
+lr: 0.001
 weight_decay: 0
 
 negative_sampler_name: UnifNegativeSampler
@@ -63,10 +63,10 @@ negative_sampler_name: UnifNegativeSampler
 
 trainer_name: Kr_Trainer
 trainer_args:
-  trainer_batch_size: 1024
+  trainer_batch_size: 1
   epoch: 200
   save_step: None
-  metric_step: 10
+  metric_step: 40
   save_final_model: 1 # False
   visualization: 1 # False
 

@@ -64,6 +64,12 @@ class Download_Data:
                       zip_name="MOBILEWIKIDATA5M.zip",
                       dataset_path=self.dataset_path,
                       url_path=self.url)
+    def EVENTKG(self):
+        download_data(task="kr",
+                      data_name="EVENTKG",
+                      zip_name="EVENTKG.zip",
+                      dataset_path=self.dataset_path,
+                      url_path=self.url)
 
 # class Download_Visualization:
 #     pass
@@ -83,3 +89,4 @@ if __name__=="__main__":
     downloader.WN18RR()
     downloader.WIKIDATA5M()
     downloader.MOBILEWIKIDATA5M()
+    downloader.EVENTKG()

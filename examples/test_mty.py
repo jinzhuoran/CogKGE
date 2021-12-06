@@ -74,8 +74,8 @@ loader = MyLoader(args.data_path, args.download, args.download_path)
 train_data, valid_data, test_data = loader.load_all_data()
 lookuptable_E, lookuptable_R = loader.load_all_lut()
 train_data.print_table(5)
-valid_data.print_table(5)
-test_data.print_table(5)
+valid_data.print_table(1)
+test_data.print_table(1)
 lookuptable_E.print_table(5)
 lookuptable_R.print_table(5)
 print("data_length:\n", len(train_data), len(valid_data), len(test_data))
@@ -123,7 +123,7 @@ if args.negative_sampler_name == 'AdversarialSampler':
     negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
                                         entity_dict_len=len(lookuptable_E),
                                         relation_dict_len=len(lookuptable_R),
-                                        neg_per_pos = args.loss_args['neg_per_pos'],)
+                                        neg_per_pos = args.loss_args['neg_per_pos'])
 else:
     negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
                                         entity_dict_len=len(lookuptable_E),
