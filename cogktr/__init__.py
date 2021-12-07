@@ -21,6 +21,8 @@ __all__ = [
     "Link_Prediction",
     "Kr_Trainer",
 
+    "DataLoaderX",
+
     # data
     "FB15KLoader",
     "FB15K237Loader",
