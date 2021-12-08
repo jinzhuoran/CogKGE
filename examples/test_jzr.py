@@ -34,7 +34,7 @@ def init_seed(seed):
 init_seed(1)
 parser = argparse.ArgumentParser(description="konwledge embedding toolkit")
 parser.add_argument('--config',
-                    default='./config_mty.yaml',
+                    default='./config_jzr.yaml',
                     help='path to the configuration file')
 cmd_args = parser.parse_args()
 
@@ -147,6 +147,9 @@ trainer = Trainer(
     output_path=output_path,
     device=device,
     lr_scheduler=lr_scheduler,
+    dataloaderX=True,
+    num_workers=4,
+    pin_memory=True,
     **args.trainer_args
 )
 trainer.train()

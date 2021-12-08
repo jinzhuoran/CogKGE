@@ -4,6 +4,7 @@ from .wn18loader import *
 from .wn18rrloader import *
 from .wikidata5mloader import *
 from .mobilewikidata5mloader import *
+from .eventkgloader import *
 
 __all__=[
     "FB15KLoader",
@@ -11,5 +12,6 @@ __all__=[
     "WN18Loader",
     "WN18RRLoader",
     "WIKIDATA5MLoader",
-    "MOBILEWIKIDATA5MLoader"
+    "MOBILEWIKIDATA5MLoader",
+    "EVENTKGLoader",
 ]

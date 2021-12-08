@@ -1,9 +1,10 @@
+from .dataloader import *
 from .evaluator import *
 from .log import *
 from .loss import *
 from .metric import *
-from .trainer import *
 from .sampler import *
+from .trainer import *
 
 __all__ = [
     # evaluate
@@ -32,5 +33,8 @@ __all__ = [
     "UnifNegativeSampler",
     "BernNegativeSampler",
     "AdversarialSampler",
+
+    # dataloader
+    "DataLoaderX",
 
 ]

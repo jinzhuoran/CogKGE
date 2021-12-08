@@ -1,14 +1,14 @@
 # raw data of one dataset
-data_path: ../dataset/kr/EVENTKG/raw_data
-data_loader: EVENTKGLoader
-data_processor: EVENTKGProcessor
-# data_path: ../dataset/kr/WN18/raw_data
-# data_loader: WN18Loader
-# data_processor: WN18Processor
+#data_path: ../dataset/kr/EVENTKG/raw_data
+#data_loader: EVENTKGLoader
+#data_processor: EVENTKGProcessor
+data_path: ../dataset/kr/WN18/raw_data
+data_loader: WN18Loader
+data_processor: WN18Processor
 
 #download data
 download: True
-download_path: "Research_code/CogKTR/dataset"
+download_path: "code/CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
 device: 7,6,5,4,3,2,1,0
@@ -28,7 +28,7 @@ device: 7,6,5,4,3,2,1,0
 #   dim_relation: 100
 model_name: TransE
 model_args:
-  embedding_dim: 50
+  embedding_dim: 100
 
 
 
@@ -50,7 +50,7 @@ loss_args:
 # metric function
 metric_name: Link_Prediction
 metric_args:
-  batch_size: 1
+  batch_size: 200000
   reverse: False
 
 lr: 0.001
@@ -63,7 +63,7 @@ negative_sampler_name: UnifNegativeSampler
 
 trainer_name: Kr_Trainer
 trainer_args:
-  trainer_batch_size: 1
+  trainer_batch_size: 200000
   epoch: 200
   save_step: None
   metric_step: 40

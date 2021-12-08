@@ -21,6 +21,8 @@ __all__ = [
     "Link_Prediction",
     "Kr_Trainer",
 
+    "DataLoaderX",
+
     # data
     "FB15KLoader",
     "FB15K237Loader",
@@ -28,12 +30,14 @@ __all__ = [
     "WN18RRLoader",
     "WIKIDATA5MLoader",
     "MOBILEWIKIDATA5MLoader",
+    "EVENTKGLoader",
     "FB15KProcessor",
     "FB15K237Processor",
     "WN18Processor",
     "WN18RRProcessor",
     "WIKIDATA5MProcessor",
     "MOBILEWIKIDATA5MProcessor",
+    "EVENTKGProcessor",
 
     # models
     "TransE",
