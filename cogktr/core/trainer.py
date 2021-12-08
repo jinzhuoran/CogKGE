@@ -9,6 +9,8 @@ from logging import Logger
 from torch.nn import parallel
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
+import time
+
 
 from .log import *
 
@@ -114,6 +116,7 @@ class Kr_Trainer:
         mean_ranks = []
         mrrs = []
         hitattens = []
+
 
         for epoch in range(self.epoch):
             # Training Progress
