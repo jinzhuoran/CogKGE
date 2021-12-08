@@ -1,10 +1,10 @@
 # raw data of one dataset
-#data_path: ../dataset/kr/EVENTKG/raw_data
-#data_loader: EVENTKGLoader
-#data_processor: EVENTKGProcessor
-data_path: ../dataset/kr/WN18/raw_data
-data_loader: WN18Loader
-data_processor: WN18Processor
+data_path: ../dataset/kr/EVENTKG/raw_data
+data_loader: EVENTKGLoader
+data_processor: EVENTKGProcessor
+#data_path: ../dataset/kr/WN18/raw_data
+#data_loader: WN18Loader
+#data_processor: WN18Processor
 
 #download data
 download: True
@@ -28,7 +28,7 @@ device: 7,6,5,4,3,2,1,0
 #   dim_relation: 100
 model_name: TransE
 model_args:
-  embedding_dim: 50
+  embedding_dim: 100
 
 
 
