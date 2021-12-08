@@ -7,7 +7,7 @@ from torch.nn.parameter import Parameter
 
 class GCN(torch.nn.Module):
     def __init__(self, nfeat, nhid, nclass):
-        super(PyGCN, self).__init__()
+        super(GCN, self).__init__()
         self.gc1 = GraphConvolution(nfeat, nhid)
         self.gc2 = GraphConvolution(nhid, nclass)
         self.dropout = nn.Dropout()
