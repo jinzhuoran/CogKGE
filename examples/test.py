@@ -147,6 +147,9 @@ trainer = Trainer(
     output_path=output_path,
     device=device,
     lr_scheduler=lr_scheduler,
+    dataloaderX=True,
+    num_workers=4,
+    pin_memory=True,
     **args.trainer_args
 )
 trainer.train()
