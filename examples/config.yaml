@@ -22,21 +22,21 @@ device: 0
 #   negative_sample_method: Random_Negative_Sampling
 
 # SimplE
-model_name: Tucker
-model_args:
-  dim_entity: 100
-  dim_relation: 100
-# model_name: SimplE
+# model_name: TransE
 # model_args:
-#   embedding_dim: 200
+#   dim_entity: 100
+#   dim_relation: 100
+model_name: TransE
+model_args:
+  embedding_dim: 100
 
 
 
 # loss function
-# loss_name: MarginLoss
-# loss_args:
-#   margin: 1.0
-#   C: 0.03
+loss_name: MarginLoss
+loss_args:
+  margin: 1.0
+  C: 0.03
 # loss_name: NegLogLikehoodLoss
 # loss_args:
 #   C: 0.1
@@ -45,15 +45,15 @@ model_args:
 #  margin: 15
 #  alpha: 0.5
 #  neg_per_pos: 10 # 每个正样本对应的负样本个数
-loss_name: TuckERLoss
-loss_args:
-  margin: None
+# loss_name: TuckERLoss
+# loss_args:
+#   margin: None
 
 # metric function
 metric_name: Link_Prediction
 metric_args:
   batch_size: 1000
-  reverse: True
+  reverse: False
 
 lr: 0.001
 weight_decay: 0
