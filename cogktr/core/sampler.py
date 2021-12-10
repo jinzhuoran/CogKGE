@@ -23,6 +23,7 @@ class UnifNegativeSampler():
 
 
 class BernNegativeSampler():
+    # TODO: The for loop need to be removed!
     def __init__(self, triples, entity_dict_len, relation_dict_len):
         # numpy:(batch,3)
         self.triples = triples
@@ -58,6 +59,7 @@ class BernNegativeSampler():
 
 
 class AdversarialSampler:
+    # TODO: The for loop need to be removed!
     def __init__(self, triples, entity_dict_len, relation_dict_len, neg_per_pos):
         # (batch,3)
         self.triples = triples

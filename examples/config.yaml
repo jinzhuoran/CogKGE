@@ -11,7 +11,7 @@ download: True
 download_path: "CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 3
+device: 0
 
 # choose the model
 
@@ -22,7 +22,7 @@ device: 3
 #   negative_sample_method: Random_Negative_Sampling
 
 # SimplE
-model_name: TuckER
+model_name: Tucker
 model_args:
   dim_entity: 100
   dim_relation: 100
@@ -52,7 +52,7 @@ loss_args:
 # metric function
 metric_name: Link_Prediction
 metric_args:
-  batch_size: 50000
+  batch_size: 1000
   reverse: True
 
 lr: 0.001
