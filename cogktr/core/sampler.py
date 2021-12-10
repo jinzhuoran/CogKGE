@@ -15,8 +15,9 @@ class UnifNegativeSampler():
     def create_negative(self, batch_pos):
         batch_neg = batch_pos.clone()
         entity_number = torch.randint(self.entity_dict_len, (batch_neg.size()[0],)).to(self.device)
-        head_mask = (torch.randn(batch_neg.size()[0]) > 0.5).bool().to(self.device)
-        tail_mask = (torch.randn(batch_neg.size()[0]) <= 0.5).bool().to(self.device)
+        mask = torch.rand(batch_neg.size()[0])
+        head_mask = (mask > 0.5).bool().to(self.device)
+        tail_mask = (mask <= 0.5).bool().to(self.device)
         batch_neg[head_mask, 0] = entity_number[head_mask].to(self.device)
         batch_neg[tail_mask, 2] = entity_number[tail_mask].to(self.device)
         return batch_neg
