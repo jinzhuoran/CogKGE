@@ -10,5 +10,5 @@ __all__=[
     "WN18RRProcessor",
     "WIKIDATA5MProcessor",
     "MOBILEWIKIDATA5MProcessor",
-    "EVENTKGProcessor"
+    "EVENTKG2MProcessor"
 ]

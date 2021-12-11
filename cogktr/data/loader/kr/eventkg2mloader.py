@@ -4,7 +4,7 @@ from ...lut import LookUpTable
 from ....utils.download_utils import Download_Data
 import json
 
-class EVENTKGLoader:
+class EVENTKG2MLoader:
     def __init__(self, path,download=False,download_path=None):
         self.path = path
         self.download = download
@@ -13,10 +13,10 @@ class EVENTKGLoader:
         self.relation_list = list()
         if self.download == True:
             downloader = Download_Data(dataset_path=self.download_path)
-            downloader.EVENTKG()
-        self.train_name="freebase_mtr100_mte100-train.txt"
-        self.valid_name="freebase_mtr100_mte100-valid.txt"
-        self.test_name="freebase_mtr100_mte100-test.txt"
+            downloader.EVENTKG2M()
+        self.train_name="eventkg2m_train.txt"
+        self.valid_name="eventkg2m_valid.txt"
+        self.test_name="eventkg2m_test.txt"
 
 
 

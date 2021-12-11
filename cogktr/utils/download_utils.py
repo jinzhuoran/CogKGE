@@ -64,10 +64,10 @@ class Download_Data:
                       zip_name="MOBILEWIKIDATA5M.zip",
                       dataset_path=self.dataset_path,
                       url_path=self.url)
-    def EVENTKG(self):
+    def EVENTKG2M(self):
         download_data(task="kr",
-                      data_name="EVENTKG",
-                      zip_name="EVENTKG.zip",
+                      data_name="EVENTKG2M",
+                      zip_name="EVENTKG2M.zip",
                       dataset_path=self.dataset_path,
                       url_path=self.url)
 
