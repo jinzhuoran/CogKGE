@@ -89,4 +89,4 @@ if __name__=="__main__":
     downloader.WN18RR()
     downloader.WIKIDATA5M()
     downloader.MOBILEWIKIDATA5M()
-    downloader.EVENTKG()
+    downloader.EVENTKG2M()

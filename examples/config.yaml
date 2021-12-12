@@ -20,15 +20,14 @@ device: 0
 # model_args:
 #   embedding_dim: 100
 #   negative_sample_method: Random_Negative_Sampling
-
-# SimplE
-# model_name: TransE
-# model_args:
-#   dim_entity: 100
-#   dim_relation: 100
+ 
 model_name: TransE
 model_args:
-  embedding_dim: 100
+  dim_entity: 100
+  dim_relation: 100
+# model_name: TransE
+# model_args:
+#   embedding_dim: 100
 
 
 

@@ -2,6 +2,8 @@ from .loader import *
 from .processor import *
 from .dataset import *
 from .lut import *
+from .vocabulary import *
+
 
 __all__=[
     #loader
@@ -24,5 +26,7 @@ __all__=[
 
     "Cog_Dataset",
 
-    "LookUpTable"
+    "LookUpTable",
+
+    "Vocabulary",
 ]

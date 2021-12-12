@@ -63,5 +63,6 @@ __all__ = [
     "BernNegativeSampler",
     "AdversarialSampler",
 
+    "Vocabulary",
    
 ]
