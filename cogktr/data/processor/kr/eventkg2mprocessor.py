@@ -1,14 +1,10 @@
-from ...dataset import Cog_Dataset
+# from ...dataset import Cog_Dataset
+from .baseprocessor import BaseProcessor
 
 
-class EVENTKG2MProcessor:
+class EVENTKG2MProcessor(BaseProcessor):
     def __init__(self):
-        pass
-
-    def process(self, data):
-        return Cog_Dataset(data, task='kr')
-
-
+        super().__init__()
 
 # from ...dataset import Cog_Dataset
 # class EVENTKGProcessor:

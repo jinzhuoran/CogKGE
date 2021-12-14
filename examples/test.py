@@ -122,17 +122,18 @@ class ReadArgs:
         MyLoader = self.get_class(self.args.data_loader)
         loader = MyLoader(self.args.data_path, self.args.download, self.args.download_path)
         train_data, valid_data, test_data = loader.load_all_data()
-        lookuptable_E, lookuptable_R = loader.load_all_lut()
-        train_data.print_table(5)
-        valid_data.print_table(5)
-        test_data.print_table(5)
-        lookuptable_E.print_table(5)
-        lookuptable_R.print_table(5)
+        # lookuptable_E, lookuptable_R = loader.load_all_lut()
+        # train_data.print_table(5)
+        # valid_data.print_table(5)
+        # test_data.print_table(5)
+        # lookuptable_E.print_table(5)
+        # lookuptable_R.print_table(5)
         print("data_length:\n", len(train_data), len(valid_data), len(test_data))
-        print("table_length:\n", len(lookuptable_E), len(lookuptable_R))
+        # print("table_length:\n", len(lookuptable_E), len(lookuptable_R))
 
         Processor = self.get_class(self.args.data_processor)
-        processor = Processor(lookuptable_E, lookuptable_R)
+        # processor = Processor(lookuptable_E, lookuptable_R)
+        processor = Processor()
         train_dataset = processor.process(train_data)
         valid_dataset = processor.process(valid_data)
         test_dataset = processor.process(test_data)
@@ -144,7 +145,7 @@ class ReadArgs:
         self.train_dataset = train_dataset
         self.valid_dataset = valid_dataset
         self.test_dataset = test_dataset
-        self.lookuptable_E,self.lookuptable_R = lookuptable_E,lookuptable_R
+        # self.lookuptable_E,self.lookuptable_R = lookuptable_E,lookuptable_R
     
     def loadModel(self):
         Model = self.get_class(self.args.model_name)
@@ -175,7 +176,8 @@ class ReadArgs:
         Negative_sampler = self.get_class(self.args.negative_sampler_name)
         if self.args.negative_sampler_name == 'AdversarialSampler':
             if 'neg_per_pos' not in self.args.loss_args:
-                assert ValueError("Please configure the neg_per_pos in loss_args if you want to choose AdversarialSampler!")
+                assert ValueError("Please configure the neg_per_pos in loss_args if you want to choose "
+                                  "AdversarialSampler!")
             negative_sampler = Negative_sampler(triples=self.train_dataset.data_numpy,
                                                 entity_dict_len=len(self.lookuptable_E),
                                                 relation_dict_len=len(self.lookuptable_R),

@@ -13,5 +13,5 @@
 #             datable["relation"][i]=self.lut_R.str_dic[datable["relation"][i]]
 #             datable["tail"][i]=self.lut_E.str_dic[datable["tail"][i]]
 #         return datable
-class EVENTKG2MProcessor:
+class EVENTKGProcessor:
     pass
