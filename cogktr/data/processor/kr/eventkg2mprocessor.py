@@ -1,3 +1,15 @@
+from ...dataset import Cog_Dataset
+
+
+class EVENTKG2MProcessor:
+    def __init__(self):
+        pass
+
+    def process(self, data):
+        return Cog_Dataset(data, task='kr')
+
+
+
 # from ...dataset import Cog_Dataset
 # class EVENTKGProcessor:
 #     def __init__(self,lut_E,lut_R):
@@ -13,5 +25,3 @@
 #             datable["relation"][i]=self.lut_R.str_dic[datable["relation"][i]]
 #             datable["tail"][i]=self.lut_E.str_dic[datable["tail"][i]]
 #         return datable
-class EVENTKG2MProcessor:
-    pass
