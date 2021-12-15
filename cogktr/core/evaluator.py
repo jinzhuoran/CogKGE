@@ -1,23 +1,56 @@
 import torch
-from .log import *
-
-
+import os
+import re
 class Kr_Evaluator:
     def __init__(self,
+                 logger,
+                 train_dataset,
+                 valid_dataset,
                  test_dataset,
+                 lookuptable_E,
+                 lookuptable_R,
+                 model,
                  metric,
-                 model_path
+                 device,
+                 load_checkpoint,
                  ):
-        self.test_dataset = test_dataset
-        self.metric = metric
-        self.model_path = model_path
-        self.model = None
-
+        self.logger=logger
+        self.train_dataset=train_dataset
+        self.valid_dataset=valid_dataset
+        self.test_dataset=test_dataset
+        self.lookuptable_E=lookuptable_E
+        self.lookuptable_R=lookuptable_R
+        self.model=model
+        self.metric=metric
+        self.device=device
+        self.load_checkpoint=load_checkpoint
     def evaluate(self):
-        self.model = torch.load(self.model_path)
-        if self.metric.name == "Link_Prediction":
-            self.metric(self.model, self.test_dataset)
-            raw_meanrank = self.metric.raw_meanrank
-            raw_hitatten = self.metric.raw_hitatten
-            logger.info("raw_meanrank:%.2f" % raw_meanrank +"raw_hitatten:%.2f%%" % raw_hitatten)
-        pass
+        if os.path.exists(self.load_checkpoint):
+            parallel_model=torch.nn.DataParallel(torch.load(self.load_checkpoint))
+            parallel_model=parallel_model.to(self.device)
+        else:
+            raise FileExistsError("Checkpoint path doesn't exist!")
+
+        string=self.load_checkpoint
+        pattern=r"^.*?/checkpoints/(.*?)_(.*?)_(.*?)epochs.pkl$$"
+        match = re.search(pattern, string)
+        model_name=match.group(1)
+        epoch=match.group(3)
+
+        print("Evaluating Model {}...".format(self.model.name))
+        self.metric.caculate(device=self.device,
+                             model=parallel_model,
+                             total_epoch=epoch,
+                             current_epoch=epoch,
+                             metric_type="test_dataset",
+                             metric_dataset=self.test_dataset,
+                             node_dict_len=len(self.lookuptable_E),
+                             model_name=model_name,
+                             logger=self.logger,
+                             writer=None,
+                             train_dataset=self.train_dataset,
+                             valid_dataset=self.valid_dataset,
+                             test_dataset=self.test_dataset)
+        self.metric.print_table()
+        self.metric.log()
+        self.metric.write()
