@@ -8,10 +8,10 @@ import time
 # processor = FB15KProcessor()
 
 print("Testing FB15K237 dataloader...")
-loader = FB15K237Loader(path='/home/hongbang/CogKTR/dataset/kr/FB15K/raw_data',
+loader = FB15K237Loader(path='/home/hongbang/CogKTR/dataset/kr/FB15K237/raw_data',
                      download=True,
                      download_path="CogKTR/dataset/")
-processor = FB15K237Processor()
+
 
 # print("Testing WN18 dataloader...")
 # loader = WN18Loader(path='/home/hongbang/CogKTR/dataset/kr/FB15K/raw_data',
@@ -28,6 +28,9 @@ processor = FB15K237Processor()
 start_time = time.time()
 train_data, valid_data, test_data = loader.load_all_data()
 node_vocab, relation_vocab = loader.load_all_vocabs()
+
+processor = FB15K237Processor(node_vocab,relation_vocab)
+
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)

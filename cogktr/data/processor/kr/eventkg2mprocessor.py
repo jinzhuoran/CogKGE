@@ -1,10 +1,33 @@
-# from ...dataset import Cog_Dataset
+from ...dataset import Cog_Dataset
 from .baseprocessor import BaseProcessor
 
 
 class EVENTKG2MProcessor(BaseProcessor):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, node_vocab, relation_vocab, time_vocab):
+        """
+        :param vocabs: node_vocab,relation_vocab,time_vocab
+        """
+        super().__init__(node_vocab,relation_vocab)
+        self.time_vocab = time_vocab
+
+    def process(self, data):
+        data = self._datable2numpy(data)
+        return Cog_Dataset(data, task='kr')
+
+    def _datable2numpy(self, data):
+        """
+        convert a datable to numpy array form according to the previously constructed Vocab
+        :param data: datable (dataset_len,5)
+        :return: numpy array
+        """
+        data.str2idx("head",self.node_vocab)
+        data.str2idx("tail",self.node_vocab)
+        data.str2idx("relation",self.relation_vocab)
+        data.str2idx("start",self.time_vocab)
+        data.str2idx("end",self.time_vocab)
+        return data.to_numpy()
+
+
 
 # from ...dataset import Cog_Dataset
 # class EVENTKGProcessor:

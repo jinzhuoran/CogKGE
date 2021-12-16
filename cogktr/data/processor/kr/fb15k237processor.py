@@ -2,8 +2,8 @@ from .baseprocessor import BaseProcessor
 
 
 class FB15K237Processor(BaseProcessor):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, node_vocab, relation_vocab):
+        super().__init__(node_vocab, relation_vocab)
 
 
 # from ...dataset import Cog_Dataset
