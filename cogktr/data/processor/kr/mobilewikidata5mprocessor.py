@@ -1,3 +1,26 @@
+from .baseprocessor import BaseProcessor
+from transformers import RobertaTokenizer
+from transformers import RobertaModel
+
+
+class MOBILEWIKIDATA5MProcessor(BaseProcessor):
+    def __init__(self, node_vocab, relation_vocab,node_lut):
+        """
+        :param vocabs: node_vocab,relation_vocab,time_vocab
+        """
+        super().__init__(node_vocab, relation_vocab)
+        self.node_lut = node_lut
+        self.pre_training_model_name = "roberta-base"
+        self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
+        self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
+
+    def process(self, data):
+
+        data = self._datable2numpy(data)
+
+
+
+
 # from ...dataset import Cog_Dataset
 # from tqdm import tqdm
 # from transformers import logging
@@ -52,19 +75,17 @@ from transformers import RobertaTokenizer
 #             datable["tail"][i]=encoded_text_tail[0].data.numpy()
 #         return datable
 from ...dataset import Cog_Dataset
-class MOBILEWIKIDATA5MProcessor:
-    def __init__(self,lut_E,lut_R):
-        self.lut_E=lut_E
-        self.lut_R=lut_R
-    def process(self,datable):
-        datable=self.str2number(datable)
-        dataset=Cog_Dataset(data=datable,task="kr")
-        return dataset
-    def str2number(self,datable):
-        for i in range(len(datable)):
-            datable["head"][i]=self.lut_E.str_dic[datable["head"][i]]
-            datable["relation"][i]=self.lut_R.str_dic[datable["relation"][i]]
-            datable["tail"][i]=self.lut_E.str_dic[datable["tail"][i]]
-        return datable
-
-
+# class MOBILEWIKIDATA5MProcessor:
+#     def __init__(self,lut_E,lut_R):
+#         self.lut_E=lut_E
+#         self.lut_R=lut_R
+#     def process(self,datable):
+#         datable=self.str2number(datable)
+#         dataset=Cog_Dataset(data=datable,task="kr")
+#         return dataset
+#     def str2number(self,datable):
+#         for i in range(len(datable)):
+#             datable["head"][i]=self.lut_E.str_dic[datable["head"][i]]
+#             datable["relation"][i]=self.lut_R.str_dic[datable["relation"][i]]
+#             datable["tail"][i]=self.lut_E.str_dic[datable["tail"][i]]
+#         return datable

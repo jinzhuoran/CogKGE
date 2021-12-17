@@ -1,3 +1,5 @@
+import copy
+
 from ...dataset import Cog_Dataset
 
 class BaseProcessor:
@@ -18,6 +20,7 @@ class BaseProcessor:
         :param data: datable (dataset_len,5)
         :return: numpy array
         """
+        data = copy.deepcopy(data)
         data.str2idx("head",self.node_vocab)
         data.str2idx("tail",self.node_vocab)
         data.str2idx("relation",self.relation_vocab)

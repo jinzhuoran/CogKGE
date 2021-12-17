@@ -1,12 +1,16 @@
 import prettytable as pt
 import pandas as pd
 
+
 class LookUpTable:
     def __init__(self):
         self.data = None
 
-    def read_json(self,*args,**kwargs):
-        self.data = pd.read_json(*args,**kwargs)
+    def read_json(self, *args, **kwargs):
+        self.data = pd.read_json(*args, **kwargs)
+
+    def read_csv(self,*args,**kwargs):
+        self.data = pd.read_csv(*args,**kwargs)
 
     def transpose(self):
         self.data = self.data.T
@@ -14,11 +18,11 @@ class LookUpTable:
     def __len__(self):
         return self.data.shape[0]
 
-    def save_to_pickle(self,*args,**kwargs):
-        self.data.to_pickle(*args,**kwargs)
+    def save_to_pickle(self, *args, **kwargs):
+        self.data.to_pickle(*args, **kwargs)
 
-    def read_from_pickle(self,*args,**kwargs):
-        self.data = pd.read_pickle(*args,**kwargs)
+    def read_from_pickle(self, *args, **kwargs):
+        self.data = pd.read_pickle(*args, **kwargs)
 
     def __getitem__(self, index):
         if isinstance(index, int):
@@ -28,10 +32,10 @@ class LookUpTable:
         else:
             raise ValueError("Index must be number or string!")
 
-    def _get_row(self,index):
-        return self.data.iloc[index,:]
+    def _get_row(self, index):
+        return self.data.iloc[index, :]
 
-    def _get_column(self,index):
+    def _get_column(self, index):
         """
         get the column of dataframe
         :param index: column name
@@ -39,19 +43,19 @@ class LookUpTable:
         """
         return self.data[index]
 
-    def rename(self,*args,**kwargs):
-        self.data = self.data.rename(*args,**kwargs)
+    def rename(self, *args, **kwargs):
+        self.data = self.data.rename(*args, **kwargs)
 
-    def add_column(self,elem_list,column_name):
+    def add_column(self, elem_list, column_name):
         """
         add column to current dataframe
         :param column: a list of elements the same as the dataframe length
         :return: nothing
         """
-        kwargs = {column_name:pd.Series(elem_list).values}
+        kwargs = {column_name: pd.Series(elem_list).values}
         self.data = self.data.assign(**kwargs)
 
-    def append(self,lut2):
+    def append(self, lut2):
         new_lut = LookUpTable()
         new_lut.data = self.data.append(lut2.data)
         return new_lut
@@ -268,14 +272,3 @@ class LookUpTable:
 #     #     #..........#.............#.....................#.............#..............#............#.............#
 #     #     #..........#.............#.....................#.............#..............#............#.............#
 #     #     ########################################################################################################
-
-
-
-
-
-
-
-
-
-
-

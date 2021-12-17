@@ -10,9 +10,9 @@ class EVENTKG2MProcessor(BaseProcessor):
         super().__init__(node_vocab,relation_vocab)
         self.time_vocab = time_vocab
 
-    def process(self, data):
-        data = self._datable2numpy(data)
-        return Cog_Dataset(data, task='kr')
+    # def process(self, data):
+    #     data = self._datable2numpy(data)
+    #     return Cog_Dataset(data, task='kr')
 
     def _datable2numpy(self, data):
         """
