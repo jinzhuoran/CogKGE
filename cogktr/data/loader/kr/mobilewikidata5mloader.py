@@ -20,7 +20,7 @@ class MOBILEWIKIDATA5MLoader(BaseLoader):
     def _load_lut(self,path):
         total_path = os.path.join(self.path, path).replace('\\', '/')
         lut = LookUpTable()
-        lut.read_csv(total_path,sep='\t',names=["description"],index_col=0)
+        lut.read_csv(total_path,sep='\t',names=["descriptions"],index_col=0)
         return lut
 
     def load_node_lut(self):

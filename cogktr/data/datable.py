@@ -7,12 +7,12 @@ class Datable:
     def __init__(self):
         self.data = None
 
-    def read_csv(self,file, **args):
+    def read_csv(self, file, **args):
         """
         create datable from csv file
         :param args: args for pandas read_csv function
         """
-        self.data = pd.read_csv(filepath_or_buffer=file,**args)
+        self.data = pd.read_csv(filepath_or_buffer=file, **args)
 
     def __len__(self):
         return self.data.shape[0]
@@ -25,10 +25,10 @@ class Datable:
         else:
             raise ValueError("Index must be number or string!")
 
-    def _get_row(self,index):
-        return self.data.iloc[index,:]
+    def _get_row(self, index):
+        return self.data.iloc[index, :]
 
-    def _get_column(self,index):
+    def _get_column(self, index):
         """
         get the column of dataframe
         :param index: column name
@@ -39,17 +39,17 @@ class Datable:
     # def __str__(self):
     #     print(self.data)
 
-    def save_to_pickle(self,*args,**kwargs):
-        self.data.to_pickle(*args,**kwargs)
+    def save_to_pickle(self, *args, **kwargs):
+        self.data.to_pickle(*args, **kwargs)
         # pd.to_pickle(self.data,*args,**kwargs)
 
-    def read_from_pickle(self,*args,**kwargs):
-        self.data = pd.read_pickle(*args,**kwargs)
+    def read_from_pickle(self, *args, **kwargs):
+        self.data = pd.read_pickle(*args, **kwargs)
 
     def to_numpy(self):
         return self.data.values
 
-    def str2idx(self,column_name,vocab):
+    def str2idx(self, column_name, vocab):
         """
         convert one column of datable from str-type to idx-type
         :param column_name: which column shall be processed
@@ -70,6 +70,14 @@ class Datable:
         f = lambda word: word2idx[word]
         return series.apply(f)
 
+    def search(self, name, attribute):
+        """
+        find attribute of the given name
+        :param name: str
+        :param attribute: str
+        :return: the data stored in the corresponding place
+        """
+        return self.data.loc[name, attribute]
 
 # class Datable:
 #     def __init__(self):

@@ -2,7 +2,7 @@ from torch.utils.data import Dataset
 import torch
 
 class Cog_Dataset(Dataset):
-    def __init__(self, data, task):
+    def __init__(self, data, task,descriptions=None):
         """
 
         :param data: numpy array  (len,5) or (len,3)
@@ -10,13 +10,20 @@ class Cog_Dataset(Dataset):
         """
         self.data = data
         self.task = task
+        self.descriptions = descriptions
 
     def __len__(self):
         return self.data.shape[0]
 
     def __getitem__(self, index):
         if self.task == 'kr':
-            return torch.tensor(self.data[index], dtype=torch.long)
+            if not self.descriptions:
+                return torch.tensor(self.data[index], dtype=torch.long)
+            else:
+                return [torch.tensor(self.data[index], dtype=torch.long),*[
+                    self.descriptions[i][index] for i in range(len(self.descriptions))
+                ]]
+
         else:
             raise ValueError("{} currently are not supported!".format(self.task))
 

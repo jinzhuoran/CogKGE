@@ -60,6 +60,15 @@ class LookUpTable:
         new_lut.data = self.data.append(lut2.data)
         return new_lut
 
+    def search(self,name,attribute):
+        """
+        find attribute of the given name
+        :param name: str
+        :param attribute: str
+        :return: the data stored in the corresponding place
+        """
+        return self.data.loc[name,attribute]
+
 # class LookUpTable:
 #     def __init__(self):
 #         self.columns=list()
