@@ -42,10 +42,10 @@ class Link_Prediction(object):
     def _create_correct_node_dict(self,dataset):
         node_dict=defaultdict(dict)
         for index in range(len(dataset)):
-            r_t=tuple(dataset.data_numpy[index][1:])
-            h_r=tuple(dataset.data_numpy[index][:2])
-            h=torch.tensor(dataset.data_numpy[index][0])
-            t=torch.tensor(dataset.data_numpy[index][2])
+            r_t=tuple(dataset.data[index][1:])
+            h_r=tuple(dataset.data[index][:2])
+            h=torch.tensor(dataset.data[index][0])
+            t=torch.tensor(dataset.data[index][2])
             if r_t not in node_dict["head"]:
                 node_dict["head"].setdefault(r_t,[])
             node_dict["head"][r_t].append(h)
