@@ -38,6 +38,7 @@ class TuckER(nn.Module):
         t = torch.unsqueeze(t,dim=1)  # (batch,1,dim_entity)
 
         # print("r.shape:{}   w.shape:{}".format(r.shape,self.core_tensor.shape))
+        #这一步的参数得清
         tmp = torch.matmul(r,self.core_tensor) # (batch,dim_entity,1,dim_entity)
         tmp = torch.squeeze(tmp,-2)               # (batch,dim_entity,dim_etity)
 

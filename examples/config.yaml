@@ -11,9 +11,17 @@ download: True
 download_path: "CogKTR/dataset"
 
 # choose training devices:cpu or 0 or 0,1,2,3
-device: 0
+device: 1
 
 # choose the model
+ #TransE
+ model_name: Tucker
+ model_args:
+   embedding_dim: 100
+   negative_sample_method: Random_Negative_Sampling
+
+
+
 
 # #TransE
 # model_name: TransE

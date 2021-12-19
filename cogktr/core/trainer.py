@@ -1,279 +1,233 @@
-import numpy as np
+import re
 import os
-import random
+import time
 import torch
+from tqdm import tqdm
 import torch.utils.data as Data
 from cogktr.core import DataLoaderX
-from cogktr.data import dataset
-from logging import Logger
-from torch.nn import parallel
 from torch.utils.tensorboard import SummaryWriter
-from tqdm import tqdm
-import time
+
+# from .log import *
 
 
-from .log import *
-
-
-class Kr_Trainer:
+class Kr_Trainer(object):
     def __init__(self,
-                 logger,
                  train_dataset,
-                 valid_dataset,
-                 test_dataset,
                  train_sampler,
-                 valid_sampler,
-                 test_sampler,
-                 negative_sampler,
                  trainer_batch_size,
                  model,
                  loss,
                  optimizer,
-                 metric,
+                 negative_sampler,
                  epoch,
-                 output_path,
                  device,
-                 lr_scheduler,
+                 output_path,
+                 valid_dataset=None,
+                 valid_sampler=None,
                  lookuptable_E=None,
                  lookuptable_R=None,
-                 save_step=None,
-                 metric_step=None,
-                 save_final_model=False,
+                 metric=None,
+                 lr_scheduler=None,
+                 logger=None,
+                 load_checkpoint=None,
                  visualization=False,
+                 apex=False,
                  dataloaderX=False,
                  num_workers=None,
                  pin_memory=False,
+                 metric_step=None,
+                 save_step=None,
+                 metric_final_model=True,
+                 save_final_model=True,
                  ):
-        self.logger = logger
         self.train_dataset = train_dataset
-        self.valid_dataset = valid_dataset
-        self.test_dataset = test_dataset
-        self.lookuptable_E = lookuptable_E
-        self.lookuptable_R = lookuptable_R
-        self.train_sampler = train_sampler
-        self.valid_sampler = valid_sampler
-        self.test_sampler = test_sampler
-        self.negative_sampler = negative_sampler
-        self.trainer_batch_size = trainer_batch_size
-        self.model = model
-        self.loss = loss
-        self.optimizer = optimizer
-        self.metric = metric
-        self.epoch = epoch
-        self.output_path = output_path
-        self.device = device
-        self.save_step = save_step
-        self.metric_step = metric_step
-        self.save_final_model = save_final_model
-        self.visualization = visualization
-        self.lr_scheduler = lr_scheduler
-        self.dataloaderX = dataloaderX
-        self.num_workers = num_workers
-        self.pin_memory = pin_memory
+        self.train_sampler=train_sampler
+        self.trainer_batch_size=trainer_batch_size
+        self.model=model
+        self.loss=loss
+        self.optimizer=optimizer
+        self.negative_sampler=negative_sampler
+        self.epoch=epoch
+        self.device=device
+        self.output_path=output_path
+        self.valid_dataset=valid_dataset
+        self.valid_sampler=valid_sampler
+        self.lookuptable_E=lookuptable_E
+        self.lookuptable_R=lookuptable_R
+        self.metric=metric
+        self.lr_scheduler=lr_scheduler
+        self.logger=logger
+        self.load_checkpoint=load_checkpoint
+        self.visualization=visualization
+        self.apex=apex
+        self.dataloaderX=dataloaderX
+        self.num_workers=num_workers
+        self.pin_memory=pin_memory
+        self.metric_step=metric_step
+        self.save_step=save_step
+        self.metric_final_model=metric_final_model
+        self.save_final_model=save_final_model
+
+        #Load Apex
+        if self.apex:
+            try:
+                from apex import amp
+            except ImportError:
+                raise ImportError("Please install apex.")
+            self.model , self.optimizer = amp.initialize(self.model.to(self.device) , self.optimizer, opt_level="O1")
+
+        #Load Data
+        if self.dataloaderX:
+            self.train_loader = DataLoaderX(dataset=self.train_dataset, sampler=self.train_sampler,
+                                            batch_size=self.trainer_batch_size, num_workers=self.num_workers,
+                                            pin_memory=self.pin_memory)
+            if self.valid_dataset:
+                self.valid_loader = DataLoaderX(dataset=self.valid_dataset, sampler=self.valid_sampler,
+                                                batch_size=self.trainer_batch_size, num_workers=self.num_workers,
+                                                pin_memory=self.pin_memory)
+        else:
+            self.train_loader = Data.DataLoader(dataset=self.train_dataset, sampler=self.train_sampler,
+                                                batch_size=self.trainer_batch_size, num_workers=self.num_workers,
+                                                pin_memory=self.pin_memory)
+            if self.valid_dataset:
+                self.valid_loader = Data.DataLoader(dataset=self.valid_dataset, sampler=self.valid_sampler,
+                                                    batch_size=self.trainer_batch_size, num_workers=self.num_workers,
+                                                    pin_memory=self.pin_memory)
+
+        #Load Lookuptable
+        # TODO: add lut_loader
+        #for example
+        # if self.lookuptable_E and self.lookuptable_E:
+        #     self.model.load_lookuotable(self.lookuptable_E, self.lookuptable_R)
+
+        #Load Checkpoint
+        self.trained_epoch=0
+        if self.load_checkpoint:
+            if os.path.exists(self.load_checkpoint):
+                string=self.load_checkpoint
+                pattern=r"^.*?/checkpoints/.*?_(.*?)epochs$"
+                match = re.search(pattern, string)
+                self.trained_epoch=int(match.group(1))
+                self.model.load_state_dict(torch.load(os.path.join(self.load_checkpoint,"Model.pkl")))
+                self.optimizer.load_state_dict(torch.load(os.path.join(self.load_checkpoint,"Optimizer.pkl")))
+                self.lr_scheduler.load_state_dict(torch.load(os.path.join(self.load_checkpoint,"Lr_Scheduler.pkl")))
+            else:
+                raise FileExistsError("Checkpoint path doesn't exist!")
+
+
+        #Load Dataparallel Training
+        print("Available cuda devices:", torch.cuda.device_count())
+        self.parallel_model = torch.nn.DataParallel(self.model)
+        self.parallel_model = self.parallel_model.to(self.device)
+
+        #Load Visualization
+        if self.visualization == True:
+            self.visualization_path=os.path.join(self.output_path, "visualization", self.model.name)
+            if not os.path.exists(self.visualization_path):
+                os.makedirs(self.visualization_path)
+            self.writer = SummaryWriter(self.visualization_path)
+            self.logger.info(
+                "The visualization path is" + self.visualization_path)
+
+
+
+
 
     def train(self):
-        if self.dataloaderX:
-            train_loader = DataLoaderX(dataset=self.train_dataset, sampler=self.train_sampler,
-                                       batch_size=self.trainer_batch_size, num_workers=self.num_workers,
-                                       pin_memory=self.pin_memory)
-            valid_loader = DataLoaderX(dataset=self.valid_dataset, sampler=self.valid_sampler,
-                                       batch_size=self.trainer_batch_size, num_workers=self.num_workers,
-                                       pin_memory=self.pin_memory)
-            test_loader = DataLoaderX(dataset=self.test_dataset, sampler=self.test_sampler,
-                                      batch_size=self.trainer_batch_size, num_workers=self.num_workers,
-                                      pin_memory=self.pin_memory)
-        else:
-            train_loader = Data.DataLoader(dataset=self.train_dataset, sampler=self.train_sampler,
-                                           batch_size=self.trainer_batch_size, num_workers=self.num_workers,
-                                           pin_memory=self.pin_memory)
-            valid_loader = Data.DataLoader(dataset=self.valid_dataset, sampler=self.valid_sampler,
-                                           batch_size=self.trainer_batch_size, num_workers=self.num_workers,
-                                           pin_memory=self.pin_memory)
-            test_loader = Data.DataLoader(dataset=self.test_dataset, sampler=self.test_sampler,
-                                          batch_size=self.trainer_batch_size, num_workers=self.num_workers,
-                                          pin_memory=self.pin_memory)
+        if self.epoch-self.trained_epoch<=0:
+            raise ValueError("Trained_epoch is bigger than total_epoch!")
 
-        if self.lookuptable_E != None:
-            self.model.load_lookuotable(self.lookuptable_E, self.lookuptable_R)
-        print("Available cuda devices:", torch.cuda.device_count())
-        # TODO: change distribute
-        parallel_model = torch.nn.DataParallel(self.model)
-        parallel_model = parallel_model.to(self.device)
+        for epoch in range(self.epoch-self.trained_epoch):
+            current_epoch=epoch+1+self.trained_epoch
 
-        if self.visualization == True:
-            if not os.path.exists(os.path.join(self.output_path, "visualization", self.model.name)):
-                os.makedirs(os.path.join(self.output_path, "visualization", self.model.name))
-            writer = SummaryWriter(os.path.join(self.output_path, "visualization", self.model.name))
-            self.logger.info(
-                "The visualization path is" + os.path.join(self.output_path, "visualization", self.model.name).replace(
-                    '\\', '/'))
-            self.logger.info("After cd FB15k-237 dir，please enter tensorboard --logdir=experimental_output")
-            self.logger.info("Enter the website address into the browser")
-
-        raw_meanrank = -1
-        raw_hitatten = -1
-
-        mean_ranks = []
-        mrrs = []
-        hitattens = []
-
-
-        for epoch in range(self.epoch):
             # Training Progress
-            epoch_loss = 0.0
-            for train_step, train_positive in enumerate(tqdm(train_loader)):
+            train_epoch_loss = 0.0
+            for train_step, train_positive in enumerate(tqdm(self.train_loader)):
                 train_positive = train_positive.to(self.device)
                 train_negative = self.negative_sampler.create_negative(train_positive)
-                train_positive_score = parallel_model(train_positive)
-                train_negative_score = parallel_model(train_negative)
+                train_positive_score = self.parallel_model(train_positive)
+                train_negative_score = self.parallel_model(train_negative)
                 penalty = self.model.get_penalty() if hasattr(self.model, 'get_penalty') else 0
                 train_loss = self.loss(train_positive_score, train_negative_score, penalty)
 
                 self.optimizer.zero_grad()
-                train_loss.backward()
-                epoch_loss = epoch_loss + train_loss.item()
+                if self.apex :
+                    from apex import amp
+                    with amp.scale_loss(train_loss, self.optimizer) as scaled_loss:
+                        scaled_loss.backward()
+                else:
+                    train_loss.backward()
+                train_epoch_loss = train_epoch_loss + train_loss.item()
                 self.optimizer.step()
 
             valid_epoch_loss = 0.0
             with torch.no_grad():
-                for valid_step, valid_positive in enumerate(valid_loader):
+                for valid_step, valid_positive in enumerate(self.valid_loader):
                     valid_positive = valid_positive.to(self.device)
                     valid_negative = self.negative_sampler.create_negative(valid_positive)
-                    valid_positive_score = parallel_model(valid_positive)
-                    valid_negative_score = parallel_model(valid_negative)
+                    valid_positive_score = self.parallel_model(valid_positive)
+                    valid_negative_score = self.parallel_model(valid_negative)
                     penalty = self.model.get_penalty() if hasattr(self.model, 'get_penalty') else 0
                     valid_loss = self.loss(valid_positive_score, valid_negative_score, penalty)
                     valid_epoch_loss = valid_epoch_loss + valid_loss.item()
 
-            print("Epoch{}/{}   Train Loss:".format(epoch + 1, self.epoch), epoch_loss / (train_step + 1),
+            print("Epoch{}/{}   Train Loss:".format(current_epoch, self.epoch), train_epoch_loss / (train_step + 1),
                   " Valid Loss:", valid_epoch_loss / (valid_step + 1))
 
-            # self.lr_scheduler.step(valid_epoch_loss/(valid_step+1))
-            # self.lr_scheduler.step()
-            # 每隔几步评价模型
-            if self.metric_step != None and (epoch + 1) % self.metric_step == 0:
-                if self.metric.name == "Link_Prediction":
-                    print("Evaluating Model {}...".format(self.model.name))
-                    # self.metric(self.model, self.valid_dataset,self.device)
-                    self.metric(parallel_model, self.valid_dataset, self.device)
-                    raw_meanrank = self.metric.raw_meanrank
-                    raw_hitatten = self.metric.raw_hitatten
-                    raw_mrr = self.metric.raw_MRR
-                    print("mean rank:{}     hit@10:{}   MRR:{}".format(raw_meanrank, raw_hitatten, raw_mrr))
-                    self.logger.info("Epoch {}/{}  mean_rank:{}   hit@10:{}   MRR:{}".format(
-                        epoch + 1, self.epoch, raw_meanrank, raw_hitatten, raw_mrr
-                    ))
-                    self.lr_scheduler.step(raw_meanrank)
-                    mean_ranks.append([[raw_meanrank, epoch + 1]])
-                    hitattens.append([[raw_hitatten, epoch + 1]])
-                    mrrs.append([[raw_mrr, epoch + 1]])
-                    print("-----------------------------------------------------------------------")
-                    if self.visualization == True:
-                        writer.add_scalars("2_meanrank", {"valid_raw_meanrank": raw_meanrank}, epoch + 1)
-                        writer.add_scalars("3_hitatten", {"valid_raw_hitatten": raw_hitatten}, epoch + 1)
-                        writer.add_scalars("4_MRR", {"valid_raw_MRR": raw_mrr}, epoch + 1)
 
-            # Evaluation Process
+            # Metric Progress
+            if self.metric_step  and (current_epoch) % self.metric_step == 0 or self.metric_final_model and (current_epoch) == self.epoch:
+                print("Evaluating Model {} on Valid Dataset...".format(self.model.name))
+                self.metric.caculate(device=self.device,
+                                     model=self.parallel_model,
+                                     total_epoch=self.epoch,
+                                     current_epoch=current_epoch,
+                                     metric_type="valid_dataset",
+                                     metric_dataset=self.valid_dataset,
+                                     node_dict_len=len(self.lookuptable_E),
+                                     model_name=self.model.name,
+                                     logger=self.logger,
+                                     writer=self.writer,
+                                     train_dataset=self.train_dataset,
+                                     valid_dataset=self.valid_dataset)
+                self.metric.print_current_table()
+                self.metric.log()
+                self.metric.write()
+                print("-----------------------------------------------------------------------")
 
-            # 每轮的可视化
-            if self.visualization == True:
-                writer.add_scalars("1_loss", {"train_loss": train_loss,
-                                              "valid_loss": valid_loss}, epoch + 1)
+
+                # Scheduler Progress
+                self.lr_scheduler.step(self.metric.get_Raw_MR())
+
+
+            # Visualization Process
+            if self.visualization :
+                self.writer.add_scalars("Loss", {"train_loss": train_epoch_loss,
+                                                 "valid_loss": valid_epoch_loss}, current_epoch)
                 if epoch == 0:
                     fake_data = torch.zeros(self.trainer_batch_size, 3).long()
-                    writer.add_graph(self.model.cpu(), fake_data)
+                    self.writer.add_graph(self.model.cpu(), fake_data)
                     self.model.to(self.device)
                 # for name, param in self.model.named_parameters():
-                #     writer.add_histogram(name + '_grad', param.grad, epoch)
-                #     writer.add_histogram(name + '_data', param, epoch)
+                #     self.writer.add_histogram(name + '_grad', param.grad, epoch)
+                #     self.writer.add_histogram(name + '_data', param, epoch)
                 # if epoch == 0:
                 #     embedding_data = torch.rand(10, 20)
                 #     embedding_label = ["篮球", "足球", "乒乓球", "羽毛球", "保龄球", "游泳", "爬山", "旅游", "赛车", "写代码"]
-                #     writer.add_embedding(mat=embedding_data, metadata=embedding_label)
+                #     self.writer.add_embedding(mat=embedding_data, metadata=embedding_label)
 
-            # 每隔几步保存模型
-            if self.save_step != 'None' and (epoch + 1) % self.save_step == 0:
-                if not os.path.exists(os.path.join(self.output_path, "checkpoints")):
-                    os.makedirs(os.path.join(self.output_path, "checkpoints"))
-                torch.save(self.model, os.path.join(self.output_path, "checkpoints",
-                                                    "%s_Model_%depochs.pkl" % (self.model.name, epoch + 1)))
+            # Save Checkpoint and Final Model Process
+            if (self.save_step and (current_epoch) % self.save_step == 0) or (current_epoch)==self.epoch:
+                if not os.path.exists(os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs".format(self.model.name, current_epoch))):
+                    os.makedirs(os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints", "{}_{}epochs".format(self.model.name, current_epoch)))
+                    self.logger.info(os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints", "{}_{}epochs ".format(self.model.name, current_epoch )) + 'created successfully!')
+                torch.save(self.model.state_dict(), os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs".format(self.model.name, current_epoch ),"Model.pkl" ))
+                torch.save(self.optimizer.state_dict(), os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs".format(self.model.name,current_epoch),"Optimizer.pkl"))
+                torch.save(self.lr_scheduler.state_dict(), os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs".format(self.model.name, current_epoch),"Lr_Scheduler.pkl"))
+                self.logger.info(os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs ".format(self.model.name, current_epoch)) +"saved successfully")
 
-        # Record the top5 mean_rank and hit@10 in the log file:
-        mean_ranks.sort(key=lambda x: x[0], reverse=False)  # 1->2->3
-        hitattens.sort(key=lambda x: x[0], reverse=True)  # 3->2->1
-        mrrs.sort(key=lambda x: x[0], reverse=True)  # 3->2->1
+        #Show Best Metric Result
+        self.metric.print_best_table(front=5,key="Raw_MR")
+        self.metric.create_correct_triplet_dict_flag=True
 
-        mean_ranks = mean_ranks if len(mean_ranks) < 5 else mean_ranks[:5]
-        hitattens = hitattens if len(hitattens) < 5 else hitattens[:5]
-        mrrs = mrrs if len(mrrs) < 5 else mrrs[:5]
-        self.logger.info("Top Mean Rank: {}".format(mean_ranks))
-        self.logger.info("Top Hit@10: {}".format(hitattens))
-        self.logger.info("Top MRR: {}".format(mrrs))
-        print("Top Mean Rank: {}".format(mean_ranks))
-        print("Top Hit@10: {}".format(hitattens))
-        print("Top MRR: {}".format(mrrs))
 
-        # 保存最终模型
-        if self.save_final_model == True:
-            if not os.path.exists(os.path.join(self.output_path, "checkpoints")):
-                os.makedirs(os.path.join(self.output_path, "checkpoints"))
-                self.logger.info(os.path.join(self.output_path, "checkpoints") + ' created successfully')
-            torch.save(self.model, os.path.join(self.output_path, "checkpoints",
-                                                "%s_Model_%depochs.pkl" % (self.model.name, self.epoch + 1)))
-            self.logger.info(
-                os.path.join(self.output_path, "checkpoints",
-                             "%s_Model_%depochs.pkl" % (self.model.name, self.epoch + 1)) +
-                "saved successfully")
-
-        # Running on the test dataset
-        print("Testing Model {}...".format(self.model.name))
-        self.metric(parallel_model, self.test_dataset, self.device)
-        raw_meanrank = self.metric.raw_meanrank
-        raw_hitatten = self.metric.raw_hitatten
-        raw_mrr = self.metric.raw_MRR
-        print("Final test result:")
-        print("mean rank:{}     hit@10:{}   MRR:{}".format(raw_meanrank, raw_hitatten, raw_mrr))
-        self.logger.info("Final test result: \n mean_rank:{}   hit@10:{}   MRR:{}".format(
-            raw_meanrank, raw_hitatten, raw_mrr
-        ))
-
-        # with tqdm(train_loader, ncols=150) as t:
-
-        # with tqdm(train_loader) as t:
-        #     for step, train_positive in enumerate(t):
-        #         train_positive = train_positive.to(self.device)
-        #         train_negative = self.create_negative(train_positive)
-        #         train_positive_embedding = self.model(train_positive)
-        #         train_negative_embedding = self.model(train_negative)
-        #         train_loss = self.loss(train_positive_embedding, train_negative_embedding)
-
-        #         # valid_loader = Data.DataLoader(dataset=self.valid_dataset, sampler=self.valid_sampler,
-        #         #                                batch_size=self.trainer_batch_size)
-        #         # for step_valid, valid_positive in enumerate(valid_loader):
-        #         #     if step_valid == 0:
-        #         #         pass
-        #         #     else:
-        #         #         break
-        #         # valid_positive = next(iter(valid_loader))
-        #         # valid_positive = valid_positive.to(self.device)
-        #         # valid_negative = self.create_negative(valid_positive)
-        #         # valid_positive_embedding = self.model(valid_positive)
-        #         # valid_negative_embedding = self.model(valid_negative)
-        #         # valid_loss = self.loss(valid_positive_embedding, valid_negative_embedding)
-
-        #         self.optimizer.zero_grad()
-        #         train_loss.backward()
-        #         self.optimizer.step()
-
-        #         t.set_description("ep%d|st%d" % (epoch, step))
-        #         t.set_postfix({'train_loss:': '%.2f' % (train_loss),
-        #                        'valid_loss:': '%.2f' % (valid_loss),
-        #                        'mr:': '%.1f' % (raw_meanrank),
-        #                        'hat:': '%.0f%%' % (raw_hitatten)})
-
-        #     # 每隔几步评价模型
-        #     if self.metric_step != None and epoch % self.metric_step == 0:
-        #         if self.metric.name == "Link_Prediction":
-        #             self.metric(self.model, self.valid_dataset,self.device)
-        #             raw_meanrank = self.metric.raw_meanrank
-        #             raw_hitatten = self.metric.raw_hitatten

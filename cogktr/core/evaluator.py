@@ -1,56 +1,97 @@
-import torch
-import os
 import re
-class Kr_Evaluator:
+import os
+import torch
+import torch.utils.data as Data
+from cogktr.core import DataLoaderX
+
+
+class Kr_Evaluator(object):
     def __init__(self,
-                 logger,
-                 train_dataset,
-                 valid_dataset,
                  test_dataset,
-                 lookuptable_E,
-                 lookuptable_R,
+                 test_sampler,
+                 evaluator_batch_size,
                  model,
                  metric,
                  device,
-                 load_checkpoint,
+                 output_path,
+                 trained_model_path=None,
+                 train_dataset=None,
+                 valid_dataset=None,
+                 lookuptable_E=None,
+                 lookuptable_R=None,
+                 logger=None,
+                 dataloaderX=False,
+                 num_workers=None,
+                 pin_memory=False,
                  ):
-        self.logger=logger
-        self.train_dataset=train_dataset
-        self.valid_dataset=valid_dataset
         self.test_dataset=test_dataset
-        self.lookuptable_E=lookuptable_E
-        self.lookuptable_R=lookuptable_R
+        self.test_sampler=test_sampler
+        self.evaluator_batch_size=evaluator_batch_size
         self.model=model
+        self.trained_model_path=trained_model_path
         self.metric=metric
         self.device=device
-        self.load_checkpoint=load_checkpoint
-    def evaluate(self):
-        if os.path.exists(self.load_checkpoint):
-            parallel_model=torch.nn.DataParallel(torch.load(self.load_checkpoint))
-            parallel_model=parallel_model.to(self.device)
+        self.output_path=output_path
+        self.train_dataset=train_dataset
+        self.valid_dataset=valid_dataset
+        self.lookuptable_E=lookuptable_E
+        self.lookuptable_R=lookuptable_R
+        self.logger=logger
+        self.dataloaderX=dataloaderX
+        self.num_workers=num_workers
+        self.pin_memory=pin_memory
+
+        #Load Data
+        if self.dataloaderX:
+            self.test_loader = DataLoaderX(dataset=self.test_dataset, sampler=self.test_sampler,
+                                           batch_size=self.evaluator_batch_size, num_workers=self.num_workers,
+                                           pin_memory=self.pin_memory)
         else:
-            raise FileExistsError("Checkpoint path doesn't exist!")
+            self.test_loader = Data.DataLoader(dataset=self.test_dataset, sampler=self.test_sampler,
+                                               batch_size=self.evaluator_batch_size, num_workers=self.num_workers,
+                                               pin_memory=self.pin_memory)
 
-        string=self.load_checkpoint
-        pattern=r"^.*?/checkpoints/(.*?)_(.*?)_(.*?)epochs.pkl$$"
-        match = re.search(pattern, string)
-        model_name=match.group(1)
-        epoch=match.group(3)
+        #Load Lookuptable
+        # TODO: add lut_loader
+        #for example
+        # if self.lookuptable_E and self.lookuptable_E:
+        #     self.model.load_lookuotable(self.lookuptable_E, self.lookuptable_R)
 
-        print("Evaluating Model {}...".format(self.model.name))
+        #Load Trained Model
+        self.trained_epoch=0
+        if self.trained_model_path:
+            if os.path.exists(self.trained_model_path):
+                string=self.trained_model_path
+                pattern=r"^.*?/checkpoints/.*?_(.*?)epochs$"
+                match = re.search(pattern, string)
+                self.trained_epoch=int(match.group(1))
+                self.model.load_state_dict(torch.load(os.path.join(self.trained_model_path,"Model.pkl")))
+            else:
+                raise FileExistsError("Trained_model_path doesn't exist!")
+
+        #Load Dataparallel Training
+        print("Available cuda devices:", torch.cuda.device_count())
+        self.parallel_model = torch.nn.DataParallel(self.model)
+        self.parallel_model = self.parallel_model.to(self.device)
+
+    def evaluate(self):
+        current_epoch=self.trained_epoch
+
+        print("Evaluating Model {} on Test Dataset...".format(self.model.name))
         self.metric.caculate(device=self.device,
-                             model=parallel_model,
-                             total_epoch=epoch,
-                             current_epoch=epoch,
+                             model=self.parallel_model,
+                             total_epoch=self.trained_epoch,
+                             current_epoch=current_epoch,
                              metric_type="test_dataset",
                              metric_dataset=self.test_dataset,
                              node_dict_len=len(self.lookuptable_E),
-                             model_name=model_name,
+                             model_name=self.model.name,
                              logger=self.logger,
-                             writer=None,
                              train_dataset=self.train_dataset,
                              valid_dataset=self.valid_dataset,
                              test_dataset=self.test_dataset)
-        self.metric.print_table()
+        self.metric.print_current_table()
         self.metric.log()
         self.metric.write()
+
+

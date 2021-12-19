@@ -93,6 +93,9 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
+########################################################################################################################
+
+
 Model = get_class(args.model_name)
 model = Model(entity_dict_len=len(lookuptable_E),
               relation_dict_len=len(lookuptable_R),
@@ -104,17 +107,14 @@ loss = Loss(**args.loss_args)
 optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
 Metric = get_class(args.metric_name)
-metric = Metric(entity_dict_len=len(lookuptable_E),**args.metric_args)
-# metric = Metric(entity_dict_len=len(lookuptable_E))
+metric = Metric(**args.metric_args)
 
 # Learning Rate Scheduler:
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,  # mean rank!
     factor=0.5, min_lr=1e-9, verbose=True
 )
-# lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
-#     optimizer,milestones=[30,60,90],gamma=0.5
-# )
+
 
 Negative_sampler = get_class(args.negative_sampler_name)
 if args.negative_sampler_name == 'AdversarialSampler':
@@ -132,24 +132,39 @@ else:
 
 Trainer = get_class(args.trainer_name)
 trainer = Trainer(
-    logger=logger,
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
-    test_dataset=test_dataset,
     train_sampler=train_sampler,
     valid_sampler=valid_sampler,
-    test_sampler=test_sampler,
-    negative_sampler=negative_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
-    metric=metric,
-    output_path=output_path,
+    negative_sampler=negative_sampler,
     device=device,
+    output_path=output_path,
+    lookuptable_E= lookuptable_E,
+    lookuptable_R= lookuptable_R,
+    metric=metric,
     lr_scheduler=lr_scheduler,
-    dataloaderX=True,
-    num_workers=4,
-    pin_memory=True,
+    logger=logger,
     **args.trainer_args
 )
 trainer.train()
+
+
+Evaluator = get_class(args.evaluator_name)
+evaluator = Evaluator(
+    test_dataset=test_dataset,
+    test_sampler=test_sampler,
+    model=model,
+    device=device,
+    metric=metric,
+    output_path=output_path,
+    train_dataset=train_dataset,
+    valid_dataset=valid_dataset,
+    lookuptable_E= lookuptable_E,
+    lookuptable_R= lookuptable_R,
+    logger=logger,
+    **args.evaluator_args
+)
+evaluator.evaluate()
