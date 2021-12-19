@@ -96,7 +96,8 @@ class Link_Prediction(object):
                 result=self._model(data_input)
                 score_list.append(result)
         sorted_score_rank= torch.argsort(torch.cat(score_list,dim=0).reshape(self._single_batch_len,-1).T,dim=0)  #torch.Size([14541, batch])
-        len_b=self.batch_size if self.batch_size<len(sorted_score_rank) else len(sorted_score_rank)
+        # len_b=self.batch_size if self.batch_size<len(sorted_score_rank) else len(sorted_score_rank)
+        len_b=len(sorted_score_rank)
         correct_triplet_rank=torch.mm(torch.unsqueeze(torch.arange(0,len_b),dim=0),(sorted_score_rank==correct_id).type(torch.LongTensor))[0]+1
 
         if self.link_prediction_raw:
