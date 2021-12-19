@@ -1,5 +1,6 @@
 from cogktr import *
 import time
+import torch.utils.data as Data
 
 start_time = time.time()
 loader = MOBILEWIKIDATA5MLoader(path='/home/hongbang/CogKTR/dataset/kr/MOBILEWIKIDATA5M/raw_data',
@@ -23,6 +24,12 @@ for i in range(2):
 print("Train:{}  Valid:{} Test:{}".format(len(train_dataset),
                                           len(valid_dataset),
                                           len(test_dataset)))
+train_loader = Data.DataLoader(dataset=train_dataset,
+                               batch_size=128, num_workers=2,
+                               pin_memory=True)
+it = iter(train_loader)
+for i in range(10):
+    sample = next(it)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
