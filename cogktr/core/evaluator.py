@@ -99,9 +99,14 @@ class Kr_Evaluator(object):
     def search_similar_entity(self,entity,top):
         print("Search_similar_entity Process...")
         entity_index=self.lookuptable_E.word2idx[entity]
-        entity_embedding=torch.unsqueeze(self.model.entity_embedding(torch.tensor(entity_index).to(self.device)),dim=0)
-        total_index=torch.arange(len(self.lookuptable_E))
-        total_embedding=self.model.entity_embedding(total_index.to(self.device))
+        if self.model.name=="BoxE":
+            entity_embedding=torch.unsqueeze(self.model.entity_embedding_base(torch.tensor(entity_index).to(self.device)),dim=0)
+            total_index=torch.arange(len(self.lookuptable_E))
+            total_embedding=self.model.entity_embedding_base(total_index.to(self.device))
+        else:
+            entity_embedding=torch.unsqueeze(self.model.entity_embedding(torch.tensor(entity_index).to(self.device)),dim=0)
+            total_index=torch.arange(len(self.lookuptable_E))
+            total_embedding=self.model.entity_embedding(total_index.to(self.device))
         distance=F.pairwise_distance(entity_embedding, total_embedding, p=2)
         value,index=torch.topk(distance,top+1,largest=False)
         tb = pt.PrettyTable()
@@ -109,31 +114,82 @@ class Kr_Evaluator(object):
         for i in range(len(value)-1):
             tb.add_row([entity,i+1,self.lookuptable_E.idx2word[index[i+1].item()],round(value[i+1].item(),3)])
         print(tb)
-    def search_similar_head(self,tail,relation,top):
+    def search_similar_head(self,tail,top,relation=None,filt=True):
         print("Search_similar_head Process...")
-        tail_index=torch.tensor(self.lookuptable_E.word2idx[tail]).expand(len(self.lookuptable_E),1)
-        relation_index=torch.tensor(self.lookuptable_R.word2idx[relation]).expand(len(self.lookuptable_E),1)
-        total_index=torch.unsqueeze(torch.arange(len(self.lookuptable_E)),dim=1)
-        data_index=torch.cat([total_index,relation_index,tail_index],dim=1)
-        distance=self.model(data_index.to(self.device))
-        value,index=torch.topk(distance,top,largest=False)
-        tb = pt.PrettyTable()
-        tb.field_names = ["Query_Relation","Query_Tail","Rank","Candidates_Head","Distance"]
-        for i in range(len(value)):
-            tb.add_row([relation,tail,i+1,self.lookuptable_E.idx2word[index[i].item()],round(value[i].item(),3)])
-        print(tb)
-    def search_similar_tail(self,head,relation,top):
+        if relation:
+            tail_index=torch.tensor(self.lookuptable_E.word2idx[tail]).expand(len(self.lookuptable_E),1)
+            relation_index=torch.tensor(self.lookuptable_R.word2idx[relation]).expand(len(self.lookuptable_E),1)
+            total_index=torch.unsqueeze(torch.arange(len(self.lookuptable_E)),dim=1)
+            data_index=torch.cat([total_index,relation_index,tail_index],dim=1)
+            distance=self.model(data_index.to(self.device))
+            value,index=torch.topk(distance,top,largest=False)
+            tb = pt.PrettyTable()
+            tb.field_names = ["Query_Relation","Query_Tail","Rank","Candidates_Head","Distance"]
+            for i in range(len(value)):
+                tb.add_row([relation,tail,i+1,self.lookuptable_E.idx2word[index[i].item()],round(value[i].item(),3)])
+            print(tb)
+        else:
+            score_list=list()
+            head_list=list()
+            tail_idx=self.lookuptable_E.word2idx[tail]
+            with torch.no_grad():
+                for relation_index in list(self.lookuptable_R.word2idx.values()):
+                    tail_index=torch.tensor(self.lookuptable_E.word2idx[tail]).expand(len(self.lookuptable_E),1)
+                    relation_index=torch.tensor(relation_index).expand(len(self.lookuptable_E),1)
+                    total_index=torch.unsqueeze(torch.arange(len(self.lookuptable_E)),dim=1)
+                    data_index=torch.cat([total_index,relation_index,tail_index],dim=1)
+                    distance=self.model(data_index.to(self.device))
+                    index=distance.argmin(dim=0)
+                    value=distance[index]
+                    score_list.append(value)
+                    head_list.append(index)
+                    pass
+            score=torch.tensor(score_list)
+            head=torch.tensor(head_list)
+            value,index=torch.topk(score,top,largest=False)
+            tb = pt.PrettyTable()
+            tb.field_names = ["Query_Tail","Rank","Candidates_Head","Candidates_Relation","Distance"]
+            for i in range(len(value)):
+                tb.add_row([tail,i+1,self.lookuptable_E.idx2word[head[index][i].item()],self.lookuptable_R.idx2word[index[i].item()],round(value[i].item(),3)])
+            print(tb)
+
+    def search_similar_tail(self,head,top,relation=None,filt=True):
         print("Search_similar_tail Process...")
-        head_index=torch.tensor(self.lookuptable_E.word2idx[head]).expand(len(self.lookuptable_E),1)
-        relation_index=torch.tensor(self.lookuptable_R.word2idx[relation]).expand(len(self.lookuptable_E),1)
-        total_index=torch.unsqueeze(torch.arange(len(self.lookuptable_E)),dim=1)
-        data_index=torch.cat([head_index,relation_index,total_index],dim=1)
-        distance=self.model(data_index.to(self.device))
-        value,index=torch.topk(distance,top,largest=False)
-        tb = pt.PrettyTable()
-        tb.field_names = ["Query_Head","Query_Relation","Rank","Candidates_Tail","Distance"]
-        for i in range(len(value)):
-            tb.add_row([head,relation,i+1,self.lookuptable_E.idx2word[index[i].item()],round(value[i].item(),3)])
-        print(tb)
+        if relation:
+            head_index=torch.tensor(self.lookuptable_E.word2idx[head]).expand(len(self.lookuptable_E),1)
+            relation_index=torch.tensor(self.lookuptable_R.word2idx[relation]).expand(len(self.lookuptable_E),1)
+            total_index=torch.unsqueeze(torch.arange(len(self.lookuptable_E)),dim=1)
+            data_index=torch.cat([head_index,relation_index,total_index],dim=1)
+            distance=self.model(data_index.to(self.device))
+            value,index=torch.topk(distance,top,largest=False)
+            tb = pt.PrettyTable()
+            tb.field_names = ["Query_Head","Query_Relation","Rank","Candidates_Tail","Distance"]
+            for i in range(len(value)):
+                tb.add_row([head,relation,i+1,self.lookuptable_E.idx2word[index[i].item()],round(value[i].item(),3)])
+            print(tb)
+        else:
+            score_list=list()
+            tail_list=list()
+            head_idx=self.lookuptable_E.word2idx[head]
+            with torch.no_grad():
+                for relation_index in list(self.lookuptable_R.word2idx.values()):
+                    head_index=torch.tensor(self.lookuptable_E.word2idx[head]).expand(len(self.lookuptable_E),1)
+                    relation_index=torch.tensor(relation_index).expand(len(self.lookuptable_E),1)
+                    total_index=torch.unsqueeze(torch.arange(len(self.lookuptable_E)),dim=1)
+                    data_index=torch.cat([head_index,relation_index,total_index],dim=1)
+                    distance=self.model(data_index.to(self.device))
+                    index=distance.argmin(dim=0)
+                    value=distance[index]
+                    score_list.append(value)
+                    tail_list.append(index)
+                    pass
+            score=torch.tensor(score_list)
+            tail=torch.tensor(tail_list)
+            value,index=torch.topk(score,top,largest=False)
+            tb = pt.PrettyTable()
+            tb.field_names = ["Query_Head","Rank","Candidates_Relation","Candidates_Tail","Distance"]
+            for i in range(len(value)):
+                tb.add_row([head,i+1,self.lookuptable_R.idx2word[index[i].item()],self.lookuptable_E.idx2word[tail[index][i].item()],round(value[i].item(),3)])
+            print(tb)
 
 

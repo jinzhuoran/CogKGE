@@ -1,11 +1,5 @@
 import os
 import torch
-import random
-import argparse
-import datetime
-import numpy as np
-import yaml
-import shutil
 from torch.utils.data import RandomSampler
 from cogktr import *
 
@@ -46,16 +40,16 @@ metric = Link_Prediction(link_prediction_raw= True,
                          batch_size=2000000,
                          reverse=False)
 
-model = TransE(entity_dict_len=len(node_vocab),
+model = BoxE(entity_dict_len=len(node_vocab),
               relation_dict_len=len(relation_vocab),
                embedding_dim=50)
 
 entity_candidate=list(node_vocab.word2idx.keys())
 relation_candidate=list(relation_vocab.word2idx.keys())
-test_entity=entity_candidate[0]
-test_relation=relation_candidate[0]
-print(test_entity)  #/m/027rn
-print(test_relation)  #/location/country/form_of_government
+test_entity=entity_candidate[6]
+test_relation=relation_candidate[10]
+print(test_entity)
+print(test_relation)
 
 evaluator = Kr_Evaluator(
     test_dataset=test_dataset,
@@ -73,8 +67,10 @@ evaluator = Kr_Evaluator(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    trained_model_path="/data/mentianyi/Research_code/CogKTR/dataset/kr/FB15K/experimental_output/TransE2021-12-22--11-04-34.23--1000epochs/checkpoints/TransE_500epochs",
+    trained_model_path="/data/mentianyi/Research_code/CogKTR/dataset/kr/FB15K/experimental_output/BoxE2021-12-22--16-47-21.82--1000epochs/checkpoints/BoxE_100epochs",
 )
 evaluator.search_similar_entity(entity=test_entity,top=10)
 evaluator.search_similar_head(tail=test_entity,relation=test_relation,top=10)
 evaluator.search_similar_tail(head=test_entity,relation=test_relation,top=10)
+evaluator.search_similar_head(tail=test_entity,top=10)
+evaluator.search_similar_tail(head=test_entity,top=10)
