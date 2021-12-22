@@ -1,8 +1,11 @@
 import re
 import os
 import torch
+import prettytable as pt
+import torch.nn.functional as F
 import torch.utils.data as Data
 from cogktr.core import DataLoaderX
+
 
 
 class Kr_Evaluator(object):
@@ -93,5 +96,44 @@ class Kr_Evaluator(object):
         self.metric.print_current_table()
         self.metric.log()
         self.metric.write()
+    def search_similar_entity(self,entity,top):
+        print("Search_similar_entity Process...")
+        entity_index=self.lookuptable_E.word2idx[entity]
+        entity_embedding=torch.unsqueeze(self.model.entity_embedding(torch.tensor(entity_index).to(self.device)),dim=0)
+        total_index=torch.arange(len(self.lookuptable_E))
+        total_embedding=self.model.entity_embedding(total_index.to(self.device))
+        distance=F.pairwise_distance(entity_embedding, total_embedding, p=2)
+        value,index=torch.topk(distance,top+1,largest=False)
+        tb = pt.PrettyTable()
+        tb.field_names = ["Query_Entity","Rank","Candidates","Distance"]
+        for i in range(len(value)-1):
+            tb.add_row([entity,i+1,self.lookuptable_E.idx2word[index[i+1].item()],round(value[i+1].item(),3)])
+        print(tb)
+    def search_similar_head(self,tail,relation,top):
+        print("Search_similar_head Process...")
+        tail_index=torch.tensor(self.lookuptable_E.word2idx[tail]).expand(len(self.lookuptable_E),1)
+        relation_index=torch.tensor(self.lookuptable_R.word2idx[relation]).expand(len(self.lookuptable_E),1)
+        total_index=torch.unsqueeze(torch.arange(len(self.lookuptable_E)),dim=1)
+        data_index=torch.cat([total_index,relation_index,tail_index],dim=1)
+        distance=self.model(data_index.to(self.device))
+        value,index=torch.topk(distance,top,largest=False)
+        tb = pt.PrettyTable()
+        tb.field_names = ["Query_Relation","Query_Tail","Rank","Candidates_Head","Distance"]
+        for i in range(len(value)):
+            tb.add_row([relation,tail,i+1,self.lookuptable_E.idx2word[index[i].item()],round(value[i].item(),3)])
+        print(tb)
+    def search_similar_tail(self,head,relation,top):
+        print("Search_similar_tail Process...")
+        head_index=torch.tensor(self.lookuptable_E.word2idx[head]).expand(len(self.lookuptable_E),1)
+        relation_index=torch.tensor(self.lookuptable_R.word2idx[relation]).expand(len(self.lookuptable_E),1)
+        total_index=torch.unsqueeze(torch.arange(len(self.lookuptable_E)),dim=1)
+        data_index=torch.cat([head_index,relation_index,total_index],dim=1)
+        distance=self.model(data_index.to(self.device))
+        value,index=torch.topk(distance,top,largest=False)
+        tb = pt.PrettyTable()
+        tb.field_names = ["Query_Head","Query_Relation","Rank","Candidates_Tail","Distance"]
+        for i in range(len(value)):
+            tb.add_row([head,relation,i+1,self.lookuptable_E.idx2word[index[i].item()],round(value[i].item(),3)])
+        print(tb)
 
 
