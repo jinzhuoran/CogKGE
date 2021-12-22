@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import pickle
 from ...datable import Datable
+from ...lut import LookUpTable
 
 
 class BaseLoader:
@@ -81,6 +82,13 @@ class BaseLoader:
     def load_vocabs_from_pickle(self,file_name):
         with open(file_name,"rb") as file:
             self.node_vocab,self.relation_vocab = pickle.load(file)
+
+    def load_all_lut(self):
+        node_lut = LookUpTable()
+        node_lut.add_vocab(self.node_vocab)
+        relation_lut = LookUpTable()
+        relation_lut.add_vocab(self.relation_vocab)
+        return node_lut,relation_lut
 
     def load_all_vocabs(self, ):
         """

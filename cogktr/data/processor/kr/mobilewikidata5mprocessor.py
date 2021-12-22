@@ -6,11 +6,11 @@ import torch
 
 
 class MOBILEWIKIDATA5MProcessor(BaseProcessor):
-    def __init__(self, node_vocab, relation_vocab,node_lut):
+    def __init__(self, node_lut, relation_lut):
         """
-        :param vocabs: node_vocab,relation_vocab,time_vocab
+        :param luts:node_lut,relation_lut
         """
-        super().__init__(node_vocab, relation_vocab)
+        super().__init__(node_lut, relation_lut)
         self.node_lut = node_lut
         self.pre_training_model_name = "roberta-base"
         self.token_length = 10
@@ -32,27 +32,24 @@ class MOBILEWIKIDATA5MProcessor(BaseProcessor):
             tokens_list.append(encoded_text["input_ids"])
             masks_list.append(encoded_text['attention_mask'])
         self.node_lut.add_column(tokens_list, "input_ids")
-        self.node_lut.add_column(masks_list,"attention_mask")
+        self.node_lut.add_column(masks_list, "attention_mask")
 
         head_input_ids = []
         head_attention_mask = []
         tail_intput_ids = []
         tail_attention_mask = []
         for i in tqdm(range(len(data))):
-            head, tail = data[i]["head"],data[i]["tail"]
-            head_input_ids.append(self.node_lut.search(head,"input_ids"))
-            head_attention_mask.append(self.node_lut.search(head,"attention_mask"))
-            tail_intput_ids.append(self.node_lut.search(tail,"input_ids"))
-            tail_attention_mask.append(self.node_lut.search(tail,"attention_mask"))
-        descriptions = [torch.cat(l,dim=0) for l in [head_input_ids,tail_intput_ids,head_attention_mask,tail_attention_mask]]
-
+            head, tail = data[i]["head"], data[i]["tail"]
+            head_input_ids.append(self.node_lut.search(head, "input_ids"))
+            head_attention_mask.append(self.node_lut.search(head, "attention_mask"))
+            tail_intput_ids.append(self.node_lut.search(tail, "input_ids"))
+            tail_attention_mask.append(self.node_lut.search(tail, "attention_mask"))
+        descriptions = [torch.cat(l, dim=0) for l in
+                        [head_input_ids, tail_intput_ids, head_attention_mask, tail_attention_mask]]
 
         data = self._datable2numpy(data)
 
-        return Cog_Dataset(data, task='kr',descriptions=descriptions)
-
-
-
+        return Cog_Dataset(data, task='kr', descriptions=descriptions)
 
 
 # from ...dataset import Cog_Dataset

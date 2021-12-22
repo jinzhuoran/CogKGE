@@ -61,6 +61,7 @@ class EVENTKG2MLoader(BaseLoader):
             relation_lut.read_from_pickle(preprocessed_file)
         else:
             relation_lut = self._load_lut(self.relation_lut_name)
+            relation_lut.add_vocab(self.relation_vocab)
             relation_lut.save_to_pickle(preprocessed_file)
         return relation_lut
 
@@ -85,14 +86,21 @@ class EVENTKG2MLoader(BaseLoader):
             # event_lut = event_lut.assign(node_type=pd.Series(['event'] * len(event_lut)).values)
 
             node_lut = entity_lut.append(event_lut)
+            node_lut.add_vocab(self.node_vocab)
             node_lut.save_to_pickle(preprocessed_file)
             # node_lut.to_pickle(preprocessed_file)
         return node_lut
 
+    def load_time_lut(self):
+        time_lut = LookUpTable()
+        time_lut.add_vocab(self.time_vocab)
+        return time_lut
+
     def load_all_lut(self):
         node_lut = self.load_node_lut()
         relation_lut = self.load_relation_lut()
-        return node_lut, relation_lut
+        time_lut = self.load_time_lut()
+        return node_lut, relation_lut,time_lut
 
 # class EVENTKG2MLoader:
 #     """

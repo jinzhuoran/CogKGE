@@ -8,9 +8,9 @@ loader = MOBILEWIKIDATA5MLoader(path='/home/hongbang/CogKTR/dataset/kr/MOBILEWIK
                                 download_path="CogKTR/dataset/")
 train_data, valid_data, test_data = loader.load_all_data()
 node_vocab, relation_vocab = loader.load_all_vocabs()
-node_lut = loader.load_all_lut()
+node_lut,relation_lut = loader.load_all_lut()
 
-processor = MOBILEWIKIDATA5MProcessor(node_vocab,relation_vocab,node_lut)
+processor = MOBILEWIKIDATA5MProcessor(node_lut,relation_lut)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)

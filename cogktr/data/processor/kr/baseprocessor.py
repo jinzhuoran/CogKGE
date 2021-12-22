@@ -2,13 +2,16 @@ import copy
 
 from ...dataset import Cog_Dataset
 
+
 class BaseProcessor:
-    def __init__(self, node_vocab, relation_vocab):
+    def __init__(self, node_lut, relation_lut):
         """
-        :param vocabs: node_vocab,relation_vocab,time_vocab
+        :param vocabs: node_vocab,relation_vocab from node_lut relation_lut
         """
-        self.node_vocab = node_vocab
-        self.relation_vocab = relation_vocab
+        self.node_vocab = node_lut.vocab
+        self.relation_vocab = relation_lut.vocab
+        # self.node_vocab = node_vocab
+        # self.relation_vocab = relation_vocab
 
     def process(self, data):
         data = self._datable2numpy(data)
@@ -21,9 +24,9 @@ class BaseProcessor:
         :return: numpy array
         """
         data = copy.deepcopy(data)
-        data.str2idx("head",self.node_vocab)
-        data.str2idx("tail",self.node_vocab)
-        data.str2idx("relation",self.relation_vocab)
+        data.str2idx("head", self.node_vocab)
+        data.str2idx("tail", self.node_vocab)
+        data.str2idx("relation", self.relation_vocab)
         return data.to_numpy()
 
     @staticmethod

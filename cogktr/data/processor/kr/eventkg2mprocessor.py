@@ -3,12 +3,12 @@ from .baseprocessor import BaseProcessor
 
 
 class EVENTKG2MProcessor(BaseProcessor):
-    def __init__(self, node_vocab, relation_vocab, time_vocab):
+    def __init__(self, node_lut, relation_lut, time_lut):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """
-        super().__init__(node_vocab,relation_vocab)
-        self.time_vocab = time_vocab
+        super().__init__(node_lut,relation_lut)
+        self.time_vocab = time_lut.vocab
 
     # def process(self, data):
     #     data = self._datable2numpy(data)

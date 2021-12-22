@@ -30,6 +30,7 @@ class MOBILEWIKIDATA5MLoader(BaseLoader):
             node_lut.read_from_pickle(pre_node_lut)
         else:
             node_lut = self._load_lut(self.text_name)
+            node_lut.add_vocab(self.node_vocab)
             node_lut.save_to_pickle(pre_node_lut)
         return node_lut
 
@@ -39,7 +40,9 @@ class MOBILEWIKIDATA5MLoader(BaseLoader):
         :return: node lut (!!There is no relation lut!!)
         """
         node_lut = self.load_node_lut()
-        return node_lut
+        relation_lut = LookUpTable()
+        relation_lut.add_vocab(self.relation_vocab)
+        return node_lut,relation_lut
 
 
 

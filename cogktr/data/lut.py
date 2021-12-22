@@ -1,10 +1,15 @@
 import prettytable as pt
 import pandas as pd
+import pickle
 
 
 class LookUpTable:
     def __init__(self):
         self.data = None
+        self.vocab = None
+
+    def add_vocab(self,vocab):
+        self.vocab = vocab
 
     def read_json(self, *args, **kwargs):
         self.data = pd.read_json(*args, **kwargs)
@@ -15,14 +20,26 @@ class LookUpTable:
     def transpose(self):
         self.data = self.data.T
 
+    # def __len__(self):
+    #     return self.data.shape[0]
     def __len__(self):
-        return self.data.shape[0]
+        return len(self.vocab)
 
-    def save_to_pickle(self, *args, **kwargs):
-        self.data.to_pickle(*args, **kwargs)
+    def save_to_pickle(self,file_name):
+        tmp = {"data":self.data,"vocab":self.vocab}
+        with open(file_name,"wb") as f:
+            pickle.dump(tmp,f,protocol=pickle.HIGHEST_PROTOCOL)
 
-    def read_from_pickle(self, *args, **kwargs):
-        self.data = pd.read_pickle(*args, **kwargs)
+    def read_from_pickle(self,file_name):
+        with open(file_name,"rb") as f:
+            tmp = pickle.load(f)
+            self.data = tmp["data"]
+            self.vocab = tmp["vocab"]
+    # def save_to_pickle(self, *args, **kwargs):
+    #     self.data.to_pickle(*args, **kwargs)
+
+    # def read_from_pickle(self, *args, **kwargs):
+    #     self.data = pd.read_pickle(*args, **kwargs)
 
     def __getitem__(self, index):
         if isinstance(index, int):
