@@ -74,13 +74,13 @@ class EVENTKG2MLoader(BaseLoader):
         else:
             entity_lut = self._load_lut(self.entity_lut_name)
             entity_lut.rename(columns={"entity_label": "node_label", "entity_rdf": "node_rdf"})
-            entity_lut.add_column(['entity'] * len(entity_lut), "node_type")
+            entity_lut.add_column(['entity'] * len(entity_lut.data), "node_type")
             # entity_lut = entity_lut.rename(columns={"entity_label": "node_label", "entity_rdf": "node_rdf"})
             # entity_lut = entity_lut.assign(node_type=pd.Series(['entity'] * len(entity_lut)).values)
 
             event_lut = self._load_lut(self.event_lut_name)
             event_lut.rename(columns={"event_label": "node_label", "event_rdf": "node_rdf"})
-            event_lut.add_column(['event'] * len(event_lut), "node_type")
+            event_lut.add_column(['event'] * len(event_lut.data), "node_type")
 
             # event_lut = event_lut.rename(columns={"event_label": "node_label", "event_rdf": "node_rdf"})
             # event_lut = event_lut.assign(node_type=pd.Series(['event'] * len(event_lut)).values)
