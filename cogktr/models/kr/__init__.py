@@ -10,6 +10,7 @@ from .tucker import *
 from .pairre import *
 from .kepler import *
 from .boxe import *
+from .ttd import *
 
 __all__=[
     #transe
@@ -36,4 +37,8 @@ __all__=[
     "PairRE",
 
     "BoxE",
+
+    "TTD_TransE",
+    "TTD_TransE_TYPE",
+    "TTD_TransE_TYPE_2"
 ]
