@@ -2,7 +2,6 @@ class Vocabulary:
     def __init__(self, ):
         self.word2idx = {}
         self.idx2word = {}
-        self.cnt = None
 
     def buildVocab(self, tokens, *args):
         """

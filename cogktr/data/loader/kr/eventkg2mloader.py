@@ -9,23 +9,28 @@ from ...lut import LookUpTable
 from ....utils.download_utils import Download_Data
 from ...vocabulary import Vocabulary
 import json
+import prettytable as pt
 
 from .baseloader import BaseLoader
 
 
 class EVENTKG2MLoader(BaseLoader):
-    def __init__(self, path, download=False, download_path=None):
-        super().__init__(path, download, download_path,
+    def __init__(self, dataset_path, download=False):
+        super().__init__(dataset_path, download,
+                         raw_data_path="kr/EVENTKG2M/raw_data",
+                         processed_data_path="kr/EVENTKG2M/processed_data",
                          train_name="eventkg2m_train.txt",
                          valid_name="eventkg2m_valid.txt",
-                         test_name="eventkg2m_test.txt")
+                         test_name="eventkg2m_test.txt",
+                         data_name="EVENTKG2M")
+
         self.time_vocab = Vocabulary()
         self.entity_lut_name = "eventkg2m_entities_lut.json"
         self.event_lut_name = "eventkg2m_events_lut.json"
         self.relation_lut_name = "eventkg2m_relations_lut.json"
 
-    def _load_data(self, path):
-        return BaseLoader._load_data(self, path=path, column_names=["head", "relation", "tail", "start", "end"])
+    def _load_data(self, path ,data_type):
+        return BaseLoader._load_data(self, path=path,data_type=data_type, column_names=["head", "relation", "tail", "start", "end"])
 
     def download_action(self):
         self.downloader.EVENTKG2M()
@@ -48,48 +53,64 @@ class EVENTKG2MLoader(BaseLoader):
             self.node_vocab, self.relation_vocab, self.time_vocab = pickle.load(file)
 
     def _load_lut(self, path):
-        total_path = os.path.join(self.path, path).replace('\\', '/')
+        total_path = os.path.join(self.raw_data_path, path)
         lut = LookUpTable()
         lut.read_json(total_path)
         lut.transpose()
         return lut
 
-    def load_relation_lut(self):
-        preprocessed_file = os.path.join(self.path, "relation_lut.pkl")
-        if os.path.exists(preprocessed_file):
-            relation_lut = LookUpTable()
-            relation_lut.read_from_pickle(preprocessed_file)
-        else:
-            relation_lut = self._load_lut(self.relation_lut_name)
-            relation_lut.add_vocab(self.relation_vocab)
-            relation_lut.save_to_pickle(preprocessed_file)
-        return relation_lut
-
     def load_node_lut(self):
-        preprocessed_file = os.path.join(self.path, "node_lut.pkl")
+        preprocessed_file = os.path.join(self.processed_data_path, "node_lut.pkl")
         if os.path.exists(preprocessed_file):
             node_lut = LookUpTable()
             node_lut.read_from_pickle(preprocessed_file)
             # node_lut = pd.read_pickle(preprocessed_file)
         else:
             entity_lut = self._load_lut(self.entity_lut_name)
-            entity_lut.rename(columns={"entity_label": "node_label", "entity_rdf": "node_rdf"})
             entity_lut.add_column(['entity'] * len(entity_lut.data), "node_type")
             # entity_lut = entity_lut.rename(columns={"entity_label": "node_label", "entity_rdf": "node_rdf"})
             # entity_lut = entity_lut.assign(node_type=pd.Series(['entity'] * len(entity_lut)).values)
 
             event_lut = self._load_lut(self.event_lut_name)
-            event_lut.rename(columns={"event_label": "node_label", "event_rdf": "node_rdf"})
             event_lut.add_column(['event'] * len(event_lut.data), "node_type")
 
             # event_lut = event_lut.rename(columns={"event_label": "node_label", "event_rdf": "node_rdf"})
             # event_lut = event_lut.assign(node_type=pd.Series(['event'] * len(event_lut)).values)
 
+            # my_dict=self.node_vocab.
+            #
+            # my_dict={"Q_123":0,"Q_222":2,"Q_321":1}
+            # df=pd.DataFrame([my_dict]).T
+            # df.rename({0:"name_id"},axis=1)
+
             node_lut = entity_lut.append(event_lut)
             node_lut.add_vocab(self.node_vocab)
+
+            df=pd.DataFrame([self.node_vocab.word2idx]).T
+            df=df.rename({0:"name_id"},axis=1)
+            node_lut.data=pd.merge(df,node_lut.data,left_index=True, right_index=True, how='outer')
+            node_lut.data=node_lut.data.sort_values(by="name_id")
+
             node_lut.save_to_pickle(preprocessed_file)
             # node_lut.to_pickle(preprocessed_file)
         return node_lut
+
+    def load_relation_lut(self):
+        preprocessed_file = os.path.join(self.processed_data_path, "relation_lut.pkl")
+        if os.path.exists(preprocessed_file):
+            relation_lut = LookUpTable()
+            relation_lut.read_from_pickle(preprocessed_file)
+        else:
+            relation_lut = self._load_lut(self.relation_lut_name)
+            relation_lut.add_vocab(self.relation_vocab)
+
+            df=pd.DataFrame([self.relation_vocab.word2idx]).T
+            df=df.rename({0:"name_id"},axis=1)
+            relation_lut.data=pd.merge(df,relation_lut.data,left_index=True, right_index=True, how='outer')
+            relation_lut.data=relation_lut.data.sort_values(by="name_id")
+
+            relation_lut.save_to_pickle(preprocessed_file)
+        return relation_lut
 
     def load_time_lut(self):
         time_lut = LookUpTable()
@@ -98,9 +119,18 @@ class EVENTKG2MLoader(BaseLoader):
 
     def load_all_lut(self):
         node_lut = self.load_node_lut()
+        node_lut.add_processed_path(self.processed_data_path)
         relation_lut = self.load_relation_lut()
+        relation_lut.add_processed_path(self.processed_data_path)
         time_lut = self.load_time_lut()
         return node_lut, relation_lut,time_lut
+
+    def describe(self):
+        tb = pt.PrettyTable()
+        tb.field_names = [self.data_name,"train","valid","test","node","relation","time"]
+        tb.add_row(["num",self.train_len,self.valid_len,self.test_len,len(self.node_vocab),len(self.relation_vocab),len(self.time_vocab)])
+        print(tb)
+
 
 # class EVENTKG2MLoader:
 #     """

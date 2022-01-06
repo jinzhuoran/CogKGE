@@ -56,7 +56,7 @@ class MOBILEWIKIDATA5MProcessor(BaseProcessor):
 # from tqdm import tqdm
 # from transformers import logging
 # logging.set_verbosity_error()
-from transformers import RobertaTokenizer
+# from transformers import RobertaTokenizer
 # import numpy as np
 #
 # class MOBILEWIKIDATA5MProcessor:

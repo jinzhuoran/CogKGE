@@ -5,6 +5,8 @@ import prettytable as pt
 import torch.nn.functional as F
 import torch.utils.data as Data
 from cogktr.core import DataLoaderX
+from ..utils.kr_utils import cal_output_path
+from .log import save_logger
 
 
 
@@ -22,7 +24,7 @@ class Kr_Evaluator(object):
                  valid_dataset=None,
                  lookuptable_E=None,
                  lookuptable_R=None,
-                 logger=None,
+                 log=None,
                  dataloaderX=False,
                  num_workers=None,
                  pin_memory=False,
@@ -39,10 +41,24 @@ class Kr_Evaluator(object):
         self.valid_dataset=valid_dataset
         self.lookuptable_E=lookuptable_E
         self.lookuptable_R=lookuptable_R
-        self.logger=logger
+        self.log=log
         self.dataloaderX=dataloaderX
         self.num_workers=num_workers
         self.pin_memory=pin_memory
+
+        # Set output_path
+        output_path = os.path.join(output_path, "kr", "EVENTKG2M")
+        self.output_path = cal_output_path(output_path, self.model.name)
+        if not os.path.exists(self.output_path):
+            os.makedirs(self.output_path)
+
+        # Set logger
+        if log:
+            logger = save_logger(os.path.join(self.output_path, "run.log"))
+            logger.info("Data Experiment Output Path:{}".format(self.output_path))
+            self.logger = logger
+
+
 
         #Load Data
         if self.dataloaderX:
@@ -77,22 +93,25 @@ class Kr_Evaluator(object):
         self.parallel_model = torch.nn.DataParallel(self.model)
         self.parallel_model = self.parallel_model.to(self.device)
 
+        # Load Metric
+        if self.metric:
+            self.metric.initialize(device=self.device,
+                                   total_epoch=0,
+                                   metric_type="test",
+                                   node_dict_len=len(self.lookuptable_E),
+                                   model_name=self.model.name,
+                                   logger=self.logger,
+                                   writer=None,
+                                   train_dataset=self.train_dataset,
+                                   valid_dataset=self.valid_dataset,
+                                   test_dataset=self.test_dataset)
+            if self.metric.link_prediction_filt:
+                self.metric.establish_correct_triplets_dict()
+
     def evaluate(self):
         current_epoch=self.trained_epoch
-
         print("Evaluating Model {} on Test Dataset...".format(self.model.name))
-        self.metric.caculate(device=self.device,
-                             model=self.parallel_model,
-                             total_epoch=self.trained_epoch,
-                             current_epoch=current_epoch,
-                             metric_type="test_dataset",
-                             metric_dataset=self.test_dataset,
-                             node_dict_len=len(self.lookuptable_E),
-                             model_name=self.model.name,
-                             logger=self.logger,
-                             train_dataset=self.train_dataset,
-                             valid_dataset=self.valid_dataset,
-                             test_dataset=self.test_dataset)
+        self.metric.caculate(model=self.parallel_model, current_epoch=current_epoch)
         self.metric.print_current_table()
         self.metric.log()
         self.metric.write()

@@ -67,7 +67,7 @@ evaluator = Kr_Evaluator(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    trained_model_path="/data/mentianyi/Research_code/CogKTR/dataset/kr/FB15K/experimental_output/BoxE2021-12-22--16-47-21.82--1000epochs/checkpoints/BoxE_100epochs",
+    trained_model_path="/data/mentianyi/Research_code/CogKTR/dataset/kr/FB15K/experimental_output/BoxE2021-12-22--16-47-21.82--1000epochs/checkpoints/BoxE_1000epochs",
 )
 evaluator.search_similar_entity(entity=test_entity,top=10)
 evaluator.search_similar_head(tail=test_entity,relation=test_relation,top=10)

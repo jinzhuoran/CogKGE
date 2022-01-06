@@ -72,17 +72,12 @@ MyLoader = get_class(args.data_loader)
 loader = MyLoader(args.data_path, args.download, args.download_path)
 # loader = MyLoader(args.data_path)
 train_data, valid_data, test_data = loader.load_all_data()
-lookuptable_E, lookuptable_R = loader.load_all_lut()
-train_data.print_table(5)
-valid_data.print_table(1)
-test_data.print_table(1)
-lookuptable_E.print_table(5)
-lookuptable_R.print_table(5)
-print("data_length:\n", len(train_data), len(valid_data), len(test_data))
-print("table_length:\n", len(lookuptable_E), len(lookuptable_R))
+node_vocab, relation_vocab = loader.load_all_vocabs()
+lookuptable_E = loader.load_all_lut()
+
 
 Processor = get_class(args.data_processor)
-processor = Processor(lookuptable_E, lookuptable_R)
+processor = Processor(node_vocab, relation_vocab,lookuptable_E)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
@@ -97,8 +92,8 @@ test_sampler = RandomSampler(test_dataset)
 
 
 Model = get_class(args.model_name)
-model = Model(entity_dict_len=len(lookuptable_E),
-              relation_dict_len=len(lookuptable_R),
+model = Model(entity_dict_len=len(node_vocab),
+              relation_dict_len=len(relation_vocab),
               **args.model_args)
 
 Loss = get_class(args.loss_name)
@@ -120,14 +115,14 @@ Negative_sampler = get_class(args.negative_sampler_name)
 if args.negative_sampler_name == 'AdversarialSampler':
     if 'neg_per_pos' not in args.loss_args:
         assert ValueError("Please configure the neg_per_pos in loss_args if you want to choose AdversarialSampler!")
-    negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
-                                        entity_dict_len=len(lookuptable_E),
-                                        relation_dict_len=len(lookuptable_R),
+    negative_sampler = Negative_sampler(triples=train_dataset,
+                                        entity_dict_len=len(node_vocab),
+                                        relation_dict_len=len(relation_vocab),
                                         neg_per_pos = args.loss_args['neg_per_pos'])
 else:
-    negative_sampler = Negative_sampler(triples=train_dataset.data_numpy,
-                                        entity_dict_len=len(lookuptable_E),
-                                        relation_dict_len=len(lookuptable_R))
+    negative_sampler = Negative_sampler(triples=train_dataset,
+                                        entity_dict_len=len(node_vocab),
+                                        relation_dict_len=len(relation_vocab))
 
 
 Trainer = get_class(args.trainer_name)
@@ -142,8 +137,8 @@ trainer = Trainer(
     negative_sampler=negative_sampler,
     device=device,
     output_path=output_path,
-    lookuptable_E= lookuptable_E,
-    lookuptable_R= lookuptable_R,
+    lookuptable_E= node_vocab,
+    lookuptable_R= relation_vocab,
     metric=metric,
     lr_scheduler=lr_scheduler,
     logger=logger,
@@ -162,8 +157,8 @@ evaluator = Evaluator(
     output_path=output_path,
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
-    lookuptable_E= lookuptable_E,
-    lookuptable_R= lookuptable_R,
+    lookuptable_E= node_vocab,
+    lookuptable_R= relation_vocab,
     logger=logger,
     **args.evaluator_args
 )
