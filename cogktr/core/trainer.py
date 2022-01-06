@@ -4,8 +4,11 @@ import time
 import torch
 from tqdm import tqdm
 import torch.utils.data as Data
+# from accelerate import Accelerator
 from cogktr.core import DataLoaderX
 from torch.utils.tensorboard import SummaryWriter
+from ..utils.kr_utils import cal_output_path
+from .log import save_logger
 
 # from .log import *
 
@@ -28,7 +31,7 @@ class Kr_Trainer(object):
                  lookuptable_R=None,
                  metric=None,
                  lr_scheduler=None,
-                 logger=None,
+                 log=None,
                  load_checkpoint=None,
                  visualization=False,
                  apex=False,
@@ -49,14 +52,13 @@ class Kr_Trainer(object):
         self.negative_sampler=negative_sampler
         self.epoch=epoch
         self.device=device
-        self.output_path=output_path
         self.valid_dataset=valid_dataset
         self.valid_sampler=valid_sampler
         self.lookuptable_E=lookuptable_E
         self.lookuptable_R=lookuptable_R
         self.metric=metric
         self.lr_scheduler=lr_scheduler
-        self.logger=logger
+        self.log=log
         self.load_checkpoint=load_checkpoint
         self.visualization=visualization
         self.apex=apex
@@ -67,6 +69,18 @@ class Kr_Trainer(object):
         self.save_step=save_step
         self.metric_final_model=metric_final_model
         self.save_final_model=save_final_model
+
+        #Set output_path
+        output_path=os.path.join(output_path,"kr","EVENTKG2M")
+        self.output_path = cal_output_path(output_path, self.model.name)
+        if not os.path.exists(self.output_path):
+            os.makedirs(self.output_path)
+
+        #Set logger
+        if log:
+            logger = save_logger(os.path.join(self.output_path, "run.log"))
+            logger.info("Data Experiment Output Path:{}".format(self.output_path))
+            self.logger = logger
 
         #Load Apex
         if self.apex:
@@ -116,11 +130,16 @@ class Kr_Trainer(object):
 
 
         #Load Dataparallel Training
+        # self.accelerator = Accelerator()
+        # self.device = self.accelerator.device
+        # self.model, my_optimizer, my_training_dataloader = self.accelerate.prepare(
+        #     +     my_model, my_optimizer, my_training_dataloader)
         print("Available cuda devices:", torch.cuda.device_count())
         self.parallel_model = torch.nn.DataParallel(self.model)
         self.parallel_model = self.parallel_model.to(self.device)
 
         #Load Visualization
+        self.writer=None
         if self.visualization == True:
             self.visualization_path=os.path.join(self.output_path, "visualization", self.model.name)
             if not os.path.exists(self.visualization_path):
@@ -129,8 +148,19 @@ class Kr_Trainer(object):
             self.logger.info(
                 "The visualization path is" + self.visualization_path)
 
-
-
+        #Load Metric
+        if self.metric:
+            self.metric.initialize(device=self.device,
+                                   total_epoch=self.epoch,
+                                   metric_type="valid",
+                                   node_dict_len=len(self.lookuptable_E),
+                                   model_name=self.model.name,
+                                   logger=self.logger,
+                                   writer=self.writer,
+                                   train_dataset=self.train_dataset,
+                                   valid_dataset=self.valid_dataset)
+            if self.metric.link_prediction_filt:
+                self.metric.establish_correct_triplets_dict()
 
 
     def train(self):
@@ -143,12 +173,15 @@ class Kr_Trainer(object):
             # Training Progress
             train_epoch_loss = 0.0
             for train_step, train_positive in enumerate(tqdm(self.train_loader)):
-                train_positive = train_positive.to(self.device)
-                train_negative = self.negative_sampler.create_negative(train_positive)
+                train_positive= train_positive.to(self.device)
+                train_negative = self.negative_sampler.create_negative(train_positive[:,:3])
                 train_positive_score = self.parallel_model(train_positive)
+                if len(train_positive[0])==5:
+                    train_negative=torch.cat((train_negative,train_positive[:,3:]),dim=1)
                 train_negative_score = self.parallel_model(train_negative)
                 penalty = self.model.get_penalty() if hasattr(self.model, 'get_penalty') else 0
                 train_loss = self.loss(train_positive_score, train_negative_score, penalty)
+                # self.accelerate.backward(train_loss)
 
                 self.optimizer.zero_grad()
                 if self.apex :
@@ -163,9 +196,11 @@ class Kr_Trainer(object):
             valid_epoch_loss = 0.0
             with torch.no_grad():
                 for valid_step, valid_positive in enumerate(self.valid_loader):
-                    valid_positive = valid_positive.to(self.device)
-                    valid_negative = self.negative_sampler.create_negative(valid_positive)
+                    valid_positive= valid_positive.to(self.device)
+                    valid_negative = self.negative_sampler.create_negative(valid_positive[:,:3])
                     valid_positive_score = self.parallel_model(valid_positive)
+                    if len(valid_positive[0])==5:
+                        valid_negative=torch.cat((valid_negative,valid_positive[:,3:]),dim=1)
                     valid_negative_score = self.parallel_model(valid_negative)
                     penalty = self.model.get_penalty() if hasattr(self.model, 'get_penalty') else 0
                     valid_loss = self.loss(valid_positive_score, valid_negative_score, penalty)
@@ -178,18 +213,7 @@ class Kr_Trainer(object):
             # Metric Progress
             if self.metric_step  and (current_epoch) % self.metric_step == 0 or self.metric_final_model and (current_epoch) == self.epoch:
                 print("Evaluating Model {} on Valid Dataset...".format(self.model.name))
-                self.metric.caculate(device=self.device,
-                                     model=self.parallel_model,
-                                     total_epoch=self.epoch,
-                                     current_epoch=current_epoch,
-                                     metric_type="valid_dataset",
-                                     metric_dataset=self.valid_dataset,
-                                     node_dict_len=len(self.lookuptable_E),
-                                     model_name=self.model.name,
-                                     logger=self.logger,
-                                     writer=self.writer,
-                                     train_dataset=self.train_dataset,
-                                     valid_dataset=self.valid_dataset)
+                self.metric.caculate(model=self.parallel_model,current_epoch=current_epoch)
                 self.metric.print_current_table()
                 self.metric.log()
                 self.metric.write()

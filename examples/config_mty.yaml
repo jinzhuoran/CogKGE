@@ -2,9 +2,9 @@
 #data_path: ../dataset/kr/EVENTKG/raw_data
 #data_loader: EVENTKGLoader
 #data_processor: EVENTKGProcessor
-data_path: ../dataset/kr/FB15K237/raw_data
-data_loader: FB15K237Loader
-data_processor: FB15K237Processor
+data_path: ../dataset/kr/MOBILEWIKIDATA5M/raw_data
+data_loader: MOBILEWIKIDATA5MLoader
+data_processor: MOBILEWIKIDATA5MProcessor
 #data_path: ../dataset/kr/FB15K/raw_data
 #data_loader: FB15KLoader
 #data_processor: FB15KProcessor

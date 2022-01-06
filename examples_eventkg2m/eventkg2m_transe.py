@@ -1,79 +1,15 @@
-import os
 import torch
-import random
-import numpy as np
 from torch.utils.data import RandomSampler
-
 from cogktr import *
 
-class Init_CogKTR():
-    def __init__(self,seed,device_id,data_path,model_name):
-        self.seed=seed
-        self.device_id=device_id
-        self.data_path=data_path
-        self.model_name=model_name
-    def _init_seed(self):
-        random.seed(self.seed)
-        np.random.seed(self.seed)
-        torch.manual_seed(self.seed)
-        torch.cuda.manual_seed_all(self.seed)
-    def _init_device(self):
-        device_list=str(self.device_id).strip().lower().replace('cuda:', '')
-        cpu = device_list == 'cpu'
-        if cpu:
-            os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # force torch.cuda.is_available() = False
-        elif device_list:  # non-cpu device requested
-            os.environ['CUDA_VISIBLE_DEVICES'] = device_list  # set environment variable
-            assert torch.cuda.is_available(), f'CUDA unavailable, invalid device {device_list} requested'  # check availability
-        self.device = torch.device('cuda:0' if torch.cuda.is_available() == True else "cpu")
-    def _init_output_path(self):
-        output_path = cal_output_path(self.data_path, self.model_name)
-        if not os.path.exists(output_path):
-            os.makedirs(output_path)
-        self.output_path =output_path
-    def _init_logger(self):
-        logger = save_logger(os.path.join(self.output_path, "run.log"))
-        logger.info("Data Path:{}".format(self.data_path))
-        logger.info("Output Path:{}".format(self.output_path))
-        self.logger=logger
-    def start(self):
-        self._init_seed()
-        self._init_device()
-        self._init_output_path()
-        self._init_logger()
-    def get_device(self):
-        return self.device
-    def get_output_path(self):
-        return self.output_path
-    def get_logger(self):
-        return self.logger
+device=init_cogktr(device_id="0",seed=1)
 
-
-
-
-init=Init_CogKTR(seed=1,
-                 device_id="2",
-                 data_path="../dataset/kr/FB15K/raw_data",
-                 model_name="TransE")
-init.start()
-device=init.get_device()
-output_path=init.get_output_path()
-logger=init.get_logger()
-
-####################处理完成#####################################
-from cogktr import *
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut ,time_lut= loader.load_all_lut()
-# train_data.print_table(front=3)
-# valid_data.print_table(front=3)
-# test_data.print_table(front=3)
-# print("train_len",len(train_data))
-# print("valid_len",len(valid_data))
-# print("test_len",len(test_data))
-# print("node_lut_len",len(node_lut))
-# print("relation_lut_len",len(relation_lut))
-# print("time_lut_len",len(time_lut))
+# loader.describe()
+# train_data.describe()
+# node_lut.describe()
 
 processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,
                                type=True,description=False,reprocess=False,
@@ -91,7 +27,7 @@ test_sampler = RandomSampler(test_dataset)
 
 model = TTD_TransE(entity_dict_len=len(node_lut),
             relation_dict_len=len(relation_lut),
-            embedding_dim=50)
+            embedding_dim=20)
 
 loss = MarginLoss(margin=1.0,C=0)
 
@@ -121,14 +57,14 @@ trainer = Kr_Trainer(
     optimizer=optimizer,
     negative_sampler=negative_sampler,
     device=device,
-    output_path=output_path,
+    output_path="../dataset",
     lookuptable_E= node_lut,
     lookuptable_R= relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    logger=logger,
+    log=True,
     trainer_batch_size=100000,
-    epoch=1000,
+    epoch=1,
     visualization=0,
     apex=True,
     dataloaderX=True,
@@ -148,12 +84,12 @@ evaluator = Kr_Evaluator(
     model=model,
     device=device,
     metric=metric,
-    output_path=output_path,
+    output_path="../dataset",
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     lookuptable_E= node_lut,
     lookuptable_R= relation_lut,
-    logger=logger,
+    log=True,
     evaluator_batch_size=50000,
     dataloaderX=True,
     num_workers= 4,

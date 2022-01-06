@@ -10,7 +10,6 @@ class TransE(nn.Module):
         self.relation_dict_len = relation_dict_len
         self.embedding_dim = embedding_dim
         self.name = "TransE"
-        self.square = embedding_dim ** 0.5
         self.p = p
 
         self.entity_embedding = nn.Embedding(num_embeddings=self.entity_dict_len, embedding_dim=self.embedding_dim)
@@ -25,7 +24,7 @@ class TransE(nn.Module):
     def get_score(self,triplet_idx):
         output = self._forward(triplet_idx)  # (batch,3,embedding_dim)
         score = F.pairwise_distance(output[:, 0] + output[:, 1], output[:, 2], p=self.p)
-        return score  # (batch,) 
+        return score  # (batch,)
 
     def forward(self,triplet_idx):
         return self.get_score(triplet_idx)
@@ -48,4 +47,3 @@ class TransE(nn.Module):
         output = triplet_embedding
 
         return output # (batch,3,embedding_dim)
-        

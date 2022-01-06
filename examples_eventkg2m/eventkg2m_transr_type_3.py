@@ -88,9 +88,9 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TTD_TransE_TYPE_2(entity_dict_len=len(node_lut),
+model = TTD_TransR_TYPE_3(entity_dict_len=len(node_lut),
                         relation_dict_len=len(relation_lut),
-                        embedding_dim=20,node_lut=node_lut)
+                        dim_entity=20,dim_relation=20,node_lut=node_lut)
 
 loss = MarginLoss(margin=1.0,C=0)
 
@@ -126,7 +126,7 @@ trainer = Kr_Trainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     logger=logger,
-    trainer_batch_size=100000,#100000
+    trainer_batch_size=50000,
     epoch=1000,
     visualization=0,
     apex=True,

@@ -7,9 +7,25 @@ class LookUpTable:
     def __init__(self):
         self.data = None
         self.vocab = None
+        self.token=None
+        self.mask=None
+        self.type=None
+        self.processed_path=None
 
     def add_vocab(self,vocab):
         self.vocab = vocab
+
+    def add_token(self,token):
+        self.token=token
+
+    def add_mask(self,mask):
+        self.mask=mask
+
+    def add_type(self,type):
+        self.type=type
+
+    def add_processed_path(self,processed_path):
+        self.processed_path=processed_path
 
     def read_json(self, *args, **kwargs):
         self.data = pd.read_json(*args, **kwargs)
@@ -26,7 +42,7 @@ class LookUpTable:
         return len(self.vocab)
 
     def save_to_pickle(self,file_name):
-        tmp = {"data":self.data,"vocab":self.vocab}
+        tmp = {"data":self.data,"vocab":self.vocab,"token":self.token,"mask":self.mask,"type":self.type,"processed_path":self.processed_path}
         with open(file_name,"wb") as f:
             pickle.dump(tmp,f,protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -35,6 +51,10 @@ class LookUpTable:
             tmp = pickle.load(f)
             self.data = tmp["data"]
             self.vocab = tmp["vocab"]
+            self.token=tmp["token"]
+            self.mask=tmp["mask"]
+            self.type=tmp["type"]
+            self.processed_path=tmp["processed_path"]
     # def save_to_pickle(self, *args, **kwargs):
     #     self.data.to_pickle(*args, **kwargs)
 
@@ -85,8 +105,13 @@ class LookUpTable:
         :return: the data stored in the corresponding place
         """
         return self.data.loc[name,attribute]
+    def describe(self,front=3,max_colwidth=100):
+        pd.set_option('display.max_columns', None)
+        pd.set_option('display.width', None)
+        pd.set_option('max_colwidth', max_colwidth)
+        print(self.data.iloc[:front])
 
-# class LookUpTable:
+    # class LookUpTable:
 #     def __init__(self):
 #         self.columns=list()
 #         self.datas=dict()

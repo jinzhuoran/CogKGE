@@ -52,27 +52,28 @@ class Init_CogKTR():
 
 
 init=Init_CogKTR(seed=1,
-                 device_id="1",
+                 device_id="5",
                  data_path="../dataset/kr/EVENTKG2M/raw_data",
-                 model_name="TTD_TYPE")
+                 model_name="TransE")
 init.start()
 device=init.get_device()
 output_path=init.get_output_path()
 logger=init.get_logger()
 
+####################处理完成#####################################
 from cogktr import *
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut ,time_lut= loader.load_all_lut()
-train_data.print_table(front=3)
-valid_data.print_table(front=3)
-test_data.print_table(front=3)
-print("train_len",len(train_data))
-print("valid_len",len(valid_data))
-print("test_len",len(test_data))
-print("node_lut_len",len(node_lut))
-print("relation_lut_len",len(relation_lut))
-print("time_lut_len",len(time_lut))
+# train_data.print_table(front=3)
+# valid_data.print_table(front=3)
+# test_data.print_table(front=3)
+# print("train_len",len(train_data))
+# print("valid_len",len(valid_data))
+# print("test_len",len(test_data))
+# print("node_lut_len",len(node_lut))
+# print("relation_lut_len",len(relation_lut))
+# print("time_lut_len",len(time_lut))
 
 processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,
                                type=True,description=False,reprocess=False,
@@ -81,16 +82,16 @@ train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
 node_lut,relation_lut,time_lut=processor.process_lut()
-node_lut.print_table(front=3)
-relation_lut.print_table(front=3)
+# node_lut.print_table(front=3)
+# relation_lut.print_table(front=3)
 
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TTD_TransE_TYPE_2(entity_dict_len=len(node_lut),
-                        relation_dict_len=len(relation_lut),
-                        embedding_dim=20,node_lut=node_lut)
+model = TTD_TransR_TYPE_3_Baseline_bian(entity_dict_len=len(node_lut),
+                   relation_dict_len=len(relation_lut),
+                   dim_entity=20,dim_relation=20)
 
 loss = MarginLoss(margin=1.0,C=0)
 
@@ -98,7 +99,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=500000,
+                         batch_size=1000000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -126,7 +127,7 @@ trainer = Kr_Trainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     logger=logger,
-    trainer_batch_size=100000,#100000
+    trainer_batch_size=50000,
     epoch=1000,
     visualization=0,
     apex=True,

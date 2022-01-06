@@ -18,5 +18,6 @@ __all__=[
     "BoxE",
     "TTD_TransE",
     "TTD_TransE_TYPE",
-    "TTD_TransE_TYPE_2"
+    "TTD_TransR_TYPE_3",
+    "TTD_TransR_TYPE_3_Baseline_bian"
 ]

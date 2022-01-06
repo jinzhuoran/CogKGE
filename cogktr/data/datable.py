@@ -4,8 +4,9 @@ from .vocabulary import Vocabulary
 
 
 class Datable:
-    def __init__(self):
+    def __init__(self,data_type):
         self.data = None
+        self.data_type=data_type
 
     def read_csv(self, file, **args):
         """
@@ -56,6 +57,23 @@ class Datable:
         :param vocab: choose the mapping from str to idx
         """
         self.data[column_name] = self._series2numpy(self.data[column_name], vocab)
+    def describe(self,front=3):
+        tb = pt.PrettyTable()
+        df_list=self.data.iloc[:front].values.tolist()
+        if len(df_list[0])==5:
+            tb.field_names = ["head",
+                              "relation",
+                              "tail",
+                              "start_time",
+                              "end_time"]
+        if len(df_list[0])==3:
+            tb.field_names = ["head",
+                              "relation",
+                              "tail"]
+        for i in range(len(df_list)):
+            tb.add_row(df_list[i])
+        print("Show front {} lines of {}_data".format(front,self.data_type))
+        print(tb)
 
     @staticmethod
     def _series2numpy(series, vocab):

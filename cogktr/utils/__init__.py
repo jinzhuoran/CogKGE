@@ -5,5 +5,6 @@ __all__ = [
     'Download_Data',
     'import_class',
     'cal_output_path',
+    'init_cogktr'
  
 ]
