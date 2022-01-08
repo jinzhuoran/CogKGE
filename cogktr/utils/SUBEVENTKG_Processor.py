@@ -646,7 +646,7 @@ class SUBEVENTKG_Processor(object):
                     x=line.strip().split(" ")
                     if x[1]=="<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>" and x[0] in filt_event_set:
                         event_lut[self.event_rdf2name_dict[x[0]]]["type_rdf"] = x[2]
-                        event_lut[self.event_rdf2name_dict[x[0]]]["type"] = self.type_dict[x[2]]
+                        event_lut[self.event_rdf2name_dict[x[0]]]["type"] = self.type_name_dict[x[2]]
             with open("relations_base.nq","r",encoding="utf-8") as file:
                 for line in tqdm(file, total=self._get_num_lines("relations_base.nq")):
                     x=line.strip().split(" ")
@@ -686,7 +686,7 @@ class SUBEVENTKG_Processor(object):
                         x=line.strip().split(" ")
                         if x[1]=="<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>" and x[0] in filt_entity_set:
                             entity_lut[self.entity_rdf2name_dict[x[0]]]["type_rdf"] = x[2]
-                            entity_lut[self.entity_rdf2name_dict[x[0]]]["type"] =self.type_dict[x[2]]
+                            entity_lut[self.entity_rdf2name_dict[x[0]]]["type"] =self.type_name_dict[x[2]]
             with open("relations_base.nq","r",encoding="utf-8") as file:
                 for line in tqdm(file, total=self._get_num_lines("relations_base.nq")):
                     x=line.strip().split(" ")
@@ -831,8 +831,8 @@ subeventkg_processor.filt_entity_entity(reprocess=False,describe=True,
                                         entity_degree=10)
 subeventkg_processor.create_subeventkg_rdf2name_all(reprocess=True,event_degree=10,entity_degree=10)
 subeventkg_processor.create_relation_rdf2type_name(reprocess=True)
-subeventkg_processor.create_subeventkg_event_lut(reprocess=False,event_degree=10)
-subeventkg_processor.create_subeventkg_entity_lut(reprocess=False,entity_degree=10)
+subeventkg_processor.create_subeventkg_event_lut(reprocess=True,event_degree=10)
+subeventkg_processor.create_subeventkg_entity_lut(reprocess=True,entity_degree=10)
 subeventkg_processor.create_subeventkg_relation_lut(reprocess=True)
 subeventkg_processor.merge_all_data_convert_name(reprocess=True,event_degree=10,entity_degree=10)
 subeventkg_processor.split_data(reprocess=True,seed=1,threshold=8,test_num=20000)
