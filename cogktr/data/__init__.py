@@ -14,6 +14,7 @@ __all__=[
     "WIKIDATA5MLoader",
     "MOBILEWIKIDATA5MLoader",
     "EVENTKG2MLoader",
+    "CSKGLoader",
 
     #processor
     "FB15KProcessor",
@@ -23,6 +24,7 @@ __all__=[
     "WIKIDATA5MProcessor",
     "MOBILEWIKIDATA5MProcessor",
     "EVENTKG2MProcessor",
+    "CSKGProcessor",
 
     "Cog_Dataset",
 
