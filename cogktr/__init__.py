@@ -31,6 +31,8 @@ __all__ = [
     "WIKIDATA5MLoader",
     "MOBILEWIKIDATA5MLoader",
     "EVENTKG2MLoader",
+    "CSKGLoader",
+
     "FB15KProcessor",
     "FB15K237Processor",
     "WN18Processor",
@@ -38,6 +40,7 @@ __all__ = [
     "WIKIDATA5MProcessor",
     "MOBILEWIKIDATA5MProcessor",
     "EVENTKG2MProcessor",
+    "CSKGProcessor",
 
     # models
     "TransE",
@@ -54,8 +57,8 @@ __all__ = [
     "BoxE",
     "TTD_TransE",
     "TTD_TransE_TYPE",
-    "TTD_TransR_TYPE_3",
-    "TTD_TransR_TYPE_3_Baseline_bian",
+    # "TTD_TransR_TYPE_3",
+    # "TTD_TransR_TYPE_3_Baseline_bian",
 
     # utils
     "Download_Data",

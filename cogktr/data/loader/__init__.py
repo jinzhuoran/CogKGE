@@ -10,5 +10,6 @@ __all__=[
     "WN18RRLoader",
     "WIKIDATA5MLoader",
     "MOBILEWIKIDATA5MLoader",
-    "EVENTKG2MLoader"
+    "EVENTKG2MLoader",
+    "CSKGLoader",
 ]
