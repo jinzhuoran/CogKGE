@@ -12,13 +12,14 @@ from ...vocabulary import Vocabulary
 
 class EVENTKG2MProcessor(BaseProcessor):
     def __init__(self, node_lut, relation_lut, time_lut,
-                 type,description,reprocess,
+                 time,type,description,reprocess,
                  pretrain_model_name,token_len):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """
         super().__init__(node_lut,relation_lut)
         self.time_lut = time_lut
+        self.time=time
         self.type=type
         self.description=description
         self.reprocess=reprocess
@@ -108,13 +109,15 @@ class EVENTKG2MProcessor(BaseProcessor):
 
     def process(self, data):
         path=os.path.join(self.processed_path,"{}_dataset.pkl".format(data.data_type))
-        if os.path.exists(path):
+        if os.path.exists(path) and not self.reprocess:
             print("load {} dataset".format(data.data_type))
             with open(path,"rb") as new_file:
                 new_data=pickle.loads(new_file.read())
             return new_data
         else:
             data = self._datable2numpy(data)
+            if not self.time:
+                data=data[:,:3]
             dataset=Cog_Dataset(data, task='kr')
             file=open(path ,"wb")
             file.write(pickle.dumps(dataset))
