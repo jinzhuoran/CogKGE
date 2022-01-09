@@ -32,4 +32,3 @@ for i in range(10):
     sample = next(it)
 
 print("--- %s seconds ---" % (time.time() - start_time))
-

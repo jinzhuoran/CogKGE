@@ -595,9 +595,9 @@ class SUBEVENTKG_Processor(object):
                 self.relation_rdf2name_dict=json.load(file)
             print("relation_rdf2name_dict_len",len(self.relation_rdf2name_dict))
 
-    def create_relation_rdf2name(self,reprocess):
+    def create_relation_rdf2type_name(self,reprocess):
         if reprocess:
-            self.type_dict=dict()
+            self.type_name_dict=dict()
             file_list=["property_labels.nq","type_labels_dbpedia.nq"]
             for single_file in file_list:
                 with open(single_file,"r",encoding="utf-8") as file:
@@ -607,12 +607,12 @@ class SUBEVENTKG_Processor(object):
                         if x[1]=="<http://www.w3.org/2000/01/rdf-schema#label>":
                             match_instance = re.findall(r"^<.*?> <.*?> (\".*?\"@en) <.*?> \D", line)
                             if len(match_instance) != 0:
-                                self.type_dict[x[0]]= match_instance[0][1:-4]
-            json.dump(self.type_dict,open(self.relation_rdf2name_path,"w"),indent=4,sort_keys=True)
+                                self.type_name_dict[x[0]]= match_instance[0][1:-4]
+            json.dump(self.type_name_dict,open("rdf2type_name","w"),indent=4,sort_keys=True)
 
         else:
-            with open(self.relation_rdf2name_path) as file:
-                self.type_dict=json.load(file)
+            with open("rdf2type_name") as file:
+                self.type_name_dict=json.load(file)
 
 
     def create_subeventkg_event_lut(self,event_degree,reprocess=True):
@@ -625,8 +625,8 @@ class SUBEVENTKG_Processor(object):
                 event_lut[value]["type"] = -1
                 event_lut[value]["type_rdf"] = -1
                 event_lut[value]["description"] = -1
-                event_lut[value]["begintime"] = -1
-                event_lut[value]["endtime"] = -1
+                # event_lut[value]["begintime"] = -1
+                # event_lut[value]["endtime"] = -1
 
             with open(self.raw_events_path,"r",encoding="utf-8") as file:
                 for line in tqdm(file, total=self._get_num_lines(self.raw_events_path)):
@@ -646,14 +646,14 @@ class SUBEVENTKG_Processor(object):
                     x=line.strip().split(" ")
                     if x[1]=="<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>" and x[0] in filt_event_set:
                         event_lut[self.event_rdf2name_dict[x[0]]]["type_rdf"] = x[2]
-                        event_lut[self.event_rdf2name_dict[x[0]]]["type"] = self.type_dict[x[2]]
+                        event_lut[self.event_rdf2name_dict[x[0]]]["type"] = self.type_name_dict[x[2]]
             with open("relations_base.nq","r",encoding="utf-8") as file:
                 for line in tqdm(file, total=self._get_num_lines("relations_base.nq")):
                     x=line.strip().split(" ")
-                    if x[1]=="<http://semanticweb.cs.vu.nl/2009/11/sem/hasBeginTimeStamp>" and x[0] in filt_event_set:
-                        event_lut[self.event_rdf2name_dict[x[0]]]["begintime"] = x[2][1:11]
-                    if x[1] == "<http://semanticweb.cs.vu.nl/2009/11/sem/hasEndTimeStamp>" and x[0] in filt_event_set:
-                        event_lut[self.event_rdf2name_dict[x[0]]]["endtime"] = x[2][1:11]
+                    # if x[1]=="<http://semanticweb.cs.vu.nl/2009/11/sem/hasBeginTimeStamp>" and x[0] in filt_event_set:
+                    #     event_lut[self.event_rdf2name_dict[x[0]]]["begintime"] = x[2][1:11]
+                    # if x[1] == "<http://semanticweb.cs.vu.nl/2009/11/sem/hasEndTimeStamp>" and x[0] in filt_event_set:
+                    #     event_lut[self.event_rdf2name_dict[x[0]]]["endtime"] = x[2][1:11]
 
             json.dump(event_lut,open(self.event_lut_path,"w"),indent=4,sort_keys=True)
 
@@ -667,8 +667,8 @@ class SUBEVENTKG_Processor(object):
                 entity_lut[value]["type"] = -1
                 entity_lut[value]["type_rdf"] = -1
                 entity_lut[value]["description"] = -1
-                entity_lut[value]["begintime"] = -1
-                entity_lut[value]["endtime"] = -1
+                # entity_lut[value]["begintime"] = -1
+                # entity_lut[value]["endtime"] = -1
 
             with open(self.raw_entities_path,"r",encoding="utf-8") as file:
                 for line in tqdm(file, total=self._get_num_lines(self.raw_entities_path)):
@@ -686,20 +686,21 @@ class SUBEVENTKG_Processor(object):
                         x=line.strip().split(" ")
                         if x[1]=="<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>" and x[0] in filt_entity_set:
                             entity_lut[self.entity_rdf2name_dict[x[0]]]["type_rdf"] = x[2]
-                            entity_lut[self.entity_rdf2name_dict[x[0]]]["type"] =self.type_dict[x[2]]
+                            entity_lut[self.entity_rdf2name_dict[x[0]]]["type"] =self.type_name_dict[x[2]]
             with open("relations_base.nq","r",encoding="utf-8") as file:
                 for line in tqdm(file, total=self._get_num_lines("relations_base.nq")):
                     x=line.strip().split(" ")
-                    if x[1]=="<http://semanticweb.cs.vu.nl/2009/11/sem/hasBeginTimeStamp>" and x[0] in filt_entity_set:
-                        entity_lut[self.entity_rdf2name_dict[x[0]]]["begintime"] = x[2][1:11]
-                    if x[1] == "<http://semanticweb.cs.vu.nl/2009/11/sem/hasEndTimeStamp>" and x[0] in filt_entity_set:
-                        entity_lut[self.entity_rdf2name_dict[x[0]]]["endtime"] = x[2][1:11]
+                    # if x[1]=="<http://semanticweb.cs.vu.nl/2009/11/sem/hasBeginTimeStamp>" and x[0] in filt_entity_set:
+                    #     entity_lut[self.entity_rdf2name_dict[x[0]]]["begintime"] = x[2][1:11]
+                    # if x[1] == "<http://semanticweb.cs.vu.nl/2009/11/sem/hasEndTimeStamp>" and x[0] in filt_entity_set:
+                    #     entity_lut[self.entity_rdf2name_dict[x[0]]]["endtime"] = x[2][1:11]
 
             print(entity_lut)
             json.dump(entity_lut,open(self.entity_lut_path,"w"),indent=4,sort_keys=True)
 
     def create_subeventkg_relation_lut(self,reprocess=True):
         if reprocess:
+            print("开始")
             my_dict=defaultdict(dict)
             for key,value in self.relation_rdf2name_dict.items():
                 my_dict[value]["rdf"] = key
@@ -707,7 +708,7 @@ class SUBEVENTKG_Processor(object):
             for key,value in self.relation_rdf2name_dict.items():
                 my_dict[value]["rdf"] = key
                 try:
-                    my_dict[value]["name"] = self.type_dict[key]
+                    my_dict[value]["name"] = self.type_name_dict[key]
                 except Exception as e:
                     match_instance = re.findall(r"<.*?/.*?/.*?/.*?/(.*?)>$", key)
                     my_dict[value]["name"] =  match_instance[0]
@@ -828,11 +829,11 @@ subeventkg_processor.filt_event_entity(reprocess=False,describe=True,
                                        event_degree=10,entity_degree=10)
 subeventkg_processor.filt_entity_entity(reprocess=False,describe=True,
                                         entity_degree=10)
-subeventkg_processor.create_subeventkg_rdf2name_all(reprocess=False,event_degree=10,entity_degree=10)
-subeventkg_processor.create_relation_rdf2name(reprocess=False)
-subeventkg_processor.create_subeventkg_event_lut(reprocess=False,event_degree=10)
-subeventkg_processor.create_subeventkg_entity_lut(reprocess=False,entity_degree=10)
-subeventkg_processor.create_subeventkg_relation_lut(reprocess=False)
+subeventkg_processor.create_subeventkg_rdf2name_all(reprocess=True,event_degree=10,entity_degree=10)
+subeventkg_processor.create_relation_rdf2type_name(reprocess=True)
+subeventkg_processor.create_subeventkg_event_lut(reprocess=True,event_degree=10)
+subeventkg_processor.create_subeventkg_entity_lut(reprocess=True,entity_degree=10)
+subeventkg_processor.create_subeventkg_relation_lut(reprocess=True)
 subeventkg_processor.merge_all_data_convert_name(reprocess=True,event_degree=10,entity_degree=10)
 subeventkg_processor.split_data(reprocess=True,seed=1,threshold=8,test_num=20000)
 
@@ -884,17 +885,6 @@ total_node       251 073
 训练集 2 200 000左右,实际2 294 008
 验证集    20 000左右,实际   19 978
 测试集    20 000左右,实际   20 000
-
-
-event_degree=10,entity_degree=30
-event  115 579
-entity  28 599
-event-event       221 944 /  730 830   30.37%
-event-entity      803 037 /4 270 521   18.80%
-entity-entity      60 689 /4 361 809    1.39%
-total_triplets 1 085 670
-total_node       144 178
-三元组比节点的比例 7.53:1
 """
 
 
