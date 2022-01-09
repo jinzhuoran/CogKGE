@@ -1,6 +1,7 @@
 import re
 import os
 import time
+import sys
 import torch
 from tqdm import tqdm
 import torch.utils.data as Data
@@ -84,11 +85,19 @@ class Kr_Trainer(object):
 
         #Load Apex
         if self.apex:
-            try:
+            if "apex" not in sys.modules:
+                logger.info("Apex has not been installed!Force the parameter to be False.")
+                self.apex = False
+            else:
                 from apex import amp
-            except ImportError:
-                raise ImportError("Please install apex.")
-            self.model , self.optimizer = amp.initialize(self.model.to(self.device) , self.optimizer, opt_level="O1")
+                self.model, self.optimizer = amp.initialize(self.model.to(self.device), self.optimizer, opt_level="O1")
+
+        # if self.apex:
+        #     try:
+        #         from apex import amp
+        #     except ImportError:
+        #         raise ImportError("Please install apex.")
+        #     self.model , self.optimizer = amp.initialize(self.model.to(self.device) , self.optimizer, opt_level="O1")
 
         #Load Data
         if self.dataloaderX:

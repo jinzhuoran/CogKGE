@@ -54,8 +54,8 @@ __all__ = [
     "BoxE",
     "TTD_TransE",
     "TTD_TransE_TYPE",
-    "TTD_TransR_TYPE_3",
-    "TTD_TransR_TYPE_3_Baseline_bian",
+    # "TTD_TransR_TYPE_3",
+    # "TTD_TransR_TYPE_3_Baseline_bian",
 
     # utils
     "Download_Data",

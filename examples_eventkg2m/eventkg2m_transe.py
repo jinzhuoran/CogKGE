@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from cogktr import *
 
-device=init_cogktr(device_id="0",seed=1)
+device=init_cogktr(device_id="1",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -12,7 +12,7 @@ node_lut, relation_lut ,time_lut= loader.load_all_lut()
 # node_lut.describe()
 
 processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,
-                               type=True,description=False,reprocess=False,
+                               type=True,description=False,reprocess=True,
                                pretrain_model_name="roberta-base",token_len=10)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)

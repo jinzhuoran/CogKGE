@@ -147,6 +147,9 @@ visualization/*
 checkpoints/*
 experimental_output
 
+# ignore the processed fiels
+processed_data/
+
 # ignore the raw data files
 raw_data/
 # ignore my own debug files

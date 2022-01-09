@@ -40,5 +40,5 @@ __all__=[
 
     "TTD_TransE",
     "TTD_TransE_TYPE",
-    "TTD_TransE_TYPE_2"
+    # "TTD_TransE_TYPE_3"
 ]
