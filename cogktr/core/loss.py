@@ -40,12 +40,13 @@ class NegLogLikehoodLoss:
         return torch.mean(output) + self.C * penalty
 
 class NegSamplingLoss:
-    def __init__(self,margin,alpha,neg_per_pos):
+    def __init__(self,margin,alpha,neg_per_pos,C=0):
         self.alpha = alpha
         self.margin = margin
         self.neg_per_pos = neg_per_pos
+        self.C = C
     
-    def __call__(self,p_score,n_score,empty_penalty):
+    def __call__(self,p_score,n_score,penalty):
         """
         p_score: (batch,)
         n_score: (batch * neg_per_pos,)
@@ -63,7 +64,7 @@ class NegSamplingLoss:
         
         negative_loss = -torch.sum(n_log_score * n_prob,dim=-1) # (batch,)
         positive_loss = -torch.log(torch.sigmoid(self.margin - p_score)) # (batch,)
-        return torch.mean(positive_loss + negative_loss)
+        return torch.mean(positive_loss + negative_loss) + self.C * penalty
 
 
 
