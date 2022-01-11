@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from cogktr import *
 
-device=init_cogktr(device_id="3",seed=1)
+device=init_cogktr(device_id="0",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -32,7 +32,6 @@ model = TransR(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                dim_entity=50,
                dim_relation=50)
-
 
 loss = MarginLoss(margin=1.0,C=0)
 
@@ -70,12 +69,12 @@ trainer = Kr_Trainer(
     log=True,
     trainer_batch_size=100000,
     epoch=3000,
-    visualization=0,
+    visualization=1,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=200,
+    metric_step=500,
     save_step=200,
     metric_final_model=True,
     save_final_model=True,
@@ -103,5 +102,3 @@ evaluator = Kr_Evaluator(
 )
 evaluator.evaluate()
 
-
-print("end")

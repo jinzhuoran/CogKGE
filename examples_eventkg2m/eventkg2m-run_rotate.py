@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from cogktr import *
 
-device=init_cogktr(device_id="9",seed=1)
+device=init_cogktr(device_id="3",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -32,14 +32,13 @@ model = RotatE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50)
 
-
-loss = MarginLoss(margin=1.0,C=0)
+loss = NegSamplingLoss(margin=1.0,alpha=0.5,neg_per_pos=3,C=0.01)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=500000,
+                         batch_size=5000000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -47,9 +46,10 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     factor=0.5, min_lr=1e-9, verbose=True
 )
 
-negative_sampler = UnifNegativeSampler(triples=train_dataset,
+negative_sampler = AdversarialSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
+                                       relation_dict_len=len(relation_lut),
+                                      neg_per_pos=3)
 
 trainer = Kr_Trainer(
     train_dataset=train_dataset,
@@ -69,7 +69,7 @@ trainer = Kr_Trainer(
     log=True,
     trainer_batch_size=100000,
     epoch=3000,
-    visualization=0,
+    visualization=1,
     apex=True,
     dataloaderX=True,
     num_workers=4,
@@ -102,5 +102,3 @@ evaluator = Kr_Evaluator(
 )
 evaluator.evaluate()
 
-
-print("end")

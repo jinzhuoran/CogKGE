@@ -252,16 +252,16 @@ class Kr_Trainer(object):
 
             # Save Checkpoint and Final Model Process
             if (self.save_step and (current_epoch) % self.save_step == 0) or (current_epoch)==self.epoch:
-                if not os.path.exists(os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs".format(self.model.name, current_epoch))):
-                    os.makedirs(os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints", "{}_{}epochs".format(self.model.name, current_epoch)))
-                    self.logger.info(os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints", "{}_{}epochs ".format(self.model.name, current_epoch )) + 'created successfully!')
-                torch.save(self.model.state_dict(), os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs".format(self.model.name, current_epoch ),"Model.pkl" ))
-                torch.save(self.optimizer.state_dict(), os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs".format(self.model.name,current_epoch),"Optimizer.pkl"))
-                torch.save(self.lr_scheduler.state_dict(), os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs".format(self.model.name, current_epoch),"Lr_Scheduler.pkl"))
-                self.logger.info(os.path.join(self.output_path+"--{}epochs".format(self.epoch), "checkpoints","{}_{}epochs ".format(self.model.name, current_epoch)) +"saved successfully")
+                if not os.path.exists(os.path.join(self.output_path, "checkpoints","{}_{}epochs".format(self.model.name, current_epoch))):
+                    os.makedirs(os.path.join(self.output_path, "checkpoints", "{}_{}epochs".format(self.model.name, current_epoch)))
+                    self.logger.info(os.path.join(self.output_path, "checkpoints", "{}_{}epochs ".format(self.model.name, current_epoch )) + 'created successfully!')
+                torch.save(self.model.state_dict(), os.path.join(self.output_path, "checkpoints","{}_{}epochs".format(self.model.name, current_epoch ),"Model.pkl" ))
+                torch.save(self.optimizer.state_dict(), os.path.join(self.output_path, "checkpoints","{}_{}epochs".format(self.model.name,current_epoch),"Optimizer.pkl"))
+                torch.save(self.lr_scheduler.state_dict(), os.path.join(self.output_path, "checkpoints","{}_{}epochs".format(self.model.name, current_epoch),"Lr_Scheduler.pkl"))
+                self.logger.info(os.path.join(self.output_path, "checkpoints","{}_{}epochs ".format(self.model.name, current_epoch)) +"saved successfully")
 
         #Show Best Metric Result
-        self.metric.print_best_table(front=5,key="Raw_MR")
-        self.metric.create_correct_triplet_dict_flag=True
+        if self.metric_step:
+            self.metric.print_best_table(front=5,key="Raw_MR")
 
 

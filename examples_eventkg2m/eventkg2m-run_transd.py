@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from cogktr import *
 
-device=init_cogktr(device_id="5",seed=1)
+device=init_cogktr(device_id="6",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -33,14 +33,13 @@ model = TransD(entity_dict_len=len(node_lut),
                dim_entity=50,
                dim_relation=50)
 
-
 loss = MarginLoss(margin=1.0,C=0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=500000,
+                         batch_size=5000000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -70,7 +69,7 @@ trainer = Kr_Trainer(
     log=True,
     trainer_batch_size=100000,
     epoch=3000,
-    visualization=0,
+    visualization=1,
     apex=True,
     dataloaderX=True,
     num_workers=4,
@@ -103,5 +102,3 @@ evaluator = Kr_Evaluator(
 )
 evaluator.evaluate()
 
-
-print("end")
