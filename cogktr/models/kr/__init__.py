@@ -38,7 +38,9 @@ __all__=[
 
     "BoxE",
 
-    "TTD_TransE",
-    "TTD_TransE_TYPE",
-    # "TTD_TransE_TYPE_3"
+    "TransE_baseline",
+    "TransE_Add_Description",
+    "TransE_Add_Time",
+    "TransE_Add_Type",
+    "TransE_Add_Path"
 ]

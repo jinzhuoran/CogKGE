@@ -84,3 +84,10 @@ class Download_Data:
                       dataset_path=self.dataset_path,
                       url_path=self.url)
 
+    def FRAMENET(self):
+        download_data(task="kr",
+                      data_name="FRAMENET",
+                      zip_name="FRAMENET.zip",
+                      dataset_path=self.dataset_path,
+                      url_path=self.url)
+

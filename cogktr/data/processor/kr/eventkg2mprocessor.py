@@ -12,8 +12,11 @@ from ...vocabulary import Vocabulary
 
 class EVENTKG2MProcessor(BaseProcessor):
     def __init__(self, node_lut, relation_lut, time_lut,
-                 time,type,description,reprocess,
-                 pretrain_model_name,token_len):
+                 reprocess,
+                 time,type,description,path,
+                 time_unit,
+                 pretrain_model_name,token_len,
+                 path_len):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """
@@ -22,6 +25,7 @@ class EVENTKG2MProcessor(BaseProcessor):
         self.time=time
         self.type=type
         self.description=description
+        self.path=path
         self.reprocess=reprocess
         self.pre_training_model_name = pretrain_model_name
         self.token_length = token_len
@@ -30,6 +34,8 @@ class EVENTKG2MProcessor(BaseProcessor):
         self.time_vocab = time_lut.vocab
         self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
         self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
+        self.time_unit=time_unit
+        self.path_len=path_len
         self.node_lut=node_lut
         self.relation_lut=relation_lut
         self.node_type_vocab = Vocabulary()
@@ -65,6 +71,7 @@ class EVENTKG2MProcessor(BaseProcessor):
                 self.node_lut.add_column(masks_list, "attention_mask")
                 self.node_lut.add_token(torch.cat(tokens_list,dim=0))
                 self.node_lut.add_mask(torch.cat(masks_list,dim=0))
+                self.node_lut.save_to_pickle(preprocessed_node_lut_file)
 
         if self.type:
             if self.reprocess or not os.path.exists(preprocessed_node_lut_file):
@@ -88,10 +95,34 @@ class EVENTKG2MProcessor(BaseProcessor):
                 self.relation_lut.add_type(torch.cat(relation_type_list,dim=0))
                 self.relation_lut.save_to_pickle(preprocessed_relation_lut_file)
 
+        if self.time:
+            if time_unit=="day":
+                pass
+            if time_unit=="month":
+                time_list=[]
+                month_time_vocab=Vocabulary()
+                for key in tqdm(self.time_lut.vocab.word2idx.keys()):
+                    if key=='-1':
+                        time_list.append(-1)
+                    else:
+                        time_list.append(key[:7])
+                month_time_vocab.buildVocab(time_list)
+                self.time_vocab=month_time_vocab
+                self.time_lut.vocab=month_time_vocab
+            if time_unit=="year":
+                time_list=[]
+                day_time_vocab=Vocabulary()
+                for key in tqdm(self.time_lut.vocab.word2idx.keys()):
+                    if key==-1:
+                        time_list.append(-1)
+                    else:
+                        time_list.append(key[:4])
+                day_time_vocab.buildVocab(time_list)
+                self.time_vocab=day_time_vocab
+                self.time_lut.vocab=day_time_vocab
 
-
-
-
+        if self.path:
+            pass
 
 
     def _datable2numpy(self, data):
@@ -103,6 +134,17 @@ class EVENTKG2MProcessor(BaseProcessor):
         data.str2idx("head",self.node_vocab)
         data.str2idx("tail",self.node_vocab)
         data.str2idx("relation",self.relation_vocab)
+        if self.time:
+            if self.time_unit=="month":
+                data.data["start"]=data.data.apply(lambda x: x["start"][:7], axis = 1)
+                data.data["end"]=data.data.apply(lambda x: x["end"][:7], axis = 1)
+            if self.time_unit=="year":
+                data.data["start"]=data.data.apply(lambda x: x["start"][:4], axis = 1)
+                data.data["end"]=data.data.apply(lambda x: x["end"][:4], axis = 1)
+                # for index,row in tqdm(data.data.iterrows(),total=data.data.shape[0]):
+                #     data.data.loc[index,"start"]=row["start"][:4]
+                #     data.data.loc[index,"end"]=row["end"][:4]
+
         data.str2idx("start",self.time_vocab)
         data.str2idx("end",self.time_vocab)
         return data.to_numpy()

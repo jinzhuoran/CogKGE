@@ -32,15 +32,15 @@ class RotatE(nn.Module):
         return self.get_score(triplet_idx)
 
     def _forward(self, triplet_idx):
-        head_embeddiing = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 0]), 1)
-        relation_embeddiing = torch.unsqueeze(self.relation_embedding(triplet_idx[:, 1]), 1)
-        tail_embeddiing = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 2]), 1)
+        head_embedding = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 0]), 1)
+        relation_embedding = torch.unsqueeze(self.relation_embedding(triplet_idx[:, 1]), 1)
+        tail_embedding = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 2]), 1)
 
-        # head_embeddiing = F.normalize(head_embeddiing, p=2, dim=2)
-        # tail_embeddiing = F.normalize(tail_embeddiing, p=2, dim=2)
-        relation_embeddiing = F.normalize(relation_embeddiing,p=2,dim=2)
+        # head_embedding = F.normalize(head_embedding, p=2, dim=2)
+        # tail_embedding = F.normalize(tail_embedding, p=2, dim=2)
+        relation_embedding = F.normalize(relation_embedding,p=2,dim=2)
 
-        triplet_embedding = torch.cat([head_embeddiing, relation_embeddiing, tail_embeddiing], dim=1)
+        triplet_embedding = torch.cat([head_embedding, relation_embedding, tail_embedding], dim=1)
 
         output = triplet_embedding
 

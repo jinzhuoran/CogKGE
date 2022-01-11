@@ -909,8 +909,8 @@ entity_node degree > 10000  num 30 percent 0.00%
 """
 """
 event_degree=10,entity_degree=10(对勾)
-event  115 579
-entity 135 494
+event  115 579 (新)114 051
+entity 135 494 (新)124 860
 relation   822
 822
 event-event       221 944 /  730 830   30.37%
