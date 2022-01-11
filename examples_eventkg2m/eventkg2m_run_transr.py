@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from cogktr import *
 
-device=init_cogktr(device_id="3",seed=1)
+device=init_cogktr(device_id="7",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -13,7 +13,7 @@ node_lut, relation_lut ,time_lut= loader.load_all_lut()
 
 processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,
                                reprocess=True,
-                               type=True,time=False,description=False,path=False,
+                               type=False,time=False,description=False,path=False,
                                time_unit="year",
                                pretrain_model_name="roberta-base",token_len=10,
                                path_len=10)
@@ -28,10 +28,11 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE_Add_Type(entity_dict_len=len(node_lut),
-                        relation_dict_len=len(relation_lut),
-                        embedding_dim=50,
-                        node_lut=node_lut)
+model = TransR(entity_dict_len=len(node_lut),
+               relation_dict_len=len(relation_lut),
+               dim_entity=50,
+               dim_relation=50)
+
 
 loss = MarginLoss(margin=1.0,C=0)
 
@@ -39,7 +40,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=500000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -74,7 +75,7 @@ trainer = Kr_Trainer(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=100,
+    metric_step=200,
     save_step=100,
     metric_final_model=True,
     save_final_model=True,

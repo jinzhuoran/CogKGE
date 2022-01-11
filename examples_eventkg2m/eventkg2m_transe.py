@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from cogktr import *
 
-device=init_cogktr(device_id="3",seed=1)
+device=init_cogktr(device_id="2",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -13,7 +13,7 @@ node_lut, relation_lut ,time_lut= loader.load_all_lut()
 
 processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,
                                reprocess=True,
-                               type=True,time=False,description=False,path=False,
+                               type=False,time=False,description=False,path=False,
                                time_unit="year",
                                pretrain_model_name="roberta-base",token_len=10,
                                path_len=10)
@@ -28,10 +28,9 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE_Add_Type(entity_dict_len=len(node_lut),
-                        relation_dict_len=len(relation_lut),
-                        embedding_dim=50,
-                        node_lut=node_lut)
+model = TransE(entity_dict_len=len(node_lut),
+            relation_dict_len=len(relation_lut),
+            embedding_dim=50)
 
 loss = MarginLoss(margin=1.0,C=0)
 

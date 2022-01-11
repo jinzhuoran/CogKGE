@@ -16,8 +16,9 @@ __all__=[
     "KEPLER",
     "PairRE",
     "BoxE",
-    "TTD_TransE",
-    "TTD_TransE_TYPE",
-    "TTD_TransR_TYPE_3",
-    "TTD_TransR_TYPE_3_Baseline_bian"
+    "TransE_baseline",
+    "TransE_Add_Description",
+    "TransE_Add_Time",
+    "TransE_Add_Type",
+    "TransE_Add_Path"
 ]

@@ -11,6 +11,7 @@ class TransE(nn.Module):
         self.embedding_dim = embedding_dim
         self.name = "TransE"
         self.p = p
+        self.square = embedding_dim ** 0.5
 
         self.entity_embedding = nn.Embedding(num_embeddings=self.entity_dict_len, embedding_dim=self.embedding_dim)
         self.entity_embedding.weight.data = torch.FloatTensor(self.entity_dict_len, self.embedding_dim).uniform_(
@@ -35,14 +36,14 @@ class TransE(nn.Module):
 
 
     def _forward(self, triplet_idx):
-        head_embeddiing = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 0]), 1)
-        relation_embeddiing = torch.unsqueeze(self.relation_embedding(triplet_idx[:, 1]), 1)
-        tail_embeddiing = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 2]), 1)
+        head_embedding = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 0]), 1)
+        relation_embedding = torch.unsqueeze(self.relation_embedding(triplet_idx[:, 1]), 1)
+        tail_embedding = torch.unsqueeze(self.entity_embedding(triplet_idx[:, 2]), 1)
 
-        head_embeddiing = F.normalize(head_embeddiing, p=2, dim=2)
-        tail_embeddiing = F.normalize(tail_embeddiing, p=2, dim=2)
+        head_embedding = F.normalize(head_embedding, p=2, dim=2)
+        tail_embedding = F.normalize(tail_embedding, p=2, dim=2)
 
-        triplet_embedding = torch.cat([head_embeddiing, relation_embeddiing, tail_embeddiing], dim=1)
+        triplet_embedding = torch.cat([head_embedding, relation_embedding, tail_embedding], dim=1)
 
         output = triplet_embedding
 
