@@ -74,6 +74,7 @@ class Kr_Trainer(object):
         #Set output_path
         output_path=os.path.join(output_path,"kr","EVENTKG2M")
         self.output_path = cal_output_path(output_path, self.model.name)
+        self.output_path=self.output_path+"--{}epochs".format(self.epoch)
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
