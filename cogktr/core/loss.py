@@ -46,7 +46,7 @@ class NegSamplingLoss:
         self.neg_per_pos = neg_per_pos
         self.C = C
     
-    def __call__(self,p_score,n_score,penalty):
+    def __call__(self,p_score,n_score,penalty=0):
         """
         p_score: (batch,)
         n_score: (batch * neg_per_pos,)
