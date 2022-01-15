@@ -14,8 +14,8 @@ class Kr_Predictior:
                  relation_lut,
                  reprocess=True,
                  top=10,
-                 name2id_node_dict_path="name2id_node_dict.json",
-                 name2id_relation_dict_path="name2id_relation_dict.json"):
+                 name2id_node_dict_path="data/name2id_node_dict.json",
+                 name2id_relation_dict_path="data/name2id_relation_dict.json"):
         """
         三元组链接预测
 
