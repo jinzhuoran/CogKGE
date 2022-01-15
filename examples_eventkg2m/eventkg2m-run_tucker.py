@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from cogktr import *
 
-device=init_cogktr(device_id="8",seed=1)
+device=init_cogktr(device_id="7",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -75,7 +75,7 @@ trainer = Kr_Trainer(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=200,
+    metric_step=1000,
     save_step=200,
     metric_final_model=True,
     save_final_model=True,

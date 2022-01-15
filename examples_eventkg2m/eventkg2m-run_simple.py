@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from cogktr import *
 
-device=init_cogktr(device_id="4",seed=1)
+device=init_cogktr(device_id="6",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()

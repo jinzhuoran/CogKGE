@@ -3,12 +3,14 @@ from .evaluator import *
 from .log import *
 from .loss import *
 from .metric import *
+from .predictor import *
 from .sampler import *
 from .trainer import *
 
 __all__ = [
     # evaluate
     "Kr_Evaluator",
+
 
     # log
     # "logger",
@@ -25,6 +27,9 @@ __all__ = [
 
     # metric
     "Link_Prediction",
+
+    # predictor
+    "Kr_Predictior",
 
     # trainer
     "Kr_Trainer",
