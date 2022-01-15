@@ -45,9 +45,14 @@ predictor=Kr_Predictior(model=model,
 ###########################################################################
 #                    以上为模型加载，以下为调用的接口
 ###########################################################################
-#'Copa Colombia': [{'id': 79336, 'name': 'Copa Colombia', 'summary': 'The Copa Colombia (English: Colombia Cup; officially known as Copa BetPlay Dimayor is an annual football tournament in Colombia.'}],
-result_node=predictor.fuzzy_query_node_keyword('Copa Colombia')
-result_relation=predictor.fuzzy_query_relation_keyword("sport")
+#'Copa Colombia'
+result_node=predictor.fuzzy_query_node_keyword()
+print(result_node)
+
+#"sport"
+result_relation=predictor.fuzzy_query_relation_keyword()
+print(result_relation)
+
 similar_node_list=predictor.predict_similar_node(node_id=0)
 # print(similar_node_list)
 tail_list=predictor.predcit_tail(head_id=0,relation_id=0)

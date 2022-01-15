@@ -106,7 +106,16 @@ class Kr_Predictior:
         """
         if node_keyword is None:
             #做到这里了，每一种空值取10个
-            return [self.name2id_node_dict["Copa Colombia"][0]]
+            return [self.name2id_node_dict["Copa Colombia"][0],
+                    self.name2id_node_dict["Speed skating at the 2018 Winter Olympics – Women's 500 metres"][0],
+                    self.name2id_node_dict["Swimming at the 1988 Summer Olympics – Women's 50 metre freestyle"][0],
+                    self.name2id_node_dict["2015 Malta Badminton Championships"][0],
+                    self.name2id_node_dict["Syracuse Grand Prix"][0],
+                    self.name2id_node_dict["Western Canada Hockey League"][0],
+                    self.name2id_node_dict["Anke Engelke"][0],
+                    self.name2id_node_dict["Aviram Baruchyan"][0],
+                    self.name2id_node_dict["Attica Prison riot"][0],
+                    self.name2id_node_dict["Wayne Odesnik"][0]]
         else:
             return self.name2id_node_dict[node_keyword]
 
@@ -117,6 +126,17 @@ class Kr_Predictior:
         :param relation_keyword: 输入关系名字
         :return: 模糊关系列表
         """
+        if relation_keyword is None:
+            return [self.name2id_relation_dict["hasWonPrize"][0],
+                    self.name2id_relation_dict["nextEvent"][0],
+                    self.name2id_relation_dict["participant of"][0],
+                    self.name2id_relation_dict["previousEvent"][0],
+                    self.name2id_relation_dict["award received"][0],
+                    self.name2id_relation_dict["author"][0],
+                    self.name2id_relation_dict["has cause"][0],
+                    self.name2id_relation_dict["similar"][0],
+                    self.name2id_relation_dict["represents"][0],
+                    self.name2id_relation_dict["style"][0]]
         return self.name2id_relation_dict[relation_keyword]
 
 
