@@ -115,7 +115,6 @@ class SUBEVENTKG_Processor(object):
     def _get_num_lines(self,file_path):
         """
         统计txt文件的行数
-
         :param file_path:待统计行数的txt文件路径
         """
         fp = open(file_path, "r+")
@@ -187,7 +186,6 @@ class SUBEVENTKG_Processor(object):
     def event_event_raw2df(self,reprocess=True,describe=True):
         """
         找出事件与事件的hassubevent，nextevent，previousevent三种关系，并转化成dataframe格式保存
-
         原始格式
         事件 关系 事件
         存储格式
@@ -300,17 +298,14 @@ class SUBEVENTKG_Processor(object):
         """
         找出事件与实体，实体与事件的所有关系，并转化成dataframe格式保存
         原始格式--》嵌套字典格式--》存储格式dataframe
-
         原始格式
         relation结点 subject event/entity (头结点)
         relation结点 object event/entity (尾结点)
         relation结点 roleType 比如参与者(关系)
         relation结点 hasbegintimestamp 时间
         relation结点 hasendtimestamp 时间
-
         嵌套字典格式
         {relation结点：{头结点，关系，尾结点，开始时间，结束时间}。。。。。。。。。。}
-
         存储格式
         事件/实体 关系 实体/事件 开始时间 结束时间 如果有空值，则用-1表示，多个关系则随机选取一个
         """
@@ -323,20 +318,16 @@ class SUBEVENTKG_Processor(object):
 
     def entity_entity_raw2df(self,reprocess=True,describe=True):
         """
-
         找出实体与实体的所有关系，并转化成dataframe格式保存
         原始格式--》嵌套字典格式--》存储格式dataframe
-
         原始格式
         relation结点 subject entity (头结点)
         relation结点 object entity (尾结点)
         relation结点 roleType 比如参与者(关系)
         relation结点 hasbegintimestamp 时间
         relation结点 hasendtimestamp 时间
-
         嵌套字典格式
         {relation结点：{头结点，关系，尾结点，开始时间，结束时间}。。。。。。。。。。}
-
         存储格式
         事件/实体 关系 实体/事件 开始时间 结束时间 如果有空值，则用-1表示，多个关系则随机选取一个
         """
@@ -353,7 +344,6 @@ class SUBEVENTKG_Processor(object):
                              event_entity=True):
         """
         统计事件节点的度
-
         :param reprocess: True重新处理
         :param describe: True展示数据描述
         :param event_event: True统计event-event数据的事件节点数据量
@@ -408,7 +398,6 @@ class SUBEVENTKG_Processor(object):
                               event_entity=True):
         """
         统计实体节点的度
-
         :param reprocess: True重新处理
         :param describe: True展示数据描述
         :param entity_entity: True统计entity-entity数据的事件节点数据量
@@ -459,7 +448,6 @@ class SUBEVENTKG_Processor(object):
     def filt_event_event(self,event_degree,reprocess=True,describe=True):
         """
         事件-事件 三元组过滤
-
         :param event_degree: 保留事件节点的度大于degree 的三元组
         """
         if reprocess:
@@ -491,7 +479,6 @@ class SUBEVENTKG_Processor(object):
     def filt_event_entity(self,event_degree,entity_degree,reprocess=True,describe=True):
         """
         事件-实体 三元组过滤
-
         :param event_degree: 保留事件节点的度大于degree 的三元组
         """
         if reprocess:
@@ -528,7 +515,6 @@ class SUBEVENTKG_Processor(object):
     def filt_entity_entity(self,entity_degree,reprocess=True,describe=True):
         """
         实体-实体 三元组过滤
-
         :param entity_degree: 保留实体节点的度大于degree 的三元组
         """
         if reprocess:
@@ -908,24 +894,20 @@ entity_node degree > 20000  num 16 percent 0.00%
 entity_node degree > 10000  num 30 percent 0.00%
 """
 """
-event_degree=10,entity_degree=10(对勾)
-event  115 579 (新)114 051
-entity 135 494 (新)124 860
-relation   822
-822
+event_degree=10,entity_degree=10
+事件节点数目event  114 051
+实体节点数目entity 124 860
+关系数目   relation   822
+total_node       238 911
+
+三元组数目             过滤后/  原始       保留比例
 event-event       221 944 /  730 830   30.37%
 event-entity    1 140 552 /4 270 521   26.71%
 entity-entity     971 490 /4 361 809   22.27%
 total_triplets 2 333 986
-total_node       251 073
-三元组比节点的比例 9.23:1
+
+三元组比节点的比例 9.769:1
 训练集 2 200 000左右,实际2 294 008
 验证集    20 000左右,实际   19 978
 测试集    20 000左右,实际   20 000
 """
-
-
-
-
-
-
