@@ -4,53 +4,80 @@ import torch
 from tqdm import tqdm
 import torch.nn.functional as F
 from collections import defaultdict
+from fast_fuzzy_search import FastFuzzySearch
 
 class Kr_Predictior:
     def __init__(self,
                  model,
                  pretrained_model_path,
+                 model_name,
+                 data_name,
                  device,
                  node_lut,
                  relation_lut,
+                 processed_data_path="data",
                  reprocess=True,
-                 top=10,
-                 name2id_node_dict_path="data/name2id_node_dict.json",
-                 name2id_relation_dict_path="data/name2id_relation_dict.json"):
+                 fuzzy_query_top_k=10,
+                 predict_top_k=50):
         """
         三元组链接预测
 
-        :param model:模型
+        :param model: 模型
         :param pretrained_model_path: 知识表示预训练模型路径
-        :param device:显卡编号
-        :param node_lut:节点查找表
-        :param relation_lut:关系查找表
-        :param reprocess:重新处理
-        :param top:查找前top个结果
-        :param name2id_node_dict_path:名字转id的字典
-        :param name2id_relation_dict_path:关系转id的字典
+        :param model_name: 模型名字
+        :param data_name: 数据集名字
+        :param device: 显卡编号
+        :param node_lut: 节点查找表
+        :param relation_lut: 关系查找表
+        :param processed_data_path: 处理后的数据输出路径
+        :param reprocess: 是否重新处理
+        :param fuzzy_query_top_k: 模糊查询前fuzzy_query_top_k个最相似的结果
+        :param predict_top_k: 链接预测前predict_top_k的结果
         """
 
         if not isinstance(reprocess, bool):
             raise TypeError("param reprocess is True or False!")
+        if not isinstance(fuzzy_query_top_k, int):
+            raise TypeError("param fuzzy_query_top_k is not int type!")
+        if not (1<=fuzzy_query_top_k):
+            raise ValueError("param fuzzy_query_top_k must be greater than 0!")
+        if not isinstance(predict_top_k, int):
+            raise TypeError("param predict_top_k is not int type!")
+        if not (1<=predict_top_k):
+            raise ValueError("param predict_top_k must be greater than 0!")
+        if not os.path.exists(pretrained_model_path):
+            raise FileExistsError("pretrained_model_path doesn't exist!")
+        if not os.path.exists(processed_data_path):
+            raise FileExistsError("processed_data_path doesn't exist!")
+        if not os.path.exists(os.path.join(processed_data_path,data_name,model_name)):
+            os.makedirs(os.path.join(processed_data_path,data_name,model_name))
 
         self.model=model
         self.pretrained_mode_path=pretrained_model_path
+        self.model_name=model_name
+        self.data_name=data_name
         self.device=device
         self.node_lut=node_lut
         self.relation_lut=relation_lut
+        self.processed_data_path = os.path.join(processed_data_path,self.data_name,model_name)
         self.reprocess=reprocess
-        self.top=top
-        self.name2id_node_dict_path =name2id_node_dict_path
-        self.name2id_relation_dict_path =name2id_relation_dict_path
-
-        if os.path.exists(self.pretrained_mode_path):
-            self.model.load_state_dict(torch.load(self.pretrained_mode_path))
-            self.model=self.model.to(self.device)
-        else:
-            raise FileExistsError("pretrained_model_path doesn't exist!")
+        self.fuzzy_query_top_k=fuzzy_query_top_k
+        self.predict_top_k=predict_top_k
 
         self.node_len = len(self.node_lut)
         self.relation_len=len(self.relation_lut)
+        self.summary_node_dict=defaultdict(dict)       #模糊查询节点字典
+        self.summary_relation_dict=defaultdict(dict)   #模糊查询关系字典
+        self.detailed_node_dict=defaultdict(dict)      #链接预测节点字典
+        self.detailed_relation_dict=defaultdict(dict)  #链接预测关系字典
+        self.summary_node_dict_path = os.path.join(self.processed_data_path,"summary_node_dict.json")
+        self.summary_relation_dict_path =  os.path.join(self.processed_data_path,"summary_relation_dict.json")
+        self.detailed_node_dict_path =  os.path.join(self.processed_data_path,"detailed_node_dict.json")
+        self.detailed_relation_dict_path =  os.path.join(self.processed_data_path,"detailed_relation_dict.json")
+        # self.name2id_node_dict=defaultdict(list)#准备删除
+        # self.name2id_relation_dict = defaultdict(list)#准备删除
+        self.model.load_state_dict(torch.load(self.pretrained_mode_path))
+        self.model = self.model.to(self.device)
         self.all_node_index_column_matrix = torch.unsqueeze(torch.arange(self.node_len).to(self.device),dim=1)
         self.all_node_index_row_vector = torch.arange(self.node_len).to(self.device)
         self.all_node_embedding = self.model.entity_embedding_base(self.all_node_index_row_vector)
@@ -58,55 +85,144 @@ class Kr_Predictior:
         # self.all_relation_index_row_vector = torch.arange(self.relation_len).to(self.device)
         # self.all_relation_embedding = self.model.relation_embedding_base(self.all_relation_index_row_vector)
 
-        self.name2id_node_dict=defaultdict(list)
-        self.name2id_relation_dict = defaultdict(list)
-        self._create_name2id_node_dict()
-        self._create_name2id_relation_dict()
+        self._create_summary_dict()  #建立模糊查询字典
+        self._create_detailed_dict() #建立链接预测字典
+        self._init_fuzzy_query()     #初始化模糊查询
+        # self._create_name2id_node_dict()  # 准备删除
+        # self._create_name2id_relation_dict()  # 准备删除
 
-    def _create_name2id_node_dict(self):
+    def _create_summary_dict(self):
         """
-        建立节点名字到id的查找表
+        建立模糊查询字典
         """
         if self.reprocess:
+            print("Creating_summary_node_dict...")
             for i in tqdm(range(self.node_len)):
-                item_df=self.node_lut[i]
-                item={}
-                item["id"]=str(item_df["name_id"])
-                item["name"]=item_df["name"]
-                item["summary"]=item_df["description"]
-                self.name2id_node_dict[item_df["name"]].append(item)
-            json.dump(self.name2id_node_dict,open(self.name2id_node_dict_path,"w"),indent=4,sort_keys=False)
-        else:
-            if os.path.exists(self.name2id_node_dict_path):
-                with open(self.name2id_node_dict_path) as file:
-                    self.name2id_node_dict=json.load(file)
-            else:
-                raise FileExistsError("{} does not exist!".format(self.name2id_node_dict_path))
-
-    def _create_name2id_relation_dict(self):
-        """
-        建立关系名字到id的查找表
-        """
-        if self.reprocess:
+                item_df = self.node_lut[i]
+                item = {}
+                item["id"] = int(str(item_df["name_id"]))
+                item["name"] = item_df["name"]
+                item["summary"] = item_df["description"]
+                self.summary_node_dict[str(item_df["name_id"])]=item
+            json.dump(self.summary_node_dict, open(self.summary_node_dict_path, "w"), indent=4, sort_keys=False)
+            print("Creating_summary_relation_dict...")
             for i in tqdm(range(self.relation_len)):
                 item_df = self.relation_lut[i]
                 item = {}
-                item["id"] = str(item_df["name_id"])
+                item["id"] = int(str(item_df["name_id"]))
                 item["name"] = item_df["name"]
-                self.name2id_relation_dict[item_df["name"]].append(item)
-            json.dump(self.name2id_relation_dict, open(self.name2id_relation_dict_path, "w"), indent=4, sort_keys=True)
+                item["summary"] = item_df["rdf"]
+                self.summary_relation_dict[str(item_df["name_id"])]=item
+            json.dump(self.summary_relation_dict, open(self.summary_relation_dict_path, "w"), indent=4, sort_keys=False)
         else:
-            if os.path.exists(self.name2id_relation_dict_path):
-                with open(self.name2id_relation_dict_path) as file:
-                    self.name2id_relation_dict = json.load(file)
+            if os.path.exists(self.summary_node_dict_path):
+                with open(self.summary_node_dict_path) as file:
+                    self.summary_node_dict=json.load(file)
             else:
-                raise FileExistsError("{} does not exist!".format(self.name2id_relation_dict_path))
+                raise FileExistsError("{} does not exist!".format(self.summary_node_dict_path))
+            if os.path.exists(self.summary_relation_dict_path):
+                with open(self.summary_relation_dict_path) as file:
+                    self.summary_relation_dict=json.load(file)
+            else:
+                raise FileExistsError("{} does not exist!".format(self.summary_relation_dict_path))
 
-    def _caculate_triplets_topk_node(self,triplet_id_matric):
+
+
+    def _create_detailed_dict(self):
+        """
+        建立链接预测字典
+        """
+        if self.reprocess:
+            print("Creating_detailed_node_dict...")
+            for i in tqdm(range(self.node_len)):
+                item_df = self.node_lut[i]
+                item = {}
+                item["id"] = int(str(item_df["name_id"]))
+                item["name"] = item_df["name"]
+                item["rdf"] = item_df["name_rdf"]
+                item["type"] = item_df["type"]
+                item["type_rdf"] = item_df["type_rdf"]
+                item["node_type"] = item_df["node_type"]
+                item["description"] = item_df["description"]
+                self.detailed_node_dict[str(item_df["name_id"])] = item
+            json.dump(self.detailed_node_dict, open(self.detailed_node_dict_path, "w"), indent=4, sort_keys=False)
+            print("Creating_detailed_relation_dict...")
+            for i in tqdm(range(self.relation_len)):
+                item_df = self.relation_lut[i]
+                item = {}
+                item["id"] = int(str(item_df["name_id"]))
+                item["name"] = item_df["name"]
+                item["summary"] = item_df["rdf"]
+                self.detailed_relation_dict[str(item_df["name_id"])] = item
+            json.dump(self.detailed_relation_dict, open(self.detailed_relation_dict_path, "w"), indent=4, sort_keys=False)
+        else:
+            if os.path.exists(self.detailed_node_dict_path):
+                with open(self.detailed_node_dict_path) as file:
+                    self.detailed_node_dict = json.load(file)
+            else:
+                raise FileExistsError("{} does not exist!".format(self.detailed_node_dict_path))
+            if os.path.exists(self.detailed_relation_dict_path):
+                with open(self.detailed_relation_dict_path) as file:
+                    self.detailed_relation_dict = json.load(file)
+            else:
+                raise FileExistsError("{} does not exist!".format(self.detailed_relation_dict_path))
+
+
+    def _init_fuzzy_query(self):
+        ffs_node = FastFuzzySearch({'language': 'english'})
+        ffs_relation = FastFuzzySearch({'language': 'english'})
+        print("Initing_fuzzy_query...")
+        for i in tqdm(range(self.node_len)):
+            ffs_node.add_term(self.summary_node_dict[str(i)]["name"].replace(" ","_"),i)
+        for i in tqdm(range(self.relation_len)):
+            ffs_relation.add_term(self.summary_relation_dict[str(i)]["name"].replace(" ","_"),i)
+
+
+    # def _create_name2id_node_dict(self):
+    #     """
+    #     建立节点名字到id的查找表
+    #     """
+    #     if self.reprocess:
+    #         for i in tqdm(range(self.node_len)):
+    #             item_df=self.node_lut[i]
+    #             item={}
+    #             item["id"]=str(item_df["name_id"])
+    #             item["name"]=item_df["name"]
+    #             item["summary"]=item_df["description"]
+    #             self.name2id_node_dict[item_df["name"]].append(item)
+    #         json.dump(self.name2id_node_dict,open(self.name2id_node_dict_path,"w"),indent=4,sort_keys=False)
+    #     else:
+    #         if os.path.exists(self.name2id_node_dict_path):
+    #             with open(self.name2id_node_dict_path) as file:
+    #                 self.name2id_node_dict=json.load(file)
+    #         else:
+    #             raise FileExistsError("{} does not exist!".format(self.name2id_node_dict_path))
+    #
+    # def _create_name2id_relation_dict(self):
+    #     """
+    #     建立关系名字到id的查找表
+    #     """
+    #     if self.reprocess:
+    #         for i in tqdm(range(self.relation_len)):
+    #             item_df = self.relation_lut[i]
+    #             item = {}
+    #             item["id"] = str(item_df["name_id"])
+    #             item["name"] = item_df["name"]
+    #             self.name2id_relation_dict[item_df["name"]].append(item)
+    #         json.dump(self.name2id_relation_dict, open(self.name2id_relation_dict_path, "w"), indent=4, sort_keys=True)
+    #     else:
+    #         if os.path.exists(self.name2id_relation_dict_path):
+    #             with open(self.name2id_relation_dict_path) as file:
+    #                 self.name2id_relation_dict = json.load(file)
+    #         else:
+    #             raise FileExistsError("{} does not exist!".format(self.name2id_relation_dict_path))
+
+    def _caculate_triplets_topk_node(self,triplet_id_matric,predict_node=None):
         """
         计算三元组得分最高的k个头节点或者尾节点
 
         :param triplet_id_matric: 更换头结点和尾节点的三元组
+        :param predict_node: 要预测的节点是头节点还是尾节点
         :return: 得分topk的三元组列表
         """
         distance = self.model(triplet_id_matric)
@@ -131,42 +247,44 @@ class Kr_Predictior:
         """
         模糊查询节点名字
 
-        :param node_keyword: 输入节点名字
+        :param node_keyword: 输入节点名字,如果输入为空，则返回10个范例
         :return: 模糊节点列表
         """
         if node_keyword is None:
-            return [self.name2id_node_dict["Copa Colombia"][0],
-                    self.name2id_node_dict["Speed skating at the 2018 Winter Olympics – Women's 500 metres"][0],
-                    self.name2id_node_dict["Swimming at the 1988 Summer Olympics – Women's 50 metre freestyle"][0],
-                    self.name2id_node_dict["2015 Malta Badminton Championships"][0],
-                    self.name2id_node_dict["Syracuse Grand Prix"][0],
-                    self.name2id_node_dict["Western Canada Hockey League"][0],
-                    self.name2id_node_dict["Anke Engelke"][0],
-                    self.name2id_node_dict["Aviram Baruchyan"][0],
-                    self.name2id_node_dict["Attica Prison riot"][0],
-                    self.name2id_node_dict["Wayne Odesnik"][0]]
+
+            return [self.summary_node_dict[0],
+                    self.summary_node_dict[1],
+                    self.summary_node_dict[2],
+                    self.summary_node_dict[3],
+                    self.summary_node_dict[4],
+                    self.summary_node_dict[5],
+                    self.summary_node_dict[6],
+                    self.summary_node_dict[7],
+                    self.summary_node_dict[8],
+                    self.summary_node_dict[9]]
         else:
-            return self.name2id_node_dict[node_keyword]
+            return self.summary_node_dict[node_keyword]
 
     def fuzzy_query_relation_keyword(self,relation_keyword=None):
         """
         模糊查询关系名字
 
-        :param relation_keyword: 输入关系名字
+        :param relation_keyword: 输入关系名字，如果输入为空，则返回10个范例
         :return: 模糊关系列表
         """
         if relation_keyword is None:
-            return [self.name2id_relation_dict["hasWonPrize"][0],
-                    self.name2id_relation_dict["nextEvent"][0],
-                    self.name2id_relation_dict["participant of"][0],
-                    self.name2id_relation_dict["previousEvent"][0],
-                    self.name2id_relation_dict["award received"][0],
-                    self.name2id_relation_dict["author"][0],
-                    self.name2id_relation_dict["has cause"][0],
-                    self.name2id_relation_dict["similar"][0],
-                    self.name2id_relation_dict["represents"][0],
-                    self.name2id_relation_dict["style"][0]]
-        return self.name2id_relation_dict[relation_keyword]
+            return [self.summary_relation_dict[0],
+                    self.summary_relation_dict[1],
+                    self.summary_relation_dict[2],
+                    self.summary_relation_dict[3],
+                    self.summary_relation_dict[4],
+                    self.summary_relation_dict[5],
+                    self.summary_relation_dict[6],
+                    self.summary_relation_dict[7],
+                    self.summary_relation_dict[8],
+                    self.summary_relation_dict[9]]
+        else:
+            return self.summary_relation_dict[relation_keyword]
 
 
     def predict_similar_node(self,node_id):
@@ -246,7 +364,7 @@ class Kr_Predictior:
             relation_id_vector = torch.tensor(relation_id).expand(self.node_len, 1).to(self.device)
             tail_id_vectoe = self.all_node_index_column_matrix.clone()
             triplet_id_matric = torch.cat([head_id_vector, relation_id_vector, tail_id_vectoe], dim=1)
-            tail_list = self._caculate_triplets_topk_node(triplet_id_matric)
+            tail_list = self._caculate_triplets_topk_node(triplet_id_matric,predict_node="tail")
             return tail_list
 
 
@@ -299,7 +417,7 @@ class Kr_Predictior:
             relation_id_vector = torch.tensor(relation_id).expand(self.node_len, 1).to(self.device)
             head_id_vector = self.all_node_index_column_matrix.clone()
             triplet_id_matric = torch.cat([head_id_vector, relation_id_vector, tail_id_vector], dim=1)
-            head_list = self._caculate_triplets_topk_node(triplet_id_matric)
+            head_list = self._caculate_triplets_topk_node(triplet_id_matric,predict_node="head")
             return head_list
 
 
@@ -330,6 +448,7 @@ class Kr_Predictior:
             relation_list.append(item)
 
         return relation_list
+
 
 
 

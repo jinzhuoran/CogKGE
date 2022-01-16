@@ -30,12 +30,17 @@ metric = Link_Prediction(link_prediction_raw=True,
                          reverse=False)
 
 
-predictor=Kr_Predictior(model=model,
-                        pretrained_model_path="data/BoxE_Model.pkl",
+predictor=Kr_Predictior(model_name="BoxE",
+                        data_name="EVENTKG2M",
+                        model=model,
                         device=device,
                         node_lut=node_lut,
                         relation_lut=relation_lut,
-                        reprocess=False)
+                        pretrained_model_path="data/BoxE_Model.pkl",
+                        processed_data_path="data",
+                        reprocess=False,
+                        fuzzy_query_top_k=10,
+                        predict_top_k=50)
 ###########################################################################
 #                    以上为模型加载，以下为调用的接口
 ###########################################################################
