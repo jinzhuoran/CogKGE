@@ -1,25 +1,29 @@
-import os
 import datetime
-import torch
+import os
 import random
+
 import numpy as np
- 
+import torch
+
 
 # import the specified class
 def import_class(name):
     components = name.split('.')
-    mod = __import__(components[0]) 
+    mod = __import__(components[0])
     for comp in components[1:]:
         mod = getattr(mod, comp)
     return mod
 
+
 # compute the output path from the data path
-def cal_output_path(data_path,model_name):
-    output_path = os.path.join(*data_path.split("/")[:], "experimental_output",model_name + str(datetime.datetime.now())[:-4]).replace(
-    ':', '-').replace(' ', '--')
+def cal_output_path(data_path, model_name):
+    output_path = os.path.join(*data_path.split("/")[:], "experimental_output",
+                               model_name + str(datetime.datetime.now())[:-4]).replace(
+        ':', '-').replace(' ', '--')
     return output_path
 
-def init_cogktr(device_id,seed):
+
+def init_cogktr(device_id, seed):
     """
     cogktr初始化
 
@@ -39,12 +43,6 @@ def init_cogktr(device_id,seed):
     elif device_list:  # non-cpu device requested
         os.environ['CUDA_VISIBLE_DEVICES'] = device_list  # set environment variable
         assert torch.cuda.is_available(), f'CUDA unavailable, invalid device {device_list} requested'  # check availability
-    device = torch.device('cuda:0' if torch.cuda.is_available() == True else "cpu")
+    device = torch.device('cuda' if torch.cuda.is_available() == True else "cpu")
     return device
 
-
-
-
-# class 
-
-    

@@ -1,3 +1,12 @@
+import os
+import sys
+sys.path.append('/home/zhuoran/code/CogKTR/')
+sys.path.append('/home/zhuoran/CogKTR/')
+curPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curPath)[0]
+sys.path.append(os.path.split(rootPath)[0])
+sys.path.append(os.getcwd())
+
 import torch
 from torch.utils.data import RandomSampler
 

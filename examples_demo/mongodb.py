@@ -1,58 +1,52 @@
-import datetime
+from cogktr import *
 
-from mongoengine import StringField, IntField, FloatField, BooleanField, DateTimeField, Document
-from mongoengine import connect
+device = init_cogktr(device_id="4", seed=1)
 
-connect('cogkge', host='210.75.240.136', username='cipzhao2022', password='cipzhao2022', port=1234, connect=False)
+loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
+train_data, valid_data, test_data = loader.load_all_data()
+node_lut, relation_lut, time_lut = loader.load_all_lut()
 
+processor = EVENTKG2MProcessor(node_lut, relation_lut, time_lut,
+                               reprocess=True,
+                               type=False, time=False, description=False, path=False,
+                               time_unit="year",
+                               pretrain_model_name="roberta-base", token_len=10,
+                               path_len=10)
+train_dataset = processor.process(train_data)
+valid_dataset = processor.process(valid_data)
+test_dataset = processor.process(test_data)
+node_lut, relation_lut, time_lut = processor.process_lut()
 
-def to_dict_helper(obj):
-    return_data = []
-    for field_name in obj._fields:
-        if field_name in ("id",):
-            continue
-        data = obj._data[field_name]
-        if isinstance(obj._fields[field_name], StringField):
-            return_data.append((field_name, str(data)))
-        elif isinstance(obj._fields[field_name], FloatField):
-            return_data.append((field_name, float(data)))
-        elif isinstance(obj._fields[field_name], IntField):
-            return_data.append((field_name, int(data)))
-        elif isinstance(obj._fields[field_name], BooleanField):
-            return_data.append((field_name, bool(data)))
-        elif isinstance(obj._fields[field_name], DateTimeField):
-            return_data.append(field_name, datetime.datetime.strptime(data))
-        else:
-            return_data.append((field_name, data))
-    return dict(return_data)
+model = BoxE(entity_dict_len=len(node_lut),
+             relation_dict_len=len(relation_lut),
+             embedding_dim=50)
 
+loss = MarginLoss(margin=1.0, C=0)
 
-class Entity(Document):
-    name = StringField(required=True)
-    description = StringField(required=True)
-    type = StringField(required=True)
-    time = StringField(default="2000")
+metric = Link_Prediction(link_prediction_raw=True,
+                         link_prediction_filt=False,
+                         batch_size=5000000,
+                         reverse=False)
 
-    def to_dict(self):
-        return to_dict_helper(self)
+predictor = Kr_Predictior(model_name="BoxE",
+                          data_name="EVENTKG2M",
+                          model=model,
+                          device=device,
+                          node_lut=node_lut,
+                          relation_lut=relation_lut,
+                          pretrained_model_path="data/BoxE_Model.pkl",
+                          processed_data_path="data",
+                          reprocess=False,
+                          fuzzy_query_top_k=10,
+                          predict_top_k=5)
+# for value in predictor.detailed_relation_dict.values():
+#     value['idd'] = str(value['id'])
+#     del value['id']
+#     value['name'] = str(value['name'])
+#     value['summary'] = str(value['summary'])
+#     predictor.insert_relation(value)
 
+predictor.fuzzy_query_node_keyword('tom')
+predictor.fuzzy_query_relation_keyword('city')
 
-def insert_entity(entity):
-    # entity = {'name': 'sss', 'description': 'sss', 'type': 'sss'}
-    Entity.objects.create(**entity)
-
-
-def search_entity(keyword):
-    entities = Entity.objects(name__contains=keyword)
-    return entities
-
-if __name__ == '__main__':
-    entity = {'name': 'sss', 'description': 'sss', 'type': 'sss'}
-    insert_entity(entity)
-    entity = {'name': 'ss', 'description': 'ss', 'type': 'ss'}
-    insert_entity(entity)
-    for item in search_entity('s'):
-        print(item.to_dict())
-    # print(search_entity('s'))
-    Entity.objects(name='ss').delete()
-    print("end")
+print(1)
