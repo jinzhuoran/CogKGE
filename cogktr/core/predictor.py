@@ -10,8 +10,6 @@ from mongoengine import StringField, IntField, FloatField, BooleanField, DateTim
 from mongoengine import connect
 from tqdm import tqdm
 
-connect('cogkge', host='210.75.240.136', username='cipzhao2022', password='cipzhao2022', port=1234, connect=False)
-
 
 class Kr_Predictior:
     def __init__(self,
@@ -90,7 +88,8 @@ class Kr_Predictior:
 
         self._create_summary_dict()  # 建立模糊查询字典
         self._create_detailed_dict()  # 建立链接预测字典
-        # self._init_fuzzy_query()     #初始化模糊查询
+        connect('eventkg', host='210.75.240.136', username='cipzhao2022', password='cipzhao2022', port=1234,
+                connect=False)
 
     def _create_summary_dict(self):
         """
@@ -168,11 +167,12 @@ class Kr_Predictior:
                 raise FileExistsError("{} does not exist!".format(self.detailed_relation_dict_path))
 
     def insert_entity(self, entity):
-        # entity = {'name': 'xxx', 'description': 'xxx', 'type': 'xxx'}
+        # {'name': 'Tom Waits', 'rdf': '<http://eventKG.l3s.uni-hannover.de/resource/entity_3481409>', 'type': 'Singer',
+        #  'type_rdf': '<http://dbpedia.org/ontology/Singer>', 'node_type': 'entity', 'description': '-1', 'idd': '1'}
         Entity.objects.create(**entity)
 
     def insert_relation(self, relation):
-        # entity = {'name': 'xxx', 'description': 'xxx', 'type': 'xxx'}
+        # relation = {'name': 'hasWonPrize', 'summary': '<http://yago-knowledge.org/resource/hasWonPrize>', 'idd': '1'}
         Relation.objects.create(**relation)
 
     def remove_all(self):
@@ -199,7 +199,10 @@ class Kr_Predictior:
                     self.summary_node_dict[9]]
         else:
             entities = Entity.objects(name__contains=node_keyword)
-            return entities
+            results = []
+            for i in range(min(self.predict_top_k, len(entities))):
+                results.append(entities[i].to_dict())
+            return results
 
     def fuzzy_query_relation_keyword(self, relation_keyword=None):
         """
@@ -221,7 +224,10 @@ class Kr_Predictior:
                     self.summary_relation_dict[9]]
         else:
             relations = Relation.objects(name__contains=relation_keyword)
-            return relations
+            results = []
+            for i in range(min(self.predict_top_k, len(relations))):
+                results.append(relations[i].to_dict())
+            return results
 
     def predict_similar_node(self, node_id):
         """
@@ -385,21 +391,22 @@ class Kr_Predictior:
 
 
 class Entity(Document):
-    id = StringField(required=True)
+    idd = StringField(required=True)
     name = StringField(required=True)
-    description = StringField(required=True)
+    rdf = StringField(required=True)
     type = StringField(required=True)
+    type_rdf = StringField(required=True)
+    node_type = StringField(required=True)
+    description = StringField(required=True)
 
     def to_dict(self):
         return to_dict_helper(self)
 
 
 class Relation(Document):
-    id = StringField(required=True)
+    idd = StringField(required=True)
     name = StringField(required=True)
-    description = StringField(required=True)
-    type = StringField(required=True)
-    time = StringField(default="2233")
+    summary = StringField(required=True)
 
     def to_dict(self):
         return to_dict_helper(self)
