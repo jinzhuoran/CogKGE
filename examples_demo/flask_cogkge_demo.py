@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, jsonify, request
+from mongodb import Flask, jsonify, request
 from flask_cors import *
 
 app = Flask(__name__, static_url_path='')
