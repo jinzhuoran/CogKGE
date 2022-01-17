@@ -8,6 +8,7 @@ import torch
 import torch.nn.functional as F
 from mongoengine import StringField, IntField, FloatField, BooleanField, DateTimeField, Document
 from mongoengine import connect
+from mongoengine.queryset.visitor import Q
 from tqdm import tqdm
 
 
@@ -198,9 +199,10 @@ class Kr_Predictior:
                     self.summary_node_dict[8],
                     self.summary_node_dict[9]]
         else:
-            entities = Entity.objects(name__contains=node_keyword)
+            entities = Entity.objects(Q(name__contains=node_keyword) | Q(
+                description__contains=node_keyword))
             results = []
-            for i in range(min(self.predict_top_k, len(entities))):
+            for i in range(min(self.fuzzy_query_top_k, len(entities))):
                 results.append(entities[i].to_dict())
             return results
 
@@ -223,9 +225,10 @@ class Kr_Predictior:
                     self.summary_relation_dict[8],
                     self.summary_relation_dict[9]]
         else:
-            relations = Relation.objects(name__contains=relation_keyword)
+            relations = Relation.objects(Q(name__contains=relation_keyword) | Q(
+                summary__contains=relation_keyword))
             results = []
-            for i in range(min(self.predict_top_k, len(relations))):
+            for i in range(min(self.fuzzy_query_top_k, len(relations))):
                 results.append(relations[i].to_dict())
             return results
 
