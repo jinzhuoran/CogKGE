@@ -1,0 +1,4112 @@
+{
+    "0": {
+        "id": 0,
+        "name": "sport",
+        "summary": "<http://www.wikidata.org/prop/direct/P641>"
+    },
+    "1": {
+        "id": 1,
+        "name": "hasWonPrize",
+        "summary": "<http://yago-knowledge.org/resource/hasWonPrize>"
+    },
+    "2": {
+        "id": 2,
+        "name": "city",
+        "summary": "<http://dbpedia.org/ontology/city>"
+    },
+    "3": {
+        "id": 3,
+        "name": "championInSingleMale",
+        "summary": "<http://dbpedia.org/ontology/championInSingleMale>"
+    },
+    "4": {
+        "id": 4,
+        "name": "nextEvent",
+        "summary": "<http://dbpedia.org/ontology/nextEvent>"
+    },
+    "5": {
+        "id": 5,
+        "name": "participant of",
+        "summary": "<http://www.wikidata.org/prop/direct/P1344>"
+    },
+    "6": {
+        "id": 6,
+        "name": "previousEvent",
+        "summary": "<http://dbpedia.org/ontology/previousEvent>"
+    },
+    "7": {
+        "id": 7,
+        "name": "race",
+        "summary": "<http://dbpedia.org/ontology/race>"
+    },
+    "8": {
+        "id": 8,
+        "name": "award received",
+        "summary": "<http://www.wikidata.org/prop/direct/P166>"
+    },
+    "9": {
+        "id": 9,
+        "name": "champion",
+        "summary": "<http://dbpedia.org/ontology/champion>"
+    },
+    "10": {
+        "id": 10,
+        "name": "time period",
+        "summary": "<http://www.wikidata.org/prop/direct/P2348>"
+    },
+    "11": {
+        "id": 11,
+        "name": "instance of",
+        "summary": "<http://www.wikidata.org/prop/direct/P31>"
+    },
+    "12": {
+        "id": 12,
+        "name": "poleDriver",
+        "summary": "<http://dbpedia.org/ontology/poleDriver>"
+    },
+    "13": {
+        "id": 13,
+        "name": "official color",
+        "summary": "<http://www.wikidata.org/prop/direct/P6364>"
+    },
+    "14": {
+        "id": 14,
+        "name": "winner",
+        "summary": "<http://www.wikidata.org/prop/direct/P1346>"
+    },
+    "15": {
+        "id": 15,
+        "name": "significant event",
+        "summary": "<http://www.wikidata.org/prop/direct/P793>"
+    },
+    "16": {
+        "id": 16,
+        "name": "located in the administrative territorial entity",
+        "summary": "<http://www.wikidata.org/prop/direct/P131>"
+    },
+    "17": {
+        "id": 17,
+        "name": "office contested",
+        "summary": "<http://www.wikidata.org/prop/direct/P541>"
+    },
+    "18": {
+        "id": 18,
+        "name": "championInMixedDouble",
+        "summary": "<http://dbpedia.org/ontology/championInMixedDouble>"
+    },
+    "19": {
+        "id": 19,
+        "name": "11/sem/hasSubEvent",
+        "summary": "<http://semanticweb.cs.vu.nl/2009/11/sem/hasSubEvent>"
+    },
+    "20": {
+        "id": 20,
+        "name": "affiliation",
+        "summary": "<http://dbpedia.org/ontology/affiliation>"
+    },
+    "21": {
+        "id": 21,
+        "name": "twinned administrative body",
+        "summary": "<http://www.wikidata.org/prop/direct/P190>"
+    },
+    "22": {
+        "id": 22,
+        "name": "playsFor",
+        "summary": "<http://yago-knowledge.org/resource/playsFor>"
+    },
+    "23": {
+        "id": 23,
+        "name": "country",
+        "summary": "<http://dbpedia.org/ontology/country>"
+    },
+    "24": {
+        "id": 24,
+        "name": "member of sports team",
+        "summary": "<http://www.wikidata.org/prop/direct/P54>"
+    },
+    "25": {
+        "id": 25,
+        "name": "participant",
+        "summary": "<http://www.wikidata.org/prop/direct/P710>"
+    },
+    "26": {
+        "id": 26,
+        "name": "facet of",
+        "summary": "<http://www.wikidata.org/prop/direct/P1269>"
+    },
+    "27": {
+        "id": 27,
+        "name": "soccerTournamentLastChampion",
+        "summary": "<http://dbpedia.org/ontology/soccerTournamentLastChampion>"
+    },
+    "28": {
+        "id": 28,
+        "name": "sports season of league or competition",
+        "summary": "<http://www.wikidata.org/prop/direct/P3450>"
+    },
+    "29": {
+        "id": 29,
+        "name": "employer",
+        "summary": "<http://www.wikidata.org/prop/direct/P108>"
+    },
+    "30": {
+        "id": 30,
+        "name": "position held",
+        "summary": "<http://www.wikidata.org/prop/direct/P39>"
+    },
+    "31": {
+        "id": 31,
+        "name": "occupation",
+        "summary": "<http://www.wikidata.org/prop/direct/P106>"
+    },
+    "32": {
+        "id": 32,
+        "name": "language of work or name",
+        "summary": "<http://www.wikidata.org/prop/direct/P407>"
+    },
+    "33": {
+        "id": 33,
+        "name": "surface played on",
+        "summary": "<http://www.wikidata.org/prop/direct/P765>"
+    },
+    "34": {
+        "id": 34,
+        "name": "voice type",
+        "summary": "<http://www.wikidata.org/prop/direct/P412>"
+    },
+    "35": {
+        "id": 35,
+        "name": "01/rdf-schema#seeAlso",
+        "summary": "<http://www.w3.org/2000/01/rdf-schema#seeAlso>"
+    },
+    "36": {
+        "id": 36,
+        "name": "battle",
+        "summary": "<http://dbpedia.org/ontology/battle>"
+    },
+    "37": {
+        "id": 37,
+        "name": "sport",
+        "summary": "<http://dbpedia.org/ontology/sport>"
+    },
+    "38": {
+        "id": 38,
+        "name": "conflict",
+        "summary": "<http://www.wikidata.org/prop/direct/P607>"
+    },
+    "39": {
+        "id": 39,
+        "name": "commander",
+        "summary": "<http://dbpedia.org/ontology/commander>"
+    },
+    "40": {
+        "id": 40,
+        "name": "genre",
+        "summary": "<http://www.wikidata.org/prop/direct/P136>"
+    },
+    "41": {
+        "id": 41,
+        "name": "22-rdf-syntax-ns#type",
+        "summary": "<http://dbpedia.org/ontology/22-rdf-syntax-ns#type>"
+    },
+    "42": {
+        "id": 42,
+        "name": "author",
+        "summary": "<http://dbpedia.org/ontology/author>"
+    },
+    "43": {
+        "id": 43,
+        "name": "part of",
+        "summary": "<http://www.wikidata.org/prop/direct/P361>"
+    },
+    "44": {
+        "id": 44,
+        "name": "team",
+        "summary": "<http://dbpedia.org/ontology/team>"
+    },
+    "45": {
+        "id": 45,
+        "name": "participatedIn",
+        "summary": "<http://yago-knowledge.org/resource/participatedIn>"
+    },
+    "46": {
+        "id": 46,
+        "name": "championInDoubleMale",
+        "summary": "<http://dbpedia.org/ontology/championInDoubleMale>"
+    },
+    "47": {
+        "id": 47,
+        "name": "applies to jurisdiction",
+        "summary": "<http://www.wikidata.org/prop/direct/P1001>"
+    },
+    "48": {
+        "id": 48,
+        "name": "educated at",
+        "summary": "<http://www.wikidata.org/prop/direct/P69>"
+    },
+    "49": {
+        "id": 49,
+        "name": "molecular function",
+        "summary": "<http://www.wikidata.org/prop/direct/P680>"
+    },
+    "50": {
+        "id": 50,
+        "name": "poleDriverTeam",
+        "summary": "<http://dbpedia.org/ontology/poleDriverTeam>"
+    },
+    "51": {
+        "id": 51,
+        "name": "color",
+        "summary": "<http://www.wikidata.org/prop/direct/P462>"
+    },
+    "52": {
+        "id": 52,
+        "name": "academic degree",
+        "summary": "<http://www.wikidata.org/prop/direct/P512>"
+    },
+    "53": {
+        "id": 53,
+        "name": "depicts",
+        "summary": "<http://www.wikidata.org/prop/direct/P180>"
+    },
+    "54": {
+        "id": 54,
+        "name": "organizer",
+        "summary": "<http://www.wikidata.org/prop/direct/P664>"
+    },
+    "55": {
+        "id": 55,
+        "name": "described by source",
+        "summary": "<http://www.wikidata.org/prop/direct/P1343>"
+    },
+    "56": {
+        "id": 56,
+        "name": "country of citizenship",
+        "summary": "<http://www.wikidata.org/prop/direct/P27>"
+    },
+    "57": {
+        "id": 57,
+        "name": "partner",
+        "summary": "<http://www.wikidata.org/prop/direct/P451>"
+    },
+    "58": {
+        "id": 58,
+        "name": "located in time zone",
+        "summary": "<http://www.wikidata.org/prop/direct/P421>"
+    },
+    "59": {
+        "id": 59,
+        "name": "candidacy in election",
+        "summary": "<http://www.wikidata.org/prop/direct/P3602>"
+    },
+    "60": {
+        "id": 60,
+        "name": "award",
+        "summary": "<http://dbpedia.org/ontology/award>"
+    },
+    "61": {
+        "id": 61,
+        "name": "promotion",
+        "summary": "<http://dbpedia.org/ontology/promotion>"
+    },
+    "62": {
+        "id": 62,
+        "name": "location of first performance",
+        "summary": "<http://www.wikidata.org/prop/direct/P4647>"
+    },
+    "63": {
+        "id": 63,
+        "name": "chairperson",
+        "summary": "<http://www.wikidata.org/prop/direct/P488>"
+    },
+    "64": {
+        "id": 64,
+        "name": "bronzeMedalist",
+        "summary": "<http://dbpedia.org/ontology/bronzeMedalist>"
+    },
+    "65": {
+        "id": 65,
+        "name": "manager",
+        "summary": "<http://dbpedia.org/ontology/manager>"
+    },
+    "66": {
+        "id": 66,
+        "name": "isAffiliatedTo",
+        "summary": "<http://yago-knowledge.org/resource/isAffiliatedTo>"
+    },
+    "67": {
+        "id": 67,
+        "name": "predecessor",
+        "summary": "<http://dbpedia.org/ontology/predecessor>"
+    },
+    "68": {
+        "id": 68,
+        "name": "production company",
+        "summary": "<http://www.wikidata.org/prop/direct/P272>"
+    },
+    "69": {
+        "id": 69,
+        "name": "manufacturer",
+        "summary": "<http://www.wikidata.org/prop/direct/P176>"
+    },
+    "70": {
+        "id": 70,
+        "name": "cast member",
+        "summary": "<http://www.wikidata.org/prop/direct/P161>"
+    },
+    "71": {
+        "id": 71,
+        "name": "competition class",
+        "summary": "<http://www.wikidata.org/prop/direct/P2094>"
+    },
+    "72": {
+        "id": 72,
+        "name": "capital of",
+        "summary": "<http://www.wikidata.org/prop/direct/P1376>"
+    },
+    "73": {
+        "id": 73,
+        "name": "season",
+        "summary": "<http://dbpedia.org/ontology/season>"
+    },
+    "74": {
+        "id": 74,
+        "name": "officeholder",
+        "summary": "<http://www.wikidata.org/prop/direct/P1308>"
+    },
+    "75": {
+        "id": 75,
+        "name": "points classification",
+        "summary": "<http://www.wikidata.org/prop/direct/P3494>"
+    },
+    "76": {
+        "id": 76,
+        "name": "silverMedalist",
+        "summary": "<http://dbpedia.org/ontology/silverMedalist>"
+    },
+    "77": {
+        "id": 77,
+        "name": "country of origin",
+        "summary": "<http://www.wikidata.org/prop/direct/P495>"
+    },
+    "78": {
+        "id": 78,
+        "name": "month of the year",
+        "summary": "<http://www.wikidata.org/prop/direct/P2922>"
+    },
+    "79": {
+        "id": 79,
+        "name": "colour",
+        "summary": "<http://dbpedia.org/ontology/colour>"
+    },
+    "80": {
+        "id": 80,
+        "name": "work location",
+        "summary": "<http://www.wikidata.org/prop/direct/P937>"
+    },
+    "81": {
+        "id": 81,
+        "name": "occupant",
+        "summary": "<http://www.wikidata.org/prop/direct/P466>"
+    },
+    "82": {
+        "id": 82,
+        "name": "translator",
+        "summary": "<http://www.wikidata.org/prop/direct/P655>"
+    },
+    "83": {
+        "id": 83,
+        "name": "sponsor",
+        "summary": "<http://www.wikidata.org/prop/direct/P859>"
+    },
+    "84": {
+        "id": 84,
+        "name": "member of political party",
+        "summary": "<http://www.wikidata.org/prop/direct/P102>"
+    },
+    "85": {
+        "id": 85,
+        "name": "recentWinner",
+        "summary": "<http://dbpedia.org/ontology/recentWinner>"
+    },
+    "86": {
+        "id": 86,
+        "name": "operator",
+        "summary": "<http://www.wikidata.org/prop/direct/P137>"
+    },
+    "87": {
+        "id": 87,
+        "name": "published in",
+        "summary": "<http://www.wikidata.org/prop/direct/P1433>"
+    },
+    "88": {
+        "id": 88,
+        "name": "country",
+        "summary": "<http://www.wikidata.org/prop/direct/P17>"
+    },
+    "89": {
+        "id": 89,
+        "name": "place of burial",
+        "summary": "<http://www.wikidata.org/prop/direct/P119>"
+    },
+    "90": {
+        "id": 90,
+        "name": "owned by",
+        "summary": "<http://www.wikidata.org/prop/direct/P127>"
+    },
+    "91": {
+        "id": 91,
+        "name": "general classification of race participants",
+        "summary": "<http://www.wikidata.org/prop/direct/P2321>"
+    },
+    "92": {
+        "id": 92,
+        "name": "hair color",
+        "summary": "<http://www.wikidata.org/prop/direct/P1884>"
+    },
+    "93": {
+        "id": 93,
+        "name": "contains administrative territorial entity",
+        "summary": "<http://www.wikidata.org/prop/direct/P150>"
+    },
+    "94": {
+        "id": 94,
+        "name": "soccerLeaguePromoted",
+        "summary": "<http://dbpedia.org/ontology/soccerLeaguePromoted>"
+    },
+    "95": {
+        "id": 95,
+        "name": "organisation",
+        "summary": "<http://dbpedia.org/ontology/organisation>"
+    },
+    "96": {
+        "id": 96,
+        "name": "destination point",
+        "summary": "<http://www.wikidata.org/prop/direct/P1444>"
+    },
+    "97": {
+        "id": 97,
+        "name": "director",
+        "summary": "<http://www.wikidata.org/prop/direct/P57>"
+    },
+    "98": {
+        "id": 98,
+        "name": "language",
+        "summary": "<http://dbpedia.org/ontology/language>"
+    },
+    "99": {
+        "id": 99,
+        "name": "exhibition history",
+        "summary": "<http://www.wikidata.org/prop/direct/P608>"
+    },
+    "100": {
+        "id": 100,
+        "name": "productionCompany",
+        "summary": "<http://dbpedia.org/ontology/productionCompany>"
+    },
+    "101": {
+        "id": 101,
+        "name": "relegated",
+        "summary": "<http://www.wikidata.org/prop/direct/P2882>"
+    },
+    "102": {
+        "id": 102,
+        "name": "parent organization",
+        "summary": "<http://www.wikidata.org/prop/direct/P749>"
+    },
+    "103": {
+        "id": 103,
+        "name": "heritage designation",
+        "summary": "<http://www.wikidata.org/prop/direct/P1435>"
+    },
+    "104": {
+        "id": 104,
+        "name": "municipality",
+        "summary": "<http://dbpedia.org/ontology/municipality>"
+    },
+    "105": {
+        "id": 105,
+        "name": "home venue",
+        "summary": "<http://www.wikidata.org/prop/direct/P115>"
+    },
+    "106": {
+        "id": 106,
+        "name": "victory",
+        "summary": "<http://www.wikidata.org/prop/direct/P2522>"
+    },
+    "107": {
+        "id": 107,
+        "name": "lyrics",
+        "summary": "<http://dbpedia.org/ontology/lyrics>"
+    },
+    "108": {
+        "id": 108,
+        "name": "firstLeader",
+        "summary": "<http://dbpedia.org/ontology/firstLeader>"
+    },
+    "109": {
+        "id": 109,
+        "name": "candidate",
+        "summary": "<http://www.wikidata.org/prop/direct/P726>"
+    },
+    "110": {
+        "id": 110,
+        "name": "operating area",
+        "summary": "<http://www.wikidata.org/prop/direct/P2541>"
+    },
+    "111": {
+        "id": 111,
+        "name": "owns",
+        "summary": "<http://yago-knowledge.org/resource/owns>"
+    },
+    "112": {
+        "id": 112,
+        "name": "commanded by",
+        "summary": "<http://www.wikidata.org/prop/direct/P4791>"
+    },
+    "113": {
+        "id": 113,
+        "name": "stage classification",
+        "summary": "<http://www.wikidata.org/prop/direct/P2417>"
+    },
+    "114": {
+        "id": 114,
+        "name": "doctoral advisor",
+        "summary": "<http://www.wikidata.org/prop/direct/P184>"
+    },
+    "115": {
+        "id": 115,
+        "name": "handedness",
+        "summary": "<http://www.wikidata.org/prop/direct/P552>"
+    },
+    "116": {
+        "id": 116,
+        "name": "launchVehicle",
+        "summary": "<http://dbpedia.org/ontology/launchVehicle>"
+    },
+    "117": {
+        "id": 117,
+        "name": "genre",
+        "summary": "<http://dbpedia.org/ontology/genre>"
+    },
+    "118": {
+        "id": 118,
+        "name": "creator",
+        "summary": "<http://www.wikidata.org/prop/direct/P170>"
+    },
+    "119": {
+        "id": 119,
+        "name": "conferred by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1027>"
+    },
+    "120": {
+        "id": 120,
+        "name": "secondLeader",
+        "summary": "<http://dbpedia.org/ontology/secondLeader>"
+    },
+    "121": {
+        "id": 121,
+        "name": "named after",
+        "summary": "<http://www.wikidata.org/prop/direct/P138>"
+    },
+    "122": {
+        "id": 122,
+        "name": "replaces",
+        "summary": "<http://www.wikidata.org/prop/direct/P1365>"
+    },
+    "123": {
+        "id": 123,
+        "name": "pictureDescription",
+        "summary": "<http://dbpedia.org/ontology/pictureDescription>"
+    },
+    "124": {
+        "id": 124,
+        "name": "instrumentation",
+        "summary": "<http://www.wikidata.org/prop/direct/P870>"
+    },
+    "125": {
+        "id": 125,
+        "name": "member of",
+        "summary": "<http://www.wikidata.org/prop/direct/P463>"
+    },
+    "126": {
+        "id": 126,
+        "name": "causedBy",
+        "summary": "<http://dbpedia.org/ontology/causedBy>"
+    },
+    "127": {
+        "id": 127,
+        "name": "follows",
+        "summary": "<http://www.wikidata.org/prop/direct/P155>"
+    },
+    "128": {
+        "id": 128,
+        "name": "deathCause",
+        "summary": "<http://dbpedia.org/ontology/deathCause>"
+    },
+    "129": {
+        "id": 129,
+        "name": "successor",
+        "summary": "<http://dbpedia.org/ontology/successor>"
+    },
+    "130": {
+        "id": 130,
+        "name": "item operated",
+        "summary": "<http://www.wikidata.org/prop/direct/P121>"
+    },
+    "131": {
+        "id": 131,
+        "name": "spouse",
+        "summary": "<http://www.wikidata.org/prop/direct/P26>"
+    },
+    "132": {
+        "id": 132,
+        "name": "charge",
+        "summary": "<http://www.wikidata.org/prop/direct/P1595>"
+    },
+    "133": {
+        "id": 133,
+        "name": "season starts",
+        "summary": "<http://www.wikidata.org/prop/direct/P4794>"
+    },
+    "134": {
+        "id": 134,
+        "name": "official language",
+        "summary": "<http://www.wikidata.org/prop/direct/P37>"
+    },
+    "135": {
+        "id": 135,
+        "name": "occupation",
+        "summary": "<http://dbpedia.org/ontology/occupation>"
+    },
+    "136": {
+        "id": 136,
+        "name": "language used",
+        "summary": "<http://www.wikidata.org/prop/direct/P2936>"
+    },
+    "137": {
+        "id": 137,
+        "name": "league",
+        "summary": "<http://dbpedia.org/ontology/league>"
+    },
+    "138": {
+        "id": 138,
+        "name": "founded by",
+        "summary": "<http://www.wikidata.org/prop/direct/P112>"
+    },
+    "139": {
+        "id": 139,
+        "name": "participating team",
+        "summary": "<http://www.wikidata.org/prop/direct/P1923>"
+    },
+    "140": {
+        "id": 140,
+        "name": "collection",
+        "summary": "<http://www.wikidata.org/prop/direct/P195>"
+    },
+    "141": {
+        "id": 141,
+        "name": "producer",
+        "summary": "<http://www.wikidata.org/prop/direct/P162>"
+    },
+    "142": {
+        "id": 142,
+        "name": "costume designer",
+        "summary": "<http://www.wikidata.org/prop/direct/P2515>"
+    },
+    "143": {
+        "id": 143,
+        "name": "performer",
+        "summary": "<http://www.wikidata.org/prop/direct/P175>"
+    },
+    "144": {
+        "id": 144,
+        "name": "location of formation",
+        "summary": "<http://www.wikidata.org/prop/direct/P740>"
+    },
+    "145": {
+        "id": 145,
+        "name": "residence",
+        "summary": "<http://www.wikidata.org/prop/direct/P551>"
+    },
+    "146": {
+        "id": 146,
+        "name": "movement",
+        "summary": "<http://dbpedia.org/ontology/movement>"
+    },
+    "147": {
+        "id": 147,
+        "name": "cause of death",
+        "summary": "<http://www.wikidata.org/prop/direct/P509>"
+    },
+    "148": {
+        "id": 148,
+        "name": "nominated for",
+        "summary": "<http://www.wikidata.org/prop/direct/P1411>"
+    },
+    "149": {
+        "id": 149,
+        "name": "referee",
+        "summary": "<http://www.wikidata.org/prop/direct/P1652>"
+    },
+    "150": {
+        "id": 150,
+        "name": "recordedIn",
+        "summary": "<http://dbpedia.org/ontology/recordedIn>"
+    },
+    "151": {
+        "id": 151,
+        "name": "religion",
+        "summary": "<http://dbpedia.org/ontology/religion>"
+    },
+    "152": {
+        "id": 152,
+        "name": "deathPlace",
+        "summary": "<http://dbpedia.org/ontology/deathPlace>"
+    },
+    "153": {
+        "id": 153,
+        "name": "space launch vehicle",
+        "summary": "<http://www.wikidata.org/prop/direct/P375>"
+    },
+    "154": {
+        "id": 154,
+        "name": "connecting line",
+        "summary": "<http://www.wikidata.org/prop/direct/P81>"
+    },
+    "155": {
+        "id": 155,
+        "name": "author",
+        "summary": "<http://www.wikidata.org/prop/direct/P50>"
+    },
+    "156": {
+        "id": 156,
+        "name": "subsidiary",
+        "summary": "<http://www.wikidata.org/prop/direct/P355>"
+    },
+    "157": {
+        "id": 157,
+        "name": "has facility",
+        "summary": "<http://www.wikidata.org/prop/direct/P912>"
+    },
+    "158": {
+        "id": 158,
+        "name": "mostWins",
+        "summary": "<http://dbpedia.org/ontology/mostWins>"
+    },
+    "159": {
+        "id": 159,
+        "name": "has part",
+        "summary": "<http://www.wikidata.org/prop/direct/P527>"
+    },
+    "160": {
+        "id": 160,
+        "name": "successful candidate",
+        "summary": "<http://www.wikidata.org/prop/direct/P991>"
+    },
+    "161": {
+        "id": 161,
+        "name": "league",
+        "summary": "<http://www.wikidata.org/prop/direct/P118>"
+    },
+    "162": {
+        "id": 162,
+        "name": "region",
+        "summary": "<http://dbpedia.org/ontology/region>"
+    },
+    "163": {
+        "id": 163,
+        "name": "composer",
+        "summary": "<http://www.wikidata.org/prop/direct/P86>"
+    },
+    "164": {
+        "id": 164,
+        "name": "basedOn",
+        "summary": "<http://dbpedia.org/ontology/basedOn>"
+    },
+    "165": {
+        "id": 165,
+        "name": "replaced by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1366>"
+    },
+    "166": {
+        "id": 166,
+        "name": "legal form",
+        "summary": "<http://www.wikidata.org/prop/direct/P1454>"
+    },
+    "167": {
+        "id": 167,
+        "name": "playing hand",
+        "summary": "<http://www.wikidata.org/prop/direct/P741>"
+    },
+    "168": {
+        "id": 168,
+        "name": "medical condition",
+        "summary": "<http://www.wikidata.org/prop/direct/P1050>"
+    },
+    "169": {
+        "id": 169,
+        "name": "literaryGenre",
+        "summary": "<http://dbpedia.org/ontology/literaryGenre>"
+    },
+    "170": {
+        "id": 170,
+        "name": "nationalTeam",
+        "summary": "<http://dbpedia.org/ontology/nationalTeam>"
+    },
+    "171": {
+        "id": 171,
+        "name": "head of government",
+        "summary": "<http://www.wikidata.org/prop/direct/P6>"
+    },
+    "172": {
+        "id": 172,
+        "name": "soccerLeagueWinner",
+        "summary": "<http://dbpedia.org/ontology/soccerLeagueWinner>"
+    },
+    "173": {
+        "id": 173,
+        "name": "stock exchange",
+        "summary": "<http://www.wikidata.org/prop/direct/P414>"
+    },
+    "174": {
+        "id": 174,
+        "name": "ground",
+        "summary": "<http://dbpedia.org/ontology/ground>"
+    },
+    "175": {
+        "id": 175,
+        "name": "manifestation of",
+        "summary": "<http://www.wikidata.org/prop/direct/P1557>"
+    },
+    "176": {
+        "id": 176,
+        "name": "military rank",
+        "summary": "<http://www.wikidata.org/prop/direct/P410>"
+    },
+    "177": {
+        "id": 177,
+        "name": "soccerLeagueRelegated",
+        "summary": "<http://dbpedia.org/ontology/soccerLeagueRelegated>"
+    },
+    "178": {
+        "id": 178,
+        "name": "shares border with",
+        "summary": "<http://www.wikidata.org/prop/direct/P47>"
+    },
+    "179": {
+        "id": 179,
+        "name": "architectural style",
+        "summary": "<http://www.wikidata.org/prop/direct/P149>"
+    },
+    "180": {
+        "id": 180,
+        "name": "followed by",
+        "summary": "<http://www.wikidata.org/prop/direct/P156>"
+    },
+    "181": {
+        "id": 181,
+        "name": "created",
+        "summary": "<http://yago-knowledge.org/resource/created>"
+    },
+    "182": {
+        "id": 182,
+        "name": "cell component",
+        "summary": "<http://www.wikidata.org/prop/direct/P681>"
+    },
+    "183": {
+        "id": 183,
+        "name": "uses",
+        "summary": "<http://www.wikidata.org/prop/direct/P2283>"
+    },
+    "184": {
+        "id": 184,
+        "name": "scenographer",
+        "summary": "<http://www.wikidata.org/prop/direct/P4608>"
+    },
+    "185": {
+        "id": 185,
+        "name": "company",
+        "summary": "<http://dbpedia.org/ontology/company>"
+    },
+    "186": {
+        "id": 186,
+        "name": "goldMedalist",
+        "summary": "<http://dbpedia.org/ontology/goldMedalist>"
+    },
+    "187": {
+        "id": 187,
+        "name": "07/owl#differentFrom",
+        "summary": "<http://www.w3.org/2002/07/owl#differentFrom>"
+    },
+    "188": {
+        "id": 188,
+        "name": "usedInWar",
+        "summary": "<http://dbpedia.org/ontology/usedInWar>"
+    },
+    "189": {
+        "id": 189,
+        "name": "industry",
+        "summary": "<http://dbpedia.org/ontology/industry>"
+    },
+    "190": {
+        "id": 190,
+        "name": "firstDriver",
+        "summary": "<http://dbpedia.org/ontology/firstDriver>"
+    },
+    "191": {
+        "id": 191,
+        "name": "locationCity",
+        "summary": "<http://dbpedia.org/ontology/locationCity>"
+    },
+    "192": {
+        "id": 192,
+        "name": "operator",
+        "summary": "<http://dbpedia.org/ontology/operator>"
+    },
+    "193": {
+        "id": 193,
+        "name": "championInDoubleFemale",
+        "summary": "<http://dbpedia.org/ontology/championInDoubleFemale>"
+    },
+    "194": {
+        "id": 194,
+        "name": "raceTrack",
+        "summary": "<http://dbpedia.org/ontology/raceTrack>"
+    },
+    "195": {
+        "id": 195,
+        "name": "formerTeam",
+        "summary": "<http://dbpedia.org/ontology/formerTeam>"
+    },
+    "196": {
+        "id": 196,
+        "name": "thirdTeam",
+        "summary": "<http://dbpedia.org/ontology/thirdTeam>"
+    },
+    "197": {
+        "id": 197,
+        "name": "musical conductor",
+        "summary": "<http://www.wikidata.org/prop/direct/P3300>"
+    },
+    "198": {
+        "id": 198,
+        "name": "has effect",
+        "summary": "<http://www.wikidata.org/prop/direct/P1542>"
+    },
+    "199": {
+        "id": 199,
+        "name": "location",
+        "summary": "<http://www.wikidata.org/prop/direct/P276>"
+    },
+    "200": {
+        "id": 200,
+        "name": "military branch",
+        "summary": "<http://www.wikidata.org/prop/direct/P241>"
+    },
+    "201": {
+        "id": 201,
+        "name": "newspaper format",
+        "summary": "<http://www.wikidata.org/prop/direct/P3912>"
+    },
+    "202": {
+        "id": 202,
+        "name": "homeport",
+        "summary": "<http://dbpedia.org/ontology/homeport>"
+    },
+    "203": {
+        "id": 203,
+        "name": "lyrics by",
+        "summary": "<http://www.wikidata.org/prop/direct/P676>"
+    },
+    "204": {
+        "id": 204,
+        "name": "isLeaderOf",
+        "summary": "<http://yago-knowledge.org/resource/isLeaderOf>"
+    },
+    "205": {
+        "id": 205,
+        "name": "period",
+        "summary": "<http://dbpedia.org/ontology/period>"
+    },
+    "206": {
+        "id": 206,
+        "name": "headquarters location",
+        "summary": "<http://www.wikidata.org/prop/direct/P159>"
+    },
+    "207": {
+        "id": 207,
+        "name": "subclass of",
+        "summary": "<http://www.wikidata.org/prop/direct/P279>"
+    },
+    "208": {
+        "id": 208,
+        "name": "title of chess person",
+        "summary": "<http://www.wikidata.org/prop/direct/P2962>"
+    },
+    "209": {
+        "id": 209,
+        "name": "sportGoverningBody",
+        "summary": "<http://dbpedia.org/ontology/sportGoverningBody>"
+    },
+    "210": {
+        "id": 210,
+        "name": "capital",
+        "summary": "<http://www.wikidata.org/prop/direct/P36>"
+    },
+    "211": {
+        "id": 211,
+        "name": "religious order",
+        "summary": "<http://www.wikidata.org/prop/direct/P611>"
+    },
+    "212": {
+        "id": 212,
+        "name": "points/goal scored by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1363>"
+    },
+    "213": {
+        "id": 213,
+        "name": "languages spoken, written or signed",
+        "summary": "<http://www.wikidata.org/prop/direct/P1412>"
+    },
+    "214": {
+        "id": 214,
+        "name": "programmingLanguage",
+        "summary": "<http://dbpedia.org/ontology/programmingLanguage>"
+    },
+    "215": {
+        "id": 215,
+        "name": "movement",
+        "summary": "<http://www.wikidata.org/prop/direct/P135>"
+    },
+    "216": {
+        "id": 216,
+        "name": "religion",
+        "summary": "<http://www.wikidata.org/prop/direct/P140>"
+    },
+    "217": {
+        "id": 217,
+        "name": "copyright status",
+        "summary": "<http://www.wikidata.org/prop/direct/P6216>"
+    },
+    "218": {
+        "id": 218,
+        "name": "owner",
+        "summary": "<http://dbpedia.org/ontology/owner>"
+    },
+    "219": {
+        "id": 219,
+        "name": "main subject",
+        "summary": "<http://www.wikidata.org/prop/direct/P921>"
+    },
+    "220": {
+        "id": 220,
+        "name": "part of the series",
+        "summary": "<http://www.wikidata.org/prop/direct/P179>"
+    },
+    "221": {
+        "id": 221,
+        "name": "student of",
+        "summary": "<http://www.wikidata.org/prop/direct/P1066>"
+    },
+    "222": {
+        "id": 222,
+        "name": "birthPlace",
+        "summary": "<http://dbpedia.org/ontology/birthPlace>"
+    },
+    "223": {
+        "id": 223,
+        "name": "owner of",
+        "summary": "<http://www.wikidata.org/prop/direct/P1830>"
+    },
+    "224": {
+        "id": 224,
+        "name": "head coach",
+        "summary": "<http://www.wikidata.org/prop/direct/P286>"
+    },
+    "225": {
+        "id": 225,
+        "name": "tenant",
+        "summary": "<http://dbpedia.org/ontology/tenant>"
+    },
+    "226": {
+        "id": 226,
+        "name": "starring",
+        "summary": "<http://dbpedia.org/ontology/starring>"
+    },
+    "227": {
+        "id": 227,
+        "name": "derivative",
+        "summary": "<http://dbpedia.org/ontology/derivative>"
+    },
+    "228": {
+        "id": 228,
+        "name": "publisher",
+        "summary": "<http://www.wikidata.org/prop/direct/P123>"
+    },
+    "229": {
+        "id": 229,
+        "name": "format",
+        "summary": "<http://dbpedia.org/ontology/format>"
+    },
+    "230": {
+        "id": 230,
+        "name": "affiliation",
+        "summary": "<http://www.wikidata.org/prop/direct/P1416>"
+    },
+    "231": {
+        "id": 231,
+        "name": "event",
+        "summary": "<http://dbpedia.org/ontology/event>"
+    },
+    "232": {
+        "id": 232,
+        "name": "championInSingleFemale",
+        "summary": "<http://dbpedia.org/ontology/championInSingleFemale>"
+    },
+    "233": {
+        "id": 233,
+        "name": "biological process",
+        "summary": "<http://www.wikidata.org/prop/direct/P682>"
+    },
+    "234": {
+        "id": 234,
+        "name": "original broadcaster",
+        "summary": "<http://www.wikidata.org/prop/direct/P449>"
+    },
+    "235": {
+        "id": 235,
+        "name": "pole position",
+        "summary": "<http://www.wikidata.org/prop/direct/P3764>"
+    },
+    "236": {
+        "id": 236,
+        "name": "child",
+        "summary": "<http://www.wikidata.org/prop/direct/P40>"
+    },
+    "237": {
+        "id": 237,
+        "name": "creator",
+        "summary": "<http://dbpedia.org/ontology/creator>"
+    },
+    "238": {
+        "id": 238,
+        "name": "contributor to the creative work or subject",
+        "summary": "<http://www.wikidata.org/prop/direct/P767>"
+    },
+    "239": {
+        "id": 239,
+        "name": "operatingSystem",
+        "summary": "<http://dbpedia.org/ontology/operatingSystem>"
+    },
+    "240": {
+        "id": 240,
+        "name": "territory",
+        "summary": "<http://dbpedia.org/ontology/territory>"
+    },
+    "241": {
+        "id": 241,
+        "name": "signatory",
+        "summary": "<http://www.wikidata.org/prop/direct/P1891>"
+    },
+    "242": {
+        "id": 242,
+        "name": "different from",
+        "summary": "<http://www.wikidata.org/prop/direct/P1889>"
+    },
+    "243": {
+        "id": 243,
+        "name": "legislated by",
+        "summary": "<http://www.wikidata.org/prop/direct/P467>"
+    },
+    "244": {
+        "id": 244,
+        "name": "instrument",
+        "summary": "<http://www.wikidata.org/prop/direct/P1303>"
+    },
+    "245": {
+        "id": 245,
+        "name": "commemorates",
+        "summary": "<http://www.wikidata.org/prop/direct/P547>"
+    },
+    "246": {
+        "id": 246,
+        "name": "terminus location",
+        "summary": "<http://www.wikidata.org/prop/direct/P609>"
+    },
+    "247": {
+        "id": 247,
+        "name": "manufacturer",
+        "summary": "<http://dbpedia.org/ontology/manufacturer>"
+    },
+    "248": {
+        "id": 248,
+        "name": "narrative location",
+        "summary": "<http://www.wikidata.org/prop/direct/P840>"
+    },
+    "249": {
+        "id": 249,
+        "name": "influencedBy",
+        "summary": "<http://dbpedia.org/ontology/influencedBy>"
+    },
+    "250": {
+        "id": 250,
+        "name": "office held by head of government",
+        "summary": "<http://www.wikidata.org/prop/direct/P1313>"
+    },
+    "251": {
+        "id": 251,
+        "name": "director/manager",
+        "summary": "<http://www.wikidata.org/prop/direct/P1037>"
+    },
+    "252": {
+        "id": 252,
+        "name": "namedAfter",
+        "summary": "<http://dbpedia.org/ontology/namedAfter>"
+    },
+    "253": {
+        "id": 253,
+        "name": "choreographer",
+        "summary": "<http://www.wikidata.org/prop/direct/P1809>"
+    },
+    "254": {
+        "id": 254,
+        "name": "business division",
+        "summary": "<http://www.wikidata.org/prop/direct/P199>"
+    },
+    "255": {
+        "id": 255,
+        "name": "soccerTournamentTopScorer",
+        "summary": "<http://dbpedia.org/ontology/soccerTournamentTopScorer>"
+    },
+    "256": {
+        "id": 256,
+        "name": "category",
+        "summary": "<http://dbpedia.org/ontology/category>"
+    },
+    "257": {
+        "id": 257,
+        "name": "conflict",
+        "summary": "<http://dbpedia.org/ontology/conflict>"
+    },
+    "258": {
+        "id": 258,
+        "name": "firstWinner",
+        "summary": "<http://dbpedia.org/ontology/firstWinner>"
+    },
+    "259": {
+        "id": 259,
+        "name": "public holiday",
+        "summary": "<http://www.wikidata.org/prop/direct/P832>"
+    },
+    "260": {
+        "id": 260,
+        "name": "adjacent station",
+        "summary": "<http://www.wikidata.org/prop/direct/P197>"
+    },
+    "261": {
+        "id": 261,
+        "name": "port of registry",
+        "summary": "<http://www.wikidata.org/prop/direct/P532>"
+    },
+    "262": {
+        "id": 262,
+        "name": "wroteMusicFor",
+        "summary": "<http://yago-knowledge.org/resource/wroteMusicFor>"
+    },
+    "263": {
+        "id": 263,
+        "name": "instrument",
+        "summary": "<http://dbpedia.org/ontology/instrument>"
+    },
+    "264": {
+        "id": 264,
+        "name": "locatedInArea",
+        "summary": "<http://dbpedia.org/ontology/locatedInArea>"
+    },
+    "265": {
+        "id": 265,
+        "name": "depiction",
+        "summary": "<http://dbpedia.org/ontology/depiction>"
+    },
+    "266": {
+        "id": 266,
+        "name": "musicBy",
+        "summary": "<http://dbpedia.org/ontology/musicBy>"
+    },
+    "267": {
+        "id": 267,
+        "name": "league level above",
+        "summary": "<http://www.wikidata.org/prop/direct/P2499>"
+    },
+    "268": {
+        "id": 268,
+        "name": "broadcast by",
+        "summary": "<http://www.wikidata.org/prop/direct/P3301>"
+    },
+    "269": {
+        "id": 269,
+        "name": "dan/kyu rank",
+        "summary": "<http://www.wikidata.org/prop/direct/P468>"
+    },
+    "270": {
+        "id": 270,
+        "name": "significant person",
+        "summary": "<http://www.wikidata.org/prop/direct/P3342>"
+    },
+    "271": {
+        "id": 271,
+        "name": "aspect ratio",
+        "summary": "<http://www.wikidata.org/prop/direct/P2061>"
+    },
+    "272": {
+        "id": 272,
+        "name": "secretary general",
+        "summary": "<http://www.wikidata.org/prop/direct/P3975>"
+    },
+    "273": {
+        "id": 273,
+        "name": "album",
+        "summary": "<http://dbpedia.org/ontology/album>"
+    },
+    "274": {
+        "id": 274,
+        "name": "vehicle",
+        "summary": "<http://www.wikidata.org/prop/direct/P1876>"
+    },
+    "275": {
+        "id": 275,
+        "name": "ideology",
+        "summary": "<http://dbpedia.org/ontology/ideology>"
+    },
+    "276": {
+        "id": 276,
+        "name": "is a list of",
+        "summary": "<http://www.wikidata.org/prop/direct/P360>"
+    },
+    "277": {
+        "id": 277,
+        "name": "has parts of the class",
+        "summary": "<http://www.wikidata.org/prop/direct/P2670>"
+    },
+    "278": {
+        "id": 278,
+        "name": "subject",
+        "summary": "<http://dbpedia.org/ontology/subject>"
+    },
+    "279": {
+        "id": 279,
+        "name": "noble title",
+        "summary": "<http://www.wikidata.org/prop/direct/P97>"
+    },
+    "280": {
+        "id": 280,
+        "name": "model item",
+        "summary": "<http://www.wikidata.org/prop/direct/P5869>"
+    },
+    "281": {
+        "id": 281,
+        "name": "speaker",
+        "summary": "<http://www.wikidata.org/prop/direct/P823>"
+    },
+    "282": {
+        "id": 282,
+        "name": "dramaturge",
+        "summary": "<http://www.wikidata.org/prop/direct/P6086>"
+    },
+    "283": {
+        "id": 283,
+        "name": "builder",
+        "summary": "<http://dbpedia.org/ontology/builder>"
+    },
+    "284": {
+        "id": 284,
+        "name": "locationCountry",
+        "summary": "<http://dbpedia.org/ontology/locationCountry>"
+    },
+    "285": {
+        "id": 285,
+        "name": "approved by",
+        "summary": "<http://www.wikidata.org/prop/direct/P790>"
+    },
+    "286": {
+        "id": 286,
+        "name": "relatedFunctions",
+        "summary": "<http://dbpedia.org/ontology/relatedFunctions>"
+    },
+    "287": {
+        "id": 287,
+        "name": "producer",
+        "summary": "<http://dbpedia.org/ontology/producer>"
+    },
+    "288": {
+        "id": 288,
+        "name": "target",
+        "summary": "<http://www.wikidata.org/prop/direct/P533>"
+    },
+    "289": {
+        "id": 289,
+        "name": "recordLabel",
+        "summary": "<http://dbpedia.org/ontology/recordLabel>"
+    },
+    "290": {
+        "id": 290,
+        "name": "qualifies for event",
+        "summary": "<http://www.wikidata.org/prop/direct/P3085>"
+    },
+    "291": {
+        "id": 291,
+        "name": "copyright license",
+        "summary": "<http://www.wikidata.org/prop/direct/P275>"
+    },
+    "292": {
+        "id": 292,
+        "name": "officially opened by",
+        "summary": "<http://www.wikidata.org/prop/direct/P542>"
+    },
+    "293": {
+        "id": 293,
+        "name": "librettist",
+        "summary": "<http://www.wikidata.org/prop/direct/P87>"
+    },
+    "294": {
+        "id": 294,
+        "name": "court",
+        "summary": "<http://www.wikidata.org/prop/direct/P4884>"
+    },
+    "295": {
+        "id": 295,
+        "name": "crew member",
+        "summary": "<http://www.wikidata.org/prop/direct/P1029>"
+    },
+    "296": {
+        "id": 296,
+        "name": "young rider classification",
+        "summary": "<http://www.wikidata.org/prop/direct/P4323>"
+    },
+    "297": {
+        "id": 297,
+        "name": "crewMember",
+        "summary": "<http://dbpedia.org/ontology/crewMember>"
+    },
+    "298": {
+        "id": 298,
+        "name": "elected in",
+        "summary": "<http://www.wikidata.org/prop/direct/P2715>"
+    },
+    "299": {
+        "id": 299,
+        "name": "mountains classification",
+        "summary": "<http://www.wikidata.org/prop/direct/P4320>"
+    },
+    "300": {
+        "id": 300,
+        "name": "firstDriverTeam",
+        "summary": "<http://dbpedia.org/ontology/firstDriverTeam>"
+    },
+    "301": {
+        "id": 301,
+        "name": "olympicGames",
+        "summary": "<http://dbpedia.org/ontology/olympicGames>"
+    },
+    "302": {
+        "id": 302,
+        "name": "fastestDriverTeam",
+        "summary": "<http://dbpedia.org/ontology/fastestDriverTeam>"
+    },
+    "303": {
+        "id": 303,
+        "name": "teams classification by time",
+        "summary": "<http://www.wikidata.org/prop/direct/P3497>"
+    },
+    "304": {
+        "id": 304,
+        "name": "mission",
+        "summary": "<http://dbpedia.org/ontology/mission>"
+    },
+    "305": {
+        "id": 305,
+        "name": "best sprinter classification",
+        "summary": "<http://www.wikidata.org/prop/direct/P4322>"
+    },
+    "306": {
+        "id": 306,
+        "name": "authority",
+        "summary": "<http://dbpedia.org/ontology/authority>"
+    },
+    "307": {
+        "id": 307,
+        "name": "type of orbit",
+        "summary": "<http://www.wikidata.org/prop/direct/P522>"
+    },
+    "308": {
+        "id": 308,
+        "name": "commander of",
+        "summary": "<http://www.wikidata.org/prop/direct/P598>"
+    },
+    "309": {
+        "id": 309,
+        "name": "use",
+        "summary": "<http://www.wikidata.org/prop/direct/P366>"
+    },
+    "310": {
+        "id": 310,
+        "name": "network",
+        "summary": "<http://dbpedia.org/ontology/network>"
+    },
+    "311": {
+        "id": 311,
+        "name": "launchSite",
+        "summary": "<http://dbpedia.org/ontology/launchSite>"
+    },
+    "312": {
+        "id": 312,
+        "name": "servingRailwayLine",
+        "summary": "<http://dbpedia.org/ontology/servingRailwayLine>"
+    },
+    "313": {
+        "id": 313,
+        "name": "promoted",
+        "summary": "<http://www.wikidata.org/prop/direct/P2881>"
+    },
+    "314": {
+        "id": 314,
+        "name": "secondTeam",
+        "summary": "<http://dbpedia.org/ontology/secondTeam>"
+    },
+    "315": {
+        "id": 315,
+        "name": "league points system",
+        "summary": "<http://www.wikidata.org/prop/direct/P3195>"
+    },
+    "316": {
+        "id": 316,
+        "name": "voiceType",
+        "summary": "<http://dbpedia.org/ontology/voiceType>"
+    },
+    "317": {
+        "id": 317,
+        "name": "fastest lap",
+        "summary": "<http://www.wikidata.org/prop/direct/P5053>"
+    },
+    "318": {
+        "id": 318,
+        "name": "created",
+        "summary": "<http://dbpedia.org/ontology/created>"
+    },
+    "319": {
+        "id": 319,
+        "name": "soccerTournamentMostSuccesfull",
+        "summary": "<http://dbpedia.org/ontology/soccerTournamentMostSuccesfull>"
+    },
+    "320": {
+        "id": 320,
+        "name": "cause of destruction",
+        "summary": "<http://www.wikidata.org/prop/direct/P770>"
+    },
+    "321": {
+        "id": 321,
+        "name": "location of landing",
+        "summary": "<http://www.wikidata.org/prop/direct/P1158>"
+    },
+    "322": {
+        "id": 322,
+        "name": "lighting designer",
+        "summary": "<http://www.wikidata.org/prop/direct/P5026>"
+    },
+    "323": {
+        "id": 323,
+        "name": "judge",
+        "summary": "<http://dbpedia.org/ontology/judge>"
+    },
+    "324": {
+        "id": 324,
+        "name": "statistical leader",
+        "summary": "<http://www.wikidata.org/prop/direct/P3279>"
+    },
+    "325": {
+        "id": 325,
+        "name": "party",
+        "summary": "<http://dbpedia.org/ontology/party>"
+    },
+    "326": {
+        "id": 326,
+        "name": "on focus list of Wikimedia project",
+        "summary": "<http://www.wikidata.org/prop/direct/P5008>"
+    },
+    "327": {
+        "id": 327,
+        "name": "astronaut mission",
+        "summary": "<http://www.wikidata.org/prop/direct/P450>"
+    },
+    "328": {
+        "id": 328,
+        "name": "isCitizenOf",
+        "summary": "<http://yago-knowledge.org/resource/isCitizenOf>"
+    },
+    "329": {
+        "id": 329,
+        "name": "coach of sports team",
+        "summary": "<http://www.wikidata.org/prop/direct/P6087>"
+    },
+    "330": {
+        "id": 330,
+        "name": "member of the crew of",
+        "summary": "<http://www.wikidata.org/prop/direct/P5096>"
+    },
+    "331": {
+        "id": 331,
+        "name": "populationPlace",
+        "summary": "<http://dbpedia.org/ontology/populationPlace>"
+    },
+    "332": {
+        "id": 332,
+        "name": "diplomatic relation",
+        "summary": "<http://www.wikidata.org/prop/direct/P530>"
+    },
+    "333": {
+        "id": 333,
+        "name": "teams classification by points",
+        "summary": "<http://www.wikidata.org/prop/direct/P3496>"
+    },
+    "334": {
+        "id": 334,
+        "name": "after a work by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1877>"
+    },
+    "335": {
+        "id": 335,
+        "name": "musicComposer",
+        "summary": "<http://dbpedia.org/ontology/musicComposer>"
+    },
+    "336": {
+        "id": 336,
+        "name": "characters",
+        "summary": "<http://www.wikidata.org/prop/direct/P674>"
+    },
+    "337": {
+        "id": 337,
+        "name": "best combative classification",
+        "summary": "<http://www.wikidata.org/prop/direct/P4321>"
+    },
+    "338": {
+        "id": 338,
+        "name": "capital",
+        "summary": "<http://dbpedia.org/ontology/capital>"
+    },
+    "339": {
+        "id": 339,
+        "name": "head of state",
+        "summary": "<http://www.wikidata.org/prop/direct/P35>"
+    },
+    "340": {
+        "id": 340,
+        "name": "graduatedFrom",
+        "summary": "<http://yago-knowledge.org/resource/graduatedFrom>"
+    },
+    "341": {
+        "id": 341,
+        "name": "product",
+        "summary": "<http://dbpedia.org/ontology/product>"
+    },
+    "342": {
+        "id": 342,
+        "name": "position",
+        "summary": "<http://dbpedia.org/ontology/position>"
+    },
+    "343": {
+        "id": 343,
+        "name": "thirdDriver",
+        "summary": "<http://dbpedia.org/ontology/thirdDriver>"
+    },
+    "344": {
+        "id": 344,
+        "name": "webcast",
+        "summary": "<http://dbpedia.org/ontology/webcast>"
+    },
+    "345": {
+        "id": 345,
+        "name": "isMarriedTo",
+        "summary": "<http://yago-knowledge.org/resource/isMarriedTo>"
+    },
+    "346": {
+        "id": 346,
+        "name": "backup or reserve team or crew",
+        "summary": "<http://www.wikidata.org/prop/direct/P3015>"
+    },
+    "347": {
+        "id": 347,
+        "name": "sportSpecialty",
+        "summary": "<http://dbpedia.org/ontology/sportSpecialty>"
+    },
+    "348": {
+        "id": 348,
+        "name": "bandMember",
+        "summary": "<http://dbpedia.org/ontology/bandMember>"
+    },
+    "349": {
+        "id": 349,
+        "name": "track gauge",
+        "summary": "<http://www.wikidata.org/prop/direct/P1064>"
+    },
+    "350": {
+        "id": 350,
+        "name": "shuttle",
+        "summary": "<http://dbpedia.org/ontology/shuttle>"
+    },
+    "351": {
+        "id": 351,
+        "name": "fastestDriver",
+        "summary": "<http://dbpedia.org/ontology/fastestDriver>"
+    },
+    "352": {
+        "id": 352,
+        "name": "art director",
+        "summary": "<http://www.wikidata.org/prop/direct/P3174>"
+    },
+    "353": {
+        "id": 353,
+        "name": "programming language",
+        "summary": "<http://www.wikidata.org/prop/direct/P277>"
+    },
+    "354": {
+        "id": 354,
+        "name": "secondDriver",
+        "summary": "<http://dbpedia.org/ontology/secondDriver>"
+    },
+    "355": {
+        "id": 355,
+        "name": "mostSuccessfulPlayer",
+        "summary": "<http://dbpedia.org/ontology/mostSuccessfulPlayer>"
+    },
+    "356": {
+        "id": 356,
+        "name": "partnership with",
+        "summary": "<http://www.wikidata.org/prop/direct/P2652>"
+    },
+    "357": {
+        "id": 357,
+        "name": "musicalBand",
+        "summary": "<http://dbpedia.org/ontology/musicalBand>"
+    },
+    "358": {
+        "id": 358,
+        "name": "currency",
+        "summary": "<http://www.wikidata.org/prop/direct/P38>"
+    },
+    "359": {
+        "id": 359,
+        "name": "homeStadium",
+        "summary": "<http://dbpedia.org/ontology/homeStadium>"
+    },
+    "360": {
+        "id": 360,
+        "name": "brand",
+        "summary": "<http://dbpedia.org/ontology/brand>"
+    },
+    "361": {
+        "id": 361,
+        "name": "nominee",
+        "summary": "<http://dbpedia.org/ontology/nominee>"
+    },
+    "362": {
+        "id": 362,
+        "name": "copyright representative",
+        "summary": "<http://www.wikidata.org/prop/direct/P6275>"
+    },
+    "363": {
+        "id": 363,
+        "name": "adapted by",
+        "summary": "<http://www.wikidata.org/prop/direct/P5202>"
+    },
+    "364": {
+        "id": 364,
+        "name": "profession",
+        "summary": "<http://dbpedia.org/ontology/profession>"
+    },
+    "365": {
+        "id": 365,
+        "name": "allegiance",
+        "summary": "<http://www.wikidata.org/prop/direct/P945>"
+    },
+    "366": {
+        "id": 366,
+        "name": "political ideology",
+        "summary": "<http://www.wikidata.org/prop/direct/P1142>"
+    },
+    "367": {
+        "id": 367,
+        "name": "drug used for treatment",
+        "summary": "<http://www.wikidata.org/prop/direct/P2176>"
+    },
+    "368": {
+        "id": 368,
+        "name": "doctoral student",
+        "summary": "<http://www.wikidata.org/prop/direct/P185>"
+    },
+    "369": {
+        "id": 369,
+        "name": "based on",
+        "summary": "<http://www.wikidata.org/prop/direct/P144>"
+    },
+    "370": {
+        "id": 370,
+        "name": "home port",
+        "summary": "<http://www.wikidata.org/prop/direct/P504>"
+    },
+    "371": {
+        "id": 371,
+        "name": "type of electrification",
+        "summary": "<http://www.wikidata.org/prop/direct/P930>"
+    },
+    "372": {
+        "id": 372,
+        "name": "combination classification",
+        "summary": "<http://www.wikidata.org/prop/direct/P4324>"
+    },
+    "373": {
+        "id": 373,
+        "name": "sportDiscipline",
+        "summary": "<http://dbpedia.org/ontology/sportDiscipline>"
+    },
+    "374": {
+        "id": 374,
+        "name": "philosophicalSchool",
+        "summary": "<http://dbpedia.org/ontology/philosophicalSchool>"
+    },
+    "375": {
+        "id": 375,
+        "name": "competitionTitle",
+        "summary": "<http://dbpedia.org/ontology/competitionTitle>"
+    },
+    "376": {
+        "id": 376,
+        "name": "said to be the same as",
+        "summary": "<http://www.wikidata.org/prop/direct/P460>"
+    },
+    "377": {
+        "id": 377,
+        "name": "field of work",
+        "summary": "<http://www.wikidata.org/prop/direct/P101>"
+    },
+    "378": {
+        "id": 378,
+        "name": "spacestation",
+        "summary": "<http://dbpedia.org/ontology/spacestation>"
+    },
+    "379": {
+        "id": 379,
+        "name": "firstRace",
+        "summary": "<http://dbpedia.org/ontology/firstRace>"
+    },
+    "380": {
+        "id": 380,
+        "name": "presenter",
+        "summary": "<http://www.wikidata.org/prop/direct/P371>"
+    },
+    "381": {
+        "id": 381,
+        "name": "screenwriter",
+        "summary": "<http://www.wikidata.org/prop/direct/P58>"
+    },
+    "382": {
+        "id": 382,
+        "name": "convicted of",
+        "summary": "<http://www.wikidata.org/prop/direct/P1399>"
+    },
+    "383": {
+        "id": 383,
+        "name": "launchPad",
+        "summary": "<http://dbpedia.org/ontology/launchPad>"
+    },
+    "384": {
+        "id": 384,
+        "name": "country for sport",
+        "summary": "<http://www.wikidata.org/prop/direct/P1532>"
+    },
+    "385": {
+        "id": 385,
+        "name": "premierePlace",
+        "summary": "<http://dbpedia.org/ontology/premierePlace>"
+    },
+    "386": {
+        "id": 386,
+        "name": "continent",
+        "summary": "<http://www.wikidata.org/prop/direct/P30>"
+    },
+    "387": {
+        "id": 387,
+        "name": "ethnic group",
+        "summary": "<http://www.wikidata.org/prop/direct/P172>"
+    },
+    "388": {
+        "id": 388,
+        "name": "premiere type",
+        "summary": "<http://www.wikidata.org/prop/direct/P4634>"
+    },
+    "389": {
+        "id": 389,
+        "name": "poleDriverCountry",
+        "summary": "<http://dbpedia.org/ontology/poleDriverCountry>"
+    },
+    "390": {
+        "id": 390,
+        "name": "source of energy",
+        "summary": "<http://www.wikidata.org/prop/direct/P618>"
+    },
+    "391": {
+        "id": 391,
+        "name": "diplomatic mission sent",
+        "summary": "<http://www.wikidata.org/prop/direct/P531>"
+    },
+    "392": {
+        "id": 392,
+        "name": "firstDriverCountry",
+        "summary": "<http://dbpedia.org/ontology/firstDriverCountry>"
+    },
+    "393": {
+        "id": 393,
+        "name": "professorship",
+        "summary": "<http://www.wikidata.org/prop/direct/P803>"
+    },
+    "394": {
+        "id": 394,
+        "name": "parent club",
+        "summary": "<http://www.wikidata.org/prop/direct/P831>"
+    },
+    "395": {
+        "id": 395,
+        "name": "product or material produced",
+        "summary": "<http://www.wikidata.org/prop/direct/P1056>"
+    },
+    "396": {
+        "id": 396,
+        "name": "parliamentary group",
+        "summary": "<http://www.wikidata.org/prop/direct/P4100>"
+    },
+    "397": {
+        "id": 397,
+        "name": "distribution format",
+        "summary": "<http://www.wikidata.org/prop/direct/P437>"
+    },
+    "398": {
+        "id": 398,
+        "name": "defendant",
+        "summary": "<http://www.wikidata.org/prop/direct/P1591>"
+    },
+    "399": {
+        "id": 399,
+        "name": "drafted by",
+        "summary": "<http://www.wikidata.org/prop/direct/P647>"
+    },
+    "400": {
+        "id": 400,
+        "name": "consecrator",
+        "summary": "<http://www.wikidata.org/prop/direct/P1598>"
+    },
+    "401": {
+        "id": 401,
+        "name": "mediaType",
+        "summary": "<http://dbpedia.org/ontology/mediaType>"
+    },
+    "402": {
+        "id": 402,
+        "name": "knownFor",
+        "summary": "<http://dbpedia.org/ontology/knownFor>"
+    },
+    "403": {
+        "id": 403,
+        "name": "military casualty classification",
+        "summary": "<http://www.wikidata.org/prop/direct/P1347>"
+    },
+    "404": {
+        "id": 404,
+        "name": "official symbol",
+        "summary": "<http://www.wikidata.org/prop/direct/P2238>"
+    },
+    "405": {
+        "id": 405,
+        "name": "influenced by",
+        "summary": "<http://www.wikidata.org/prop/direct/P737>"
+    },
+    "406": {
+        "id": 406,
+        "name": "animator",
+        "summary": "<http://www.wikidata.org/prop/direct/P6942>"
+    },
+    "407": {
+        "id": 407,
+        "name": "notableWork",
+        "summary": "<http://dbpedia.org/ontology/notableWork>"
+    },
+    "408": {
+        "id": 408,
+        "name": "presenter",
+        "summary": "<http://dbpedia.org/ontology/presenter>"
+    },
+    "409": {
+        "id": 409,
+        "name": "video designer",
+        "summary": "<http://www.wikidata.org/prop/direct/P5880>"
+    },
+    "410": {
+        "id": 410,
+        "name": "torchBearer",
+        "summary": "<http://dbpedia.org/ontology/torchBearer>"
+    },
+    "411": {
+        "id": 411,
+        "name": "destroyed",
+        "summary": "<http://www.wikidata.org/prop/direct/P3082>"
+    },
+    "412": {
+        "id": 412,
+        "name": "interested in",
+        "summary": "<http://www.wikidata.org/prop/direct/P2650>"
+    },
+    "413": {
+        "id": 413,
+        "name": "personFunction",
+        "summary": "<http://dbpedia.org/ontology/personFunction>"
+    },
+    "414": {
+        "id": 414,
+        "name": "ratified by",
+        "summary": "<http://www.wikidata.org/prop/direct/P6193>"
+    },
+    "415": {
+        "id": 415,
+        "name": "curator",
+        "summary": "<http://www.wikidata.org/prop/direct/P1640>"
+    },
+    "416": {
+        "id": 416,
+        "name": "sound designer",
+        "summary": "<http://www.wikidata.org/prop/direct/P5028>"
+    },
+    "417": {
+        "id": 417,
+        "name": "shooting handedness",
+        "summary": "<http://www.wikidata.org/prop/direct/P423>"
+    },
+    "418": {
+        "id": 418,
+        "name": "platform",
+        "summary": "<http://www.wikidata.org/prop/direct/P400>"
+    },
+    "419": {
+        "id": 419,
+        "name": "penalty",
+        "summary": "<http://www.wikidata.org/prop/direct/P1596>"
+    },
+    "420": {
+        "id": 420,
+        "name": "test taken",
+        "summary": "<http://www.wikidata.org/prop/direct/P5021>"
+    },
+    "421": {
+        "id": 421,
+        "name": "series",
+        "summary": "<http://dbpedia.org/ontology/series>"
+    },
+    "422": {
+        "id": 422,
+        "name": "architecturalStyle",
+        "summary": "<http://dbpedia.org/ontology/architecturalStyle>"
+    },
+    "423": {
+        "id": 423,
+        "name": "buildingType",
+        "summary": "<http://dbpedia.org/ontology/buildingType>"
+    },
+    "424": {
+        "id": 424,
+        "name": "hasAcademicAdvisor",
+        "summary": "<http://yago-knowledge.org/resource/hasAcademicAdvisor>"
+    },
+    "425": {
+        "id": 425,
+        "name": "publisher",
+        "summary": "<http://dbpedia.org/ontology/publisher>"
+    },
+    "426": {
+        "id": 426,
+        "name": "fastestDriverCountry",
+        "summary": "<http://dbpedia.org/ontology/fastestDriverCountry>"
+    },
+    "427": {
+        "id": 427,
+        "name": "soccerTournamentThisSeason",
+        "summary": "<http://dbpedia.org/ontology/soccerTournamentThisSeason>"
+    },
+    "428": {
+        "id": 428,
+        "name": "img",
+        "summary": "<http://dbpedia.org/ontology/img>"
+    },
+    "429": {
+        "id": 429,
+        "name": "operating system",
+        "summary": "<http://www.wikidata.org/prop/direct/P306>"
+    },
+    "430": {
+        "id": 430,
+        "name": "amended by",
+        "summary": "<http://www.wikidata.org/prop/direct/P2567>"
+    },
+    "431": {
+        "id": 431,
+        "name": "spacecraft",
+        "summary": "<http://dbpedia.org/ontology/spacecraft>"
+    },
+    "432": {
+        "id": 432,
+        "name": "dedicated to",
+        "summary": "<http://www.wikidata.org/prop/direct/P825>"
+    },
+    "433": {
+        "id": 433,
+        "name": "place of publication",
+        "summary": "<http://www.wikidata.org/prop/direct/P291>"
+    },
+    "434": {
+        "id": 434,
+        "name": "place of detention",
+        "summary": "<http://www.wikidata.org/prop/direct/P2632>"
+    },
+    "435": {
+        "id": 435,
+        "name": "editor",
+        "summary": "<http://dbpedia.org/ontology/editor>"
+    },
+    "436": {
+        "id": 436,
+        "name": "origin",
+        "summary": "<http://dbpedia.org/ontology/origin>"
+    },
+    "437": {
+        "id": 437,
+        "name": "gender",
+        "summary": "<http://dbpedia.org/ontology/gender>"
+    },
+    "438": {
+        "id": 438,
+        "name": "era",
+        "summary": "<http://dbpedia.org/ontology/era>"
+    },
+    "439": {
+        "id": 439,
+        "name": "medicalCause",
+        "summary": "<http://dbpedia.org/ontology/medicalCause>"
+    },
+    "440": {
+        "id": 440,
+        "name": "record held",
+        "summary": "<http://www.wikidata.org/prop/direct/P1000>"
+    },
+    "441": {
+        "id": 441,
+        "name": "chief executive officer",
+        "summary": "<http://www.wikidata.org/prop/direct/P169>"
+    },
+    "442": {
+        "id": 442,
+        "name": "league level below",
+        "summary": "<http://www.wikidata.org/prop/direct/P2500>"
+    },
+    "443": {
+        "id": 443,
+        "name": "original film format",
+        "summary": "<http://www.wikidata.org/prop/direct/P3803>"
+    },
+    "444": {
+        "id": 444,
+        "name": "horseRidingDiscipline",
+        "summary": "<http://dbpedia.org/ontology/horseRidingDiscipline>"
+    },
+    "445": {
+        "id": 445,
+        "name": "lifestyle",
+        "summary": "<http://www.wikidata.org/prop/direct/P1576>"
+    },
+    "446": {
+        "id": 446,
+        "name": "designated as terrorist by",
+        "summary": "<http://www.wikidata.org/prop/direct/P3461>"
+    },
+    "447": {
+        "id": 447,
+        "name": "launch contractor",
+        "summary": "<http://www.wikidata.org/prop/direct/P1079>"
+    },
+    "448": {
+        "id": 448,
+        "name": "picture",
+        "summary": "<http://dbpedia.org/ontology/picture>"
+    },
+    "449": {
+        "id": 449,
+        "name": "record label",
+        "summary": "<http://www.wikidata.org/prop/direct/P264>"
+    },
+    "450": {
+        "id": 450,
+        "name": "channel",
+        "summary": "<http://dbpedia.org/ontology/channel>"
+    },
+    "451": {
+        "id": 451,
+        "name": "derivative work",
+        "summary": "<http://www.wikidata.org/prop/direct/P4969>"
+    },
+    "452": {
+        "id": 452,
+        "name": "programming paradigm",
+        "summary": "<http://www.wikidata.org/prop/direct/P3966>"
+    },
+    "453": {
+        "id": 453,
+        "name": "mother house",
+        "summary": "<http://www.wikidata.org/prop/direct/P612>"
+    },
+    "454": {
+        "id": 454,
+        "name": "worksAt",
+        "summary": "<http://yago-knowledge.org/resource/worksAt>"
+    },
+    "455": {
+        "id": 455,
+        "name": "officialOpenedBy",
+        "summary": "<http://dbpedia.org/ontology/officialOpenedBy>"
+    },
+    "456": {
+        "id": 456,
+        "name": "chairman",
+        "summary": "<http://dbpedia.org/ontology/chairman>"
+    },
+    "457": {
+        "id": 457,
+        "name": "handedness",
+        "summary": "<http://dbpedia.org/ontology/handedness>"
+    },
+    "458": {
+        "id": 458,
+        "name": "honorific suffix",
+        "summary": "<http://www.wikidata.org/prop/direct/P1035>"
+    },
+    "459": {
+        "id": 459,
+        "name": "native language",
+        "summary": "<http://www.wikidata.org/prop/direct/P103>"
+    },
+    "460": {
+        "id": 460,
+        "name": "leader",
+        "summary": "<http://dbpedia.org/ontology/leader>"
+    },
+    "461": {
+        "id": 461,
+        "name": "secondDriverCountry",
+        "summary": "<http://dbpedia.org/ontology/secondDriverCountry>"
+    },
+    "462": {
+        "id": 462,
+        "name": "sports discipline competed in",
+        "summary": "<http://www.wikidata.org/prop/direct/P2416>"
+    },
+    "463": {
+        "id": 463,
+        "name": "industry",
+        "summary": "<http://www.wikidata.org/prop/direct/P452>"
+    },
+    "464": {
+        "id": 464,
+        "name": "has cause",
+        "summary": "<http://www.wikidata.org/prop/direct/P828>"
+    },
+    "465": {
+        "id": 465,
+        "name": "charted in",
+        "summary": "<http://www.wikidata.org/prop/direct/P2291>"
+    },
+    "466": {
+        "id": 466,
+        "name": "canonization status",
+        "summary": "<http://www.wikidata.org/prop/direct/P411>"
+    },
+    "467": {
+        "id": 467,
+        "name": "musicType",
+        "summary": "<http://dbpedia.org/ontology/musicType>"
+    },
+    "468": {
+        "id": 468,
+        "name": "student",
+        "summary": "<http://www.wikidata.org/prop/direct/P802>"
+    },
+    "469": {
+        "id": 469,
+        "name": "voice actor",
+        "summary": "<http://www.wikidata.org/prop/direct/P725>"
+    },
+    "470": {
+        "id": 470,
+        "name": "notable work",
+        "summary": "<http://www.wikidata.org/prop/direct/P800>"
+    },
+    "471": {
+        "id": 471,
+        "name": "has program committee member",
+        "summary": "<http://www.wikidata.org/prop/direct/P5804>"
+    },
+    "472": {
+        "id": 472,
+        "name": "basic form of government",
+        "summary": "<http://www.wikidata.org/prop/direct/P122>"
+    },
+    "473": {
+        "id": 473,
+        "name": "show",
+        "summary": "<http://dbpedia.org/ontology/show>"
+    },
+    "474": {
+        "id": 474,
+        "name": "spouse",
+        "summary": "<http://dbpedia.org/ontology/spouse>"
+    },
+    "475": {
+        "id": 475,
+        "name": "leaderName",
+        "summary": "<http://dbpedia.org/ontology/leaderName>"
+    },
+    "476": {
+        "id": 476,
+        "name": "territory claimed by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1336>"
+    },
+    "477": {
+        "id": 477,
+        "name": "developer",
+        "summary": "<http://www.wikidata.org/prop/direct/P178>"
+    },
+    "478": {
+        "id": 478,
+        "name": "maintained by",
+        "summary": "<http://www.wikidata.org/prop/direct/P126>"
+    },
+    "479": {
+        "id": 479,
+        "name": "field of this occupation",
+        "summary": "<http://www.wikidata.org/prop/direct/P425>"
+    },
+    "480": {
+        "id": 480,
+        "name": "terminus",
+        "summary": "<http://www.wikidata.org/prop/direct/P559>"
+    },
+    "481": {
+        "id": 481,
+        "name": "discoverer or inventor",
+        "summary": "<http://www.wikidata.org/prop/direct/P61>"
+    },
+    "482": {
+        "id": 482,
+        "name": "openingFilm",
+        "summary": "<http://dbpedia.org/ontology/openingFilm>"
+    },
+    "483": {
+        "id": 483,
+        "name": "stylisticOrigin",
+        "summary": "<http://dbpedia.org/ontology/stylisticOrigin>"
+    },
+    "484": {
+        "id": 484,
+        "name": "vessel class",
+        "summary": "<http://www.wikidata.org/prop/direct/P289>"
+    },
+    "485": {
+        "id": 485,
+        "name": "lastFlight",
+        "summary": "<http://dbpedia.org/ontology/lastFlight>"
+    },
+    "486": {
+        "id": 486,
+        "name": "unveiled by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1656>"
+    },
+    "487": {
+        "id": 487,
+        "name": "investigated by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1840>"
+    },
+    "488": {
+        "id": 488,
+        "name": "solicitorGeneral",
+        "summary": "<http://dbpedia.org/ontology/solicitorGeneral>"
+    },
+    "489": {
+        "id": 489,
+        "name": "vehicle normally used",
+        "summary": "<http://www.wikidata.org/prop/direct/P3438>"
+    },
+    "490": {
+        "id": 490,
+        "name": "authority",
+        "summary": "<http://www.wikidata.org/prop/direct/P797>"
+    },
+    "491": {
+        "id": 491,
+        "name": "olympicOathSwornByAthlete",
+        "summary": "<http://dbpedia.org/ontology/olympicOathSwornByAthlete>"
+    },
+    "492": {
+        "id": 492,
+        "name": "office held by head of the organization",
+        "summary": "<http://www.wikidata.org/prop/direct/P2388>"
+    },
+    "493": {
+        "id": 493,
+        "name": "distributor",
+        "summary": "<http://www.wikidata.org/prop/direct/P750>"
+    },
+    "494": {
+        "id": 494,
+        "name": "honorific prefix",
+        "summary": "<http://www.wikidata.org/prop/direct/P511>"
+    },
+    "495": {
+        "id": 495,
+        "name": "division",
+        "summary": "<http://dbpedia.org/ontology/division>"
+    },
+    "496": {
+        "id": 496,
+        "name": "office held by head of state",
+        "summary": "<http://www.wikidata.org/prop/direct/P1906>"
+    },
+    "497": {
+        "id": 497,
+        "name": "thumbnail",
+        "summary": "<http://dbpedia.org/ontology/thumbnail>"
+    },
+    "498": {
+        "id": 498,
+        "name": "dissertation submitted to",
+        "summary": "<http://www.wikidata.org/prop/direct/P4101>"
+    },
+    "499": {
+        "id": 499,
+        "name": "honours",
+        "summary": "<http://dbpedia.org/ontology/honours>"
+    },
+    "500": {
+        "id": 500,
+        "name": "perpetrator",
+        "summary": "<http://dbpedia.org/ontology/perpetrator>"
+    },
+    "501": {
+        "id": 501,
+        "name": "developer",
+        "summary": "<http://dbpedia.org/ontology/developer>"
+    },
+    "502": {
+        "id": 502,
+        "name": "domain",
+        "summary": "<http://dbpedia.org/ontology/domain>"
+    },
+    "503": {
+        "id": 503,
+        "name": "depositor",
+        "summary": "<http://www.wikidata.org/prop/direct/P2058>"
+    },
+    "504": {
+        "id": 504,
+        "name": "winsAtOtherTournaments",
+        "summary": "<http://dbpedia.org/ontology/winsAtOtherTournaments>"
+    },
+    "505": {
+        "id": 505,
+        "name": "notableIdea",
+        "summary": "<http://dbpedia.org/ontology/notableIdea>"
+    },
+    "506": {
+        "id": 506,
+        "name": "nextEntity",
+        "summary": "<http://dbpedia.org/ontology/nextEntity>"
+    },
+    "507": {
+        "id": 507,
+        "name": "keyPerson",
+        "summary": "<http://dbpedia.org/ontology/keyPerson>"
+    },
+    "508": {
+        "id": 508,
+        "name": "wasBornIn",
+        "summary": "<http://yago-knowledge.org/resource/wasBornIn>"
+    },
+    "509": {
+        "id": 509,
+        "name": "medical condition treated",
+        "summary": "<http://www.wikidata.org/prop/direct/P2175>"
+    },
+    "510": {
+        "id": 510,
+        "name": "used by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1535>"
+    },
+    "511": {
+        "id": 511,
+        "name": "booster",
+        "summary": "<http://dbpedia.org/ontology/booster>"
+    },
+    "512": {
+        "id": 512,
+        "name": "distributingLabel",
+        "summary": "<http://dbpedia.org/ontology/distributingLabel>"
+    },
+    "513": {
+        "id": 513,
+        "name": "filming location",
+        "summary": "<http://www.wikidata.org/prop/direct/P915>"
+    },
+    "514": {
+        "id": 514,
+        "name": "firstWin",
+        "summary": "<http://dbpedia.org/ontology/firstWin>"
+    },
+    "515": {
+        "id": 515,
+        "name": "asteroid spectral type",
+        "summary": "<http://www.wikidata.org/prop/direct/P720>"
+    },
+    "516": {
+        "id": 516,
+        "name": "gymApparatus",
+        "summary": "<http://dbpedia.org/ontology/gymApparatus>"
+    },
+    "517": {
+        "id": 517,
+        "name": "distributor",
+        "summary": "<http://dbpedia.org/ontology/distributor>"
+    },
+    "518": {
+        "id": 518,
+        "name": "thirdDriverCountry",
+        "summary": "<http://dbpedia.org/ontology/thirdDriverCountry>"
+    },
+    "519": {
+        "id": 519,
+        "name": "exclave of",
+        "summary": "<http://www.wikidata.org/prop/direct/P500>"
+    },
+    "520": {
+        "id": 520,
+        "name": "general manager",
+        "summary": "<http://www.wikidata.org/prop/direct/P505>"
+    },
+    "521": {
+        "id": 521,
+        "name": "artist",
+        "summary": "<http://dbpedia.org/ontology/artist>"
+    },
+    "522": {
+        "id": 522,
+        "name": "has quality",
+        "summary": "<http://www.wikidata.org/prop/direct/P1552>"
+    },
+    "523": {
+        "id": 523,
+        "name": "class",
+        "summary": "<http://dbpedia.org/ontology/class>"
+    },
+    "524": {
+        "id": 524,
+        "name": "place of birth",
+        "summary": "<http://www.wikidata.org/prop/direct/P19>"
+    },
+    "525": {
+        "id": 525,
+        "name": "software quality assurance",
+        "summary": "<http://www.wikidata.org/prop/direct/P2992>"
+    },
+    "526": {
+        "id": 526,
+        "name": "decoration",
+        "summary": "<http://dbpedia.org/ontology/decoration>"
+    },
+    "527": {
+        "id": 527,
+        "name": "militaryBranch",
+        "summary": "<http://dbpedia.org/ontology/militaryBranch>"
+    },
+    "528": {
+        "id": 528,
+        "name": "academic major",
+        "summary": "<http://www.wikidata.org/prop/direct/P812>"
+    },
+    "529": {
+        "id": 529,
+        "name": "represents",
+        "summary": "<http://www.wikidata.org/prop/direct/P1268>"
+    },
+    "530": {
+        "id": 530,
+        "name": "style",
+        "summary": "<http://dbpedia.org/ontology/style>"
+    },
+    "531": {
+        "id": 531,
+        "name": "damage",
+        "summary": "<http://dbpedia.org/ontology/damage>"
+    },
+    "532": {
+        "id": 532,
+        "name": "militaryUnit",
+        "summary": "<http://dbpedia.org/ontology/militaryUnit>"
+    },
+    "533": {
+        "id": 533,
+        "name": "writer",
+        "summary": "<http://dbpedia.org/ontology/writer>"
+    },
+    "534": {
+        "id": 534,
+        "name": "appointed by",
+        "summary": "<http://www.wikidata.org/prop/direct/P748>"
+    },
+    "535": {
+        "id": 535,
+        "name": "coach",
+        "summary": "<http://dbpedia.org/ontology/coach>"
+    },
+    "536": {
+        "id": 536,
+        "name": "location of creation",
+        "summary": "<http://www.wikidata.org/prop/direct/P1071>"
+    },
+    "537": {
+        "id": 537,
+        "name": "editor",
+        "summary": "<http://www.wikidata.org/prop/direct/P98>"
+    },
+    "538": {
+        "id": 538,
+        "name": "driving side",
+        "summary": "<http://www.wikidata.org/prop/direct/P1622>"
+    },
+    "539": {
+        "id": 539,
+        "name": "place of death",
+        "summary": "<http://www.wikidata.org/prop/direct/P20>"
+    },
+    "540": {
+        "id": 540,
+        "name": "winsAtMajors",
+        "summary": "<http://dbpedia.org/ontology/winsAtMajors>"
+    },
+    "541": {
+        "id": 541,
+        "name": "season of club or team",
+        "summary": "<http://www.wikidata.org/prop/direct/P5138>"
+    },
+    "542": {
+        "id": 542,
+        "name": "computingPlatform",
+        "summary": "<http://dbpedia.org/ontology/computingPlatform>"
+    },
+    "543": {
+        "id": 543,
+        "name": "original language of film or TV show",
+        "summary": "<http://www.wikidata.org/prop/direct/P364>"
+    },
+    "544": {
+        "id": 544,
+        "name": "nationality",
+        "summary": "<http://dbpedia.org/ontology/nationality>"
+    },
+    "545": {
+        "id": 545,
+        "name": "showJudge",
+        "summary": "<http://dbpedia.org/ontology/showJudge>"
+    },
+    "546": {
+        "id": 546,
+        "name": "production statistics",
+        "summary": "<http://www.wikidata.org/prop/direct/P2746>"
+    },
+    "547": {
+        "id": 547,
+        "name": "composer",
+        "summary": "<http://dbpedia.org/ontology/composer>"
+    },
+    "548": {
+        "id": 548,
+        "name": "modified version of",
+        "summary": "<http://www.wikidata.org/prop/direct/P5059>"
+    },
+    "549": {
+        "id": 549,
+        "name": "damaged",
+        "summary": "<http://www.wikidata.org/prop/direct/P3081>"
+    },
+    "550": {
+        "id": 550,
+        "name": "commissioned by",
+        "summary": "<http://www.wikidata.org/prop/direct/P88>"
+    },
+    "551": {
+        "id": 551,
+        "name": "influenced",
+        "summary": "<http://dbpedia.org/ontology/influenced>"
+    },
+    "552": {
+        "id": 552,
+        "name": "movie",
+        "summary": "<http://dbpedia.org/ontology/movie>"
+    },
+    "553": {
+        "id": 553,
+        "name": "restingPlace",
+        "summary": "<http://dbpedia.org/ontology/restingPlace>"
+    },
+    "554": {
+        "id": 554,
+        "name": "main regulatory text",
+        "summary": "<http://www.wikidata.org/prop/direct/P92>"
+    },
+    "555": {
+        "id": 555,
+        "name": "connotation",
+        "summary": "<http://dbpedia.org/ontology/connotation>"
+    },
+    "556": {
+        "id": 556,
+        "name": "director",
+        "summary": "<http://dbpedia.org/ontology/director>"
+    },
+    "557": {
+        "id": 557,
+        "name": "rector",
+        "summary": "<http://www.wikidata.org/prop/direct/P1075>"
+    },
+    "558": {
+        "id": 558,
+        "name": "connecting service",
+        "summary": "<http://www.wikidata.org/prop/direct/P1192>"
+    },
+    "559": {
+        "id": 559,
+        "name": "election called by",
+        "summary": "<http://www.wikidata.org/prop/direct/P7508>"
+    },
+    "560": {
+        "id": 560,
+        "name": "musicFusionGenre",
+        "summary": "<http://dbpedia.org/ontology/musicFusionGenre>"
+    },
+    "561": {
+        "id": 561,
+        "name": "theme music",
+        "summary": "<http://www.wikidata.org/prop/direct/P942>"
+    },
+    "562": {
+        "id": 562,
+        "name": "docking port",
+        "summary": "<http://www.wikidata.org/prop/direct/P546>"
+    },
+    "563": {
+        "id": 563,
+        "name": "oath made by",
+        "summary": "<http://www.wikidata.org/prop/direct/P543>"
+    },
+    "564": {
+        "id": 564,
+        "name": "lastRace",
+        "summary": "<http://dbpedia.org/ontology/lastRace>"
+    },
+    "565": {
+        "id": 565,
+        "name": "associatedMusicalArtist",
+        "summary": "<http://dbpedia.org/ontology/associatedMusicalArtist>"
+    },
+    "566": {
+        "id": 566,
+        "name": "campus",
+        "summary": "<http://dbpedia.org/ontology/campus>"
+    },
+    "567": {
+        "id": 567,
+        "name": "musicalArtist",
+        "summary": "<http://dbpedia.org/ontology/musicalArtist>"
+    },
+    "568": {
+        "id": 568,
+        "name": "designed by",
+        "summary": "<http://www.wikidata.org/prop/direct/P287>"
+    },
+    "569": {
+        "id": 569,
+        "name": "start point",
+        "summary": "<http://www.wikidata.org/prop/direct/P1427>"
+    },
+    "570": {
+        "id": 570,
+        "name": "architect",
+        "summary": "<http://www.wikidata.org/prop/direct/P84>"
+    },
+    "571": {
+        "id": 571,
+        "name": "chief operating officer",
+        "summary": "<http://www.wikidata.org/prop/direct/P1789>"
+    },
+    "572": {
+        "id": 572,
+        "name": "diedIn",
+        "summary": "<http://yago-knowledge.org/resource/diedIn>"
+    },
+    "573": {
+        "id": 573,
+        "name": "lastWin",
+        "summary": "<http://dbpedia.org/ontology/lastWin>"
+    },
+    "574": {
+        "id": 574,
+        "name": "foundational text",
+        "summary": "<http://www.wikidata.org/prop/direct/P457>"
+    },
+    "575": {
+        "id": 575,
+        "name": "named by",
+        "summary": "<http://www.wikidata.org/prop/direct/P3938>"
+    },
+    "576": {
+        "id": 576,
+        "name": "athleticsDiscipline",
+        "summary": "<http://dbpedia.org/ontology/athleticsDiscipline>"
+    },
+    "577": {
+        "id": 577,
+        "name": "firstOlympicEvent",
+        "summary": "<http://dbpedia.org/ontology/firstOlympicEvent>"
+    },
+    "578": {
+        "id": 578,
+        "name": "elector",
+        "summary": "<http://www.wikidata.org/prop/direct/P2319>"
+    },
+    "579": {
+        "id": 579,
+        "name": "present in work",
+        "summary": "<http://www.wikidata.org/prop/direct/P1441>"
+    },
+    "580": {
+        "id": 580,
+        "name": "otherOccupation",
+        "summary": "<http://dbpedia.org/ontology/otherOccupation>"
+    },
+    "581": {
+        "id": 581,
+        "name": "autonomy",
+        "summary": "<http://dbpedia.org/ontology/autonomy>"
+    },
+    "582": {
+        "id": 582,
+        "name": "board member",
+        "summary": "<http://www.wikidata.org/prop/direct/P3320>"
+    },
+    "583": {
+        "id": 583,
+        "name": "political alignment",
+        "summary": "<http://www.wikidata.org/prop/direct/P1387>"
+    },
+    "584": {
+        "id": 584,
+        "name": "recovered by",
+        "summary": "<http://www.wikidata.org/prop/direct/P3093>"
+    },
+    "585": {
+        "id": 585,
+        "name": "cites work",
+        "summary": "<http://www.wikidata.org/prop/direct/P2860>"
+    },
+    "586": {
+        "id": 586,
+        "name": "supported sports team",
+        "summary": "<http://www.wikidata.org/prop/direct/P6758>"
+    },
+    "587": {
+        "id": 587,
+        "name": "debut participant",
+        "summary": "<http://www.wikidata.org/prop/direct/P2318>"
+    },
+    "588": {
+        "id": 588,
+        "name": "discipline",
+        "summary": "<http://dbpedia.org/ontology/discipline>"
+    },
+    "589": {
+        "id": 589,
+        "name": "Catholic rite",
+        "summary": "<http://www.wikidata.org/prop/direct/P3501>"
+    },
+    "590": {
+        "id": 590,
+        "name": "aircraftUser",
+        "summary": "<http://dbpedia.org/ontology/aircraftUser>"
+    },
+    "591": {
+        "id": 591,
+        "name": "CNC film rating (France)",
+        "summary": "<http://www.wikidata.org/prop/direct/P2758>"
+    },
+    "592": {
+        "id": 592,
+        "name": "culture",
+        "summary": "<http://www.wikidata.org/prop/direct/P2596>"
+    },
+    "593": {
+        "id": 593,
+        "name": "field",
+        "summary": "<http://dbpedia.org/ontology/field>"
+    },
+    "594": {
+        "id": 594,
+        "name": "partner in business or sport",
+        "summary": "<http://www.wikidata.org/prop/direct/P1327>"
+    },
+    "595": {
+        "id": 595,
+        "name": "prosecutor",
+        "summary": "<http://www.wikidata.org/prop/direct/P1592>"
+    },
+    "596": {
+        "id": 596,
+        "name": "garrison",
+        "summary": "<http://dbpedia.org/ontology/garrison>"
+    },
+    "597": {
+        "id": 597,
+        "name": "foundedBy",
+        "summary": "<http://dbpedia.org/ontology/foundedBy>"
+    },
+    "598": {
+        "id": 598,
+        "name": "similar",
+        "summary": "<http://dbpedia.org/ontology/similar>"
+    },
+    "599": {
+        "id": 599,
+        "name": "from narrative universe",
+        "summary": "<http://www.wikidata.org/prop/direct/P1080>"
+    },
+    "600": {
+        "id": 600,
+        "name": "storyboard artist",
+        "summary": "<http://www.wikidata.org/prop/direct/P3275>"
+    },
+    "601": {
+        "id": 601,
+        "name": "child astronomical body",
+        "summary": "<http://www.wikidata.org/prop/direct/P398>"
+    },
+    "602": {
+        "id": 602,
+        "name": "flag bearer",
+        "summary": "<http://www.wikidata.org/prop/direct/P3022>"
+    },
+    "603": {
+        "id": 603,
+        "name": "trophy awarded",
+        "summary": "<http://www.wikidata.org/prop/direct/P4622>"
+    },
+    "604": {
+        "id": 604,
+        "name": "isKnownFor",
+        "summary": "<http://yago-knowledge.org/resource/isKnownFor>"
+    },
+    "605": {
+        "id": 605,
+        "name": "edition or translation of",
+        "summary": "<http://www.wikidata.org/prop/direct/P629>"
+    },
+    "606": {
+        "id": 606,
+        "name": "otherFunction",
+        "summary": "<http://dbpedia.org/ontology/otherFunction>"
+    },
+    "607": {
+        "id": 607,
+        "name": "Fach",
+        "summary": "<http://www.wikidata.org/prop/direct/P1731>"
+    },
+    "608": {
+        "id": 608,
+        "name": "narrator",
+        "summary": "<http://www.wikidata.org/prop/direct/P2438>"
+    },
+    "609": {
+        "id": 609,
+        "name": "formerBandMember",
+        "summary": "<http://dbpedia.org/ontology/formerBandMember>"
+    },
+    "610": {
+        "id": 610,
+        "name": "highest judicial authority",
+        "summary": "<http://www.wikidata.org/prop/direct/P209>"
+    },
+    "611": {
+        "id": 611,
+        "name": "archives at",
+        "summary": "<http://www.wikidata.org/prop/direct/P485>"
+    },
+    "612": {
+        "id": 612,
+        "name": "championInSingle",
+        "summary": "<http://dbpedia.org/ontology/championInSingle>"
+    },
+    "613": {
+        "id": 613,
+        "name": "spokenIn",
+        "summary": "<http://dbpedia.org/ontology/spokenIn>"
+    },
+    "614": {
+        "id": 614,
+        "name": "practiced by",
+        "summary": "<http://www.wikidata.org/prop/direct/P3095>"
+    },
+    "615": {
+        "id": 615,
+        "name": "BBFC rating",
+        "summary": "<http://www.wikidata.org/prop/direct/P2629>"
+    },
+    "616": {
+        "id": 616,
+        "name": "musicSubgenre",
+        "summary": "<http://dbpedia.org/ontology/musicSubgenre>"
+    },
+    "617": {
+        "id": 617,
+        "name": "stateOfOrigin",
+        "summary": "<http://dbpedia.org/ontology/stateOfOrigin>"
+    },
+    "618": {
+        "id": 618,
+        "name": "placeOfBurial",
+        "summary": "<http://dbpedia.org/ontology/placeOfBurial>"
+    },
+    "619": {
+        "id": 619,
+        "name": "parent astronomical body",
+        "summary": "<http://www.wikidata.org/prop/direct/P397>"
+    },
+    "620": {
+        "id": 620,
+        "name": "timeZone",
+        "summary": "<http://dbpedia.org/ontology/timeZone>"
+    },
+    "621": {
+        "id": 621,
+        "name": "material used",
+        "summary": "<http://www.wikidata.org/prop/direct/P186>"
+    },
+    "622": {
+        "id": 622,
+        "name": "winsAtAus",
+        "summary": "<http://dbpedia.org/ontology/winsAtAus>"
+    },
+    "623": {
+        "id": 623,
+        "name": "hasCapital",
+        "summary": "<http://yago-knowledge.org/resource/hasCapital>"
+    },
+    "624": {
+        "id": 624,
+        "name": "day in year for periodic occurrence",
+        "summary": "<http://www.wikidata.org/prop/direct/P837>"
+    },
+    "625": {
+        "id": 625,
+        "name": "soundtrack release",
+        "summary": "<http://www.wikidata.org/prop/direct/P406>"
+    },
+    "626": {
+        "id": 626,
+        "name": "nominated by",
+        "summary": "<http://www.wikidata.org/prop/direct/P4353>"
+    },
+    "627": {
+        "id": 627,
+        "name": "secondPopularVote",
+        "summary": "<http://dbpedia.org/ontology/secondPopularVote>"
+    },
+    "628": {
+        "id": 628,
+        "name": "takes place in fictional universe",
+        "summary": "<http://www.wikidata.org/prop/direct/P1434>"
+    },
+    "629": {
+        "id": 629,
+        "name": "map",
+        "summary": "<http://dbpedia.org/ontology/map>"
+    },
+    "630": {
+        "id": 630,
+        "name": "symptoms",
+        "summary": "<http://www.wikidata.org/prop/direct/P780>"
+    },
+    "631": {
+        "id": 631,
+        "name": "has edition",
+        "summary": "<http://www.wikidata.org/prop/direct/P747>"
+    },
+    "632": {
+        "id": 632,
+        "name": "donated by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1028>"
+    },
+    "633": {
+        "id": 633,
+        "name": "olympicOathSwornBy",
+        "summary": "<http://dbpedia.org/ontology/olympicOathSwornBy>"
+    },
+    "634": {
+        "id": 634,
+        "name": "production designer",
+        "summary": "<http://www.wikidata.org/prop/direct/P2554>"
+    },
+    "635": {
+        "id": 635,
+        "name": "associatedBand",
+        "summary": "<http://dbpedia.org/ontology/associatedBand>"
+    },
+    "636": {
+        "id": 636,
+        "name": "patron saint",
+        "summary": "<http://www.wikidata.org/prop/direct/P417>"
+    },
+    "637": {
+        "id": 637,
+        "name": "armament",
+        "summary": "<http://www.wikidata.org/prop/direct/P520>"
+    },
+    "638": {
+        "id": 638,
+        "name": "license",
+        "summary": "<http://dbpedia.org/ontology/license>"
+    },
+    "639": {
+        "id": 639,
+        "name": "europeanParliamentGroup",
+        "summary": "<http://dbpedia.org/ontology/europeanParliamentGroup>"
+    },
+    "640": {
+        "id": 640,
+        "name": "separated from",
+        "summary": "<http://www.wikidata.org/prop/direct/P807>"
+    },
+    "641": {
+        "id": 641,
+        "name": "collaboration",
+        "summary": "<http://dbpedia.org/ontology/collaboration>"
+    },
+    "642": {
+        "id": 642,
+        "name": "tonality",
+        "summary": "<http://www.wikidata.org/prop/direct/P826>"
+    },
+    "643": {
+        "id": 643,
+        "name": "mainInterest",
+        "summary": "<http://dbpedia.org/ontology/mainInterest>"
+    },
+    "644": {
+        "id": 644,
+        "name": "leaderParty",
+        "summary": "<http://dbpedia.org/ontology/leaderParty>"
+    },
+    "645": {
+        "id": 645,
+        "name": "indigenous to",
+        "summary": "<http://www.wikidata.org/prop/direct/P2341>"
+    },
+    "646": {
+        "id": 646,
+        "name": "designCompany",
+        "summary": "<http://dbpedia.org/ontology/designCompany>"
+    },
+    "647": {
+        "id": 647,
+        "name": "exonerated of",
+        "summary": "<http://www.wikidata.org/prop/direct/P7781>"
+    },
+    "648": {
+        "id": 648,
+        "name": "via",
+        "summary": "<http://www.wikidata.org/prop/direct/P2825>"
+    },
+    "649": {
+        "id": 649,
+        "name": "pictureFormat",
+        "summary": "<http://dbpedia.org/ontology/pictureFormat>"
+    },
+    "650": {
+        "id": 650,
+        "name": "founder",
+        "summary": "<http://dbpedia.org/ontology/founder>"
+    },
+    "651": {
+        "id": 651,
+        "name": "features",
+        "summary": "<http://dbpedia.org/ontology/features>"
+    },
+    "652": {
+        "id": 652,
+        "name": "firstPopularVote",
+        "summary": "<http://dbpedia.org/ontology/firstPopularVote>"
+    },
+    "653": {
+        "id": 653,
+        "name": "day of week",
+        "summary": "<http://www.wikidata.org/prop/direct/P2894>"
+    },
+    "654": {
+        "id": 654,
+        "name": "related",
+        "summary": "<http://dbpedia.org/ontology/related>"
+    },
+    "655": {
+        "id": 655,
+        "name": "service",
+        "summary": "<http://dbpedia.org/ontology/service>"
+    },
+    "656": {
+        "id": 656,
+        "name": "president",
+        "summary": "<http://dbpedia.org/ontology/president>"
+    },
+    "657": {
+        "id": 657,
+        "name": "Lagrangian point",
+        "summary": "<http://www.wikidata.org/prop/direct/P1145>"
+    },
+    "658": {
+        "id": 658,
+        "name": "opposite of",
+        "summary": "<http://www.wikidata.org/prop/direct/P461>"
+    },
+    "659": {
+        "id": 659,
+        "name": "cyclistGenre",
+        "summary": "<http://dbpedia.org/ontology/cyclistGenre>"
+    },
+    "660": {
+        "id": 660,
+        "name": "administrativeDistrict",
+        "summary": "<http://dbpedia.org/ontology/administrativeDistrict>"
+    },
+    "661": {
+        "id": 661,
+        "name": "openingTheme",
+        "summary": "<http://dbpedia.org/ontology/openingTheme>"
+    },
+    "662": {
+        "id": 662,
+        "name": "editor-in-chief",
+        "summary": "<http://www.wikidata.org/prop/direct/P5769>"
+    },
+    "663": {
+        "id": 663,
+        "name": "captain",
+        "summary": "<http://www.wikidata.org/prop/direct/P634>"
+    },
+    "664": {
+        "id": 664,
+        "name": "category of associated people",
+        "summary": "<http://www.wikidata.org/prop/direct/P1792>"
+    },
+    "665": {
+        "id": 665,
+        "name": "legalForm",
+        "summary": "<http://dbpedia.org/ontology/legalForm>"
+    },
+    "666": {
+        "id": 666,
+        "name": "plaintiff",
+        "summary": "<http://www.wikidata.org/prop/direct/P1620>"
+    },
+    "667": {
+        "id": 667,
+        "name": "set in period",
+        "summary": "<http://www.wikidata.org/prop/direct/P2408>"
+    },
+    "668": {
+        "id": 668,
+        "name": "state",
+        "summary": "<http://dbpedia.org/ontology/state>"
+    },
+    "669": {
+        "id": 669,
+        "name": "coextensive with",
+        "summary": "<http://www.wikidata.org/prop/direct/P3403>"
+    },
+    "670": {
+        "id": 670,
+        "name": "anthem",
+        "summary": "<http://dbpedia.org/ontology/anthem>"
+    },
+    "671": {
+        "id": 671,
+        "name": "addressee",
+        "summary": "<http://www.wikidata.org/prop/direct/P1817>"
+    },
+    "672": {
+        "id": 672,
+        "name": "touristicSite",
+        "summary": "<http://dbpedia.org/ontology/touristicSite>"
+    },
+    "673": {
+        "id": 673,
+        "name": "grants",
+        "summary": "<http://www.wikidata.org/prop/direct/P5460>"
+    },
+    "674": {
+        "id": 674,
+        "name": "heritageRegister",
+        "summary": "<http://dbpedia.org/ontology/heritageRegister>"
+    },
+    "675": {
+        "id": 675,
+        "name": "has works in the collection",
+        "summary": "<http://www.wikidata.org/prop/direct/P6379>"
+    },
+    "676": {
+        "id": 676,
+        "name": "primary destinations",
+        "summary": "<http://www.wikidata.org/prop/direct/P1302>"
+    },
+    "677": {
+        "id": 677,
+        "name": "source",
+        "summary": "<http://dbpedia.org/ontology/source>"
+    },
+    "678": {
+        "id": 678,
+        "name": "college",
+        "summary": "<http://dbpedia.org/ontology/college>"
+    },
+    "679": {
+        "id": 679,
+        "name": "repealed by",
+        "summary": "<http://www.wikidata.org/prop/direct/P2568>"
+    },
+    "680": {
+        "id": 680,
+        "name": "isInterestedIn",
+        "summary": "<http://yago-knowledge.org/resource/isInterestedIn>"
+    },
+    "681": {
+        "id": 681,
+        "name": "presented in",
+        "summary": "<http://www.wikidata.org/prop/direct/P5072>"
+    },
+    "682": {
+        "id": 682,
+        "name": "Australian Classification",
+        "summary": "<http://www.wikidata.org/prop/direct/P3156>"
+    },
+    "683": {
+        "id": 683,
+        "name": "party chief representative",
+        "summary": "<http://www.wikidata.org/prop/direct/P210>"
+    },
+    "684": {
+        "id": 684,
+        "name": "represented by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1875>"
+    },
+    "685": {
+        "id": 685,
+        "name": "currentWorldChampion",
+        "summary": "<http://dbpedia.org/ontology/currentWorldChampion>"
+    },
+    "686": {
+        "id": 686,
+        "name": "official religion",
+        "summary": "<http://www.wikidata.org/prop/direct/P3075>"
+    },
+    "687": {
+        "id": 687,
+        "name": "relation",
+        "summary": "<http://dbpedia.org/ontology/relation>"
+    },
+    "688": {
+        "id": 688,
+        "name": "partially coincident with",
+        "summary": "<http://www.wikidata.org/prop/direct/P1382>"
+    },
+    "689": {
+        "id": 689,
+        "name": "subject has role",
+        "summary": "<http://www.wikidata.org/prop/direct/P2868>"
+    },
+    "690": {
+        "id": 690,
+        "name": "worshipped by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1049>"
+    },
+    "691": {
+        "id": 691,
+        "name": "safety classification and labelling",
+        "summary": "<http://www.wikidata.org/prop/direct/P4952>"
+    },
+    "692": {
+        "id": 692,
+        "name": "differentialDiagnosis",
+        "summary": "<http://dbpedia.org/ontology/differentialDiagnosis>"
+    },
+    "693": {
+        "id": 693,
+        "name": "official residence",
+        "summary": "<http://www.wikidata.org/prop/direct/P263>"
+    },
+    "694": {
+        "id": 694,
+        "name": "headquarter",
+        "summary": "<http://dbpedia.org/ontology/headquarter>"
+    },
+    "695": {
+        "id": 695,
+        "name": "powerType",
+        "summary": "<http://dbpedia.org/ontology/powerType>"
+    },
+    "696": {
+        "id": 696,
+        "name": "assistant director",
+        "summary": "<http://www.wikidata.org/prop/direct/P5126>"
+    },
+    "697": {
+        "id": 697,
+        "name": "highway system",
+        "summary": "<http://www.wikidata.org/prop/direct/P16>"
+    },
+    "698": {
+        "id": 698,
+        "name": "objective of project or action",
+        "summary": "<http://www.wikidata.org/prop/direct/P3712>"
+    },
+    "699": {
+        "id": 699,
+        "name": "film crew member",
+        "summary": "<http://www.wikidata.org/prop/direct/P3092>"
+    },
+    "700": {
+        "id": 700,
+        "name": "medical evacuation to",
+        "summary": "<http://www.wikidata.org/prop/direct/P5248>"
+    },
+    "701": {
+        "id": 701,
+        "name": "hasOfficialLanguage",
+        "summary": "<http://yago-knowledge.org/resource/hasOfficialLanguage>"
+    },
+    "702": {
+        "id": 702,
+        "name": "directed",
+        "summary": "<http://yago-knowledge.org/resource/directed>"
+    },
+    "703": {
+        "id": 703,
+        "name": "organization directed from the office or person",
+        "summary": "<http://www.wikidata.org/prop/direct/P2389>"
+    },
+    "704": {
+        "id": 704,
+        "name": "originalLanguage",
+        "summary": "<http://dbpedia.org/ontology/originalLanguage>"
+    },
+    "705": {
+        "id": 705,
+        "name": "dialect of",
+        "summary": "<http://www.wikidata.org/prop/direct/P4913>"
+    },
+    "706": {
+        "id": 706,
+        "name": "fabrication method",
+        "summary": "<http://www.wikidata.org/prop/direct/P2079>"
+    },
+    "707": {
+        "id": 707,
+        "name": "militaryRank",
+        "summary": "<http://dbpedia.org/ontology/militaryRank>"
+    },
+    "708": {
+        "id": 708,
+        "name": "regionServed",
+        "summary": "<http://dbpedia.org/ontology/regionServed>"
+    },
+    "709": {
+        "id": 709,
+        "name": "championInDouble",
+        "summary": "<http://dbpedia.org/ontology/championInDouble>"
+    },
+    "710": {
+        "id": 710,
+        "name": "academicDiscipline",
+        "summary": "<http://dbpedia.org/ontology/academicDiscipline>"
+    },
+    "711": {
+        "id": 711,
+        "name": "nonFictionSubject",
+        "summary": "<http://dbpedia.org/ontology/nonFictionSubject>"
+    },
+    "712": {
+        "id": 712,
+        "name": "chiefEditor",
+        "summary": "<http://dbpedia.org/ontology/chiefEditor>"
+    },
+    "713": {
+        "id": 713,
+        "name": "intangible cultural heritage status",
+        "summary": "<http://www.wikidata.org/prop/direct/P3259>"
+    },
+    "714": {
+        "id": 714,
+        "name": "relative",
+        "summary": "<http://www.wikidata.org/prop/direct/P1038>"
+    },
+    "715": {
+        "id": 715,
+        "name": "government",
+        "summary": "<http://dbpedia.org/ontology/government>"
+    },
+    "716": {
+        "id": 716,
+        "name": "state of conservation",
+        "summary": "<http://www.wikidata.org/prop/direct/P5816>"
+    },
+    "717": {
+        "id": 717,
+        "name": "actedIn",
+        "summary": "<http://yago-knowledge.org/resource/actedIn>"
+    },
+    "718": {
+        "id": 718,
+        "name": "debutWork",
+        "summary": "<http://dbpedia.org/ontology/debutWork>"
+    },
+    "719": {
+        "id": 719,
+        "name": "grammyAward",
+        "summary": "<http://dbpedia.org/ontology/grammyAward>"
+    },
+    "720": {
+        "id": 720,
+        "name": "tradeMark",
+        "summary": "<http://dbpedia.org/ontology/tradeMark>"
+    },
+    "721": {
+        "id": 721,
+        "name": "located in present-day administrative territorial entity",
+        "summary": "<http://www.wikidata.org/prop/direct/P3842>"
+    },
+    "722": {
+        "id": 722,
+        "name": "influences",
+        "summary": "<http://yago-knowledge.org/resource/influences>"
+    },
+    "723": {
+        "id": 723,
+        "name": "located on astronomical location",
+        "summary": "<http://www.wikidata.org/prop/direct/P376>"
+    },
+    "724": {
+        "id": 724,
+        "name": "guest of honor",
+        "summary": "<http://www.wikidata.org/prop/direct/P967>"
+    },
+    "725": {
+        "id": 725,
+        "name": "residence",
+        "summary": "<http://dbpedia.org/ontology/residence>"
+    },
+    "726": {
+        "id": 726,
+        "name": "member of military unit",
+        "summary": "<http://www.wikidata.org/prop/direct/P7779>"
+    },
+    "727": {
+        "id": 727,
+        "name": "corporate officer",
+        "summary": "<http://www.wikidata.org/prop/direct/P2828>"
+    },
+    "728": {
+        "id": 728,
+        "name": "sex or gender",
+        "summary": "<http://www.wikidata.org/prop/direct/P21>"
+    },
+    "729": {
+        "id": 729,
+        "name": "previousEntity",
+        "summary": "<http://dbpedia.org/ontology/previousEntity>"
+    },
+    "730": {
+        "id": 730,
+        "name": "intended public",
+        "summary": "<http://www.wikidata.org/prop/direct/P2360>"
+    },
+    "731": {
+        "id": 731,
+        "name": "stated in",
+        "summary": "<http://www.wikidata.org/prop/direct/P248>"
+    },
+    "732": {
+        "id": 732,
+        "name": "contains",
+        "summary": "<http://www.wikidata.org/prop/direct/P4330>"
+    },
+    "733": {
+        "id": 733,
+        "name": "writing system",
+        "summary": "<http://www.wikidata.org/prop/direct/P282>"
+    },
+    "734": {
+        "id": 734,
+        "name": "winsAtJapan",
+        "summary": "<http://dbpedia.org/ontology/winsAtJapan>"
+    },
+    "735": {
+        "id": 735,
+        "name": "end cause",
+        "summary": "<http://www.wikidata.org/prop/direct/P1534>"
+    },
+    "736": {
+        "id": 736,
+        "name": "sourceCountry",
+        "summary": "<http://dbpedia.org/ontology/sourceCountry>"
+    },
+    "737": {
+        "id": 737,
+        "name": "parentOrganisation",
+        "summary": "<http://dbpedia.org/ontology/parentOrganisation>"
+    },
+    "738": {
+        "id": 738,
+        "name": "enemy of",
+        "summary": "<http://www.wikidata.org/prop/direct/P7047>"
+    },
+    "739": {
+        "id": 739,
+        "name": "in opposition to",
+        "summary": "<http://www.wikidata.org/prop/direct/P5004>"
+    },
+    "740": {
+        "id": 740,
+        "name": "winsAtAsia",
+        "summary": "<http://dbpedia.org/ontology/winsAtAsia>"
+    },
+    "741": {
+        "id": 741,
+        "name": "activity",
+        "summary": "<http://dbpedia.org/ontology/activity>"
+    },
+    "742": {
+        "id": 742,
+        "name": "page",
+        "summary": "<http://dbpedia.org/ontology/page>"
+    },
+    "743": {
+        "id": 743,
+        "name": "inspired by",
+        "summary": "<http://www.wikidata.org/prop/direct/P941>"
+    },
+    "744": {
+        "id": 744,
+        "name": "saint",
+        "summary": "<http://dbpedia.org/ontology/saint>"
+    },
+    "745": {
+        "id": 745,
+        "name": "firstFlight",
+        "summary": "<http://dbpedia.org/ontology/firstFlight>"
+    },
+    "746": {
+        "id": 746,
+        "name": "research site",
+        "summary": "<http://www.wikidata.org/prop/direct/P6153>"
+    },
+    "747": {
+        "id": 747,
+        "name": "torch lit by",
+        "summary": "<http://www.wikidata.org/prop/direct/P545>"
+    },
+    "748": {
+        "id": 748,
+        "name": "ethnicGroup",
+        "summary": "<http://dbpedia.org/ontology/ethnicGroup>"
+    },
+    "749": {
+        "id": 749,
+        "name": "almaMater",
+        "summary": "<http://dbpedia.org/ontology/almaMater>"
+    },
+    "750": {
+        "id": 750,
+        "name": "legislative body",
+        "summary": "<http://www.wikidata.org/prop/direct/P194>"
+    },
+    "751": {
+        "id": 751,
+        "name": "immediate cause of",
+        "summary": "<http://www.wikidata.org/prop/direct/P1536>"
+    },
+    "752": {
+        "id": 752,
+        "name": "manner of death",
+        "summary": "<http://www.wikidata.org/prop/direct/P1196>"
+    },
+    "753": {
+        "id": 753,
+        "name": "samples work",
+        "summary": "<http://www.wikidata.org/prop/direct/P5707>"
+    },
+    "754": {
+        "id": 754,
+        "name": "history of topic",
+        "summary": "<http://www.wikidata.org/prop/direct/P2184>"
+    },
+    "755": {
+        "id": 755,
+        "name": "kit supplier",
+        "summary": "<http://www.wikidata.org/prop/direct/P5995>"
+    },
+    "756": {
+        "id": 756,
+        "name": "FSK film rating",
+        "summary": "<http://www.wikidata.org/prop/direct/P1981>"
+    },
+    "757": {
+        "id": 757,
+        "name": "place of origin (Switzerland)",
+        "summary": "<http://www.wikidata.org/prop/direct/P1321>"
+    },
+    "758": {
+        "id": 758,
+        "name": "proxy",
+        "summary": "<http://www.wikidata.org/prop/direct/P1393>"
+    },
+    "759": {
+        "id": 759,
+        "name": "judge",
+        "summary": "<http://www.wikidata.org/prop/direct/P1594>"
+    },
+    "760": {
+        "id": 760,
+        "name": "eye color",
+        "summary": "<http://www.wikidata.org/prop/direct/P1340>"
+    },
+    "761": {
+        "id": 761,
+        "name": "systemOfLaw",
+        "summary": "<http://dbpedia.org/ontology/systemOfLaw>"
+    },
+    "762": {
+        "id": 762,
+        "name": "product certification",
+        "summary": "<http://www.wikidata.org/prop/direct/P1389>"
+    },
+    "763": {
+        "id": 763,
+        "name": "risk factor",
+        "summary": "<http://www.wikidata.org/prop/direct/P5642>"
+    },
+    "764": {
+        "id": 764,
+        "name": "website account on",
+        "summary": "<http://www.wikidata.org/prop/direct/P553>"
+    },
+    "765": {
+        "id": 765,
+        "name": "winsAtNWIDE",
+        "summary": "<http://dbpedia.org/ontology/winsAtNWIDE>"
+    },
+    "766": {
+        "id": 766,
+        "name": "winsAtChallenges",
+        "summary": "<http://dbpedia.org/ontology/winsAtChallenges>"
+    },
+    "767": {
+        "id": 767,
+        "name": "athletics",
+        "summary": "<http://dbpedia.org/ontology/athletics>"
+    },
+    "768": {
+        "id": 768,
+        "name": "model year",
+        "summary": "<http://www.wikidata.org/prop/direct/P5444>"
+    },
+    "769": {
+        "id": 769,
+        "name": "olympicOathSwornByJudge",
+        "summary": "<http://dbpedia.org/ontology/olympicOathSwornByJudge>"
+    },
+    "770": {
+        "id": 770,
+        "name": "contributed to creative work",
+        "summary": "<http://www.wikidata.org/prop/direct/P3919>"
+    },
+    "771": {
+        "id": 771,
+        "name": "copyright holder",
+        "summary": "<http://www.wikidata.org/prop/direct/P3931>"
+    },
+    "772": {
+        "id": 772,
+        "name": "material",
+        "summary": "<http://dbpedia.org/ontology/material>"
+    },
+    "773": {
+        "id": 773,
+        "name": "software engine",
+        "summary": "<http://www.wikidata.org/prop/direct/P408>"
+    },
+    "774": {
+        "id": 774,
+        "name": "IMA status and/or rank",
+        "summary": "<http://www.wikidata.org/prop/direct/P579>"
+    },
+    "775": {
+        "id": 775,
+        "name": "director of photography",
+        "summary": "<http://www.wikidata.org/prop/direct/P344>"
+    },
+    "776": {
+        "id": 776,
+        "name": "depicted by",
+        "summary": "<http://www.wikidata.org/prop/direct/P1299>"
+    },
+    "777": {
+        "id": 777,
+        "name": "capitalCountry",
+        "summary": "<http://dbpedia.org/ontology/capitalCountry>"
+    },
+    "778": {
+        "id": 778,
+        "name": "engineType",
+        "summary": "<http://dbpedia.org/ontology/engineType>"
+    },
+    "779": {
+        "id": 779,
+        "name": "permanent resident of",
+        "summary": "<http://www.wikidata.org/prop/direct/P5389>"
+    },
+    "780": {
+        "id": 780,
+        "name": "institution",
+        "summary": "<http://dbpedia.org/ontology/institution>"
+    },
+    "781": {
+        "id": 781,
+        "name": "streak color",
+        "summary": "<http://www.wikidata.org/prop/direct/P534>"
+    },
+    "782": {
+        "id": 782,
+        "name": "executive body",
+        "summary": "<http://www.wikidata.org/prop/direct/P208>"
+    },
+    "783": {
+        "id": 783,
+        "name": "trainerClub",
+        "summary": "<http://dbpedia.org/ontology/trainerClub>"
+    },
+    "784": {
+        "id": 784,
+        "name": "winsAtPGA",
+        "summary": "<http://dbpedia.org/ontology/winsAtPGA>"
+    },
+    "785": {
+        "id": 785,
+        "name": "enclave within",
+        "summary": "<http://www.wikidata.org/prop/direct/P501>"
+    },
+    "786": {
+        "id": 786,
+        "name": "people or cargo transported",
+        "summary": "<http://www.wikidata.org/prop/direct/P3437>"
+    },
+    "787": {
+        "id": 787,
+        "name": "feast day",
+        "summary": "<http://www.wikidata.org/prop/direct/P841>"
+    },
+    "788": {
+        "id": 788,
+        "name": "diocese",
+        "summary": "<http://dbpedia.org/ontology/diocese>"
+    },
+    "789": {
+        "id": 789,
+        "name": "museum",
+        "summary": "<http://dbpedia.org/ontology/museum>"
+    },
+    "790": {
+        "id": 790,
+        "name": "supervisory board member",
+        "summary": "<http://www.wikidata.org/prop/direct/P5052>"
+    },
+    "791": {
+        "id": 791,
+        "name": "political coalition",
+        "summary": "<http://www.wikidata.org/prop/direct/P5832>"
+    },
+    "792": {
+        "id": 792,
+        "name": "recording or performance of",
+        "summary": "<http://www.wikidata.org/prop/direct/P2550>"
+    },
+    "793": {
+        "id": 793,
+        "name": "club",
+        "summary": "<http://dbpedia.org/ontology/club>"
+    },
+    "794": {
+        "id": 794,
+        "name": "governmentType",
+        "summary": "<http://dbpedia.org/ontology/governmentType>"
+    },
+    "795": {
+        "id": 795,
+        "name": "reward program",
+        "summary": "<http://www.wikidata.org/prop/direct/P4446>"
+    },
+    "796": {
+        "id": 796,
+        "name": "package management system",
+        "summary": "<http://www.wikidata.org/prop/direct/P3033>"
+    },
+    "797": {
+        "id": 797,
+        "name": "employer",
+        "summary": "<http://dbpedia.org/ontology/employer>"
+    },
+    "798": {
+        "id": 798,
+        "name": "anthem",
+        "summary": "<http://www.wikidata.org/prop/direct/P85>"
+    },
+    "799": {
+        "id": 799,
+        "name": "killed by",
+        "summary": "<http://www.wikidata.org/prop/direct/P157>"
+    },
+    "800": {
+        "id": 800,
+        "name": "regionalLanguage",
+        "summary": "<http://dbpedia.org/ontology/regionalLanguage>"
+    },
+    "801": {
+        "id": 801,
+        "name": "godparent",
+        "summary": "<http://www.wikidata.org/prop/direct/P1290>"
+    },
+    "802": {
+        "id": 802,
+        "name": "depends on software",
+        "summary": "<http://www.wikidata.org/prop/direct/P1547>"
+    },
+    "803": {
+        "id": 803,
+        "name": "domain of saint or deity",
+        "summary": "<http://www.wikidata.org/prop/direct/P2925>"
+    },
+    "804": {
+        "id": 804,
+        "name": "excavation director",
+        "summary": "<http://www.wikidata.org/prop/direct/P4345>"
+    },
+    "805": {
+        "id": 805,
+        "name": "part",
+        "summary": "<http://dbpedia.org/ontology/part>"
+    },
+    "806": {
+        "id": 806,
+        "name": "structural engineer",
+        "summary": "<http://www.wikidata.org/prop/direct/P631>"
+    },
+    "807": {
+        "id": 807,
+        "name": "goldenGlobeAward",
+        "summary": "<http://dbpedia.org/ontology/goldenGlobeAward>"
+    },
+    "808": {
+        "id": 808,
+        "name": "winsInEurope",
+        "summary": "<http://dbpedia.org/ontology/winsInEurope>"
+    },
+    "809": {
+        "id": 809,
+        "name": "closingFilm",
+        "summary": "<http://dbpedia.org/ontology/closingFilm>"
+    },
+    "810": {
+        "id": 810,
+        "name": "managerClub",
+        "summary": "<http://dbpedia.org/ontology/managerClub>"
+    },
+    "811": {
+        "id": 811,
+        "name": "homeArena",
+        "summary": "<http://dbpedia.org/ontology/homeArena>"
+    },
+    "812": {
+        "id": 812,
+        "name": "languageFamily",
+        "summary": "<http://dbpedia.org/ontology/languageFamily>"
+    },
+    "813": {
+        "id": 813,
+        "name": "fictional universe described in",
+        "summary": "<http://www.wikidata.org/prop/direct/P1445>"
+    },
+    "814": {
+        "id": 814,
+        "name": "nominee",
+        "summary": "<http://www.wikidata.org/prop/direct/P2453>"
+    },
+    "815": {
+        "id": 815,
+        "name": "listItemOf",
+        "summary": "<http://dbpedia.org/ontology/listItemOf>"
+    },
+    "816": {
+        "id": 816,
+        "name": "cover art by",
+        "summary": "<http://www.wikidata.org/prop/direct/P736>"
+    },
+    "817": {
+        "id": 817,
+        "name": "followedBy",
+        "summary": "<http://dbpedia.org/ontology/followedBy>"
+    },
+    "818": {
+        "id": 818,
+        "name": "teamManager",
+        "summary": "<http://dbpedia.org/ontology/teamManager>"
+    },
+    "819": {
+        "id": 819,
+        "name": "catalog",
+        "summary": "<http://www.wikidata.org/prop/direct/P972>"
+    },
+    "820": {
+        "id": 820,
+        "name": "has melody",
+        "summary": "<http://www.wikidata.org/prop/direct/P1625>"
+    },
+    "821": {
+        "id": 821,
+        "name": "commandStructure",
+        "summary": "<http://dbpedia.org/ontology/commandStructure>"
+    }
+}

@@ -2,10 +2,53 @@ import os
 import copy
 import json
 import torch
+import datetime
 from tqdm import tqdm
+import numpy as np
+import matplotlib.pyplot as plt
+from openTSNE import TSNE
+from mongoengine import connect
 import torch.nn.functional as F
 from collections import defaultdict
 from fast_fuzzy_search import FastFuzzySearch
+from mongoengine import StringField, IntField, FloatField, BooleanField, DateTimeField, Document
+
+
+
+
+
+
+def to_dict_helper(obj):
+    return_data = []
+    for field_name in obj._fields:
+        if field_name in ("id",):
+            continue
+        data = obj._data[field_name]
+        if isinstance(obj._fields[field_name], StringField):
+            return_data.append((field_name, str(data)))
+        elif isinstance(obj._fields[field_name], FloatField):
+            return_data.append((field_name, float(data)))
+        elif isinstance(obj._fields[field_name], IntField):
+            return_data.append((field_name, int(data)))
+        elif isinstance(obj._fields[field_name], BooleanField):
+            return_data.append((field_name, bool(data)))
+        elif isinstance(obj._fields[field_name], DateTimeField):
+            return_data.append(field_name, datetime.datetime.strptime(data))
+        else:
+            return_data.append((field_name, data))
+    return dict(return_data)
+
+
+class Entity(Document):
+    name = StringField(required=True)
+    description = StringField(required=True)
+    type = StringField(required=True)
+    time = StringField(default="2000")
+
+    def to_dict(self):
+        return to_dict_helper(self)
+
+
 
 class Kr_Predictior:
     def __init__(self,
@@ -35,6 +78,7 @@ class Kr_Predictior:
         :param fuzzy_query_top_k: 模糊查询前fuzzy_query_top_k个最相似的结果
         :param predict_top_k: 链接预测前predict_top_k的结果
         """
+        connect('cogkge', host='210.75.240.136', username='cipzhao2022', password='cipzhao2022', port=1234,connect=False)
 
         if not isinstance(reprocess, bool):
             raise TypeError("param reprocess is True or False!")
@@ -52,6 +96,8 @@ class Kr_Predictior:
             raise FileExistsError("processed_data_path doesn't exist!")
         if not os.path.exists(os.path.join(processed_data_path,data_name,model_name)):
             os.makedirs(os.path.join(processed_data_path,data_name,model_name))
+
+
 
         self.model=model
         self.pretrained_mode_path=pretrained_model_path
@@ -79,12 +125,31 @@ class Kr_Predictior:
         self.model = self.model.to(self.device)
         self.all_node_index_column_matrix = torch.unsqueeze(torch.arange(self.node_len).to(self.device),dim=1)
         self.all_node_index_row_vector = torch.arange(self.node_len).to(self.device)
-        self.all_node_embedding = self.model.entity_embedding_base(self.all_node_index_row_vector)
+        if model_name=="BoxE":
+            self.all_node_embedding = self.model.entity_embedding_base(self.all_node_index_row_vector)
+        if model_name == "TransE":
+            self.all_node_embedding = self.model.entity_embedding(self.all_node_index_row_vector)
         self.all_relation_index_column_matrix=torch.unsqueeze(torch.arange(self.relation_len).to(self.device),dim=1)
+        self.visual_num = 1000  # 降维可视化的样本个数
+        if self.node_lut.type is not None:
+            self.visual_type = self.node_lut.type[self.node_lut.type[:]>0][:self.visual_num].numpy()
+
+        else:
+            self.visual_type = np.arctan2(np.random.normal(0, 2, self.visual_num),
+                                          np.random.normal(0, 2, self.visual_num))
 
         self._create_summary_dict()  #建立模糊查询字典
         self._create_detailed_dict() #建立链接预测字典
-        # self._init_fuzzy_query()     #初始化模糊查询
+        self._init_fuzzy_query()     #初始化模糊查询
+
+    def insert_entity(self,entity):
+        # entity = {'name': 'sss', 'description': 'sss', 'type': 'sss'}
+        Entity.objects.create(**entity)
+
+    def search_entity(self,keyword):
+        entities = Entity.objects(name__contains=keyword)
+        return entities
+
 
 
     def _create_summary_dict(self):
@@ -165,14 +230,11 @@ class Kr_Predictior:
 
 
     def _init_fuzzy_query(self):
-        ffs_node = FastFuzzySearch({'language': 'english'})
-        ffs_relation = FastFuzzySearch({'language': 'english'})
         print("Initing_fuzzy_query...")
-        table = ''.maketrans('0123456789–', 'xxxxxxxxxxx')
         for i in tqdm(range(self.node_len)):
-            ffs_node.add_term(str(self.summary_node_dict[str(i)]["name"]).translate(table),i)
+            self.insert_entity(self.summary_node_dict[str(i)])
         for i in tqdm(range(self.relation_len)):
-            ffs_relation.add_term(str(self.summary_relation_dict[str(i)]["name"]).translate(table),i)
+            self.insert_entity(self.summary_relation_dict[str(i)])
 
 
     def fuzzy_query_node_keyword(self,node_keyword=None):
@@ -374,6 +436,16 @@ class Kr_Predictior:
             relation_list.append(item)
 
         return relation_list
+
+    def predict_img(self):
+        if self.model_name=="BoxE":
+            embedding = self.model.entity_embedding_base.weight.data.cpu().numpy()[:self.visual_num]
+        if self.model_name == "TransE":
+            embedding = self.model.entity_embedding.weight.data.cpu().numpy()[:self.visual_num]
+        embedding = TSNE().fit(embedding)
+        plt.scatter(embedding[:, 0], embedding[:, 1], c=self.visual_type)
+        plt.savefig(fname="TransE.png")
+        plt.show()
 
 
 

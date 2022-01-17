@@ -8,8 +8,8 @@ train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut ,time_lut= loader.load_all_lut()
 
 processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,
-                               reprocess=True,
-                               type=False,time=False,description=False,path=False,
+                               reprocess=False,
+                               type=True,time=False,description=False,path=False,
                                time_unit="year",
                                pretrain_model_name="roberta-base",token_len=10,
                                path_len=10)
@@ -55,24 +55,24 @@ predictor=Kr_Predictior(model_name="BoxE",
 # # result_relation=predictor.fuzzy_query_relation_keyword()
 # print(result_relation)
 
-#查询相似节点
-similar_node_list=predictor.predict_similar_node(node_id=0)
-print(similar_node_list)
+# #查询相似节点
+# similar_node_list=predictor.predict_similar_node(node_id=0)
+# print(similar_node_list)
+# #给出头节点和关系，查询尾节点
+# tail_list=predictor.predcit_tail(head_id=0,relation_id=0)
+# print(tail_list)
+# #给出头结点，查询关系和尾节点
+# tail_list=predictor.predcit_tail(head_id=0)
+# print(tail_list)
+# #给出头节点和关系，查询尾节点
+# head_list=predictor.predict_head(tail_id=0,relation_id=0)
+# print(head_list)
+# #给出尾节点，查询关系和头节点
+# head_list=predictor.predict_head(tail_id=0)
+# print(head_list)
+# #给出头节点和尾节点，查询关系
+# relation_list=predictor.predict_relation(head_id=0,tail_id=0)
+# print(relation_list)
 
-#给出头节点和关系，查询尾节点
-tail_list=predictor.predcit_tail(head_id=0,relation_id=0)
-print(tail_list)
-#给出头结点，查询关系和尾节点
-tail_list=predictor.predcit_tail(head_id=0)
-print(tail_list)
-
-#给出头节点和关系，查询尾节点
-head_list=predictor.predict_head(tail_id=0,relation_id=0)
-print(head_list)
-#给出尾节点，查询关系和头节点
-head_list=predictor.predict_head(tail_id=0)
-print(head_list)
-
-#给出头节点和尾节点，查询关系
-relation_list=predictor.predict_relation(head_id=0,tail_id=0)
-print(relation_list)
+#输出降维图像
+predictor.predict_img()
