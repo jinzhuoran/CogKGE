@@ -1,78 +1,88 @@
 # -*- coding: utf-8 -*-
-from mongodb import Flask, jsonify, request
-from flask_cors import *
+import sys
 
-app = Flask(__name__, static_url_path='')
+sys.path.append("..")
+from flask import Flask, jsonify, request
+
+app = Flask(__name__, static_url_path='/static')
 app.config['JSON_AS_ASCII'] = False
-CORS(app,resources={r"/*": {"origins":"*"}}, send_wildcard=True, supports_credentials=True)
+
+
+# CORS(app, resources={r"/*": {"origins": "*"}}, send_wildcard=True, supports_credentials=True)
+
 # 只接受POST方法访问
 
 
 @app.route('/', methods=["GET"])
 def index():
-    return app.send_static_file('test.html')
+    return app.send_static_file('main.html')
 
 
-#模糊查询节点
+# 模糊查询节点
 @app.route('/fuzzy_query_node', methods=["GET", "POST"])
-def fuzzy_query_node(keyword=None):
+def fuzzy_query_node():
     if request.method == "POST":
-        keyword = request.form[keyword]
+        keyword = request.form['keyword']
     else:
-        keyword = request.args[keyword]
+        keyword = request.args['keyword']
+    print(predictor.fuzzy_query_node_keyword(keyword))
     return jsonify(predictor.fuzzy_query_node_keyword(keyword))
-#模糊查询关系
+
+
+# 模糊查询关系
 @app.route('/fuzzy_query_relation', methods=["GET", "POST"])
-def fuzzy_query_node(keyword=None):
+def fuzzy_query_relation():
     if request.method == "POST":
-        keyword = request.form[keyword]
+        keyword = request.form['keyword']
     else:
-        keyword = request.args[keyword]
+        keyword = request.args['keyword']
     return jsonify(predictor.fuzzy_query_relation_keyword(keyword))
 
 
-
-#查询相似节点
+# 查询相似节点
 @app.route('/predict_similar_node', methods=["GET", "POST"])
-def predict_similar_node(id=None):
+def predict_similar_node():
     if request.method == "POST":
-        id = request.form[id]
+        id = request.form['id']
     else:
-        id = request.args[id]
-    return jsonify(predictor.predict_similar_node(node_id=id))
+        id = request.args['id']
+    return jsonify(predictor.predict_similar_node(node_id=int(id)))
 
 
-
-#查询尾节点
+# 查询尾节点
 @app.route('/predcit_tail', methods=["GET", "POST"])
-def predcit_tail(head_id,relation_id=None):
+def predcit_tail():
     if request.method == "POST":
-        head_id = request.form[head_id]
-        relation_id =request.form[relation_id]
+        head_id = request.form['head_id']
+        relation_id = request.form['relation_id']
     else:
-        head_id= request.args[head_id]
-        relation_id = request.args[relation_id]
-    return jsonify(predictor.predcit_tail(head_id=head_id,relation_id=relation_id))
-#查询关系
+        head_id = request.args['head_id']
+        relation_id = request.args['relation_id']
+    return jsonify(predictor.predcit_tail(head_id=int(head_id), relation_id=int(relation_id)))
+
+
+# 查询关系
 @app.route('/predict_relation', methods=["GET", "POST"])
-def predcit_relation(head_id,tail_id):
+def predcit_relation():
     if request.method == "POST":
-        head_id = request.form[head_id]
-        tail_id = request.form[tail_id]
+        head_id = request.form['head_id']
+        tail_id = request.form['tail_id']
     else:
-        head_id = request.args[head_id]
-        tail_id = request.args[tail_id]
-    return jsonify(predictor.predict_relation(head_id=head_id,tail_id=tail_id))
-#查询头节点
+        head_id = request.args['head_id']
+        tail_id = request.args['tail_id']
+    return jsonify(predictor.predict_relation(head_id=int(head_id), tail_id=int(tail_id)))
+
+
+# 查询头节点
 @app.route('/predict_head', methods=["GET", "POST"])
-def predcit_head(tail_id,relation_id=None):
+def predcit_head():
     if request.method == "POST":
-        tail_id = request.form[tail_id]
-        relation_id = request.form[relation_id]
+        tail_id = request.form['tail_id']
+        relation_id = request.form['relation_id']
     else:
-        tail_id = request.args[tail_id]
-        relation_id = request.args[relation_id]
-    return jsonify(predictor.predict_head(tail_id=tail_id,relation_id=relation_id))
+        tail_id = request.args['tail_id']
+        relation_id = request.args['relation_id']
+    return jsonify(predictor.predict_head(tail_id=int(tail_id), relation_id=int(relation_id)))
 
 
 if __name__ == "__main__":
@@ -99,17 +109,15 @@ if __name__ == "__main__":
                  relation_dict_len=len(relation_lut),
                  embedding_dim=50)
 
-    loss = MarginLoss(margin=1.0, C=0)
-
-    metric = Link_Prediction(link_prediction_raw=True,
-                             link_prediction_filt=False,
-                             batch_size=5000000,
-                             reverse=False)
-
-    predictor = Kr_Predictior(model=model,
-                              pretrained_model_path="data/BoxE_Model.pkl",
+    predictor = Kr_Predictior(model_name="BoxE",
+                              data_name="EVENTKG2M",
+                              model=model,
                               device=device,
                               node_lut=node_lut,
                               relation_lut=relation_lut,
-                              reprocess=False)
-    app.run(host="0.0.0.0", port=5050, debug=True)
+                              pretrained_model_path="data/BoxE_Model.pkl",
+                              processed_data_path="data",
+                              reprocess=False,
+                              fuzzy_query_top_k=20,
+                              predict_top_k=40)
+    app.run(host="0.0.0.0", port=5050)
