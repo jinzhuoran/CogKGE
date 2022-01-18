@@ -18,7 +18,7 @@ cors = CORS(app)
 
 @app.route('/', methods=["GET"])
 def index():
-    return app.send_static_file('main.html')
+    return app.send_static_file('home.html')
 
 
 # 模糊查询节点
