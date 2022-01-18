@@ -2,286 +2,407 @@
 <html dir="ltr" lang="en-US">
 <head>
 
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<meta name="author" content="SemiColonWeb" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="SemiColonWeb" />
 
-	<!-- Stylesheets
-	============================================= -->
-	<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Handlee&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
-	<link rel="stylesheet" href="style.css" type="text/css" />
+    <!-- Stylesheets
+    ============================================= -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Handlee&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
 
-	<link rel="stylesheet" href="css/dark.css" type="text/css" />
-	<link rel="stylesheet" href="css/font-icons.css" type="text/css" />
-	<link rel="stylesheet" href="css/animate.css" type="text/css" />
-	<link rel="stylesheet" href="css/magnific-popup.css" type="text/css" />
+    <link rel="stylesheet" href="css/dark.css" type="text/css" />
+    <link rel="stylesheet" href="css/font-icons.css" type="text/css" />
+    <link rel="stylesheet" href="css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css" />
 
-	<link rel="stylesheet" href="css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="css/components/select-boxes.css" type="text/css">
+    <!-- Freelancer Demo Specific Stylesheet -->
+    <link rel="stylesheet" href="demos/freelancer/css/fonts.css" type="text/css" />
+    <link rel="stylesheet" href="demos/freelancer/freelancer.css" type="text/css" />
 
-	<!-- Freelancer Demo Specific Stylesheet -->
-	<link rel="stylesheet" href="demos/freelancer/css/fonts.css" type="text/css" />
-	<link rel="stylesheet" href="demos/freelancer/freelancer.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/colors.php?color=f7c25e" type="text/css" />
 
-	<link rel="stylesheet" href="css/colors.php?color=f7c25e" type="text/css" />
-
-	<!-- Document Title
-	============================================= -->
-	<title>CogKGE</title>
-
+    <!-- Document Title
+    ============================================= -->
+    <title>CogKGE</title>
+	<style>
+		.toggle-header .toggle-title{
+			overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+		}
+	</style>
 </head>
 
 <body class="stretched">
 
-	<!-- Document Wrapper
-	============================================= -->
-	<div id="wrapper" class="clearfix">
+    <!-- Document Wrapper
+    ============================================= -->
+    <div id="wrapper" class="clearfix">
 
-		<!-- Header
-		============================================= -->
-		<header id="header" class="border-bottom-0 no-sticky transparent-header">
-			<div id="header-wrap">
-				<div class="container">
-					<div class="header-row">
+        <!-- Header
+        ============================================= -->
+        <header id="header" class="border-bottom-0 no-sticky transparent-header">
+            <div id="header-wrap">
+                <div class="container">
+                    <div class="header-row">
 
-						<!-- Logo
-						============================================= -->
-						<div id="logo">
-							<a href="home.html" class="standard-logo"><img src="demos/freelancer/images/KGE1-01.png" alt="CogKGE Logo"></a>
-							<a href="home.html" class="retina-logo"><img src="demos/freelancer/images/KGE1-01.png" alt="CogKGE Logo"></a>
-						</div><!-- #logo end -->
+                        <!-- Logo
+                        ============================================= -->
+                        <div id="logo">
+                            <a href="home.html" class="standard-logo"><img src="demos/freelancer/images/KGE1-01.png" alt="CogKGE Logo"></a>
+                            <a href="home.html" class="retina-logo"><img src="demos/freelancer/images/KGE1-01.png" alt="CogKGE Logo"></a>
+                        </div><!-- #logo end -->
 
-						<div class="header-misc">
-							<a href="mailto:noreply@canvas.com" class="button button-border rounded-pill">Email Us</a>
-						</div>
+                        <div class="header-misc">
+                            <a href="mailto:noreply@canvas.com" class="button button-border rounded-pill">Email Us</a>
+                        </div>
 
-						<div id="primary-menu-trigger">
-							<svg class="svg-trigger" viewBox="0 0 100 100"><path d="m 30,33 h 40 c 3.722839,0 7.5,3.126468 7.5,8.578427 0,5.451959 -2.727029,8.421573 -7.5,8.421573 h -20"></path><path d="m 30,50 h 40"></path><path d="m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20"></path></svg>
-						</div>
+                        <div id="primary-menu-trigger">
+                            <svg class="svg-trigger" viewBox="0 0 100 100"><path d="m 30,33 h 40 c 3.722839,0 7.5,3.126468 7.5,8.578427 0,5.451959 -2.727029,8.421573 -7.5,8.421573 h -20"></path><path d="m 30,50 h 40"></path><path d="m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20"></path></svg>
+                        </div>
 
-						<!-- Primary Navigation
-						============================================= -->
-						<nav class="primary-menu">
+                        <!-- Primary Navigation
+                        ============================================= -->
+                        <nav class="primary-menu">
 
-							<ul class="menu-container">
-								<li class="menu-item"><a class="menu-link" href="home.html"><div>home</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="model.html"><div>model</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="demo-freelancer-works.html"><div>Dataset</div></a></li>
-								<li class="menu-item current"><a class="menu-link" href="evaluation.html"><div>Evaluation</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="demo-freelancer-works.html"><div>about</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="https://github.com/jinzhuoran/CogKGE"><div>GitHub</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="#" data-scrollto="#footer" data-easing="easeInOutExpo" data-speed="1250" data-offset="70"><div>Contact</div></a></li>
-							</ul>
+                            <ul class="menu-container">
+                                <li class="menu-item"><a class="menu-link" href="home.html"><div>home</div></a></li>
+                                <li class="menu-item"><a class="menu-link" href="model.html"><div>model</div></a></li>
+                                <li class="menu-item"><a class="menu-link" href="demo-freelancer-works.html"><div>Dataset</div></a></li>
+                                <li class="menu-item current"><a class="menu-link" href="evaluation.html"><div>Evaluation</div></a></li>
+                                <li class="menu-item"><a class="menu-link" href="demo-freelancer-works.html"><div>about</div></a></li>
+                                <li class="menu-item"><a class="menu-link" href="https://github.com/jinzhuoran/CogKGE"><div>GitHub</div></a></li>
+                                <li class="menu-item"><a class="menu-link" href="#" data-scrollto="#footer" data-easing="easeInOutExpo" data-speed="1250" data-offset="70"><div>Contact</div></a></li>
+                            </ul>
 
-						</nav><!-- #primary-menu end -->
+                        </nav><!-- #primary-menu end -->
 
-					</div>
-				</div>
-			</div>
-		</header><!-- #header end -->
+                    </div>
+                </div>
+            </div>
+        </header><!-- #header end -->
 
-		<!-- Content
-		============================================= -->
-		<section id="content">
+        <!-- Content
+        ============================================= -->
+        <section id="content">
 
-			<div class="content-wrap py-0">
+            <div class="content-wrap py-0">
 
-				<div class="section m-0">
-					<div class="container">
-						<div class="row align-items-end justify-content-between mb-5">
-							<div class="col-lg-6 offset-lg-1">
-								<div>
-									<h3 class="fw-bolder display-4 mb-3">Link <span class="gradient-text gradient-horizon">Prediction</span></h3>
-									<p class="lead mb-0">Input keyword to search entitys.</p>
-								</div>
-							</div>
-						</div>
+                <div class="section m-0">
+                    <div class="container">
+                        <div class="row align-items-end justify-content-between mb-5">
+                            <div class="col-lg-6 offset-lg-1">
+                                <div>
+                                    <h3 class="fw-bolder display-4 mb-3">Link <span class="gradient-text gradient-horizon">Prediction</span></h3>
+                                    <p class="lead mb-0">Input keyword to search entitys.</p>
+                                </div>
+                            </div>
+                        </div>
 
-						<div class="clear"></div>
-						<div class="tabs tabs-alt tabs-justify clearfix ui-tabs ui-corner-all ui-widget ui-widget-content" id="tab-10">
+                        <div class="clear"></div>
+                        <div class="tabs tabs-alt tabs-justify clearfix ui-tabs ui-corner-all ui-widget ui-widget-content" id="tab-10">
 
-							<ul class="tab-nav clearfix ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header" role="tablist">
-								<li role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active" aria-controls="tabs-tail-entity" aria-labelledby="ui-id-tail-entity" aria-selected="true" aria-expanded="true"><a href="#tabs-tail-entity" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-tail-entity">Predict Tail Entity</a></li>
-								<li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-entity-relation" aria-labelledby="ui-id-entity-relation" aria-selected="false" aria-expanded="false"><a href="#tabs-entity-relation" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-entity-relation">Predict Relation</a></li>
-							</ul>
+                            <ul class="tab-nav clearfix ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header" role="tablist">
+                                <li role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active" aria-controls="tabs-tail-entity" aria-labelledby="ui-id-tail-entity" aria-selected="true" aria-expanded="true"><a href="#tabs-tail-entity" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-tail-entity">Predict Tail Entity</a></li>
+                                <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-entity-relation" aria-labelledby="ui-id-entity-relation" aria-selected="false" aria-expanded="false"><a href="#tabs-entity-relation" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-entity-relation">Predict Relation</a></li>
+                            </ul>
 
-							<div class="tab-container">
+                            <div class="tab-container">
 
-								<div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-tail-entity" aria-labelledby="ui-id-tail-entity" role="tabpanel" aria-hidden="false" style="display: block;">
-									<div class="row col-mb-50 mb-0">
-										<div class="col-md-6">
-											<h5>Select An Entity</h5>
-											<select class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
-										</div>
-										<div class="col-md-6">	
-											<h5>Select A Relation</h5>
-											<select class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
-										</div>
+                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-tail-entity" aria-labelledby="ui-id-tail-entity" role="tabpanel" aria-hidden="false" style="display: block;">
+                                    <div class="row col-mb-50 mb-0">
+                                        <div class="col-md-5">
+                                            <h7>Select A Head Entity</h7>
+                                            <select id="entity_select_1" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
+                                        </div>
+                                        <div class="col-md-5">    
+                                            <h7>Select A Relation</h7>
+                                            <select id="relation_select_1" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
+                                        </div>
+                                        <div class="col-md-2">    
+                                            <a href="#" onclick="predict_tail()" class="button button-3d button-rounded gradient-horizon"><i class="icon-beaker"></i>Predict</a>
+                                        </div>
+                                    </div>
+									<div id="predict_tail_result" class="row mb-0">
 									</div>
-									<div class="row col-mb-50 mb-0">
-										<div class="col-md-2">
-											<div class="toggle toggle-border">
-												<div class="toggle-header">
-													<div class="toggle-icon">
-														<i class="toggle-closed icon-ok-circle"></i>
-														<i class="toggle-open icon-remove-circle"></i>
-													</div>
-													<div class="toggle-title">
-														This is a Toggle Title
-													</div>
-												</div>
-												<div class="toggle-content" style="display: none;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, dolorum, vero ipsum molestiae minima odio quo voluptate illum excepturi quam cum voluptates doloribus quae nisi tempore necessitatibus dolores ducimus enim libero eaque explicabo suscipit animi at quaerat aliquid ex expedita perspiciatis? Saepe, aperiam, nam unde quas beatae vero vitae nulla.</div>
-											</div>
-										</div>
-										<div class="col-md-2">
-											<div class="toggle toggle-border">
-												<div class="toggle-header">
-													<div class="toggle-icon">
-														<i class="toggle-closed icon-ok-circle"></i>
-														<i class="toggle-open icon-remove-circle"></i>
-													</div>
-													<div class="toggle-title">
-														This is a Toggle Title
-													</div>
-												</div>
-												<div class="toggle-content" style="display: none;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, dolorum, vero ipsum molestiae minima odio quo voluptate illum excepturi quam cum voluptates doloribus quae nisi tempore necessitatibus dolores ducimus enim libero eaque explicabo suscipit animi at quaerat aliquid ex expedita perspiciatis? Saepe, aperiam, nam unde quas beatae vero vitae nulla.</div>
-											</div>
-										</div>
-										<div class="col-md-2">
-											<div class="toggle toggle-border">
-												<div class="toggle-header">
-													<div class="toggle-icon">
-														<i class="toggle-closed icon-ok-circle"></i>
-														<i class="toggle-open icon-remove-circle"></i>
-													</div>
-													<div class="toggle-title">
-														This is a Toggle Title
-													</div>
-												</div>
-												<div class="toggle-content" style="display: none;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, dolorum, vero ipsum molestiae minima odio quo voluptate illum excepturi quam cum voluptates doloribus quae nisi tempore necessitatibus dolores ducimus enim libero eaque explicabo suscipit animi at quaerat aliquid ex expedita perspiciatis? Saepe, aperiam, nam unde quas beatae vero vitae nulla.</div>
-											</div>
-										</div>
-										<div class="col-md-2">
-											<div class="toggle toggle-border">
-												<div class="toggle-header">
-													<div class="toggle-icon">
-														<i class="toggle-closed icon-ok-circle"></i>
-														<i class="toggle-open icon-remove-circle"></i>
-													</div>
-													<div class="toggle-title">
-														This is a Toggle Title
-													</div>
-												</div>
-												<div class="toggle-content" style="display: none;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, dolorum, vero ipsum molestiae minima odio quo voluptate illum excepturi quam cum voluptates doloribus quae nisi tempore necessitatibus dolores ducimus enim libero eaque explicabo suscipit animi at quaerat aliquid ex expedita perspiciatis? Saepe, aperiam, nam unde quas beatae vero vitae nulla.</div>
-											</div>
-										</div>
-										<div class="col-md-2">
-											<div class="toggle toggle-border">
-												<div class="toggle-header">
-													<div class="toggle-icon">
-														<i class="toggle-closed icon-ok-circle"></i>
-														<i class="toggle-open icon-remove-circle"></i>
-													</div>
-													<div class="toggle-title">
-														This is a Toggle Title
-													</div>
-												</div>
-												<div class="toggle-content" style="display: none;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, dolorum, vero ipsum molestiae minima odio quo voluptate illum excepturi quam cum voluptates doloribus quae nisi tempore necessitatibus dolores ducimus enim libero eaque explicabo suscipit animi at quaerat aliquid ex expedita perspiciatis? Saepe, aperiam, nam unde quas beatae vero vitae nulla.</div>
-											</div>
-										</div>
-										<div class="col-md-2">
-											<div class="toggle toggle-border">
-												<div class="toggle-header">
-													<div class="toggle-icon">
-														<i class="toggle-closed icon-ok-circle"></i>
-														<i class="toggle-open icon-remove-circle"></i>
-													</div>
-													<div class="toggle-title">
-														This is a Toggle Title
-													</div>
-												</div>
-												<div class="toggle-content" style="display: none;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, dolorum, vero ipsum molestiae minima odio quo voluptate illum excepturi quam cum voluptates doloribus quae nisi tempore necessitatibus dolores ducimus enim libero eaque explicabo suscipit animi at quaerat aliquid ex expedita perspiciatis? Saepe, aperiam, nam unde quas beatae vero vitae nulla.</div>
-											</div>
-										</div>
+                                </div>
+                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-entity-relation" aria-labelledby="ui-id-entity-relation" role="tabpanel" aria-hidden="true" style="display: none;">
+                                    <div class="row col-mb-50 mb-0">
+                                        <div class="col-md-5">
+                                            <h7>Select An Entity</h7>
+                                            <select id="entity_select_2" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h7>Select Another Entity</h7>
+                                            <select id="entity_select_3" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
+                                        </div>
+                                        <div class="col-md-2">    
+                                            <a href="#" onclick="predict_relation()" class="button button-3d button-rounded gradient-horizon"><i class="icon-beaker"></i>Predict</a>
+                                        </div>
+                                    </div>
+									<div id="predict_relation_result" class="row mb-0">
 									</div>
-								</div>
-								<div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-entity-relation" aria-labelledby="ui-id-entity-relation" role="tabpanel" aria-hidden="true" style="display: none;">
-									<div class="row col-mb-50 mb-0">
-										<div class="col-md-6">
-											<h5>Select An Entity</h5>
-											<select class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
-										</div>
-										<div class="col-md-6">
-											<h5>Select Another Entity</h5>
-											<select class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
-										</div>
-									</div>
-								</div>
-							</div>
+                                </div>
+                            </div>
 
-						</div>
-					</div>
-				</div>
+                        </div>
+                    </div>
+                </div>
 
-			</div>
+            </div>
 
-		</section><!-- #content end -->
+        </section><!-- #content end -->
 
-		<!-- Footer
-		============================================= -->
-		<footer id="footer" class="border-0" style="background-color: #C9D6CF;">
+        <!-- Footer
+        ============================================= -->
+        <footer id="footer" class="border-0" style="background-color: #C9D6CF;">
 
-			<div class="container">
-				<div class="footer-widgets-wrap  m-0">
+            <div class="container">
+                <div class="footer-widgets-wrap  m-0">
 
-					<div class="row justify-content-between">
+                    <div class="row justify-content-between">
 
-						<div class="col-md-4">
-							<div class="widget">
+                        <div class="col-md-4">
+                            <div class="widget">
 
-								<h3 class="h1 mb-5">Let's Talk!</h3>
-								<span class="text-black-50">If you have any questions, please contact us in time and look forward to your feedback.</span>
-								<a href="mailto:noreply@canvas.com" class="h4 text-dark mt-5 mb-4 d-block"><u>zhuoran.jin@nlpr.ia.ac.cn</u> <i class="icon-line-arrow-right position-relative ms-2" style="top: 3px"></i></a>
-								<div>
-									<a href="https://github.com/jinzhuoran/CogKGE" class="social-icon si-small si-colored si-facebook" target="_blank">
-										<i class="icon-github"></i>
-										<i class="icon-github"></i>
-									</a>
-									
-									<a href="https://youtu.be/csgnjU_F3Qs" class="social-icon si-small si-colored si-youtube" target="_blank">
-										<i class="icon-youtube"></i>
-										<i class="icon-youtube"></i>
-									</a>
-									
-								</div>
+                                <h3 class="h1 mb-5">Let's Talk!</h3>
+                                <span class="text-black-50">If you have any questions, please contact us in time and look forward to your feedback.</span>
+                                <a href="mailto:noreply@canvas.com" class="h4 text-dark mt-5 mb-4 d-block"><u>zhuoran.jin@nlpr.ia.ac.cn</u> <i class="icon-line-arrow-right position-relative ms-2" style="top: 3px"></i></a>
+                                <div>
+                                    <a href="https://github.com/jinzhuoran/CogKGE" class="social-icon si-small si-colored si-facebook" target="_blank">
+                                        <i class="icon-github"></i>
+                                        <i class="icon-github"></i>
+                                    </a>
+                                    
+                                    <a href="https://youtu.be/csgnjU_F3Qs" class="social-icon si-small si-colored si-youtube" target="_blank">
+                                        <i class="icon-youtube"></i>
+                                        <i class="icon-youtube"></i>
+                                    </a>
+                                    
+                                </div>
 
-							</div>
-						</div>
+                            </div>
+                        </div>
 
-						
+                        
 
-					</div>
+                    </div>
 
-				</div>
-			</div>
+                </div>
+            </div>
 
-		</footer><!-- #footer end -->
+        </footer><!-- #footer end -->
 
-	</div><!-- #wrapper end -->
+    </div><!-- #wrapper end -->
 
-	<!-- Go To Top
-	============================================= -->
-	<div id="gotoTop" class="icon-double-angle-up bg-white text-dark rounded-circle shadow"></div>
+    <!-- Go To Top
+    ============================================= -->
+    <div id="gotoTop" class="icon-double-angle-up bg-white text-dark rounded-circle shadow"></div>
 
-	<!-- External JavaScripts
-	============================================= -->
-	<script src="js/jquery.js"></script>
-	<script src="js/plugins.min.js"></script>
+    <!-- External JavaScripts
+    ============================================= -->
+    <script src="js/jquery.js"></script>
+    <script src="js/plugins.min.js"></script>
 
-	<!-- Footer Scripts
-	============================================= -->
-	<script src="js/functions.js"></script>
-
+    <!-- Select-Boxes Plugin -->
+    <script src="js/components/select-boxes.js"></script>
+    <script src="js/components/selectsplitter.js"></script>
+    <!-- Footer Scripts
+    ============================================= -->
+    <script src="js/functions.js"></script>
+    <script>
+        var data = [{ id: 0, text: 'enhancement' }, { id: 1, text: 'bug' }, { id: 2, text: 'duplicate' }, { id: 3, text: 'invalid' }, { id: 4, text: 'wontfix' }];
+        var entity_select_1 = $("#entity_select_1");
+        var relation_select_1 = $("#relation_select_1");
+        var entity_select_2 = $("#entity_select_2");
+        var entity_select_3 = $("#entity_select_3");
+        var col_width = 3;
+        jQuery(document).ready( function($){
+            entity_select_1.select2({
+                placeholder: 'Input and select an entity',
+                ajax: {
+                    url: 'http://210.75.240.136:5050/fuzzy_query_node',
+                    data: function (params) {
+                        var query = {
+                            keyword: params.term
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        var result_list = []
+                        for(var i in data){
+                            var entity = data[i];
+                            result_list.push({id:entity["idd"],text:entity["name"]})
+                        }
+                        return {
+                            results: result_list
+                        };
+                    }
+                }
+            })
+            entity_select_2.select2({
+                placeholder: 'Input and select an entity',
+                ajax: {
+                    url: 'http://210.75.240.136:5050/fuzzy_query_node',
+                    data: function (params) {
+                        var query = {
+                            keyword: params.term
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        var result_list = []
+                        for(var i in data){
+                            var entity = data[i];
+                            result_list.push({id:entity["idd"],text:entity["name"]})
+                        }
+                        return {
+                            results: result_list
+                        };
+                    }
+                }
+            })
+            entity_select_3.select2({
+                placeholder: 'Input and select an entity',
+                ajax: {
+                    url: 'http://210.75.240.136:5050/fuzzy_query_node',
+                    data: function (params) {
+                        var query = {
+                            keyword: params.term
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        var result_list = []
+                        for(var i in data){
+                            var entity = data[i];
+                            result_list.push({id:entity["idd"],text:entity["name"]})
+                        }
+                        return {
+                            results: result_list
+                        };
+                    }
+                }
+            })
+            relation_select_1.select2({
+                placeholder: 'Input and select an entity',
+                ajax: {
+                    url: 'http://210.75.240.136:5050/fuzzy_query_relation',
+                    dataType: "json",
+                    data: function (params) {
+                        var query = {
+                            keyword: params.term
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        var result_list = []
+                        for(var i in data){
+                            var entity = data[i];
+                            result_list.push({id:entity["idd"],text:entity["name"]})
+                        }
+                        return {
+                            results: result_list
+                        };
+                    }
+                }
+            })
+        });
+		function confidence_color(confidence){
+			return "rgba("+166+","+166+","+255+","+confidence+")";
+		}
+		function obj_to_div(name,col_width,obj){
+			var div_str = '<div class="col-md-'+col_width+'">';
+				div_str += '<div class="toggle toggle-border" style="background:'+confidence_color(obj["confidence"])+'">';
+				div_str += '<div class="toggle-header">';
+				div_str += '<div class="toggle-icon">';
+				div_str += '<i class="toggle-closed icon-ok-circle"></i>';
+				div_str += '<i class="toggle-open icon-remove-circle"></i>';
+				div_str += '</div>';
+				div_str += '<div class="toggle-title">';
+				div_str += name;
+				div_str += '</div>';
+				div_str += '</div>';
+				div_str += '<div class="toggle-content" style="display: none;">';
+				div_str += JSON.stringify(obj);
+				div_str += '</div>';
+				div_str += '</div>';
+				div_str += '</div>';
+			return div_str;
+        }
+		function predict_tail(){
+			var head_data = entity_select_1.select2("data");
+			var relation_data = relation_select_1.select2("data");
+			if(head_data.length > 0 && relation_data.length > 0){
+				$.ajax({
+					type: "post",
+					async: true,
+					url: 'http://210.75.240.136:5050/predict_tail',
+					dataType: "json",
+					data: {"head_id": head_data[0].id,"relation_id":relation_data[0].id},
+					success: function (json) {
+						var result_rows = "";
+						for(var i = 0,col_index = 0; i < json.length; i ++){
+							var current_data = json[i];
+							if(col_index = 0){
+								result_rows += '<div class="row col-mb-50 mb-0">';
+							}
+							col_index ++;
+							result_rows += obj_to_div(current_data["name"],col_width,current_data)
+							if(col_index * col_width >= 12){
+								result_rows += '</div>';
+								col_index = 0;
+							}
+						}
+						$("#predict_tail_result").html(result_rows);
+						SEMICOLON.widget.toggles();//初始化弹出
+					},
+					error: function () {
+					}
+				});
+			}
+		}
+		function predict_relation(){
+			var head_data = entity_select_2.select2("data");
+			var tail_data = entity_select_3.select2("data");
+			if(head_data.length > 0 && tail_data.length > 0){
+				$.ajax({
+					type: "post",
+					async: true,
+					url: 'http://210.75.240.136:5050/predict_relation',
+					dataType: "json",
+					data: {"head_id": head_data[0].id,"tail_id":tail_data[0].id},
+					success: function (json) {
+						var result_rows = "";
+						for(var i = 0,col_index = 0; i < json.length; i ++){
+							var current_data = json[i];
+							if(col_index = 0){
+								result_rows += '<div class="row col-mb-50 mb-0">';
+							}
+							col_index ++;
+							result_rows += obj_to_div(current_data["name"],col_width,current_data)
+							if(col_index * col_width >= 12){
+								result_rows += '</div>';
+								col_index = 0;
+							}
+						}
+						$("#predict_relation_result").html(result_rows);
+						SEMICOLON.widget.toggles();//初始化弹出
+					},
+					error: function () {
+					}
+				});
+			}
+		}
+    </script>
 </body>
 </html>
