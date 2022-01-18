@@ -1,21 +1,46 @@
+import os
 import copy
+import pickle
 
 from ...dataset import Cog_Dataset
 
 
 class BaseProcessor:
-    def __init__(self, node_lut, relation_lut):
+    def __init__(self, data_name,node_lut, relation_lut,reprocess=True,
+                 time=None,type=None,description=None,path=None):
         """
         :param vocabs: node_vocab,relation_vocab from node_lut relation_lut
         """
+        self.data_name = data_name
         self.node_vocab = node_lut.vocab
         self.relation_vocab = relation_lut.vocab
+        self.node_lut = node_lut
+        self.relation_lut = relation_lut
+        self.reprocess=reprocess
+        self.time=time
+        self.type=type
+        self.description=description
+        self.path=path
+        self.processed_path=node_lut.processed_path
         # self.node_vocab = node_vocab
         # self.relation_vocab = relation_vocab
 
     def process(self, data):
-        data = self._datable2numpy(data)
-        return Cog_Dataset(data, task='kr')
+        path = os.path.join(self.processed_path, "{}_dataset.pkl".format(data.data_type))
+        if os.path.exists(path) and not self.reprocess:
+            print("load {} dataset".format(data.data_type))
+            with open(path, "rb") as new_file:
+                new_data = pickle.loads(new_file.read())
+            return new_data
+        else:
+            data = self._datable2numpy(data)
+            dataset = Cog_Dataset(data, task='kr')
+            dataset.data_name=self.data_name
+            file = open(path, "wb")
+            file.write(pickle.dumps(dataset))
+            file.close()
+
+            return dataset
 
     def _datable2numpy(self, data):
         """
@@ -28,6 +53,8 @@ class BaseProcessor:
         data.str2idx("tail", self.node_vocab)
         data.str2idx("relation", self.relation_vocab)
         return data.to_numpy()
+    def process_lut(self):
+        return self.node_lut,self.relation_lut
 
     @staticmethod
     def _series2numpy(series, vocab):

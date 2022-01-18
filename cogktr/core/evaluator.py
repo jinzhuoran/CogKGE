@@ -46,8 +46,10 @@ class Kr_Evaluator(object):
         self.num_workers=num_workers
         self.pin_memory=pin_memory
 
+        self.data_name=test_dataset.data_name
+
         # Set output_path
-        output_path = os.path.join(output_path, "kr", "EVENTKG2M")
+        output_path = os.path.join(output_path, "kr",self.data_name)
         self.output_path = cal_output_path(output_path, self.model.name)
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)

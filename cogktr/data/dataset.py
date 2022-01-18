@@ -11,6 +11,7 @@ class Cog_Dataset(Dataset):
         self.data = data
         self.task = task
         self.descriptions = descriptions
+        self.data_name=None
 
     def __len__(self):
         return self.data.shape[0]

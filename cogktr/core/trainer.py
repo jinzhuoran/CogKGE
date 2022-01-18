@@ -75,6 +75,8 @@ class Kr_Trainer(object):
         self.metric_final_model=metric_final_model
         self.save_final_model=save_final_model
 
+        self.data_name=train_dataset.data_name
+
 
         self.visual_num=100 #降维可视化的样本个数
         if self.lookuptable_E.type is not None:
@@ -84,7 +86,7 @@ class Kr_Trainer(object):
                                           np.random.normal(0, 2, self.visual_num))
 
         #Set output_path
-        output_path=os.path.join(output_path,"kr","EVENTKG2M")
+        output_path=os.path.join(output_path,"kr",self.data_name)
         self.output_path = cal_output_path(output_path, self.model.name)
         self.output_path=self.output_path+"--{}epochs".format(self.epoch)
         if not os.path.exists(self.output_path):
@@ -256,8 +258,8 @@ class Kr_Trainer(object):
                 # self.writer.add_image("Dimensionality reduction image", img, current_epoch)
                 # image=np.ones((64,64,3))*random.randint(255)
                 # self.writer.add_image("Dimensionality reduction image", image,current_epoch , dataformats='HWC')
-                embedding=self.model.entity_embedding.weight.data.cpu().numpy()[:self.visual_num]
-                embedding=TSNE().fit(embedding)
+                embedding=self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
+                embedding=TSNE(negative_gradient_method="bh").fit(embedding)
                 plt.scatter(embedding[:,0],embedding[:,1],c=self.visual_type)
                 plt.show()
                 if epoch == 0:
