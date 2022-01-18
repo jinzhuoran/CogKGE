@@ -1,0 +1,59 @@
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: clients.scss
+
+-----------------------------------------------------------------------------------*/
+.clients-grid {
+  position: relative;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -ms-flex-align: stretch;
+  -webkit-box-align: stretch;
+          align-items: stretch;
+  list-style: none;
+  overflow: hidden;
+}
+.clients-grid .grid-item {
+  position: relative;
+  padding: 20px 0;
+  -webkit-backface-visibility: hidden;
+}
+.clients-grid .grid-item a {
+  opacity: 0.6;
+}
+body:not(.device-touch) .clients-grid .grid-item a {
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+  backface-visibility: hidden;
+}
+.clients-grid .grid-item a,
+.clients-grid .grid-item img {
+  display: block;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.clients-grid .grid-item img {
+  width: 100%;
+}
+.clients-grid .grid-item::before, .clients-grid .grid-item::after {
+  content: '';
+  position: absolute;
+}
+.clients-grid .grid-item::before {
+  height: 100%;
+  top: 0;
+  left: -1px;
+  border-left: 1px dashed #dddddd;
+}
+.clients-grid .grid-item::after {
+  width: 100%;
+  height: 0;
+  top: auto;
+  left: 0;
+  bottom: -1px;
+  border-bottom: 1px dashed #dddddd;
+}

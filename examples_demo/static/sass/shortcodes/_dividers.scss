@@ -1,0 +1,135 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: dividers.scss
+
+-----------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Divider
+-----------------------------------------------------------------*/
+$divider-prefix: divider;
+
+.#{$divider-prefix} {
+	position: relative;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	overflow: hidden;
+	margin: $divider-margins auto;
+	color: $divider-colors;
+	width: 100%;
+	&#{&}-margin-lg { margin: decimal-floor($divider-margins * 1.667) auto; }
+	&::after,
+	&::before {
+		content: '';
+		-ms-flex-preferred-size: 0;
+		flex-basis: 0;
+		-ms-flex-positive: 1;
+		flex-grow: 1;
+		max-width: 100%;
+		height: 1px;
+		background-color: $divider-border-color;
+	}
+	&::before {
+		display: none;
+		margin-right: $divider-icon-gutter;
+	}
+
+	&::after {
+		margin-left: $divider-icon-gutter;
+	}
+	&#{&}-thick::after,
+	&#{&}-thick::before { height: $divider-thick-height; }
+	&#{&}-sm { width: $divider-short-width-sm; }
+	&#{&}-xs { width: $divider-short-width-xs; }
+	i,
+	a,
+	&-text {
+		position: relative;
+		-ms-flex: 0 0 auto;
+		flex: 0 0 auto;
+		width: round($divider-icon-size * 1.33);
+		max-width: 100%;
+		line-height: 1;
+		font-size: $divider-icon-size !important;
+		text-align: center;
+	}
+	a,
+	&-text {
+		width: auto;
+		color: inherit;
+		-webkit-transition: all .3s ease;
+		-o-transition: all .3s ease;
+		transition: all .3s ease;
+		&:hover { color: $divider-icon-hover-color; }
+	}
+
+	/* Divider - Icon Align Right
+	-----------------------------------------------------------------*/
+
+	&#{&}-right{
+		&::before {
+			display: block;
+		}
+		&::after {
+			display: none;
+		}
+	}
+
+	/* Divider - Icon Align Center
+	-----------------------------------------------------------------*/
+	&#{&}-center::before {
+		display: block;
+	}
+
+
+	/* Divider - Rounded Icon
+	-----------------------------------------------------------------*/
+
+	&#{&}-rounded,
+	&#{&}-border {
+		i {
+			width: $divider-rounded-size;
+			height: $divider-rounded-size;
+			line-height: $divider-rounded-size;
+			color: $divider-rounded-color;
+			background-color: $divider-rounded-background;
+			border-radius: 50%;
+		}
+	}
+
+	&#{&}-border,
+	&#{&}-rounded {
+		&::before,
+		&::after {
+			margin-left: 0;
+			margin-right: 0;
+		}
+	}
+
+
+	/* Divider - Rounded & Border
+	-----------------------------------------------------------------*/
+
+	&#{&}-border { color: $divider-colors;
+		i {
+			line-height: round($divider-rounded-size - round($divider-border-size * 2));
+			background-color: transparent;
+			border: $divider-border-size solid $divider-border-color;
+		}
+	}
+
+
+	/* Divider - Line Only
+	-----------------------------------------------------------------*/
+
+	&#{&}-line{
+		&::before,
+		&::after {
+			margin-left: 0;
+			margin-right: 0;
+		}
+	}
+
+}

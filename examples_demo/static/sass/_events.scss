@@ -1,0 +1,150 @@
+/* ----------------------------------------------------------------
+
+	event.scss
+
+-----------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Events
+-----------------------------------------------------------------*/
+
+
+.event {
+	&.entry::after {
+		display: none !important;
+	}
+	.grid-inner {
+		background-color: $section-bg;
+		border-bottom: 3px solid darken($body-bg, 6.67);
+	}
+
+	.entry-image .entry-date {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		background-color: rgba(0,0,0,0.7);
+		color: #FFF;
+		text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+		width: $event-entry-date * 2.286;
+		height: $event-entry-date * 2.14;
+		text-align: center;
+		padding-top: 9px;
+		font-size: $event-entry-date;
+		line-height: 1;
+		 span {
+			display: block;
+			font-size: decimal-floor($event-entry-date / 2.33, 2);
+			margin-top: 7px;
+		}
+	}
+
+}
+
+.single-event .event-meta .iconlist li,
+.parallax .iconlist li { margin: 5px 0; }
+
+.single-event .entry-overlay,
+.parallax .entry-overlay-meta {
+	position: absolute;
+	top: auto;
+	@include align-position($event-overlay-position);
+	width: 100%;
+	height: $event-overlay-meta-font * 4;
+	background-color: $event-overlay-meta-bg;
+	text-align: center;
+	line-height: $event-overlay-meta-font * 4;
+	font-size: $event-overlay-meta-font;
+	color: #FFF;
+	z-index: 5;
+}
+
+.single-event {
+	.countdown-section {
+		padding: 0 15px;
+		border-left-color: rgba(255,255,255,0.3);
+		color: #CCC;
+		.countdown-amount { color: #FFF; }
+	}
+}
+
+.parallax {
+	.entry-overlay,
+	.entry-overlay-meta {
+		background: transparent;
+		width: auto;
+		text-align: right;
+		left: auto;
+		right: 30px;
+		bottom: 30px;
+		@include media-breakpoint-down(xs) {
+			left: 0 !important;
+			right: 0 !important;
+			width: 90%;
+			margin: 0 auto;
+		}
+	}
+
+	.entry-overlay-meta {
+		padding: 20px;
+		font-size: 0.875rem;
+		text-align: left;
+		right: 38px;
+		bottom: 130px;
+		width: $event-parallax-overlay-width;
+		height: auto;
+		line-height: inherit;
+		background-color: rgba(0,0,0,0.7);
+		border-radius: 3px;
+	}
+
+	&.overlay-left .entry-overlay,
+	&.overlay-left .entry-overlay-meta {
+		right: auto;
+		left: 30px;
+	}
+
+	&.overlay-left .entry-overlay-meta { left: 38px; }
+
+
+	&.overlay-center .entry-overlay,
+	&.overlay-center .entry-overlay-meta {
+		bottom: 100px;
+		right: auto;
+		left: 50%;
+		margin-left: - round(($event-parallax-overlay-width + 16) / 2);
+	}
+
+	&.overlay-center .entry-overlay-meta {
+		top: 100px;
+		bottom: auto;
+		margin-left: - $event-parallax-overlay-width / 2;
+	}
+
+	.entry-overlay-meta h2 {
+		font-size: $event-overlay-meta-font;
+		text-transform: uppercase;
+		border-bottom: 1px dashed rgba(255,255,255,0.2);
+		padding-bottom: 17px;
+	}
+
+	.entry-overlay-meta h2 a { color: #FFF; }
+
+	.entry-overlay-meta h2 a:hover { color: #DDD; }
+
+	.countdown { top: 0; }
+
+	.countdown-section {
+		border-left: 0;
+		width: $event-entry-date * 2.286;
+		height: $event-entry-date * 2.286;
+		margin: 0 8px;
+		font-size: 13px;
+		background-color: rgba(0,0,0,0.7);
+		border-radius: 3px;
+		padding-top: 14px;
+	}
+
+	.countdown-amount {
+		font-size: 28px;
+		margin-bottom: 6px;
+	}
+}

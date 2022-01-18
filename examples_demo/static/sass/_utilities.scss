@@ -1,0 +1,702 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Utilities.scss
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Helper Classes
+-----------------------------------------------------------------*/
+
+
+.line,
+.double-line {
+	clear: both;
+	position: relative;
+	width: 100%;
+	margin: $section-margin 0;
+	border-top: $line-size solid $line-color;
+}
+
+.line.line-sm { margin: ($section-margin / 2) 0; }
+
+span.middot {
+	display: inline-block;
+	margin: 0 5px;
+}
+
+.double-line { border-top: ($line-size * 3) double #E5E5E5; }
+
+.emptydiv {
+	display: block !important;
+	position: relative !important;
+}
+
+/* ----------------------------------------------------------------
+	Margin Utility Classes
+-----------------------------------------------------------------*/
+@if $pos_align-classes {
+	.allmargin { margin: $margin-base !important; }
+	.allmargin-sm { margin: $margin-small !important; }
+	.allmargin-lg { margin: $margin-big !important; }
+
+	@each $value in $pos_align-classes  {
+		.#{$value}margin { margin-#{$value}: $margin-base !important; }
+		.#{$value}margin-sm { margin-#{$value}: $margin-small !important; }
+		.#{$value}margin-lg { margin-#{$value}: $margin-big !important; }
+	}
+}
+
+.header-stick {
+	margin-top: (-$margin-base) !important;
+	.content-wrap & { margin-top: (-$margin-big) !important; }
+}
+
+.footer-stick {
+	margin-bottom: (-$margin-base) !important;
+	.content-wrap & { margin-bottom: (-$margin-big) !important; }
+}
+
+.border-f5 { border-color: #F5F5F5 !important; }
+
+.col-padding { padding: $col-padding; }
+
+.notextshadow { text-shadow: none !important; }
+
+.inline-block {
+	float: none !important;
+	display: inline-block !important;
+}
+
+.center { text-align: center !important; }
+
+.mx-auto {
+	position: relative !important;
+	float: none !important;
+}
+
+.bg-color,
+.bg-color #header-wrap { background-color: $theme-color !important; }
+
+.color { color: $theme-color !important; }
+
+.border-color { border-color: $theme-color !important; }
+
+.nott { text-transform: none !important; }
+
+.overflow-visible { overflow: visible !important; }
+
+/* ----------------------------------------------------------------
+	Font Weight Utility Classes
+-----------------------------------------------------------------*/
+.fw-extralight { font-weight: $font-weight-extralight !important; }
+.fw-medium { font-weight: $font-weight-medium !important; }
+.fw-semibold { font-weight: $font-weight-semibold !important; }
+.fst-normal { font-style: normal !important; }
+
+
+/* ----------------------------------------------------------------
+	Letter Spacing Utility Classes
+-----------------------------------------------------------------*/
+@if $letter-spacing {
+	@include letter-spacing($letter-spacing);
+}
+
+.noheight { height: 0 !important; }
+
+.nolineheight { line-height: 0 !important; }
+
+.font-body { font-family: $body-font; }
+
+.font-primary { font-family: $heading-font; }
+
+.font-secondary { font-family: $secondary-font; }
+
+.bgicon {
+	display: block;
+	position: absolute;
+	bottom: -60px;
+	right: -50px;
+	font-size: 210px;
+	color: rgba(0,0,0,0.1);
+}
+
+/* ----------------------------------------------------------------
+	Image Scale Utility Classes
+-----------------------------------------------------------------*/
+.imagescale,
+.imagescalein {
+	display: block;
+	overflow: hidden;
+	img {
+		-webkit-transform: scale(1.1);
+		transform: scale(1.1);
+		-webkit-transition: all 1s ease;
+		transition: all 1s ease;
+	}
+}
+
+.imagescale:hover img {
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+
+.imagescalein {
+	img {
+		-webkit-transform: scale(1);
+		transform: scale(1);
+	}
+	&:hover img {
+		-webkit-transform: scale(1.1);
+		transform: scale(1.1);
+	}
+}
+
+.grayscale {
+	filter: brightness(80%) grayscale(1) contrast(90%);
+	-webkit-filter: brightness(80%) grayscale(1) contrast(90%);
+	-moz-filter: brightness(80%) grayscale(1) contrast(90%);
+	-o-filter: brightness(80%) grayscale(1) contrast(90%);
+	-ms-filter: brightness(80%) grayscale(1) contrast(90%);
+	transition: 1s filter ease;
+	-webkit-transition: 1s -webkit-filter ease;
+	-moz-transition: 1s -moz-filter ease;
+	-ms-transition: 1s -ms-filter ease;
+	-o-transition: 1s -o-filter ease;
+	&:hover {
+		filter: brightness(100%) grayscale(0);
+		-webkit-filter: brightness(100%) grayscale(0);
+		-moz-filter: brightness(100%) grayscale(0);
+		-o-filter: brightness(100%) grayscale(0);
+		-ms-filter: brightness(100%) grayscale(0);
+	}
+}
+
+// /* MOVING BG -  TESTIMONIALS */
+
+.bganimate {
+	@include animate(BgAnimated 30s infinite linear);
+}
+
+@include keyframes(BgAnimated) {
+	from  {background-position:0 0;}
+	to    {background-position:0 400px;}
+}
+
+
+.input-block-level {
+	display: block;
+	width: 100% !important;
+	min-height: 30px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.vertical-middle {
+	z-index: 3;
+	position: relative;
+	display: -ms-flexbox;
+	display: flex;
+	width: 100%;
+	min-height: 100%;
+	justify-content: center;
+	flex-flow: column;
+	&-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	+ .video-wrap { z-index: 2 !important; }
+}
+
+.magnific-max-width .mfp-content { max-width: 800px; }
+
+/* ----------------------------------------------------------------
+	Opacity Utility Classes
+-----------------------------------------------------------------*/
+@mixin opacity($op) {
+	@if $op-classes {
+		@for $op-element from 1 through $op {
+			.op-0#{$op-element},
+			.h-op-0#{$op-element}:hover {
+				opacity: #{$op-element / 10 } !important;
+			}
+		}
+	}
+}
+@if $op-classes {
+	.op-ts {
+		-webkit-transition: opacity $transitions;
+		transition: opacity $transitions;
+	}
+
+	.op-0,
+	.h-op-0:hover {
+		opacity: 0 !important;
+	}
+	.op-1,
+	.h-op-1:hover {
+		opacity: 1 !important;
+	}
+
+	@include opacity($op-classes);
+}
+
+/* ----------------------------------------------------------------
+	Text Sizing Utility
+-----------------------------------------------------------------*/
+.text {
+	&-smaller {
+		font-size: 80% !important;
+		small {
+			font-size: 90% !important;
+		}
+	}
+	&-larger {
+		font-size: 120% !important;
+	}
+}
+
+
+
+
+/* ----------------------------------------------------------------
+	Text Color Utility Classes
+-----------------------------------------------------------------*/
+.text-ts {
+	-webkit-transition: color $transitions;
+	transition: color $transitions;
+}
+
+.h-text-color:hover,
+a.h-text-color:hover {
+	color: $theme-color !important;
+}
+
+/* ----------------------------------------------------------------
+	BG Color Utility Classes
+-----------------------------------------------------------------*/
+.bg-ts {
+	-webkit-transition: background-color $transitions;
+	transition: background-color $transitions;
+}
+
+.h-bg-color:hover {
+	background-color: $theme-color !important;
+}
+
+.h-nobg:hover {
+	background-color: transparent !important;
+}
+
+@if $theme-colors {
+	@each $name, $hex in $theme-colors {
+		.h-text-#{$name}:hover,
+		a.h-text-#{$name}:hover {
+			color: $hex !important;
+		}
+
+		.h-bg-#{$name}:hover {
+			background-color: $hex !important;
+		}
+	}
+}
+
+
+.bg-clip {
+	border: $bgclips-border solid transparent;
+	-moz-background-clip: padding;
+	-webkit-background-clip: padding;
+	background-clip: padding-box;
+	transform: translate3d(0,0,0);
+}
+
+.bg-clip-sm { border-width: $bgclips-border-sm; }
+.bg-clip-lg { border-width: $bgclips-border-lg; }
+
+
+/* ----------------------------------------------------------------
+	Gradient Utility Classes
+-----------------------------------------------------------------*/
+
+@if $gradients-classes {
+	@each $key, $value in $gradient-colors {
+		@at-root .gradient-#{$key},
+		.h-gradient-#{$key}:hover {
+			background-image: -webkit-#{$value} !important;
+			background-image: $value !important;
+		}
+	}
+
+	.gradient-text {
+		text-shadow: none !important;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.gradient-underline {
+		background-repeat: no-repeat;
+		background-size: 100% 8px;
+		background-position: 0 88%;
+	}
+}
+
+/* ----------------------------------------------------------------
+	Bootstrap Utility Classes: Extended
+-----------------------------------------------------------------*/
+@if $gutter-classes {
+	@each $breakpoint in map-keys($grid-breakpoints) {
+		@include media-breakpoint-up($breakpoint) {
+	    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+	    @for $gutter-element from 1 through $gutter-classes {
+			@if $gutter-element % 10 == 0 {
+					.gutter#{$infix}-#{$gutter-element} {
+						margin-right: -#{$gutter-element/2}px;
+						margin-left: -#{$gutter-element/2}px;
+						margin-bottom: -#{$gutter-element}px;
+					}
+
+					.gutter#{$infix}-#{$gutter-element} > .col,
+					.gutter#{$infix}-#{$gutter-element} > [class*="col-"] {
+						padding-right: #{$gutter-element/2}px;
+						padding-left: #{$gutter-element/2}px;
+						padding-bottom: #{$gutter-element}px;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+/* ----------------------------------------------------------------
+	col-mb-classes & Bootstrap Utility Classes: Extended
+-----------------------------------------------------------------*/
+@if $col-mb-classes {
+	@each $breakpoint in map-keys($grid-breakpoints) {
+		@include media-breakpoint-up($breakpoint) {
+		$infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+		    @each $value in $col-mb-classes {
+				.col-mb#{$infix}-#{$value} {
+					margin-bottom: -#{$value}px;
+				}
+
+				.col-mb#{$infix}-#{$value} > .col,
+				.col-mb#{$infix}-#{$value} > [class*="col-"] {
+					padding-bottom: #{$value}px;
+				}
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+	Height Utility Classes
+-----------------------------------------------------------------*/
+@if $vh-elements {
+	@each $breakpoint in map-keys($grid-breakpoints) {
+		@include media-breakpoint-up($breakpoint) {
+			$infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+			@each $value in $vh-elements {
+
+				.min-vh#{$infix}-#{$value} {
+					min-height: #{$value}vh !important;
+				}
+				.vh#{$infix}-#{$value} {
+					height: #{$value}vh !important;
+				}
+				.max-vh#{$infix}-#{$value} {
+					max-height: #{$value}vh !important;
+				}
+				.h#{$infix}-#{$value} {
+					height: #{$value * 1%} !important;
+				}
+			}
+
+			.max-vh#{$infix}-none {
+				max-height: none !important;
+			}
+
+			.h#{$infix}-auto {
+			    height: auto !important;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+	Position Utility Classes: Extended
+-----------------------------------------------------------------*/
+@if $positions {
+	@each $breakpoint in map-keys($grid-breakpoints) {
+	  @include media-breakpoint-up($breakpoint) {
+	    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+			@each $pos in $positions {
+				.position#{$infix}-#{$pos} {
+					position: #{$pos} !important;
+				}
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+	Lazy Loading
+-----------------------------------------------------------------*/
+
+.lazy {
+	opacity: 0;
+	&:not(.initial) {
+		transition: opacity 1s;
+	}
+	&.initial,
+	&-loaded,
+	&-error { opacity: 1; }
+
+	@at-root img#{&} {
+		max-width: 100%;
+		height: auto;
+		&:not([src]) { visibility: hidden; }
+	}
+}
+
+
+/* ----------------------------------------------------------------
+	Borders
+-----------------------------------------------------------------*/
+@mixin border-width($cnvs-border-width) {
+	@for $cnvs-border-width-element from 1 through $cnvs-border-width {
+		.border-width-#{$cnvs-border-width-element},
+		.h-border-width-#{$cnvs-border-width-element}:hover {
+			border-width: #{$cnvs-border-width-element}px !important;
+		}
+	}
+}
+@include border-width($cnvs-border-width);
+
+@if $border-styles {
+	@each $styles in $border-styles {
+		.border-#{$styles} {
+			border-style: #{$styles} !important;
+		}
+	}
+}
+
+@each $color, $value in $theme-colors {
+	.h-border-#{$color}:hover {
+		border-color: $value !important;
+	}
+}
+
+.border-transparent,
+.h-border-transparent:hover {
+    border-color: transparent !important;
+}
+
+.border-default,
+.h-border-default:hover {
+    border-color: #EEE !important;
+}
+
+.dark.border-default,
+.dark .border-default,
+.dark.h-border-default:hover
+.dark .h-border-default:hover {
+    border-color: rgba(255,255,255,0.15) !important;
+}
+
+.border-ts {
+	-webkit-transition: border $transitions;
+	transition: border $transitions;
+}
+
+.rounded {
+	&-xl {
+		border-radius: $border-radius-xl !important;
+	}
+
+	&-xxl {
+	  border-radius: $border-radius-xxl !important;
+	}
+
+	&-xxxl {
+	  border-radius: $border-radius-xxl !important;
+	}
+}
+
+/* ----------------------------------------------------------------
+	Max-width Utility Classes:
+-----------------------------------------------------------------*/
+@if $max-widths {
+	@each $name, $widths in $max-widths {
+		.mw-#{$name} {
+			max-width: #{$widths} !important;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+	Text Sizes Utility Classes:
+-----------------------------------------------------------------*/
+@if $text-sizes {
+	@each $name, $size in $text-sizes {
+		.text-size-#{$name} {
+			font-size: #{$size} !important;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+	Square Sizes Utility Classes:
+-----------------------------------------------------------------*/
+@if $square-sizes {
+	@each $name, $size in $square-sizes {
+		.square-#{$name} {
+			width: #{$size} !important;
+			height: #{$size} !important;
+		}
+	}
+}
+
+
+/* ----------------------------------------------------------------
+	Max-width Utility Classes:
+-----------------------------------------------------------------*/
+.align-wide-lg {
+	margin-left: calc(50% - #{(map-get($container-max-widths, "lg") / 2)}) !important;
+    margin-right: calc(50% - #{(map-get($container-max-widths, "lg") / 2)}) !important;
+    max-width: map-get($container-max-widths, "lg") !important;
+    width: map-get($container-max-widths, "lg") !important;
+}
+
+.align-wide-xl {
+	margin-left: calc(50% - #{(map-get($container-max-widths, "xl") / 2)}) !important;
+    margin-right: calc(50% - #{(map-get($container-max-widths, "xl") / 2)}) !important;
+    max-width: map-get($container-max-widths, "xl") !important;
+    width: map-get($container-max-widths, "xl") !important;
+}
+
+.align-wide-xxl {
+	margin-left: calc(50% - #{(map-get($container-max-widths, "xxl") / 2)}) !important;
+    margin-right: calc(50% - #{(map-get($container-max-widths, "xxl") / 2)}) !important;
+    max-width: map-get($container-max-widths, "xxl") !important;
+    width: map-get($container-max-widths, "xxl") !important;
+}
+
+@include media-breakpoint-down(sm) {
+	.align-wide-lg,
+	.align-wide-xl,
+	.align-wide-xxl {
+		margin-left: calc(50% - 50vw) !important;
+		margin-right: calc(50% - 50vw) !important;
+	    max-width: 100vw !important;
+   		width: 100vw !important;
+	}
+}
+
+@mixin align-full() {
+	margin-left: calc(50% - 50vw) !important;
+	margin-right: calc(50% - 50vw) !important;
+	max-width: 100vw !important;
+	width: 100vw !important;
+}
+.align-full {
+	@include align-full();
+}
+@include media-breakpoint-down(sm) {
+	.align-wide-lg,
+	.align-wide-xl,
+	.align-wide-xxl {
+		@include align-full();
+	}
+}
+
+
+/* ----------------------------------------------------------------
+	Shadow
+-----------------------------------------------------------------*/
+.h-shadow-sm:hover { box-shadow: $box-shadow-sm !important; }
+.h-shadow:hover { box-shadow: $box-shadow !important; }
+.h-shadow-lg:hover { box-shadow: $box-shadow-lg !important; }
+.h-shadow-none:hover { box-shadow: none !important; }
+
+.shadow-ts {
+	-webkit-transition: box-shadow $transitions;
+	transition: box-shadow $transitions;
+}
+
+.all-ts {
+	-webkit-transition: all $transitions;
+	transition: all $transitions;
+}
+
+/* ----------------------------------------------------------------
+	translate
+-----------------------------------------------------------------*/
+
+.translate-y-sm,
+.h-translate-y-sm:hover { transform: translateY(-$translate-sm) !important; }
+
+.translate-y,
+.h-translate-y:hover { transform: translateY(-$translate) !important; }
+
+.translate-y-lg,
+.h-translate-y-lg:hover { transform: translateY(-$translate-lg) !important; }
+
+.translate-x-sm,
+.h-translate-x-sm:hover { transform: translateX(-$translate-sm) !important; }
+
+.translate-x,
+.h-translate-x:hover { transform: translateX(-$translate) !important; }
+
+.translate-x-lg,
+.h-translate-x-lg:hover { transform: translateX(-$translate-lg) !important; }
+
+.translate-x-n-sm,
+.h-translate-x-n-sm:hover { transform: translateX($translate-sm) !important; }
+
+.translate-x-n,
+.h-translate-x-n:hover { transform: translateX($translate) !important; }
+
+.translate-x-n-lg,
+.h-translate-x-n-lg:hover { transform: translateX($translate-lg) !important; }
+
+.scale-sm,
+.h-scale-sm:hover { transform: scale(1 + $scale-sm) !important; }
+
+.scale,
+.h-scale:hover { transform: scale(1 + $scale) !important; }
+
+.scale-lg,
+.h-scale-lg:hover { transform: scale(1 + $scale-lg) !important; }
+
+.scale-n-sm,
+.h-scale-n-sm:hover { transform: scale(1 - $scale-sm) !important; }
+
+.scale-n,
+.h-scale-n:hover { transform: scale(1 - $scale) !important; }
+
+.scale-n-lg,
+.h-scale-n-lg:hover { transform: scale(1 - $scale-lg) !important; }
+
+.transform-ts {
+	-webkit-transition: transform $a-transition;
+	transition: transform $a-transition;
+}
+
+/* ----------------------------------------------------------------
+	translate
+-----------------------------------------------------------------*/
+
+@mixin zindex($zindex) {
+	@for $zindex-element from 0 through $zindex {
+		.z-#{$zindex-element} {
+			z-index: $zindex-element !important;
+		}
+	}
+	.z-auto { z-index: auto !important; }
+}
+@include zindex($zindex);

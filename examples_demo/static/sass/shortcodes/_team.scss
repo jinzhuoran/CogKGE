@@ -1,0 +1,88 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: team.scss
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Team
+-----------------------------------------------------------------*/
+$team-prefix: team;
+
+.#{$team-prefix} {
+	position: relative;
+	&-image {
+		@extend .team;
+		> a,
+		img {
+			display: block;
+			width: 100%;
+		}
+	}
+	&-desc { text-align: $team-decs-align;
+		&-bg {
+			background-color: $team-decs-background;
+			padding: $team-decs-padding;
+		}
+	}
+	.si-share {
+		margin-top: 30px;
+		text-align: left;
+		.social-icon {
+			font-size: $team-title-designation-icon-size;
+			width: $team-title-designation-icon-width;
+		}
+	}
+	&-title {
+		position: relative;
+		padding-top: 20px;
+		h4 {
+			display: block;
+			margin-bottom: 0;
+			font-size: $team-title-font-size;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			font-weight: 700;
+		}
+		span {
+			display: block;
+			color: $team-title-designation-font-size;
+			font-weight: $team-title-designation-font-weight;
+			font-family: $team-title-designation-font-family;
+			font-style: $team-title-designation-font-style;
+			font-size: $team-title-designation-font-size;
+			margin-top: 5px;
+		}
+	}
+	&-content {
+		margin-top: 1rem;
+		color: $team-content-font-color;
+		p:last-child { margin-bottom: 0; }
+	}
+	/* Team Center
+	-----------------------------------------------------------------*/
+	&.center {
+		.#{$team-prefix}-title::after {
+			left: 50%;
+			margin-left: -40px;
+		}
+	}
+	/* Team List
+	-----------------------------------------------------------------*/
+	@at-root .#{$team-prefix}-list {
+		.#{$team-prefix}-desc {
+			text-align: left;
+		}
+		.#{$team-prefix}-title { padding-top: 0; }
+	}
+	& &-desc > .social-icon { margin-top: 20px; }
+	& &-content ~ .social-icon { margin-top: 30px; }
+	&:not(.#{$team-prefix}-list) .social-icon {
+		display: inline-block !important;
+		vertical-align: middle;
+		float: none;
+		margin-left: 4px;
+		margin-right: 4px;
+	}
+}

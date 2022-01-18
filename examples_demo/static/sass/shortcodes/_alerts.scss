@@ -1,0 +1,95 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: alerts.scss
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Alerts
+-----------------------------------------------------------------*/
+.style-msg,
+.style-msg2 {
+	position: relative;
+	display: block;
+	color: $text-color;
+	border-left: $alert-left-border solid $alert-left-border-color;
+	margin-bottom: 20px;
+}
+
+.style-msg2 { border-left-color: $alert-left-border-color; }
+
+
+
+@each $state, $value in $theme-colors {
+	$background: shift-color($value, $alert-bg-scale);
+	$border: shift-color($value, $alert-border-scale);
+	$color: shift-color($value, $alert-color-scale);
+	@if (contrast-ratio($background, $color) < $min-contrast-ratio) {
+		$color: mix($value, color-contrast($background), abs($alert-color-scale));
+	}
+	.#{$state}msg {
+		@include alert-variant($background, $border, $color);
+	}
+
+}
+
+.errormsg {
+	@include alert-variant(shift-color($danger, $alert-bg-scale), shift-color($danger, $alert-border-scale), shift-color($danger, $alert-color-scale));
+}
+
+
+.alertmsg {
+	@include alert-variant(shift-color($warning, $alert-bg-scale), shift-color($warning, $alert-border-scale), shift-color($warning, $alert-color-scale));
+}
+
+.style-msg .sb-msg,
+.style-msg2 .msgtitle,
+.style-msg2 .sb-msg {
+	display: block;
+	padding: $alert-padding;
+	border-left: 1px solid rgba(white,0.5);
+	font-size: $alert-title;
+	text-shadow: 1px 1px 1px rgba(white,0.6);
+}
+
+.style-msg2 .msgtitle {
+	background: $alert-title-bg;
+	border-top: none;
+	border-bottom: none;
+	font-size: $alert-title + 0.125rem;
+	font-weight: bold;
+}
+
+.style-msg-light .sb-msg,
+.style-msg-light .msgtitle {
+	color: #FFF;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+}
+
+.style-msg2 .sb-msg { font-weight: normal; }
+
+.style-msg2 ol,
+.style-msg2 ul { margin: 0 0 0 30px; }
+
+.style-msg2 ol { list-style-type: decimal; }
+
+.style-msg2 ul { list-style-type: disc; }
+
+.alert i,
+.sb-msg i,
+.msgtitle i {
+	position: relative;
+	top: 1px;
+	font-size: $alert-title;
+	width: $alert-title;
+	text-align: center;
+	margin-right: 5px;
+}
+
+.style-msg .btn-close {
+	position: absolute;
+	top: 0;
+	left: auto;
+	right: 0;
+}

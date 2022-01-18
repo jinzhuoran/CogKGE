@@ -1,0 +1,141 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: Forms.scss
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Forms
+-----------------------------------------------------------------*/
+
+.sm-form-control {
+	display: block;
+	width: 100%;
+	height: $sm-form-min-height;
+	padding: $sm-form-padding;
+	font-size: $sm-form-font-size;
+	line-height: 1.42857143;
+	color: $sm-form-color;
+	background-color: $sm-form-background;
+	background-image: none;
+	border: $sm-form-border solid $sm-form-border-color;
+	border-radius: $sm-form-border-radius !important;
+	-webkit-transition: border-color ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s;
+	transition: border-color ease-in-out .15s;
+	height: auto;
+	&:focus {
+		border-color: $sm-form-focus-color;
+		outline: 0;
+		-webkit-box-shadow: none;
+		box-shadow: none;
+	}
+
+	@mixin placeholder {
+		color: $sm-form-placeholder;
+		opacity: 1;
+	}
+
+	&::-moz-placeholder { @include placeholder; }
+	&:-ms-input-placeholder { @include placeholder; }
+	&::-webkit-input-placeholder { @include placeholder; }
+
+	&[disabled],
+	&[readonly],
+	fieldset[disabled] & {
+		cursor: not-allowed;
+		background-color: $sm-form-disabled;
+		opacity: 1;
+	}
+	&.error { border-color: $sm-form-label-error; }
+}
+
+
+.form-control { border-radius: $bs-form-control-radius;
+	&:active,
+	&:focus {
+		border-color: $sm-form-focus-color;
+		box-shadow: none;
+	}
+	&.error { border-color: $sm-form-label-error; }
+}
+
+label {
+	display: inline-block;
+	font-size: $sm-form-label-size;
+	font-weight: $sm-form-label-weight;
+	font-family: $sm-form-label-font;
+	text-transform: $sm-form-label-transform;
+	letter-spacing: $sm-form-label-spacing;
+	color: $sm-form-label-color;
+	margin-bottom: $sm-form-label-mb;
+	cursor: pointer;
+	&.label-muted {
+		color: $sm-form-focus-color;
+		font-weight: normal;
+		margin-right: 5px;
+	}
+	&.error {
+		display: none !important;
+		margin-top: 5px;
+		color: $sm-form-label-error;
+		font-weight: 400;
+		.show-error-msg + &,
+		input[type=checkbox]:not(:checked) + & { display: block !important; }
+	}
+
+}
+
+
+/* ----------------------------------------------------------------
+	Contact Form
+-----------------------------------------------------------------*/
+
+
+.contact-form-overlay {
+	position: relative;
+	background-color: $sm-form-background;
+	z-index: 10;
+	border-radius: 4px;
+	box-shadow: 0 1px 10px rgba(0,0,0,0.15);
+}
+
+
+/* ----------------------------------------------------------------
+	Preloaders
+-----------------------------------------------------------------*/
+
+
+.preloader {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: center center no-repeat $sm-form-background;
+}
+
+.preloader2 {
+	@extend .preloader;
+	background-color: transparent;
+}
+
+.form-process {
+	@extend .preloader;
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 3;
+	background-color: transparent;
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: $form-processor-bg;
+		opacity: $form-processor-bg-op;
+		z-index: -1;
+	}
+}

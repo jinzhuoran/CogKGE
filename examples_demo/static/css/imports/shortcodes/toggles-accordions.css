@@ -1,0 +1,170 @@
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: toggles-accordions.scss
+
+-----------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Toggle
+-----------------------------------------------------------------*/
+.toggle {
+  display: block;
+  position: relative;
+  margin: 0 0 20px 0;
+}
+
+.toggle-header,
+.accordion-header {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0 -5px;
+  cursor: pointer;
+  color: #444;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.toggle-icon,
+.accordion-icon {
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  padding: 0 5px;
+  text-align: center;
+}
+
+.toggle-icon i,
+.toggle-icon span {
+  width: 1rem;
+}
+
+.toggle-title,
+.accordion-title {
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  max-width: 100%;
+  padding: 0 5px;
+}
+
+.toggle:not(.toggle-active) > .toggle-header .toggle-open,
+.toggle-active > .toggle-header .toggle-closed {
+  display: none;
+}
+
+.toggle-active > .toggle-header .toggle-open {
+  display: inline-block;
+}
+
+
+.toggle-content,
+.accordion-content {
+  display: none;
+  position: relative;
+  padding: 0.75rem 0;
+}
+
+/* Toggle - with Title Background
+-----------------------------------------------------------------*/
+.toggle-bg .toggle-header {
+  background-color: #eeeeee;
+  margin: 0;
+  padding: 0.75rem;
+  border-radius: 2px;
+}
+.toggle-bg .toggle-content {
+  padding: 1rem 0.75rem;
+}
+
+/* Toggle - Bordered
+-----------------------------------------------------------------*/
+.toggle-border {
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+.toggle-border .toggle-header {
+  padding: 0.75rem;
+  margin: 0;
+}
+.toggle-border .toggle-content {
+  padding: 1rem;
+  padding-top: 0;
+}
+
+/* Toggle - FAQs
+-----------------------------------------------------------------*/
+.faqs .toggle {
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+.faqs .toggle-content {
+  padding-bottom: 10px;
+}
+
+/* ----------------------------------------------------------------
+	Accordions
+-----------------------------------------------------------------*/
+.accordion {
+  margin-bottom: 20px;
+}
+.accordion-header {
+  padding: 0.75rem 0;
+  border-top: 1px dotted #dddddd;
+  cursor: pointer;
+}
+.accordion-header:first-child {
+  border-top: none;
+}
+.accordion:not([data-collapsible="true"]) .accordion-header.accordion-active {
+  cursor: auto;
+}
+.accordion-header:not(.accordion-active) .accordion-open, .accordion-active .accordion-closed {
+  display: none;
+}
+.accordion-active .accordion-open {
+  display: inline-block;
+}
+.accordion-content {
+  padding-top: 0;
+  padding-bottom: 1.5rem;
+}
+
+/* Accordion - with Title Background
+-----------------------------------------------------------------*/
+.accordion-bg .accordion-header {
+  background-color: #eeeeee;
+  padding: 0.75rem;
+  border-radius: 2px;
+  margin: 0;
+  margin-bottom: 5px;
+  border-top: 0;
+}
+.accordion-bg .accordion-content {
+  padding: 0.75rem 0.75rem 1.5rem;
+}
+
+/* Accordion - Bordered
+-----------------------------------------------------------------*/
+.accordion-border {
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+}
+.accordion-border .accordion-header {
+  border-color: #cccccc;
+  padding: 0.75rem;
+  margin: 0;
+}
+.accordion-border .accordion-content {
+  padding: 0 1.125rem 1.5rem;
+}
+
+/* Accordion - Large
+-----------------------------------------------------------------*/
+.accordion-lg .accordion-header {
+  font-size: 1.25rem;
+}

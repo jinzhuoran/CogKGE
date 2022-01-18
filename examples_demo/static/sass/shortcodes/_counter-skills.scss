@@ -1,0 +1,176 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: counter-skills.scss
+
+-----------------------------------------------------------------------------------*/
+$counter-prefix: counter;
+$rounded-prefix: rounded-skill;
+$skills-prefix: skills;
+
+/* ----------------------------------------------------------------
+	Counter
+-----------------------------------------------------------------*/
+.#{$counter-prefix} {
+	font-size: $counter-font-size;
+	font-weight: $counter-font-wight;
+	font-family: $counter-font-family;
+
+	&#{&}-small { font-size: $counter-sm-font-size; }
+
+	&#{&}-large { font-size: $counter-lg-font-size; }
+
+	&#{&}-xlarge {
+		font-size: $counter-xl-font-size;
+		font-weight: 400;
+	}
+
+	&#{&}-inherit {
+		font-size: inherit;
+		font-weight: inherit;
+	}
+	+ h5 {
+		font-weight: 400;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		.widget & { opacity: 0.7; }
+	}
+	&#{&}-lined + h5::before {
+		display: block;
+		position: relative;
+		margin: 20px auto 25px auto;
+		content: '';
+		width: $counter-lined-width;
+		border-top: $counter-lined-size;
+		opacity: 0.9;
+	}
+
+	&#{&}-small + h5 { font-size: 0.875rem; }
+
+	&#{&}-large + h5,
+	&#{&}-xlarge + h5 {
+		font-size: 15px;
+		font-weight: 300;
+	}
+}
+
+
+/* ----------------------------------------------------------------
+	Animated Rounded Skills
+-----------------------------------------------------------------*/
+
+.#{$rounded-prefix} {
+	display: inline-block;
+	margin: 0 15px 15px;
+	display: inline-block;
+	position: relative;
+	text-align: center;
+	font-size: $rounded-skills-font-size;
+	font-weight: bold;
+	color: $rounded-skills-font-color;
+	body:not(.device-touch) & {
+		-webkit-transition: opacity .4s ease;
+		-o-transition: opacity .4s ease;
+		transition: opacity .4s ease;
+	}
+	+ h5 { margin-bottom: 0; }
+	i { font-size: $rounded-skills-icon-size; }
+	canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	/* News Carousel Overlays
+	-----------------------------------------------------------------*/
+	.news-carousel & {
+		position: absolute;
+		margin: 0 !important;
+		top: 30px;
+		right: 30px;
+		color: #FFF;
+		font-weight: 700;
+	}
+}
+
+/* ----------------------------------------------------------------
+	Skills Bar
+-----------------------------------------------------------------*/
+
+
+.#{$skills-prefix} {
+	margin: 0;
+	list-style: none;
+	padding-top: 25px;
+	li {
+		position: relative;
+		margin-top: $progress-skills-margin-gutters;
+		height: $progress-skills-height;
+		background-color: $progress-skills-empty-color;
+		box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+		border-radius: $progress-skills-radius;
+		&:first-child { margin-top: 0; }
+		.progress {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 0;
+			height: 100%;
+			background-color: $progress-skills-progress-color;
+			overflow: visible !important;
+			border-radius: $progress-skills-radius;
+			-webkit-transition: width $progress-skills-transition;
+			-o-transition: width $progress-skills-transition;
+			transition: width $progress-skills-transition;
+			&-percent {
+				position: absolute;
+				top: - (round($progress-skills-percent-padding) + 23);
+				right: 0;
+				background-color: $progress-skills-percent-bgcolor;
+				color: $progress-skills-percent-color;
+				text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+				height: 22px;
+				line-height: 22px;
+				padding: 0 $progress-skills-percent-padding;
+				font-size: $progress-skills-percent-size;
+				border-radius: $progress-skills-radius;
+					.counter {
+					font-weight: 400;
+					font-family: $progress-skills-counter-font;
+				}
+			}
+		}
+		> span {
+			position: absolute;
+			z-index: 1;
+			top: -23px;
+			left: 0;
+			line-height: 20px;
+			font-size: $progress-skills-Font-size;
+			font-weight: bold;
+			color: $progress-skills-counter-font-color;
+		}
+	}
+}
+
+.progress-percent::after,
+.progress-percent::before {
+	top: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+.progress-percent::after {
+	border-top-color: $progress-skills-percent-bgcolor;
+	border-width: 4px;
+	left: 50%;
+	margin-left: -4px;
+}
+.progress-percent::before {
+	border-top-color: $progress-skills-percent-bgcolor;
+	border-width: 5px;
+	left: 50%;
+	margin-left: -5px;
+}

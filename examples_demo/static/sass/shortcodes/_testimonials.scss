@@ -1,0 +1,262 @@
+
+/* ----------------------------------------------------------------
+	Clients
+-----------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Testimonials
+-----------------------------------------------------------------*/
+$testimonial-prefix: testimonial;
+
+/* Testimonials - Grid
+-----------------------------------------------------------------*/
+.#{$testimonial-prefix}s-grid {
+	position: relative;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	-ms-flex-align: stretch;
+	align-items: stretch;
+	list-style: none;
+	overflow: hidden;
+	.grid-item {
+		position: relative;
+		padding: $testimonials-grid-padding;
+		-webkit-backface-visibility: hidden;
+		&::before,
+		&::after {
+			content: '';
+			position: absolute;
+			height: 100%;
+			top: 0;
+			left: -$clients-grid-border-size;
+			border-left: $clients-grid-border-size $clients-grid-border-style lighten($text-color, 60%);
+		}
+		&::after {
+			height: 0;
+			top: auto;
+			left: 0;
+			bottom: -$clients-grid-border-size;
+			border-bottom: $clients-grid-border-size $clients-grid-border-style lighten($text-color, 60%);
+		}
+		/* Testimonials - Item
+		-----------------------------------------------------------------*/
+		.#{$testimonial-prefix} {
+			padding: 0;
+			background-color: transparent !important;
+			border: 0 !important;
+			box-shadow: none !important;
+		}
+	}
+}
+
+
+.#{$testimonial-prefix} {
+	position: relative;
+	padding: $testimonials-padding;
+	background-color: $testimonials-background;
+	border: $testimonials-border;
+	border-radius: $testimonials-border-radius;
+	box-shadow: $testimonials-box-shadow;
+	/* Testimonial - Pagination
+	-----------------------------------------------------------------*/
+	.flex-control-nav {
+		top: auto;
+		bottom: $testimonials-carousel-dots;
+		right: 0;
+		li {
+			margin: 0 2px;
+			width: $testimonials-carousel-dots;
+			height: $testimonials-carousel-dots;
+			a {
+				width: $testimonials-carousel-dots !important;
+				height: $testimonials-carousel-dots !important;
+				border: none;
+				background-color: $testimonials-carousel-dots-color;
+				opacity: $testimonials-carousel-dots-opacity;
+			}
+			&:hover {
+				a {
+					opacity: 0.75;
+				}
+			}
+			a.flex-active {
+				opacity: 1;
+			}
+		}
+	}
+}
+.testi-image {
+	float: left;
+	margin-right: $testimonials-avatar-margin;
+	display: block;
+	width: $testimonials-avatar-size;
+	height: $testimonials-avatar-size;
+	a {
+		display: block;
+		width: $testimonials-avatar-size;
+		height: $testimonials-avatar-size;
+	}
+	img {
+		display: block;
+		width: $testimonials-avatar-size;
+		height: $testimonials-avatar-size;
+		border-radius: $testimonials-avatar-rounded;
+	}
+	i {
+		display: block;
+		width: $testimonials-avatar-size;
+		height: $testimonials-avatar-size;
+		text-align: center;
+		background-color: #EEE;
+		border-radius: $testimonials-avatar-rounded;
+		line-height: $testimonials-avatar-size;
+		font-size: $testimonials-avatar-icon;
+		color: $testimonials-icon-color;
+		text-shadow: 1px 1px 1px $body-bg;
+	}
+}
+.testi-content {
+	position: relative;
+	overflow: hidden;
+	p {
+		margin-bottom: 0;
+		font-family: $testimonials-font;
+		font-style: $testimonials-font-style;
+		&::before {
+			content: $testimonials-quote-content;
+		}
+		&::after {
+			content: $testimonials-quote-content;
+		}
+	}
+}
+.testi-meta {
+	margin-top: 10px;
+	font-size: $testimonials-meta-size;
+	font-weight: bold;
+	text-transform: uppercase;
+	&::before {
+		content: '\2013';
+	}
+	span {
+		display: block;
+		font-weight: normal;
+		color: #999;
+		font-size: round($testimonials-meta-size / 1.15);
+		text-transform: none;
+		padding-left: 10px;
+	}
+}
+
+/* Twitter - Small Scroller
+-----------------------------------------------------------------*/
+.#{$testimonial-prefix}.twitter-scroll {
+	.testi-content {
+		p {
+			&::before,
+			&::after {
+				content: '';
+			}
+		}
+	}
+	.testi-meta {
+		&::before {
+			content: '';
+		}
+		span {
+			padding-left: 0;
+			a {
+				color: #999;
+				&:hover {
+					color: #222;
+				}
+			}
+		}
+	}
+}
+.#{$testimonial-prefix}.#{$testimonial-prefix}-full {
+	padding: $testimonials-full-padding;
+	/* Testimonial - Full Scroller
+	-----------------------------------------------------------------*/
+	.flex-control-nav {
+		position: relative;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		height: $testimonials-carousel-dots;
+		margin-top: 20px;
+		li {
+			display: inline-block;
+			float: none;
+		}
+	}
+}
+.#{$testimonial-prefix}.#{$testimonial-prefix}-full[data-animation="fade"] {
+	padding: $testimonials-full-padding;
+	.flexslider {
+		overflow: visible !important;
+	}
+}
+/* Testimonials - Full Width
+-----------------------------------------------------------------*/
+.#{$testimonial-prefix}-full {
+	.testi-image {
+		float: none;
+		margin: 0 auto 20px;
+		display: block;
+		width: $testimonials-full-avatar-size;
+		height: $testimonials-full-avatar-size;
+		a {
+			display: block;
+			width: $testimonials-full-avatar-size;
+			height: $testimonials-full-avatar-size;
+		}
+		img {
+			display: block;
+			width: $testimonials-full-avatar-size;
+			height: $testimonials-full-avatar-size;
+		}
+		i {
+			display: block;
+			width: $testimonials-full-avatar-size;
+			height: $testimonials-full-avatar-size;
+			line-height: $testimonials-full-avatar-size;
+		}
+	}
+	.testi-content {
+		text-align: center;
+		font-size: $testimonials-full-font-size;
+	}
+	.testi-meta {
+		margin-top: $testimonials-meta-size;
+		span {
+			padding-left: 0;
+		}
+	}
+}
+/* Testimonial - Section Scroller
+-----------------------------------------------------------------*/
+.section {
+	> .#{$testimonial-prefix} {
+		padding: 0;
+		background-color: transparent !important;
+		border: 0 !important;
+		box-shadow: none !important;
+		max-width: 800px;
+		margin: 0 auto;
+		.testi-content {
+			font-size: $testimonials-full-font-size * 1.1111;
+		}
+		.testi-meta {
+			font-size: $testimonials-full-font-size / 1.286;
+			span {
+				font-size: $testimonials-full-font-size / 1.286;
+			}
+		}
+	}
+	> .#{$testimonial-prefix}[data-animation="fade"] {
+		padding: 0;
+	}
+}

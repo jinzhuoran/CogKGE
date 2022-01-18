@@ -1,0 +1,138 @@
+
+/*-----------------------------------------------------------------------------------
+	typography.scss
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Basic
+-----------------------------------------------------------------*/
+
+dl, dt, dd, ol, ul, li {
+	margin: 0;
+	padding: 0;
+}
+
+em { font-family: $secondary-font; }
+
+.clear {
+	clear: both;
+	display: block;
+	font-size: 0px;
+	height: 0px;
+	line-height: 0;
+	width: 100%;
+	overflow:hidden;
+}
+
+@mixin selection {
+	background: $theme-color;
+	color: $body-bg;
+	text-shadow: none;
+}
+
+::selection {
+	@include selection;
+}
+
+::-moz-selection {
+	@include selection;
+}
+
+::-webkit-selection {
+	@include selection;
+}
+
+:active,
+:focus { outline: none !important; }
+
+
+/* ----------------------------------------------------------------
+	Typography
+-----------------------------------------------------------------*/
+
+
+body {
+	line-height: 1.5;
+	color: $body-text-color;
+	font-family: $body-font;
+}
+
+a {
+	text-decoration: none !important;
+	color: $theme-color;
+	&:hover { color: #222; }
+	img { border: none; }
+}
+
+img { max-width: 100%; }
+
+iframe {
+	width: 100%;
+	border: 0 !important;
+	overflow: hidden !important;
+}
+
+
+/* ----------------------------------------------------------------
+	Basic Layout Styles
+-----------------------------------------------------------------*/
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: $heading-color;
+	font-weight: 600;
+	line-height: $line-height-base;
+	margin: 0 0 30px 0;
+	font-family: $heading-font;
+}
+
+h1 { font-size: $font-size-h1; }
+
+h2 { font-size: $font-size-h2; }
+
+h3 { font-size: $font-size-h3; }
+
+h4 {
+	font-size: $font-size-h4;
+	font-weight: 600;
+}
+
+h5 { font-size: $font-size-h5; }
+
+h6 { font-size: $font-size-h6; }
+
+h5,
+h6 {
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	> span:not(.nocolor):not(.badge) {
+		color: $theme-color;
+	}
+}
+
+p,
+pre,
+ul,
+ol,
+dl,
+dd,
+blockquote,
+address,
+table,
+fieldset,
+form { margin-bottom: 30px; }
+
+small { font-family: $body-font; }

@@ -1,0 +1,1170 @@
+@import "bootstrap/_functions";
+@import "bootstrap/_variables";
+@import "bootstrap/_mixins";
+
+//-------------------- Base Colors --------------------//
+
+$theme-color:                   		#1ABC9C;
+$body-text-color:               		#555;
+
+$body-bg:														$white; // White
+$body-bg-dark:											#383838; // Dark -  .dark classes
+$body-bg-darker:										darken($body-bg-dark, 6.27%);
+
+$text-color:												#444; // #444
+$text-color-dark:										#EEE; // #EEE
+
+$heading-color:                 		$text-color;
+
+$section-bg:												darken($body-bg, 2.35%); // #f9f9f9
+$section-bg-dark:										$body-bg-darker;
+
+
+//-------------------- RTL --------------------//
+$RTL-template:							false !default; // if true then CSS will be generated for RTL Direction.
+
+//-------------------- Dark --------------------//
+$enable-dark: 							true !default; // if False then CSS will be Remove all .dark Classes.
+
+//-------------------- Dark --------------------//
+$patterns-template: 					true !default; // False to Disable all Patterns related CSS.
+
+
+//-------------------- Line Height Variables --------------------//
+
+$line-height-base:              		1.5;
+$line-height-content:           		1.8;
+
+
+//-------------------- Utilities --------------------//
+
+
+$margin-base:                   		3rem;
+$margin-small:                  		2rem;
+$margin-big:                    		5rem;
+
+$content-padding:						80px; // Top and Bottom 80px
+
+// Heper Classes Values
+$pos_align-classes:    					left, right, top, bottom; // Set False for Disabled
+$positions:								static, relative, absolute, fixed, sticky; // Set False for Disabled
+$vh-elements: 							100, 75, 60, 50, 40, 25, 0; // Set False for Disabled
+$letter-spacing:						5; //ls-* value Until
+$op-classes:							9; //op-* value Until 0 - 1
+$cnvs-border-width:							6; //border-width-* value Until 0 - 6
+$border-styles:							dotted, dashed, solid, double; // Set False for Disabled
+
+// Font weights
+$font-weight-extralight: 				100;
+$font-weight-medium: 					500;
+$font-weight-semibold: 					600;
+$font-normal: 							normal;
+
+// Transitions
+$transitions:							.5s ease;
+
+// Gutters
+$gutter-classes: 						50; //Gutter Classes Until Step by 10
+$col-mb-classes:						30, 50,80;
+
+// line
+$line-size:								1px;
+$line-color:							darken($body-bg, 6.67%);
+$line-dark:								rgba(white,0.1);
+
+$text-sizes: (
+	xs: 0.875rem,
+	sm: 1rem,
+	md: 1.5rem,
+	lg: 2rem,
+	xl: calc(1rem + 2.25vw),
+	xxl: calc(1rem + 3.5vw)
+);
+
+// Gradients
+$gradients-classes:						true !default;
+
+// Bg clips
+$enable-bgclips:						true !default;
+$bgclips-border:						1rem;
+$bgclips-border-sm:						$bgclips-border / 2;
+$bgclips-border-lg:						$bgclips-border * 2;
+
+$max-widths: (
+	xs: 38rem,
+	sm: 48rem,
+	md: 64rem,
+	lg: 80rem,
+	xl: 90rem,
+	xxl: 100rem
+);
+
+$square-sizes: (
+	xs: 1rem,
+	sm: 2rem,
+	md: 4rem,
+	lg: 6rem,
+	xl: 8rem
+);
+
+$translate-sm: 							3px;
+$translate: 							6px;
+$translate-lg: 							10px;
+
+$scale-sm:	 							0.025;
+$scale: 								0.05;
+$scale-lg: 								0.1;
+$a-transition: 							0.5s cubic-bezier(.215, .61, .355, 1);
+
+
+$border-radius-xl:             			.4rem;
+$border-radius-xxl:            			.5rem;
+$border-radius-xxxl:           			.6rem;
+
+$zindex:								10;
+
+//-------------------- Bootstrap-Adjustment --------------------//
+
+$grid-gutter-width:          			30px !default;
+$container-padding-x: 					$grid-gutter-width / 2 !default;
+
+
+$spacer: 1rem !default;
+$spacers: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$spacers: map-merge(
+  (
+    0: 0,
+    1: ($spacer * .25),
+    2: ($spacer * .5),
+    3: $spacer,
+    4: ($spacer * 1.5),
+    5: ($spacer * 3),
+    6: ($spacer * 5), // Added New
+  ),
+  $spacers
+);
+
+//-------------------- Font Families --------------------//
+
+$body-font:                     		'Lato', sans-serif;
+$heading-font:                  		'Poppins', sans-serif;
+$secondary-font:                		'PT Serif', serif;
+
+
+//-------------------- Page Loader Spinners --------------------//
+
+$page-loader-spinners:					darken($body-bg, 13.33%);
+$page-loader-spinners-dark:				lighten($body-bg-dark, 27.06%);
+
+
+//-------------------- Font Sizes --------------------//
+
+$font-size-base:                		1rem;
+$font-size-h1:                  		($font-size-base * 2.25);
+$font-size-h2:                  		($font-size-base * 1.875);
+$font-size-h3:                  		($font-size-base * 1.5);
+$font-size-h4:                  		($font-size-base * 1.125);
+$font-size-h5:                  		($font-size-base * 0.875);
+$font-size-h6:                  		($font-size-base * 0.75);
+$font-size-body:						$font-size-base;
+
+
+//-------------------- Layouts --------------------//
+
+$section-margin:						4rem;
+$section-padding:						$section-margin;
+$col-padding:							$section-padding;
+
+// Top Bar
+
+$topbar-bg:		                 		$body-bg;
+$topbar-height:                 		45px;
+$topbar-line-height:            		$topbar-height - 1;
+$topbar-font-size: 						0.75rem;
+$topbar-line-font-l-height:				20px;
+$topbar-text-padding:					12px;
+$topbar-font-weight: 					700;
+$topbar-font-transform: 				uppercase;
+$topbar-font-color: 					lighten($text-color, 13.33%);
+$topbar-border-size:					1px;
+$topbar-border-color:					$line-color;
+
+
+//-------------------- Header --------------------//
+
+$header-height:		                 	100px;
+$header-height-sm:						round($header-height / 1.6667); //60px
+$header-height-md:						round($header-height / 1.25); //80px
+$header-height-lg:						round($header-height * 1.2); //120px
+
+$header-bg:		                 		$body-bg;
+$header-bg-dark:		                $body-bg-dark;
+
+$menu-padding-y:                 		round(($header-height - 22) / 2); //Default
+$menu-padding-x:                 		15px; //Default
+
+// Sticky Header
+$header-sticky-bg:		                $header-bg;
+
+// Floating Header Offset
+$header-floating-top-offset:       		60px; //Default
+
+// Side Header
+$side-header-width:             		260px;
+$side-header-padding-gutters:			30px;
+$side-header-bg:                		$header-bg;
+
+// From sm
+$one-page-arrow-hidden-down-sm:			true;
+
+// Side Panel
+$side-panel-bg:							darken($header-bg, 3.92%);
+$side-panel-size:						300px;
+$side-panel-padding:					50px 70px 50px 40px;
+$side-panel-overlay:					rgba(black,0.6);
+$side-panel-widget-padding-top:			40px;
+$side-panel-close-icon:					'images/icons/close.png';
+
+// Preloader
+$preloader-image-path:					"images";
+$preloader-image:						"preloader";
+$preloader-fallback-extension:			"gif";
+
+//-------------------- Primary Menu --------------------//
+
+$primary-menu-font:             		$heading-font;
+$primary-menu-font-weight:      		700;
+$primary-menu-font-size:        		0.8125rem;
+$primary-menu-font-tt:          		uppercase;
+$primary-menu-font-color:       		$text-color;  // Leave as a "$text-color" for auto bg contrast
+$primary-menu-font-spacing:     		1px;
+
+$primary-menu-icon-size:				0.875rem;
+
+// Primary Menu Sub Menu
+$primary-menu-submenu-width:            220px;
+$primary-menu-submenu-font:             $body-font;
+$primary-menu-submenu-font-size:        0.75rem;
+$primary-menu-submenu-font-weight:      700;
+$primary-menu-submenu-font-color:		lighten($primary-menu-font-color, 13.33);
+$primary-menu-submenu-font-spacing:		0;
+$primary-menu-submenu-border:			1px solid $line-color;
+
+$primary-menu-active-color:		      	$theme-color;
+
+// Primary Mega menu
+$mega-menu-title:               		$heading-font;
+
+$mobile-menu-off-canvas-width: 			280px;
+
+$header-misc-icons-size: 				1.125rem;
+$header-misc-icons-color:				darken($text-color, 6.67);
+
+
+//-------------------- Page Title -------------------- //
+
+$page-title-base-color:					darken($text-color, 6.67%);
+$page-title-padding:					4rem;
+$page-title-parallax-padding:			$page-title-padding * 1.5625;
+$page-title-mini-padding:				20px;
+
+$page-title-bg:							darken($body-bg, 3.92%);
+$page-title-bg-dark:					$page-title-base-color;
+$page-title-color:						$page-title-base-color;
+
+$page-title-size:						2rem;
+$page-title-subtitle-size:				18px;
+
+$page-title-parallax-font-size:			40px;
+$page-title-parallax-subtitle-size:		1.25rem;
+
+$page-title-mini-size:					18px;
+
+$page-title-border:						1px solid darken($page-title-bg, 2.75%);
+
+$page-title-center-mx-width:			700px;
+
+
+//-------------------- Sliders --------------------//
+// Flex Slider
+$fslider-dots-position-top:				14px;
+$fslider-dots-position-right:			10px;
+$fslider-dots-size:						0.625rem;
+$fslider-dots-border:					1px solid $body-bg;
+$fslider-dots-border-radius:			50%;
+$fslider-dots-transition:				.3s ease-in-out;
+
+$fslider-thumbs-gutters:				2px;
+$fslider-thumbs-width:					100px; // for .flex-thumb-grid
+
+// Canvas Slider
+$canvas-slider-dots-size:				$fslider-dots-size;
+$swiper-dots-position-bottom:			20px;
+
+$slider-caption-width:					550px;
+$slider-caption-font-size:				1.375rem; //h3  (h2*3)
+$slider-caption-font-weight: 			300;
+$slider-caption-font-color:				darken($text-color, 13.33);
+$slider-caption-transition:				top .3s ease;
+$slider-caption-para-size:				1.5rem;
+$slider-caption-offset:					50px;
+$slider-caption-bg-light:				rgba($white,0.8);
+$slider-caption-bg-dark:				rgba($black,0.6);
+$slider-caption-bg-radius:				2px;
+$slider-caption-bg-padding:				5px 12px;
+
+// Slider Arrows
+
+$slider-arrows-size:					52px;
+$slider-arrows-sm-size:					$slider-arrows-size - 20px;
+
+$slider-arrows-bg-color:				rgba($black,0.3);
+$slider-arrows-bg-hover-color:			rgba($black,0.6);
+$slider-arrows-border-radius:			3px;
+$slider-arrow-sm-offset:				20px;
+
+$slider-arrow-colors:					$white;
+
+$video-overlay-bg:						'images/grid.png';
+
+// Owl Dots
+$owl-dots-slider-color:					$white;
+$owl-dots-slider-position:				top auto bottom 15px;
+
+//-------------------- Button --------------------//
+
+$button-theme-color:					$theme-color;
+$button-light:							darken($white, 6.67);
+$button-dark:							darken($text-color, 6.67);
+$button-padding-x:						22px;
+$button-padding-y:						8px;
+$button-l-height:						24px;
+$button-font-size:						0.875rem;
+$button-icon-margin:					5px;
+$button-text-shadow:					rgba($black, 0.2);
+
+// Button Mini
+$button-mini-padding-x:					round($button-padding-x / 1.571);
+$button-mini-padding-y:					round($button-padding-y / 2);
+$button-mini-l-height:					round($button-l-height / 1.2);
+$button-mini-font-size:					11px;
+
+// Button Small
+$button-sm-padding-x:					round($button-padding-x / 1.294);
+$button-sm-padding-y:					round($button-padding-y / 1.14);
+$button-sm-l-height:					round($button-l-height / 1.2);
+$button-sm-font-size:					12px;
+
+// Button Large
+$button-lg-padding-x:					round($button-padding-x * 1.18);
+$button-lg-padding-y:					$button-padding-y;
+$button-lg-l-height:					round($button-l-height * 1.25);
+$button-lg-font-size:					16px;
+
+// Button xLarge
+$button-xl-padding-x:					round($button-padding-x * 1.45);
+$button-xl-padding-y:					round($button-padding-y * 1.14);
+$button-xl-l-height:					round($button-l-height * 1.42);
+$button-xl-font-size:					18px;
+
+// Button Border
+$button-border-width:					2px;
+$button-border-thin-width:				1px;
+
+// Button 3D / Radius
+$button-3d-border:						3px;
+$button-rounded:						3px;
+
+$button-full-padding:					30px;
+$button-full-font-size:					$button-font-size * 2.14;
+
+// Button Reveal Icon
+$button-reveal-padding-x:				($button-padding-x + 6);
+$button-reveal-icon:					($button-padding-x + 10);
+
+$button-transition-speed:				.2s ease-in-out;
+$button-reveal-transition-speed:		.3s ease;
+$button-fill-transition-speed:			.4s ease;
+
+// Button Desc in Device-sm
+
+$buttons-color:							true; // colors are inside of $button_colors . eg: button-red;
+$buttons-social-colors:					false; // Ex:button-facebook - Find below of this page( $si-colors ). class name eg: button-facebook;
+
+
+// Colors - Button
+$button_colors: (
+	"red":									#C02942,
+	"teal":									#53777A,
+	"yellow":								#ECD078,
+	"purple":								#5D4157,
+	"pink":									#F89FA1,
+	"blue":									#1265A8,
+	"green": 								#59BA41,
+	"brown": 								#774F38,
+	"aqua": 								#40C0CB,
+	"lime": 								#AEE239,
+	"leaf": 								#A8CABA,
+	"dirtygreen": 							#1693A5,
+	"amber": 								#EB9C4D,
+	"black": 								#111,
+
+	// Just add variables and color-codes and it will be create a button class of that variables name;
+);
+
+//-------------------- Countdown -------------------- //
+
+$countdown-size:						1.25rem;
+$countdown-section:						11px;
+
+$countdown-md-size:						30px;
+$countdown-md-section:					0.875rem;
+
+$countdown-lg-size:						44px;
+$countdown-lg-section:					18px;
+
+$countdown-border:						1px dotted darken($body-bg, 26.67%);
+
+$countdown-inline-space:				7px;
+
+$countdown-large:						140px;
+
+//-------------------- Styled Icons -------------------- //
+
+$styled-icons-bg-color:					#444;
+$styled-icons-color:					$white;
+
+$styled-icons-light-color:				#F5F5F5;
+
+$styled-icons-size:						52px;
+$styled-icons-border-width:				1px;
+$styled-icons-border-color:				lighten($styled-icons-bg-color, 6.67%);
+
+$styled-icons-plain-size:				36px;
+
+$i-overlay:								rgba(black,0.2);
+
+
+//-------------------- Social Icons -------------------- //
+
+$social-margins:						5px;
+$social-icon-size:						40px;
+$social-icon-font-size:					1.25rem;
+
+$social-icon-lg-size:					56px;
+$social-icon-lg-font-size:				30px;
+
+$social-icon-sm-size:					32px;
+$social-icon-sm-font-size:				14px;
+
+$social-icon-color:						lighten($text-color, 6.67%);
+$social-icon-border:					1px;
+$social-icon-border-color:				darken($body-bg, 33.33);
+$social-icon-rounded:					3px;
+
+$social-icon-dark-color:				$text-color;
+$social-icon-light-color:				#EEE;
+
+$social-icon-enable-bg-classes:			true;
+$social-icon-enable-tcolor-classes:		true;
+
+
+//-------------------- Promo Box -------------------- //
+
+$promo-span-font-size:					1.125rem;
+$promo-uppercase:						true;
+$promo-uppercase-font-size:				1.25rem;
+$promo-uppercase-span-font-size:		1rem;
+$promo-border:							1px solid darken($body-bg, 10.2%);
+$promo-light:							darken($body-bg, 4%);
+$promo-light-text-color:				$text-color;
+$promo-dark:							darken($text-color, 6.67%);
+$promo-dark-text-color:					$white;
+
+$promo-rounded:							3px;
+
+$promo-parallax-padding:				80px;
+
+
+//-------------------- Featured Box -------------------- //
+
+$featured-box-icon:						4rem;
+$featured-box-padding-x: 				0.75rem;
+$featured-box-icon-size:				1.75rem;
+$featured-box-font-size:				$font-size-base;
+$featured-box-font-color:				darken($text-color, 6.67%);
+$featured-box-font-weight:				600;
+$featured-box-font-tt:					uppercase;
+
+$featured-box-outline-border:			1px;
+$featured-box-outline-padding:			0.25rem;
+
+$featured-box-rounded:					3px;
+
+$featured-box-bg-light:					darken($body-bg, 3.92);
+$featured-box-bg-dark:					lighten($body-bg-dark, 1.96);
+
+$featured-box-plain-font-size:			28px;
+$featured-box-plain-icon-size:			3rem;
+
+
+//-------------------- Toggles - Accordions -------------------- //
+
+$toggle-base-color:						$text-color;
+$toggle-font-size:						$font-size-base;
+
+$toggle-border-size:					1px;
+$toggle-border-color:					darken($body-bg, 20%);
+$toggle-border-radius:					4px; // Same Accordion Radius
+
+$toggle-bg-color:						darken($body-bg, 6.67%); // Same Accordion Color
+$toggle-title-color:					$toggle-base-color; // Same Accordion Title Color
+
+// // Accordion
+$accordion-border-size:					1px;
+$accordion-border-color:				darken($body-bg, 13.33%);
+
+
+$toggle-content-padding:				0.75rem;
+$accordion-content-padding:				1.5rem;
+
+//-------------------- Tabs -------------------- //
+
+$tab-base-color:						$text-color; //Text
+$tab-height:							40px;
+$tab-padding-width:						15px;
+$tabs-font-size:						$font-size-base; //Rem
+$tabs-border-width:						1px;
+$tabs-border-bottom:					$tabs-border-width;
+$tabs-border-color:						darken($body-bg, 13.33%);
+$tabs-bg-color:							darken($body-bg, 5.10%);
+$tabs-active-bg-color:					$body-bg;
+$tab-container-padding:					20px;
+
+$tabs-tb-border-width:					2px;
+
+$side-tab-width:						200px;
+$side-tab-padding-left:					20px;
+
+$sidenav-font-size:						$tabs-font-size;
+$sidenav-border:						1px;
+$sidenav-radius:						4px;
+$sidenav-icon-margin:					6px;
+$sidenav-padding-height:				11px;
+$sidenav-padding-width:					round($sidenav-padding-height * 1.28);
+
+$sidenav-border-color:					darken($body-bg, 10.2%);
+$sidenav-font-color:					lighten($tab-base-color, 13.33%);
+
+
+//-------------------- Alerts -------------------- //
+
+$alert-left-border:						4px;
+$alert-left-border-color:				rgba(0,0,0,0.1);
+$alert-padding:							1rem;
+$alert-title:							0.875rem;
+$alert-title-bg:						rgba(black,0.15);
+
+
+//-------------------- Clients -------------------- //
+
+$clients-grid-padding:					20px;
+$clients-grid-deafult-grid:				5;
+$clients-grid-border-size:				1px;
+$clients-grid-border-style:				dashed;
+$clients-grid-border-color:				lighten($text-color, 60%);
+$clients-img-opacity:					0.6;
+$clients-grid-total-columns:			6; // grid added upto 6
+
+
+//-------------------- Testimonials - Twitter --------------------//
+
+$testimonials-grid-padding:				2rem;
+$testimonials-deafult-grid:				$clients-grid-deafult-grid;
+$testimonials-background:				$body-bg;
+$testimonials-base-color:				$text-color;
+$testimonials-padding:					20px;
+$testimonials-full-padding:				round($testimonials-padding * 1.5); //30px
+$testimonials-font-size:				$font-size-body;
+$testimonials-full-font-size:			$font-size-body * 1.125;
+$testimonials-border:					1px solid rgba(0,0,0,0.1);
+$testimonials-border-radius:			5px;
+$testimonials-box-shadow:				0 1px 1px rgba(0,0,0,0.1);
+$testimonials-avatar-size:				64px;
+$testimonials-full-avatar-size:			round($testimonials-avatar-size * 1.125);
+$testimonials-avatar-rounded:			50%;
+$testimonials-avatar-icon:				28px;
+$testimonials-avatar-margin:			15px;
+$testimonials-icon-color:				lighten($testimonials-base-color, 26.67%);
+$testimonials-font:						$secondary-font;
+$testimonials-font-style:				italic;
+$testimonials-meta-size:				15px;
+
+$testimonials-quote-content:			' " ';
+
+$testimonials-carousel-dots:			6px;
+$testimonials-carousel-dots-color:		$theme-color;
+$testimonials-carousel-dots-opacity:	.5;
+
+
+//-------------------- Team --------------------//
+
+$team-base-color:						$text-color;
+$team-decs-align:						center;
+$team-decs-background:					$body-bg;
+$team-decs-padding:						10px 0 30px;
+$team-title-font-size:					1.25rem;
+
+$team-title-designation-font-size:		1rem;
+$team-title-designation-font-color:		$theme-color;
+$team-title-designation-font-family:	$secondary-font;
+$team-title-designation-font-weight:	400;
+$team-title-designation-font-style:		italic;
+
+$team-title-designation-icon-width:		$social-icon-sm-size;
+$team-title-designation-icon-size:		$social-icon-sm-font-size;
+
+$team-overlay-color:					$white;
+$team-overlay-opacity:					.75;;
+
+$team-list-image-width:					250px;
+
+$team-content-font-size:				$font-size-body;
+$team-content-font-color:				lighten($team-base-color, 20%);
+
+
+//-------------------- Pricing --------------------//
+
+$pricing-base-color:					$text-color;
+$pricing-background:					darken($body-bg, 3.92%);
+
+$pricing-border-size:					1px;
+$pricing-border-color:					rgba($black,.075);
+$pricing-border-radius:					3px;
+
+$pricing-title-padding:					1rem;
+$pricing-title-bg:						lighten($pricing-background, 1.57%);
+$pricing-title-border:					$pricing-border-size solid rgba($black,.05);
+$pricing-title-font-size:				1.5rem;
+$pricing-title-font-weight:				bold;
+$pricing-title-font-spacing:			1px;
+$pricing-title-font-transform:			uppercase;
+$pricing-title-font-color:				lighten($pricing-base-color, 6.67%);
+
+$pricing-price-padding:					$pricing-title-padding * 1.5;
+$pricing-price-color:					darken($pricing-base-color, 6.67%);
+$pricing-price-font-size:				4rem;
+$pricing-price-bottom-border-width:		100px;
+$pricing-price-bottom-border-size:		$pricing-border-size solid rgba($black,0.1);
+$pricing-price-currency-icon:			$pricing-price-font-size * .435;
+$pricing-price-month:					$pricing-price-currency-icon * .571;
+
+$pricing-features-padding:				$pricing-title-padding * 2;
+$pricing-features-font-padding:			.375rem;
+$pricing-features-font-size:			0.875rem;
+
+$pricing-popular-bg:					$body-bg;
+$pricing-popular-title-padding:			$pricing-title-padding * 1.25;
+$pricing-popular-font-color:			$theme-color;
+$pricing-popular-title-font-size:		$pricing-title-font-size;
+$pricing-popular-pricing-font-size:		$pricing-price-font-size * 1.125;
+$pricing-popular-box-shadow:			0 0 8px rgba($black,0.1);
+
+$pricing-minimal-bg:					$body-bg;
+$pricing-5-lg-col:						5; // Default
+$pricing-5-md-col:						$pricing-5-lg-col; //col
+$pricing-5-sm-col:						6; //col
+$pricing-5-xs-col:						12; //col
+
+$pricing-extended-padding: 				30px;
+
+
+//-------------------- Counter Skills --------------------//
+
+
+$counter-font-size:						42px;
+$counter-font-wight:					700;
+$counter-font-family:					$heading-font;
+$counter-caption-size:					$font-size-h5;
+
+$counter-sm-font-size:					round($counter-font-size / 1.5);
+$counter-sm-caption-size:				round($counter-caption-size * .93);
+
+$counter-lg-font-size:					round($counter-font-size * 1.33);
+$counter-lg-caption-size:				round($counter-caption-size / .93); // same also xl
+
+$counter-xl-font-size:					round($counter-font-size * 1.52);
+$counter-lined-size:					2px solid $text-color;
+$counter-lined-width:					15%;
+
+
+// Rounded Skills
+
+$rounded-skills-font-size:				1.25rem;
+$rounded-skills-font-color:				darken($text-color, 6.67);
+$rounded-skills-icon-size:				42px;
+
+
+// Progress Skills
+
+$progress-skills-height:				4px;
+$progress-skills-margin-gutters:		38px;
+$progress-skills-Font-size:				12px;
+$progress-skills-empty-color:			darken($body-bg, 3.92);
+$progress-skills-radius:				2px;
+$progress-skills-progress-color: 		$theme-color;
+$progress-skills-transition:			1.2s ease-in-out;
+
+$progress-skills-percent-padding:		5px;
+$progress-skills-percent-bgcolor:		darken($text-color, 6.67);
+$progress-skills-percent-color:			darken($body-bg, 2.39);
+$progress-skills-percent-size:			11px;
+$progress-skills-counter-font:			$body-font;
+$progress-skills-counter-font-color:	darken($text-color, 13.33);
+
+
+//-------------------- Owl Carousel --------------------//
+
+$carousel-animation-transition:			1000ms; // For animate.css
+
+$owl-video-play-icon-size:				64px;
+$owl-video-play-icon:					"images/icons/play.png";
+$owl-video-play-icon-hover:				scale(1.3);
+
+// auto-height Transitio
+$owl-autoHeight-transition:				500ms ease-in-out;
+// Owl Na
+$owl-nav-hidden:						true;
+$owl-nav-size:							18px;
+$owl-nav-border:						1px solid rgba($black,0.2);
+$owl-nav-background:					$body-bg;
+$owl-nav-color:							#666;
+$owl-nav-border-radius:					50%;
+
+// Owl Full Na
+$owl-full-nav-size:						28px;
+$owl-full-nav-border-radius:			3px;
+$owl-full-nav-bgcolor:					rgba($black,0.4);
+$owl-full-nav-color:					darken($body-bg, 6.67);
+$owl-full-nav-hover-bgcolor:			$theme-color;
+$owl-full-nav-hover-color:				$body-bg;
+
+// Owl Dots
+$owl-dots-size:							8px;
+$owl-dots-background:					$theme-color;
+$owl-dots-opacity:						0.5;
+
+
+//-------------------- Flip Card --------------------//
+
+$flipcard-transition:					0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+$flipcard-height:						280px;
+$flipcard-border-radius:				6px;
+$flipcard-color:						$white;
+$flipcard-font-size:					1.5rem;
+$flipcard-bg-overlay:					$black;
+$flipcard-bg-overlay-op:				0.6;
+
+$flipcard-inner-tranform:				translateY(-50%) translateZ(60px) scale(0.94);
+$flipcard-inner-padding:				2rem;
+
+
+//-------------------- Title/Heading Bloks --------------------//
+
+
+// Titular Title Block
+$titular-title-font-size-h1:			3.25rem;
+$titular-title-font-size-h2:			2.75rem;
+$titular-title-font-size-h3:			2rem;
+$titular-title-font-size-subtitle:		1rem;
+
+// Heading Title Block
+$heading-block-font-size-h1:			32px;
+$heading-block-font-size-h2:			30px;
+$heading-block-font-size-h3:			1.75rem;
+$heading-block-font-size-h4:			1.25rem;
+$heading-block-font-weight:				700;
+$heading-block-font-spacing:			1px;
+$heading-block-font-color:				darken($text-color, 6.67%);
+$heading-block-font-transform:			uppercase;
+$heading-block-center-container:		700px;
+$title-block-border-size:				40px;
+$heading-block-border:					2px solid $text-color;
+$heading-block-span-color:				darken($text-color, 20%);
+
+
+// Title Block
+$title-block-padding:					20px;
+$title-block-color:						$text-color;
+$title-block-border:					7px;
+$title-block-border-color:				$theme-color;
+
+$title-block-subtitle-color:			lighten($title-block-color, 6.67%);
+
+// Emphasis Title Block
+$emphasis-title-font-size:				64px;
+
+// Fancy Title Block
+$fancy-title-bg:						$body-bg;
+$fancy-title-padding:					0.75rem;
+$fancy-title-border-size:				1px;
+$fancy-title-border-color:				darken($fancy-title-bg, 6.67);
+$fancy-title-dotted-border:				"images/icons/dotted.png";
+
+$before-heading-font:					normal 400 16px $secondary-font;
+
+
+//-------------------- Dividers --------------------//
+
+$divider-colors:						darken($body-bg, 10.20%);
+$divider-margins:						3rem;
+$divider-border-size:					1px;
+$divider-border-color:					lighten($divider-colors, 3.53);
+
+$divider-thick-height:					3px;
+
+$divider-icon-size:						18px;
+$divider-icon-gutter:					0.5rem;
+$divider-icon-color:					0.5rem;
+$divider-icon-hover-color:				darken($divider-colors, 36.47%);
+
+$divider-short-width-sm:				55%;
+$divider-short-width-xs:				35%;
+
+$divider-rounded-size:					round($divider-icon-size * 2.22);
+$divider-rounded-color:					darken($divider-colors, 16.47%);
+$divider-rounded-background:			lighten($divider-colors, 6.27%);
+
+
+//-------------------- SM-Form Control --------------------//
+
+$sm-form-background:					$body-bg;
+$sm-form-min-height:					38px;
+$sm-form-border:						2px;
+$sm-form-border-color:					darken($body-bg, 13.33);
+$sm-form-border-radius:					0;
+$sm-form-color:							$body-text-color;
+$sm-form-font-size:						15px;
+$sm-form-padding:						8px 14px;
+$sm-form-focus-color:					darken($body-bg, 33.33);
+$sm-form-placeholder:					darken($body-bg, 40);
+
+$sm-form-label-color:					$sm-form-color;
+$sm-form-label-size:					$sm-form-font-size - 2px;
+$sm-form-label-font:					$heading-font;
+$sm-form-label-transform:				uppercase;
+$sm-form-label-spacing:					1px;
+$sm-form-label-weight:					700;
+$sm-form-label-mb:						10px;
+
+$sm-form-label-error:					#E42C3E;
+$sm-form-disabled:						darken($body-bg, 6.67);
+
+$bs-form-control-radius:				3px;
+
+$form-processor-bg:						$body-bg;
+$form-processor-bg-op:					0.7;
+
+// Goto Top
+$gotoTop-size:							40px;
+$gotoTop-bg:							rgba($black, 0.3);
+$gotoTop-icon-size:						1.25rem;
+$gotoTop-icon-color:					$white;
+$gotoTop-position-boxed-right:		 	30px;
+$gotoTop-position-boxed-bottom:			50px;
+$gotoTop-position-botom:				30px;
+$gotoTop-border-radius:					2px;
+$gotoTop-hover-color:					$theme-color;
+
+$gotoTop-hidden-sm:						true;
+
+
+//-------------------- Portfolio --------------------//
+
+//Grid Filter
+$grid_filter-mb:						3.5rem;
+$grid_filter-border:					1px;
+$grid_filter-border-color:				rgba(black,0.07);
+$grid_filter-border-radius:				4px;
+$grid_filter-item-padding-x:			20px;
+$grid_filter-item-padding-y:			10px;
+$grid_filter-item-font-size:			0.9375rem;
+$grid_filter-col-sm:					3;
+$grid_filter-col-xs:					2;
+
+$grid_filter-styles-m:					0.75rem;
+$grid_filter-styles-rdius:				22px;
+
+// grid-shuffle: 	;
+$grid-shuffle-size:						42px;
+
+// Portfolio: 	;
+$Portfolio_desc-padding:				20px 5px;
+$Portfolio_desc-title-size:				1.25rem;
+
+// Masonry Thumbs: 	;
+$masonry_thumbs-gutter:					1px;
+$portfolio-grid-upto:					12;
+
+// Modal. AJAX
+$portfolio-modal-width: 				1000px;
+$portfolio-modal-padding: 				40px;
+$portfolio-ajax-width:					1200px;
+
+// Portfolio Meta
+$portfolio-meta-font-size:				0.875rem;
+$portfolio-meta-color:					lighten($text-color, 13.33);
+$portfolio-meta-row-1:					150px;
+$portfolio-meta-row-1-color:			darken($text-color, 6.67);
+$portfolio-meta-icon:					14px;
+$portfolio-meta-border:					1px solid darken($body-bg, 10.20);
+
+
+$portfolio-navigation-size:				24px;
+//-------------------- Shop --------------------//
+
+//Columns Margin
+$shop-desc-padding:						15px;
+$shop-title-font-size:					1.25rem;
+$shop-title-color:						darken($text-color, 6.67);
+
+$shop-product-price:					1.125rem;
+$shop-product-price-color:				$text-color;
+$shop-product-price-font-weight:		700;
+
+$shop-product-price-del:				darken($body-bg, 46.67);
+
+// Shop Single
+$shop-single-title-size:				1.75rem;
+$shop-single-price-size: 				1.5rem;
+
+$shop-quick-view:						800px; //Same as Shop Ajax
+
+
+$quantity-box-width:					50px;
+$quantity-box-height:					40px;
+$quantity-box-bg:						darken($body-bg, 6.67);
+$quantity-box-border-color:				darken($quantity-box-bg, 6.67);
+$quantity-box-font-size:				$font-size-base;
+
+// Cart
+$cart-remove-color:						#FF0000;
+$cart-padding: 							12px 15px;
+$cart-heading-font-size:				0.875rem;
+$cart-heading-font-color: 				lighten($text-color, 6.67);
+$cart-thumbnail-size: 					68px;
+$cart-product-title-size: 				0.8125rem;
+
+//-------------------- Blog --------------------//
+
+$post-item-margin: 						50px;
+
+// Post Image
+$post-image-rounded:					3px;
+$post-image-mb:							30px;
+$post-sm-image:							64px;
+
+// Post Title
+$post-title-font-size:					$font-size-h3;
+$post-title-font-weight:				600;
+$post-title-font-spacing:				1px;
+$post-title-font-uppaercase:			true;
+$post-title-font-color:					darken($text-color, 6.67);
+
+// Post Meta
+$post-meta-seperator:					'\205E';
+$post-meta-margin:						15px;
+$post-meta-color:						lighten($text-color, 33.33);
+
+// Post Content
+$post-content-margin:					30px;
+
+// Post Entry Link
+$post-entry-link-bg: 					darken($body-bg, 3.92);
+$post-entry-link-padding: 				30px 0;
+$post-entry-link-color: 				$text-color;
+$post-entry-link-font-family: 			$heading-font;
+$post-entry-link-text-transform: 		uppercase;
+$post-entry-link-letter-spacing: 		1px;
+$post-entry-link-font-size: 			$font-size-h3;
+$post-entry-link-font-weight: 			700;
+$post-entry-link-border-radius: 		$post-image-rounded;
+
+// Post Grid
+$post-grid-margin:						30px;
+
+// Post Timeline
+$post-timeline-border-size:				1px;
+$post-timeline-border-style:			dashed;
+$post-timeline-border-color:			darken($body-bg, 20);
+$post-timeline-date-size:				64px;
+$post-timeline-date-border:				3px;
+$post-timeline-date-border-color:		$post-timeline-border-color;
+
+// Post Author
+$author-image:							64px;
+
+//-------------------- Event --------------------//
+
+$event-entry-date:						1.75rem;
+$event-overlay-meta-bg:					rgba(black,0.85);
+$event-overlay-meta-font:				1.25rem;
+$event-overlay-position:				top auto bottom 0 left 0;
+$event-parallax-overlay-width:			368px;
+
+
+//-------------------- Widget --------------------//
+
+$widget-border:							1px solid lighten($body-bg, 6.67);
+$widget-margin:							50px;
+
+$widget-title-margin: 					25px;
+$widget-title-font-size: 				15px;
+$widget-title-font-weight: 				600;
+$widget-title-letter-spacing: 			2px;
+$widget-title-text-transform: 			uppercase;
+
+$widget-icon:							'\e7a5';
+$widget-comment-icon:					'\e9b8';
+$widget-icon-font-family: 				'font-icons';
+
+
+//-------------------- Navtree --------------------//
+
+$nav-tree-font-size:					12px;
+$nav-tree-padding-left:					20px;
+
+
+//-------------------- Switch Toggle --------------------//
+
+$switch-toggle-bg:						darken($body-bg, 13.33);
+
+$switch-toggle-size:					30px;
+$switch-toggle-size-mini:				16px;
+$switch-toggle-size-lg: 				45px;
+$switch-toggle-size-xl: 				60px;
+
+$switch-toggle-active-bg:				$theme-color;
+
+//-------------------- Footers --------------------//
+
+
+$footer-bg:								darken($body-bg, 6.67%);
+$footer-bg-dark:						darken($body-bg-dark, 1.96%);
+
+$copyrights-font-size:					$font-size-h5;
+
+$footer-top-border:						5px solid rgba(black,0.2);
+
+$footer-sticky-global:					false !default;
+
+//-------------------- Social Icons Colors --------------------//
+
+
+$si-colors: (
+	facebook:                 			#3B5998,
+	whatsapp:							#25d366,
+	delicious:                			#205CC0,
+	paypal:                   			#00588B,
+	flattr:                   			#F67C1A,
+	android:                  			#A4C639,
+	smashmag:                 			#E53B2C,
+	gplus:                    			#DD4B39,
+	wikipedia:                			#333,
+	stumbleupon:              			#F74425,
+	foursquare:               			#25A0CA,
+	call:                     			#444,
+	ninetyninedesigns:        			#F26739,
+	forrst:                   			#5B9A68,
+	digg:                     			#191919,
+	spotify:                  			#81B71A,
+	reddit:                   			#C6C6C6,
+	blogger:                  			#FC4F08,
+	cc:                       			#688527,
+	dribbble:                 			#EA4C89,
+	evernote:                 			#5BA525,
+	flickr:                   			#FF0084,
+	google:                   			#DD4B39,
+	instapaper:               			#333,
+	klout:                    			#FF5F52,
+	linkedin:                 			#0E76A8,
+	vk:                       			#2B587A,
+	rss:                      			#EE802F,
+	skype:                    			#00AFF0,
+	twitter:                  			#00ACEE,
+	youtube:                  			#C4302B,
+	vimeo:                    			#86C9EF,
+	aim:                      			#FCD20B,
+	yahoo:                    			#720E9E,
+	email3:                   			#6567A5,
+	macstore:                 			#333333,
+	myspace:                  			#666666,
+	podcast:                  			#E4B21B,
+	cloudapp:                 			#525557,
+	dropbox:                  			#3D9AE8,
+	ebay:                     			#89C507,
+	github:                   			#171515,
+	googleplay:               			#DD4B39,
+	itunes:                   			#222,
+	plurk:                    			#CF5A00,
+	pinboard:                 			#0000E6,
+	soundcloud:               			#FF7700,
+	tumblr:                   			#34526F,
+	wordpress:                			#1E8CBE,
+	yelp:                     			#C41200,
+	intensedebate:            			#009EE4,
+	eventbrite:               			#F16924,
+	scribd:                   			#666666,
+	stripe:                   			#008CDD,
+	print:                    			#111,
+	dwolla:                   			#FF5C03,
+	statusnet:                			#131A30,
+	acrobat:                  			#D3222A,
+	drupal:                   			#27537A,
+	buffer:                   			#333333,
+	pocket:                   			#EE4056,
+	bitbucket:                			#0E4984,
+	stackoverflow:            			#EF8236,
+	hackernews:               			#FF6600,
+	xing:                     			#126567,
+	instagram:                			#8A3AB9,
+	quora:                    			#A82400,
+	openid:                   			#E16309,
+	steam:                    			#111,
+	amazon:                   			#E47911,
+	disqus:                   			#E4E7EE,
+	plancast:                 			#222,
+	appstore:                 			#000,
+	pinterest:                			#C8232C,
+	fivehundredpx:            			#111,
+	tiktok: 							#000,
+	tripadvisor: 						#00AF87,
+	gpay: 								#6877DF,
+	unsplash: 							#111,
+	snapchat: 							#FFFC00,
+);
+$si-text-hover-color:      $white;
+
+//-------------------- Gradient Colors --------------------//
+
+$gradient-colors: (
+	light-grey: 						linear-gradient(to right, #2c3e50, #bdc3c7),
+	green-dark: 						linear-gradient(to right, #99f2c8, #1f4037),
+	grey-brown: 						linear-gradient(to right, #C06C84, #6C5B7B, #355C7D),
+	light-pink: 						linear-gradient(to right, #ffdde1, #ee9ca7),
+	blue-purple: 						linear-gradient(to right, #4A00E0, #8E2DE2),
+	multiples: 							linear-gradient(to right, #eea2a2 0%, #bbc1bf 19%, #57c6e1 42%, #b49fda 79%, #7ac5d8 100%),
+	blue-green: 						linear-gradient(to right, #2af598 0%, #009efd 100%),
+	light: 								linear-gradient(to top, #DDD 0%, #FFF 100%),
+	grey-orange: 						linear-gradient(to right, #3B4371, #F3904F),
+	sunset: 							linear-gradient(to top, #a8edea 0%, #fed6e3 100%),
+	dark: 								linear-gradient(to right, #535353, #000),
+	lemon: 								linear-gradient(to right, #cac531, #f3f9a7),
+	earth: 								linear-gradient(to right, #649173, #dbd5a4),
+	sky: 								linear-gradient(to right, #2980b9, #6dd5fa, #F5F5F5),
+	ocean: 								linear-gradient(to right, #000046, #1cb5e0),
+	horizon: 							linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%),
+	green-blue: 						linear-gradient(to right, #43cea2, #185a9d),
+	purple-blue: 						linear-gradient(19deg, rgb(33, 212, 253) 0%, rgb(183, 33, 255) 100%),
+);

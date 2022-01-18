@@ -1,0 +1,79 @@
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: promo.scss
+
+-----------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Promo Boxes
+-----------------------------------------------------------------*/
+.promo {
+  position: relative;
+  /* Promo - Light
+  -----------------------------------------------------------------*/
+  /* Promo - Dark
+  -----------------------------------------------------------------*/
+  /* Promo - 100% Full Width
+  -----------------------------------------------------------------*/
+  /* Promo - Parallax
+  -----------------------------------------------------------------*/
+  /* Promo - Mini
+  -----------------------------------------------------------------*/
+}
+.promo h3 {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+.promo h3 + span {
+  display: block;
+  color: #444;
+  font-weight: 300;
+  font-size: 1.125rem;
+  margin-top: 6px;
+}
+.promo-uppercase {
+  text-transform: uppercase;
+}
+.promo-uppercase h3 {
+  font-size: 1.25rem;
+}
+.promo-uppercase h3 + span {
+  font-size: 1rem;
+}
+.promo-border {
+  border: 1px solid #e5e5e5;
+  border-radius: 3px;
+}
+.promo-light {
+  background-color: whitesmoke;
+  border-radius: 3px;
+}
+.promo-dark {
+  border: 0 !important;
+  background-color: #333333;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+.promo-dark h3 {
+  color: #FFF;
+}
+.promo-dark h3 + span {
+  color: #EEE;
+  font-weight: 400;
+}
+.promo-full {
+  border-radius: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+.promo.parallax {
+  padding: 80px 0 !important;
+}
+.promo-mini {
+  text-align: left;
+}
+.promo-mini h3 {
+  font-size: 1.25rem;
+}
+.promo-mini.promo-uppercase h3 {
+  font-size: 1rem;
+}

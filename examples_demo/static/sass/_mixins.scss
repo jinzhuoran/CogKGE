@@ -1,0 +1,263 @@
+@import "variables";
+
+
+//---------- @mixins ----------//
+
+@mixin box-shadow($val...) {
+	box-shadow: ($val);
+	-moz-box-shadow: ($val);
+	-webkit-box-shadow: ($val);
+}
+
+@mixin border-radius($val) {
+	border-radius: ($val);
+}
+
+@mixin transition($val...) {
+	-webkit-transition: ($val);
+	-o-transition: ($val);
+	transition: ($val);
+}
+
+@mixin translateX($val...) {
+	-webkit-transform: translateX($val);
+	-ms-transform: translateX($val);
+	-o-transform: translateX($val);
+	transform: translateX($val);
+}
+
+@mixin translateY($val...) {
+	-webkit-transform: translateY($val);
+	-ms-transform: translateY($val);
+	-o-transform: translateY($val);
+	transform: translateY($val);
+}
+
+@mixin translate3d($val,$val2,$val3) {
+	-webkit-transform: translate3d($val, $val2, $val3);
+	-ms-transform: translate3d($val, $val2, $val3);
+	-o-transform: translate3d($val, $val2, $val3);
+	transform: translate3d($val, $val2, $val3);
+}
+
+@mixin rotate($val){
+	-webkit-transform: rotate($val);
+	-moz-transform: rotate($val);
+	-ms-transform: rotate($val);
+	-o-transform: rotate($val);
+	transform: rotate($val);
+}
+
+@mixin scale($val){
+	-webkit-transform: scale($val);
+	-moz-transform: scale($val);
+	-ms-transform: scale($val);
+	transform: scale($val);
+}
+
+
+@function set-color($color) {
+	@if (lightness($color) > 50) {
+	  @return $black;
+	}
+	@else {
+	  @return $white;
+	}
+}
+
+@mixin grid-size($grid-columns, $grid-size-child) {
+	@for $grid-img from 1 through $grid-columns {
+		&.grid-#{$grid-img} #{$grid-size-child} {
+			width: 100% / $grid-img;
+		}
+	}
+}
+
+@mixin placeholder {
+	&::-webkit-input-placeholder {@content}
+	&::-moz-placeholder          {@content}
+	&:-ms-input-placeholder      {@content}
+}
+
+
+@mixin align-position($args) {
+	$offsets: top right bottom left;
+
+  @each $o in $offsets {
+	$i: index($args, $o);
+
+	@if $i and $i + 1 <= length($args) and type-of( nth($args, $i + 1) ) == number {
+	  #{$o}: nth($args, $i + 1);
+	}
+  }
+}
+
+@mixin letter-spacing($letter-spacing) {
+	@for $l-spacing-element from 1 through $letter-spacing {
+		.ls#{$l-spacing-element} {
+			letter-spacing: 1px * $l-spacing-element !important;
+		}
+	}
+}
+
+@mixin font-weight($font-weight) {
+	@for $i from 1 through $font-weight {
+		@if $i % 100 == 0 {
+			.t#{$i} {
+				font-weight: $i !important;
+			}
+		}
+	}
+}
+
+// $button: (padding: $button-padding-x, height: $button-l-height, font-size: $button-font-size, border-radius: $button-rounded);
+// $button-mini: (padding: $button-mini-padding-width, height: $button-mini-height, font-size: $button-mini-font-size, border-radius: $button-rounded);
+// $button-small: (padding: $button-small-padding-width, height: $button-small-height, font-size: $button-small-font-size, border-radius: $button-rounded);
+// $button-large: (padding: $button-large-padding-width, height: $button-large-height, font-size: $button-large-font-size, border-radius: $button-rounded);
+// $button-xlarge: (padding: $button-xlarge-padding-width, height: $button-xlarge-height, font-size: $button-xlarge-font-size, border-radius: $button-rounded);
+
+// @mixin btn-size-variant($padding, $font-size, $border-radius) {
+// 	padding: 0 $padding;
+// 	line-height: $height;
+// 	font-size: $font-size;
+// 	@if $enable-rounded {
+// 		border-radius: $border-radius;
+// 	} @else {
+// 		border-radius: 0;
+// 	}
+// }
+
+
+// @mixin button-size($padding-y, $padding-x, $font-size, $line-height, $border-radius) {
+// 	padding: $padding-y $padding-x;
+// 	font-size: $font-size;
+// 	line-height: $line-height;
+// 	// Manually declare to provide an override to the browser default
+// 	@if $enable-rounded {
+// 		border-radius: $border-radius;
+// 	} @else {
+// 		border-radius: 0;
+// 	}
+// }
+
+
+// $retina: "only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx)";
+// $image-path: '' !default;
+// $fallback-extension: '' !default;
+// @mixin background-image($image-path, $name, $fallback-extension, $size, $retina_img:false, $dark:false){
+//     background-image: url("#{$image-path}/#{$name}.#{$fallback-extension}");
+//     @if $dark == true {
+//     	.dark & {
+//     		background-image: url("#{$image-path}/#{$name}-dark.#{$fallback-extension}");
+//     	}
+//     }
+//     @media #{$retina} {
+//     	@if $retina_img == true {
+//     		background-image: url("#{$image-path}/#{$name}@2x.#{$fallback-extension}");
+//     		@if ($size) != false {
+// 			    background-size: $size;
+// 			}
+//     	}
+//     	@if ($retina_img and $dark) == true {
+//     		.dark & {
+//     			background-image: url("#{$image-path}/#{$name}-dark@2x.#{$fallback-extension}");
+//     			@if $size == true {
+// 				    background-size: $size;
+// 				}
+//     		}
+//     	}
+//     }
+// }
+
+// Div Center
+@mixin center($horizontal: true, $vertical: true) {
+	position: absolute;
+
+	@if ($horizontal and $vertical) {
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+
+	} @else if ($horizontal) {
+		left: 50%;
+		transform: translate(-50%, 0);
+
+	} @else if ($vertical) {
+		top: 50%;
+		transform: translate(0, -50%);
+	}
+}
+
+
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+	@content;
+  }
+  @keyframes #{$animationName} {
+	@content;
+  }
+}
+@mixin animate($name...) {
+	-webkit-animation:$name 30s infinite linear;
+	 -moz-animation:$name 30s infinite linear;
+		-ms-animation:$name 30s infinite linear;
+		 -o-animation:$name 30s infinite linear;
+			animation:$name 30s infinite linear;
+}
+
+@mixin variant($selector) {
+  @at-root #{$selector}#{&} {
+	@content;
+  }
+}
+
+
+@function decimal-round ($number, $digits: 0, $mode: round) {
+	$n: 1;
+	// $number must be a number
+	@if type-of($number) != number {
+		@warn '#{ $number } is not a number.';
+		@return $number;
+	}
+	// $digits must be a unitless number
+	@if type-of($digits) != number {
+		@warn '#{ $digits } is not a number.';
+		@return $number;
+	} @else if not unitless($digits) {
+		@warn '#{ $digits } has a unit.';
+		@return $number;
+	}
+	@for $i from 1 through $digits {
+		$n: $n * 10;
+	}
+	@if $mode == round {
+		@return round($number * $n) / $n;
+	} @else if $mode == ceil {
+		@return ceil($number * $n) / $n;
+	} @else if $mode == floor {
+		@return floor($number * $n) / $n;
+	} @else {
+		@warn '#{ $mode } is undefined keyword.';
+		@return $number;
+	}
+}
+@function decimal-ceil ($number, $digits: 0) {
+	@return decimal-round($number, $digits, ceil);
+}
+@function decimal-floor ($number, $digits: 0) {
+	@return decimal-round($number, $digits, floor);
+}
+
+
+@mixin opacity($opacity, $important: 0) {
+  @if $important == 1 {
+    opacity: $opacity !important;
+    $opacity-ie: $opacity * 100;
+    filter: alpha(opacity=$opacity-ie) !important; //IE8
+  }
+  @else {
+    opacity: $opacity;
+    $opacity-ie: $opacity * 100;
+    filter: alpha(opacity=$opacity-ie); //IE8
+  }
+}

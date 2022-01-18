@@ -1,0 +1,95 @@
+
+/* ----------------------------------------------------------------
+
+	footer.scss
+
+-----------------------------------------------------------------*/
+
+
+/* ----------------------------------------------------------------
+	Footer
+-----------------------------------------------------------------*/
+#footer {
+	position: relative;
+	background-color: $footer-bg;
+	border-top: $footer-top-border;
+}
+
+@if $footer-sticky-global {
+	@include media-breakpoint-up(lg) {
+		#footer {
+			position: sticky;
+			top: auto;
+			bottom: 0;
+			left: 0;
+		}
+
+		#slider:not(.slider-parallax-invisible),
+		#page-submenu,
+		#page-title,
+		#content { z-index: 2; }
+	}
+}
+
+@include media-breakpoint-up(lg) {
+	.sticky-footer #slider:not(.slider-parallax-invisible),
+	.sticky-footer #page-submenu,
+	.sticky-footer #page-title,
+	.sticky-footer #content { z-index: 2; }
+
+	.sticky-footer #footer {
+		position: sticky;
+		top: auto;
+		bottom: 0;
+		left: 0;
+	}
+}
+
+#footer .footer-widgets-wrap {
+	position: relative;
+	padding: $content-padding 0;
+}
+
+#copyrights {
+	padding: round($content-padding / 2) 0;
+	background-color: darken($footer-bg, 6.67);
+	font-size: $copyrights-font-size;
+	line-height: $line-height-content;
+
+	i.footer-icon {
+		position: relative;
+		top: 1px;
+		font-size: $copyrights-font-size;
+		width: $copyrights-font-size;
+		text-align: center;
+		margin-right: 3px;
+	}
+
+	a {
+		display: inline-block;
+		margin: 0 3px;
+		color: darken($text-color, 6.67);
+		border-bottom: 1px dotted $text-color;
+		&:hover {
+			color: lighten($text-color, 6.67);
+			border-bottom: 1px solid lighten($text-color, 13.33);
+		}
+	}
+	.text-end a:last-child { margin-right: 0; }
+}
+
+
+.copyrights-menu { margin-bottom: 10px;
+	a {
+		font-size: $copyrights-font-size;
+		margin: 0 10px;
+		border-bottom: 0 !important;
+		&:first-child { margin-left: 0; }
+	}
+}
+
+
+.footer-logo {
+	display: block;
+	margin-bottom: 30px;
+}

@@ -1,0 +1,564 @@
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: feature-box.scss
+
+-----------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Featured Boxes
+-----------------------------------------------------------------*/
+
+$featured-prefix: feature-box;
+$fbox-prefix: fbox; //child
+
+.#{$featured-prefix} {
+	position: relative;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	margin-left: -$featured-box-padding-x;
+	margin-right: -$featured-box-padding-x;
+	&:first-child { margin-top: 0; }
+}
+
+.#{$fbox-prefix}{
+	&-icon {
+		width: $featured-box-icon + ($featured-box-padding-x * 2);
+		height: $featured-box-icon;
+		padding: 0 $featured-box-padding-x;
+		a,
+		i,
+		img {
+			display: block;
+			position: relative;
+			width: 100%;
+			height: 100%;
+			color: #FFF;
+		}
+		i,
+		img {
+			border-radius: 50%;
+			background-color: $theme-color;
+		}
+		i {
+			font-style: normal;
+			font-size: $featured-box-icon-size;
+			line-height: $featured-box-icon;
+			text-align: center;
+		}
+	}
+	&-content {
+		-ms-flex-preferred-size: 0;
+		flex-basis: 0;
+		-ms-flex-positive: 1;
+		flex-grow: 1;
+		min-width: 0;
+		max-width: 100%;
+		padding: 0 $featured-box-padding-x;
+		h3 {
+			font-size: $featured-box-font-size;
+			font-weight: $featured-box-font-weight;
+			font-family: $heading-font;
+			text-transform: $featured-box-font-tt;
+			margin-bottom: 0;
+			color: $featured-box-font-color;
+		}
+		p {
+			margin-top: 0.5rem;
+			margin-bottom: 0px;
+			color: #999;
+		}
+		.before-heading { font-size: decimal-floor($featured-box-font-size / 1.142, 3); }
+
+		&-sm {
+			h3,
+			p {
+				font-size: decimal-floor($featured-box-font-size / 1.142, 3);
+			}
+
+			.before-heading {
+				font-size: decimal-floor($featured-box-font-size / 1.333, 3);
+			}
+		}
+
+		&-lg {
+			h3 {
+				font-size: decimal-floor($featured-box-font-size * 1.25, 3);
+			}
+			p {
+				font-size: decimal-floor($featured-box-font-size * 1.125, 3);
+				margin-top: 0.75rem;
+			}
+
+			.before-heading {
+				font-size: $featured-box-font-size;
+			}
+		}
+	}
+
+	/* Feature Box - Icon Small
+	-----------------------------------------------------------------*/
+
+	&-sm {
+		margin-left: -($featured-box-padding-x / 1.5);
+		margin-right: -($featured-box-padding-x / 1.5);
+
+		.#{$fbox-prefix} {
+			&-icon {
+				width: $featured-box-icon / 2 + (($featured-box-padding-x / 1.5) * 2);
+				height: $featured-box-icon / 2;
+				padding: 0 $featured-box-padding-x / 1.5;
+				i {
+					font-size: $featured-box-font-size;
+					line-height: $featured-box-icon / 2;
+				}
+			}
+			&-content {
+				padding: 0 ($featured-box-padding-x / 1.5);
+			}
+		}
+	}
+
+	/* Feature Box - Icon Large
+	-----------------------------------------------------------------*/
+
+	&-lg {
+		.#{$fbox-prefix}-icon {
+			width: ($featured-box-icon * 1.5) + ($featured-box-padding-x * 2);
+			height: $featured-box-icon * 1.5;
+			i {
+				font-size: $featured-box-font-size * 2.5;
+				line-height: $featured-box-icon * 1.5;
+			}
+		}
+	}
+
+	/* Feature Box - Icon X-Large
+	-----------------------------------------------------------------*/
+
+	&-xl {
+		.#{$fbox-prefix}-icon {
+			width: ($featured-box-icon * 2) + ($featured-box-padding-x * 2);
+			height: $featured-box-icon * 2;
+			i {
+				font-size: $featured-box-font-size * 4.5;
+				line-height: $featured-box-icon * 2;
+			}
+		}
+	}
+
+	/* Feature Box - Icon Outline
+	-----------------------------------------------------------------*/
+	&-outline {
+		.#{$fbox-prefix}-icon {
+			a {
+				border: $featured-box-outline-border solid $theme-color;
+				padding: $featured-box-outline-padding;
+				border-radius: 50%;
+			}
+			i { line-height: decimal-floor($featured-box-icon / 1.1428, 3); }
+		}
+		/* Feature Box - Icon Outline Sizes
+		-----------------------------------------------------------------*/
+
+		&.#{$fbox-prefix} {
+			&-sm .#{$fbox-prefix}-icon i { line-height: decimal-floor(($featured-box-icon / 2) / 1.333, 3); }
+			&-lg .#{$fbox-prefix}-icon i { line-height: decimal-floor(($featured-box-icon * 1.5) / 1.0909, 3); }
+			&-xl .#{$fbox-prefix}-icon i { line-height: decimal-floor(($featured-box-icon * 2) / 1.066666, 3); }
+		}
+	}
+
+	/* Feature Box - Icon Rounded
+	-----------------------------------------------------------------*/
+	&-rounded {
+		.#{$fbox-prefix}-icon { border-radius: $featured-box-rounded !important;
+			i,
+			img { border-radius: $featured-box-rounded !important; }
+		}
+		/* Feature Box - Icon Rounded Sizes
+		-----------------------------------------------------------------*/
+
+		.#{$fbox-prefix}-lg .#{$fbox-prefix}-icon {
+			border-radius: round($featured-box-rounded / 0.75) !important;
+			i,
+			img { border-radius: round($featured-box-rounded / 0.75)!important; }
+		}
+
+		.#{$fbox-prefix}-xl .#{$fbox-prefix}-icon {
+			border-radius: round($featured-box-rounded * 2) !important;
+			i,
+			img { border-radius: round($featured-box-rounded * 2) !important; }
+		}
+	}
+	/* Feature Box - Light Background
+	-----------------------------------------------------------------*/
+	&-light {
+		&.#{$fbox-prefix}-outline {
+			.#{$fbox-prefix}-icon {
+				a {
+					border-color: darken($featured-box-bg-light, 6.27);
+				}
+			}
+		}
+		.#{$fbox-prefix}-icon {
+			i,
+			img {
+				border: $featured-box-outline-border solid darken($featured-box-bg-light, 6.27);
+				background-color: $featured-box-bg-light;
+				color: $text-color;
+			}
+		}
+	}
+
+	/* Feature Box - Dark Background
+	-----------------------------------------------------------------*/
+	&-dark {
+		&.#{$fbox-prefix}-outline {
+			.#{$fbox-prefix}-icon {
+				a { border-color: lighten($featured-box-bg-dark, 6.67); }
+			}
+			.#{$fbox-prefix}-icon i,
+			.#{$fbox-prefix}-icon img { background-color: $featured-box-bg-dark; }
+		}
+	}
+
+	/* Feature Box - Border
+	-----------------------------------------------------------------*/
+	&-border {
+		.#{$fbox-prefix}-icon {
+			a {
+				border: $featured-box-outline-border solid $theme-color;
+				border-radius: 50%;
+			}
+			i,
+			img {
+				border: none;
+				background-color: transparent !important;
+				color: $theme-color;
+			}
+		}
+
+		/* Feature Box - Border - Light
+		-----------------------------------------------------------------*/
+		&.#{$fbox-prefix}-light {
+			.#{$fbox-prefix}-icon {
+				a { border-color: darken($featured-box-bg-light, 6.27); }
+				i,
+				img { color: #888; }
+			}
+		}
+
+		/* Feature Box - Border - Light / Dark
+		-----------------------------------------------------------------*/
+		&.#{$fbox-prefix}-dark {
+			.#{$fbox-prefix}-icon {
+				a{
+					border-color: lighten($featured-box-bg-dark, 6.67);
+				}
+				i,
+				img { color: $text-color; }
+			}
+		}
+	}
+
+	/* Feature Box - Plain
+	-----------------------------------------------------------------*/
+	&-plain {
+		.#{$fbox-prefix}-icon {
+			border: none !important;
+			height: auto !important;
+			i,
+			img {
+				border: none;
+				background-color: transparent;
+				color: $theme-color;
+				border-radius: 0;
+			}
+			i {
+				font-size: $featured-box-plain-icon-size;
+				line-height: 1;
+			}
+			img { height: auto; }
+		}
+		&.#{$fbox-prefix}-image .#{$fbox-prefix}-icon {
+			width: auto;
+			img {
+				width: auto;
+				display: inline-block;
+			}
+		}
+		&.#{$fbox-prefix}-light {
+			.#{$fbox-prefix}-icon {
+				i,
+				img { color: #888; }
+			}
+		}
+		&.#{$fbox-prefix}-dark {
+			.#{$fbox-prefix}-icon {
+				i,
+				img { color: #444; }
+			}
+		}
+
+		/* Feature Box - Icon Plain Sizes
+		-----------------------------------------------------------------*/
+
+		&.#{$fbox-prefix} {
+			&-sm .#{$fbox-prefix}-icon i { font-size: $featured-box-plain-icon-size / 1.5; }
+
+			&-lg .#{$fbox-prefix}-icon i { font-size: $featured-box-plain-icon-size * 1.5; }
+
+			&-xl .#{$fbox-prefix}-icon i { font-size: $featured-box-plain-icon-size * 2; }
+		}
+
+	}
+
+	/* Feature Box - Center
+	-----------------------------------------------------------------*/
+	&-center {
+		-ms-flex-direction: column;
+		flex-direction: column;
+		-ms-flex-align: center;
+		align-items: center;
+		text-align: center;
+		.#{$fbox-prefix}-icon {
+			margin-bottom: 1.5rem;
+		}
+	}
+
+	/* Feature Box - Subtitle
+	-----------------------------------------------------------------*/
+	&-content {
+		h3 {
+			+ .#{$fbox-prefix}-icon {
+				margin-top: 1.5rem;
+				margin-bottom: 0 !important;
+			}
+			span.subtitle {
+				display: block;
+				margin-top: 5px;
+				color: #444;
+				font-weight: 300;
+				text-transform: none;
+			}
+		}
+	}
+	&-center{
+		&.#{$fbox-prefix}-sep:not(.#{$fbox-prefix}-bg) {
+			h3::after {
+				content: '';
+				display: block;
+				margin: 1.25rem auto;
+				width: 2rem;
+				height: 2px;
+				background-color: #555;
+				-webkit-transition: width .3s ease;
+				-o-transition: width .3s ease;
+				transition: width .3s ease;
+			}
+			&:hover h3::after { width: 3rem; }
+		}
+		&.#{$fbox-prefix}-italic p {
+			font-style: italic;
+			font-family: $body-font;
+		}
+	}
+
+	/* Feature Box - Background
+	-----------------------------------------------------------------*/
+	&-bg {
+		&.#{$fbox-prefix}-center {
+			margin-top: 2rem;
+			margin-left: 0;
+			margin-right: 0;
+			padding: 0 2rem 2rem;
+			border: 1px solid $featured-box-bg-light;
+			border-radius: 5px;
+			.#{$fbox-prefix} {
+				&-icon {
+					margin-top: -2rem;
+					background-color: #FFF;
+				}
+				&-lg {
+					margin-top: 3rem;
+					.#{$fbox-prefix}-icon {
+						margin-top: -3rem;
+					}
+				}
+				&-xl {
+					margin-top: 4rem;
+					.#{$fbox-prefix}-icon {
+						margin-top: -4rem;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+/* Animated Icon Hovers
+-----------------------------------------------------------------*/
+.#{$fbox-prefix}-effect {
+	.#{$fbox-prefix}-icon {
+		i { z-index: 1;
+			&::after {
+				pointer-events: none;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+				content: '';
+				-webkit-box-sizing: content-box;
+				-moz-box-sizing: content-box;
+				box-sizing: content-box;
+			}
+		}
+	}
+}
+
+.#{$fbox-prefix}-rounded {
+	&.#{$fbox-prefix}-effect {
+		.#{$fbox-prefix}-icon i::after { border-radius: $featured-box-rounded; }
+	}
+}
+
+.#{$fbox-prefix}-effect {
+	.#{$fbox-prefix}-icon i {
+		-webkit-transition: background-color 0.3s, color 0.3s;
+		-o-transition: background-color 0.3s, color 0.3s;
+		transition: background-color 0.3s, color 0.3s;
+		&::after {
+			top: -3px;
+			left: -3px;
+			padding: 3px;
+			box-shadow: 0 0 0 2px $featured-box-bg-dark;
+			-webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+			-webkit-transform: scale(.8);
+			-moz-transition: -moz-transform 0.3s, opacity 0.3s;
+			-moz-transform: scale(.8);
+			-ms-transform: scale(.8);
+			transition: transform 0.3s, opacity 0.3s;
+			transform: scale(.8);
+			opacity: 0;
+		}
+	}
+	.#{$fbox-prefix}-icon i:hover,
+	&:hover .#{$fbox-prefix}-icon i {
+		background-color: $featured-box-bg-dark;
+		color: #FFF;
+	}
+	&.#{$fbox-prefix}-dark {
+		.#{$fbox-prefix}-icon {
+			i::after { box-shadow: 0 0 0 2px $theme-color; }
+		}
+		.#{$fbox-prefix}-icon i:hover,
+		&:hover .#{$fbox-prefix}-icon i { background-color: $theme-color; }
+	}
+	.#{$fbox-prefix}-icon i:hover::after,
+	&:hover .#{$fbox-prefix}-icon i::after {
+		-webkit-transform: scale(1);
+		-moz-transform: scale(1);
+		-ms-transform: scale(1);
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+
+/* Icon Effects - Bordered
+-----------------------------------------------------------------*/
+
+.#{$fbox-prefix}-border {
+	&.#{$fbox-prefix}-effect {
+		.#{$fbox-prefix}-icon i {
+			-webkit-transition: color 0.5s, box-shadow 0.5s, background-color 0.5s;
+			-o-transition: color 0.5s, box-shadow 0.5s, background-color 0.5s;
+			transition: color 0.5s, box-shadow 0.5s, background-color 0.5s;
+			&::after {
+				top: -2px;
+				left: -2px;
+				padding: 2px;
+				z-index: -1;
+				box-shadow: none;
+				background-image: url('images/icons/iconalt.svg');
+				background-position: center center;
+				background-size: 100% 100%;
+				-webkit-transition: -webkit-transform 0.5s, opacity 0.5s, background-color 0.5s;
+				-o-transition: -moz-transform 0.5s, opacity 0.5s, background-color 0.5s;
+				transition: transform 0.5s, opacity 0.5s, background-color 0.5s;
+			}
+		}
+	}
+	&.#{$fbox-prefix}-rounded.#{$fbox-prefix}-effect .#{$fbox-prefix}-icon i::after { border-radius: 3px; }
+	&.#{$fbox-prefix}-effect {
+		.#{$fbox-prefix}-icon i:hover,
+		&:hover .#{$fbox-prefix}-icon i {
+			color: #FFF;
+			box-shadow: 0 0 0 1px $featured-box-bg-dark;
+		}
+		.#{$fbox-prefix}-icon i::after {
+			-webkit-transform: scale(1.3);
+			-moz-transform: scale(1.3);
+			-ms-transform: scale(1.3);
+			transform: scale(1.3);
+			opacity: 0;
+			background-color: $featured-box-bg-dark;
+		}
+		&.#{$fbox-prefix}-dark {
+			.#{$fbox-prefix}-icon i:hover,
+			&:hover .#{$fbox-prefix}-icon i { box-shadow: 0 0 0 1px $theme-color; }
+			.#{$fbox-prefix}-icon i::after { background-color: $theme-color; }
+		}
+		.#{$fbox-prefix}-icon i:hover::after,
+		&:hover .#{$fbox-prefix}-icon i::after {
+			-webkit-transform: scale(1);
+			-moz-transform: scale(1);
+			-ms-transform: scale(1);
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+}
+
+
+/* Media Featured Box
+-----------------------------------------------------------------*/
+.media-box {
+	padding: 0;
+	margin-left: 0;
+	margin-right: 0;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	.#{$fbox-prefix}-media {
+		margin: 0 0 1.5rem;
+		position: relative;
+		display: block;
+		width: 100%;
+		height: auto;
+		a,
+		img {
+			position: relative;
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+		iframe { display: block; }
+	}
+	p { margin-top: 1rem; }
+	&.#{$fbox-prefix}-bg {
+		.#{$fbox-prefix}-media { margin: 0;
+			img { border-radius: 5px 5px 0 0; }
+		}
+		.#{$fbox-prefix}-content {
+			padding: 1.5rem;
+			background-color: #FFF;
+			border: 1px solid $featured-box-bg-light;
+			border-top: 0;
+			border-radius: 0 0 5px 5px;
+		}
+	}
+	.#{$fbox-prefix}-content {
+		-ms-flex-preferred-size: auto;
+	}
+}

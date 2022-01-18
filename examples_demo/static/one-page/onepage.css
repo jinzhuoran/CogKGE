@@ -1,0 +1,651 @@
+/* ----------------------------------------------------------------
+	CSS Specific to the One Page Module
+
+	Some of the CSS Codes have been modified from the Original
+	style.css File to match the Minimal Styling of this Module
+
+	Version: 6.5.4
+-----------------------------------------------------------------*/
+
+/* Custom Header Size
+-----------------------------------------------------------------*/
+.header-size-custom #logo img {
+	height: 70px;
+}
+
+@media (min-width: 992px) {
+
+	.header-size-custom .header-wrap-clone {
+		height: calc( 70px + 1px );
+	}
+
+	#header.header-size-custom + .include-header {
+		margin-top: calc( -70px - 2px );
+	}
+
+	.header-size-custom .menu-container > .menu-item > .menu-link {
+		padding-top: 24px;
+		padding-bottom: 24px;
+	}
+
+}
+
+@media (min-width: 992px) {
+
+	/* ----------------------------------------------------------------------------
+		Header
+	---------------------------------------------------------------------------- */
+
+	#header.full-header.transparent-header,
+	#header.full-header.transparent-header:not(.border-full-header):not(.sticky-header) #header-wrap {
+		border-bottom-color: transparent !important;
+	}
+
+	#header.full-header:not(.border-full-header):not(.sticky-header) #header-wrap { border-bottom-color: transparent; }
+
+	#header.full-header.transparent-header.border-full-header #header-wrap { border-bottom-color: rgba(0,0,0,0.05); }
+
+	.dark #header.full-header.transparent-header.border-full-header #header-wrap,
+	#header.dark.full-header.transparent-header.border-full-header #header-wrap { border-bottom-color: rgba(255,255,255,0.15); }
+
+	#header.full-header #logo { border-right: 0; }
+
+	#header.full-header .primary-menu > .menu-container {
+		padding-right: 0;
+		margin-right: 0;
+		border-right: 0;
+	}
+
+	#header.show-on-sticky #header-wrap {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	#header.show-on-sticky.sticky-header #header-wrap {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+
+	/* Sticky Header
+	---------------------------------------------------------------------------- */
+
+	#header.sticky-header #header-wrap,
+	#header.full-header.border-full-header.sticky-header #header-wrap {
+		box-shadow: none;
+		border-bottom: 1px solid #F5F5F5 !important;
+		-webkit-backface-visibility: hidden;
+	}
+
+	.dark #header.sticky-header #header-wrap,
+	.dark #header.full-header.border-full-header.sticky-header #header-wrap {
+		border-bottom-color: rgba(255,255,255,0.1) !important;
+	}
+
+
+	/* Side Header
+	---------------------------------------------------------------------------- */
+
+	.side-header #header-wrap { width: 300px !important; }
+
+	/* Primary Menu
+	---------------------------------------------------------------------------- */
+
+	.primary-menu .menu-container .menu-link {
+		padding-left: 22px;
+		padding-right: 22px;
+		font-size: 12px;
+		font-weight: 400;
+		letter-spacing: 3px;
+	}
+
+}
+
+
+/* Side Panel
+---------------------------------------------------------------------------- */
+
+body.side-push-panel.stretched #header .container { right: 0; }
+
+body.side-push-panel.side-panel-open.stretched #header .container { right: 300px; }
+
+body.side-panel-left.side-push-panel.stretched #header .container {
+	left: 0;
+	right: auto;
+}
+
+body.side-panel-left.side-push-panel.side-panel-open.stretched #header .container { left: 300px; }
+
+
+/* ----------------------------------------------------------------------------
+	Page Section
+---------------------------------------------------------------------------- */
+
+.page-section { padding: 120px 0; }
+
+
+/* ----------------------------------------------------------------------------
+	Heading Block
+---------------------------------------------------------------------------- */
+
+.heading-block h2 {
+	font-weight: 500;
+	letter-spacing: 3px;
+	font-family: 'Roboto', sans-serif;
+}
+
+
+/* ----------------------------------------------------------------------------
+	Portfolio Description
+---------------------------------------------------------------------------- */
+
+.bg-overlay .portfolio-desc h3 {
+	font-size: 22px;
+	font-weight: 300;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+.bg-overlay .portfolio-desc h3 a {
+	color: #333 !important;
+	text-shadow: none;
+}
+
+.bg-overlay .portfolio-desc span {
+	margin-top: 12px;
+	text-transform: uppercase;
+	font-size: 14px;
+	letter-spacing: 1px;
+	font-weight: 300;
+}
+
+.bg-overlay .portfolio-desc span a {
+	color: #999 !important;
+	text-shadow: none;
+}
+
+
+/**/
+
+.op-gradient-icon {
+	background: rgb(131,58,180);
+	background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+
+/* ----------------------------------------------------------------------------
+	Buttons
+---------------------------------------------------------------------------- */
+
+.button.button-border {
+	font-weight: 400;
+	letter-spacing: 2px;
+	font-size: 13px;
+}
+
+.button.button-border.button-large {
+	font-size: 15px;
+}
+
+.button.button-border.button-light {
+	border-color: #F9F9F9;
+	color: #F9F9F9;
+}
+
+.button.button-border.button-light:hover {
+	background-color: #F9F9F9;
+	color: #333;
+	text-shadow: none;
+}
+
+
+/* Blog
+---------------------------------------------------------------------------- */
+
+.posts-md .entry-title h3 {
+	font-size: 1.375rem;
+	letter-spacing: 0;
+}
+
+
+/* More Link
+---------------------------------------------------------------------------- */
+
+.more-link {
+	font-weight: 400;
+	border-bottom-width: 1px;
+	font-style: normal;
+}
+
+.more-link i.icon-angle-right {
+	position: relative;
+	top: 2px;
+	margin-left: 3px;
+}
+
+
+.link-border {
+	font-weight: 600;
+	border-bottom: 3px solid #1ABC9C;
+	-webkit-transition: all .3s ease;
+	-o-transition: all .3s ease;
+	transition: all .3s ease;
+}
+
+.link-border:hover { border-color: #FFF; }
+
+
+/* ----------------------------------------------------------------------------
+	Team & Testimonials
+---------------------------------------------------------------------------- */
+
+.team-title h4 {
+	font-weight: 600;
+	font-size: 17px;
+	letter-spacing: 2px;
+}
+
+.team-title span {
+	font-style: normal;
+	color: #999;
+	text-transform: uppercase;
+	font-size: 14px;
+	letter-spacing: 1px;
+	margin-top: 2px;
+}
+
+.team-social-icons {
+	position: absolute;
+	width: 100%;
+	bottom: 20px;
+}
+
+.parallax .fslider * { -webkit-backface-visibility: hidden !important; }
+
+.parallax .fslider .flex-control-paging * { -webkit-backface-visibility: visible !important; }
+
+.parallax .testimonial .testi-content p {
+	line-height: 1.6 !important;
+	font-size: 24px;
+	letter-spacing: 1px;
+	font-weight: 300;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-style: normal;
+}
+
+.parallax .testimonial .testi-meta {
+	margin-top: 20px;
+	font-size: 15px;
+	letter-spacing: 2px;
+	font-weight: 500;
+}
+
+.parallax .testimonial .testi-meta span {
+	font-weight: 300;
+	font-size: 14px;
+	letter-spacing: 1px;
+}
+
+
+/* Border Form Design
+---------------------------------------------------------------------------- */
+
+.border-form-control {
+	height: 48px;
+	padding: 8px 4px;
+	font-size: 21px;
+	letter-spacing: 1px;
+	background-color: transparent !important;
+	border-top: transparent;
+	border-right: transparent;
+	border-left: transparent;
+	border-bottom-width: 1px;
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+.border-form-control::-moz-placeholder { font-weight: 300; }
+.border-form-control:-ms-input-placeholder { font-weight: 300; }
+.border-form-control::-webkit-input-placeholder { font-weight: 300; }
+
+textarea.border-form-control {
+	resize: none;
+	overflow: hidden;
+	word-wrap: break-word;
+}
+
+
+/* ----------------------------------------------------------------------------
+	Helper CSS Styles
+---------------------------------------------------------------------------- */
+
+.font-body { font-family: 'Roboto', sans-serif !important; }
+
+.font-primary { font-family: 'Source Sans Pro', sans-serif !important; }
+
+
+
+/* ----------------------------------------------------------------------------
+	Footer Widgets
+---------------------------------------------------------------------------- */
+
+#footer .widget { padding: 30px 0; }
+
+#footer .widget > h4 {
+	margin-bottom: 50px;
+	font-size: 20px;
+	font-weight: 300;
+	letter-spacing: 3px;
+	text-transform: uppercase;
+}
+
+
+
+#footer .widget ul.footer-site-links li {
+	margin: 5px 0;
+	font-size: 17px;
+	letter-spacing: 1px;
+	font-weight: 300;
+}
+
+
+#footer .widget .form-control { text-align: center; }
+
+.widget p.lead {
+	font-size: 17px;
+	letter-spacing: 1px;
+	line-height: 1.6;
+}
+
+
+/* ----------------------------------------------------------------------------
+	Services Grid
+---------------------------------------------------------------------------- */
+
+.grid-border { overflow: hidden; }
+
+.grid-border [class^=col-]:before,
+.grid-border [class^=col-]:after {
+	content: '';
+	position: absolute;
+}
+
+.grid-border [class^=col-]:before {
+	height: 100%;
+	top: 0;
+	left: -1px;
+	border-left: 1px solid rgba(0,0,0,0.05);
+}
+
+.grid-border [class^=col-]:after {
+	width: 100%;
+	height: 0;
+	top: auto;
+	left: 0;
+	bottom: -1px;
+	border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.dark .grid-border [class^=col-]:before,
+.dark .grid-border [class^=col-]:after { border-color: rgba(255,255,255,0.05); }
+
+
+/* ----------------------------------------------------------------------------
+	One Page Module: Slider Specifics
+---------------------------------------------------------------------------- */
+
+.one-page-arrow i {
+	-webkit-animation-duration: 1.5s !important;
+	animation-duration: 1.5s !important;
+}
+
+
+/* Large One Word in Slider
+---------------------------------------------------------------------------- */
+
+.opm-large-word { font-size: 116px; }
+
+.device-md .opm-large-word { font-size: 96px; }
+
+.device-sm .opm-large-word { font-size: 72px; }
+
+.device-xs .opm-large-word { font-size: 54px; }
+
+
+/* Medium One Word in Slider
+---------------------------------------------------------------------------- */
+
+.opm-medium-word { font-size: 96px; }
+
+.device-md .opm-medium-word { font-size: 80px; }
+
+.device-sm .opm-medium-word { font-size: 60px; }
+
+.device-xs .opm-medium-word { font-size: 48px; }
+
+
+/* Medium Before Heading
+---------------------------------------------------------------------------- */
+
+.before-heading.opm-medium {
+	font-size: 30px;
+	font-style: normal;
+	margin: 0 0 0 5px;
+	line-height: 1;
+	letter-spacing: 12px;
+}
+
+.device-md .before-heading.opm-medium { font-size: 22px; }
+
+.device-sm .before-heading.opm-medium { font-size: 18px; }
+
+.device-xs .before-heading.opm-medium { font-size: 14px; }
+
+
+/* Large Counter in Slider
+---------------------------------------------------------------------------- */
+
+.opm-large-counter {
+	font-size: 480px;
+	color: #F2F2F2;
+	line-height: 1;
+}
+
+.device-md .opm-large-counter { font-size: 360px; }
+
+.device-sm .opm-large-counter { font-size: 220px; }
+
+.device-xs .opm-large-counter { font-size: 150px; }
+
+
+/* Slider Grid Blocks
+---------------------------------------------------------------------------- */
+
+.videoplay-on-hover h2 {
+	font-size: 40px;
+	font-weight: bold;
+}
+
+.device-sm .videoplay-on-hover h2 { font-size: 32px; }
+
+.device-xs .videoplay-on-hover h2 { font-size: 26px; }
+
+
+
+/* Content Switch
+---------------------------------------------------------------------------- */
+
+
+.con-switch {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	-webkit-backface-visibility: hidden;
+}
+
+.con-switch .con-default,
+.con-switch .con-show {
+	display: block;
+	opacity: 1;
+	-webkit-transition: opacity .4s ease;
+	-o-transition: opacity .4s ease;
+	transition: opacity .4s ease;
+}
+
+.con-switch .con-show {
+	position: absolute;
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	text-align: center;
+}
+
+.con-switch:hover .con-show { opacity: 1; }
+
+.con-switch:hover .con-default { opacity: 0; }
+
+
+
+/* Hero Video Play Event
+---------------------------------------------------------------------------- */
+
+.big-video-button {
+	display: inline-block;
+	width: 64px;
+	height: 64px;
+	line-height: 64px;
+	border-radius: 50%;
+	background-color: #333;
+	color: #F5F5F5 !important;
+	font-size: 24px;
+	text-align: center;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+	opacity: 1;
+	-webkit-transition: opacity .3s ease;
+	-o-transition: opacity .3s ease;
+	transition: opacity .3s ease;
+}
+
+.big-video-button:hover { opacity: 0.9; }
+
+.dark .big-video-button,
+.big-video-button.dark {
+	background-color: #F5F5F5;
+	color: #333 !important;
+	text-shadow: none;
+}
+
+.big-video-button i:nth-of-type(1) {
+	position: relative;
+	left: 3px;
+}
+
+.big-video-button i:nth-of-type(2),
+.big-video-button.video-played i:nth-of-type(1) { display: none; }
+
+.big-video-button.video-played i:nth-of-type(2) { display: block; }
+
+.big-video-button.video-played { opacity: 0.1; }
+
+#slider:hover .big-video-button.video-played { opacity: 1; }
+
+
+.slider-caption h2 {
+	font-size: 78px;
+	letter-spacing: 3px;
+	text-transform: lowercase;
+}
+
+.slider-caption p {
+	font-weight: 300;
+	text-transform: lowercase;
+	font-size: 26px;
+	line-height: 1.8;
+	max-width: 600px;
+	margin-top: 50px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+
+.testimonials-lg { overflow: visible; }
+
+.testimonials-lg:before {
+	position: absolute;
+	top: -20px;
+	left: -30px;
+	content: "“";
+	color: rgba(0,0,0,0.07);
+	font-size: 144px;
+	line-height: 1;
+	font-family: 'Passion One';
+}
+
+.testimonials-lg .testi-content p {
+	font-size: 26px;
+	line-height: 1.6;
+	font-style: normal;
+	font-weight: 300;
+	font-family: 'Roboto', sans-serif;
+	color: #111;
+}
+
+.testimonials-lg .testi-content p:before,
+.testimonials-lg .testi-content p:after { content:''; }
+
+.testimonials-lg .testi-meta {
+	font-size: 14px;
+	font-weight: 400;
+	margin-top: 30px;
+	color: #999;
+}
+
+.testimonials-lg .testi-meta span {
+	font-size: 13px;
+	font-weight: 300;
+	color: #BBB;
+}
+
+
+
+/* ----------------------------------------------------------------------------
+	Dark
+---------------------------------------------------------------------------- */
+
+
+.dark #header.sticky-header #header-wrap,
+#header.sticky-header.dark #header-wrap { border-bottom-color: rgba(255,255,255,0.1) !important; }
+
+
+/* ----------------------------------------------------------------------------
+	Responsive
+---------------------------------------------------------------------------- */
+
+
+@media (max-width: 991px) {
+
+	#header.transparent-header:not(.sticky-header) #header-wrap {
+		background-color: #FFF;
+		border-bottom: 1px solid #EEE;
+	}
+
+	#header.transparent-header.dark:not(.sticky-header) #header-wrap {
+		background-color: #333;
+		border-bottom-color: rgba(255,255,255,0.1) !important;
+	}
+
+	.dark #header.transparent-header #header-wrap,
+	.dark #header.semi-transparent #header-wrap,
+	#header.dark.transparent-header #header-wrap,
+	#header.dark.semi-transparent #header-wrap {
+		background-color: #333;
+		border-bottom-color: rgba(255,255,255,0.1);
+	}
+
+}
+

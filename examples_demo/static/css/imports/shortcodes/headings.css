@@ -1,0 +1,257 @@
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: headings.scss
+
+-----------------------------------------------------------------------------------*/
+/* Titular
+-----------------------------------------------------------------*/
+.titular-title {
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+h1.titular-title {
+  font-size: 3.25rem;
+}
+h2.titular-title {
+  font-size: 2.75rem;
+}
+h3.titular-title {
+  font-size: 2rem;
+}
+
+.titular-sub-title {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 4px;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+.titular-title + .titular-sub-title {
+  margin-top: -25px;
+  margin-bottom: 30px;
+}
+
+/* Block Titles
+-----------------------------------------------------------------*/
+.title-block {
+  padding: 2px 0 3px 20px;
+  border-left: 7px solid #1ABC9C;
+  margin-bottom: 30px;
+}
+.title-block-right {
+  padding: 2px 20px 3px 0;
+  border-left: 0;
+  border-right: 7px solid #1ABC9C;
+  text-align: right;
+}
+.title-block h1,
+.title-block h2,
+.title-block h3,
+.title-block h4 {
+  margin-bottom: 0;
+}
+.title-block > span {
+  display: block;
+  margin-top: 4px;
+  color: #555555;
+  font-weight: 300;
+}
+.title-block h1 + span,
+.title-block h2 + span {
+  font-size: 1.25rem;
+}
+.title-block h3 + span {
+  font-size: 1.125rem;
+}
+.title-block h4 + span {
+  font-size: 0.9375rem;
+}
+
+/* Heading Block - with Subtitle
+-----------------------------------------------------------------*/
+.heading-block {
+  margin-bottom: 50px;
+}
+.heading-block h1,
+.heading-block h2,
+.heading-block h3,
+.heading-block h4 {
+  margin-bottom: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #333333;
+}
+.heading-block h1 {
+  font-size: 32px;
+}
+.heading-block h2 {
+  font-size: 30px;
+}
+.heading-block h3 {
+  font-size: 1.75rem;
+}
+.heading-block h4 {
+  font-size: 1.25rem;
+}
+.heading-block > span:not(.before-heading) {
+  display: block;
+  margin-top: 10px;
+  font-weight: 300;
+  color: #111111;
+}
+.heading-block .before-heading {
+  margin-bottom: 7px;
+}
+.heading-block.center > span, .heading-block.text-center > span, .center .heading-block > span, .text-center .heading-block > span {
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 768px) {
+  .text-md-start .heading-block > span {
+    max-width: none !important;
+  }
+}
+.heading-block h1 + span {
+  font-size: 24px;
+}
+.heading-block h2 + span,
+.heading-block h3 + span,
+.heading-block h4 + span {
+  font-size: 20px;
+}
+.heading-block::after {
+  content: '';
+  display: block;
+  margin-top: 30px;
+  width: 40px;
+  border-top: 2px solid #444;
+}
+.center .heading-block::after, .text-center .heading-block::after, .heading-block.center::after, .heading-block.text-center::after {
+  margin: 30px auto 0;
+}
+@media (min-width: 768px) {
+  .text-md-start .heading-block::after {
+    margin-left: 0 !important;
+  }
+}
+.text-end .heading-block, .heading-block.text-end, .heading-block.title-right {
+  direction: rtl;
+}
+.heading-block.border-0::after, .heading-block.border-bottom-0::after {
+  display: none;
+}
+.heading-block.border-color::after {
+  border-color: #1ABC9C;
+}
+
+/* Emphasis Title
+-----------------------------------------------------------------*/
+.emphasis-title {
+  margin: 0 0 50px;
+}
+.emphasis-title h1,
+.emphasis-title h2 {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #333;
+  font-weight: 400;
+  text-transform: none;
+  font-size: 64px;
+  letter-spacing: -2px;
+}
+.emphasis-title h1 strong,
+.emphasis-title h2 strong {
+  font-weight: 700;
+}
+
+/* Justify Border Title
+-----------------------------------------------------------------*/
+.fancy-title {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.fancy-title h1,
+.fancy-title h2,
+.fancy-title h3,
+.fancy-title h4,
+.fancy-title h5,
+.fancy-title h6 {
+  position: relative;
+  background-color: #FFF;
+  margin-bottom: 0;
+  color: #444;
+}
+.fancy-title::before, .fancy-title::after {
+  content: '';
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  max-width: 100%;
+  height: 0;
+  border-top: 3px double #e5e5e5;
+}
+.fancy-title::before {
+  display: none;
+  margin-right: 0.75rem;
+}
+.fancy-title::after {
+  margin-left: 0.75rem;
+}
+
+.title-border::before,
+.title-border::after {
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+.title-border-color::before,
+.title-border-color::after {
+  border-top: 1px solid #1ABC9C;
+}
+
+/* Fancy Title - Center Align
+-----------------------------------------------------------------*/
+.title-center::before {
+  display: block;
+}
+
+/* Fancy Title - Right Align
+-----------------------------------------------------------------*/
+.title-right::before {
+  display: block;
+}
+.title-right::after {
+  display: none;
+}
+
+/* Fancy Title - Bottom Short Border
+-----------------------------------------------------------------*/
+.title-bottom-border::before, .title-bottom-border::after {
+  display: none;
+}
+.title-bottom-border h1,
+.title-bottom-border h2,
+.title-bottom-border h3,
+.title-bottom-border h4,
+.title-bottom-border h5,
+.title-bottom-border h6 {
+  width: 100%;
+  padding: 0 0 0.75rem;
+  border-bottom: 2px solid #1ABC9C;
+}
+
+/* Sub Heading
+-----------------------------------------------------------------*/
+.before-heading {
+  display: block;
+  margin: 0 0 5px;
+  font: normal 400 16px "PT Serif", serif;
+  color: #999999;
+}

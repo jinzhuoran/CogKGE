@@ -1,0 +1,256 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: styled-icons.scss
+
+-----------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Styled Icons
+-----------------------------------------------------------------*/
+@mixin gradient-bg($color, $imp:0) {
+	@if $imp == 1 {
+		@if $enable-gradients {
+			background-color: $color !important;
+			background-image: linear-gradient(180deg, mix($body-bg, $color, 15%), $color) !important;
+			background-repeat: repeat-x;
+		}
+		@else {
+			background-color: $color !important;
+		}
+	} @else {
+		@if $enable-gradients {
+			background-color: $color;
+			background-image: linear-gradient(180deg, mix($body-bg, $color, 15%), $color);
+			background-repeat: repeat-x;
+		}
+		@else {
+			background-color: $color;
+		}
+	}
+}
+
+.i-rounded,
+.i-plain,
+.i-circled,
+.i-bordered,
+.social-icon {
+	display: block;
+	float: left;
+	margin: 4px 11px 7px 0;
+	text-align: center !important;
+	font-size: round($styled-icons-size / 1.857);
+	color: $styled-icons-color;
+	text-shadow: 1px 1px 1px rgba(black,0.3);
+	cursor: pointer;
+	font-style: normal;
+	body:not(.device-touch) & {
+		-webkit-transition: all .3s ease;
+		-o-transition: all .3s ease;
+		transition: all .3s ease;
+	}
+}
+
+
+.i-rounded,
+.i-circled,
+.i-bordered {
+	width: $styled-icons-size !important;
+	height: $styled-icons-size !important;
+	line-height: $styled-icons-size !important;
+	@include gradient-bg($styled-icons-bg-color);
+	border-radius: 3px;
+}
+
+.i-bordered {
+	border: $styled-icons-border-width solid $styled-icons-border-color;
+	line-height: ($styled-icons-size - ($styled-icons-border-width * 2)) !important;
+	background: transparent !important;
+	color: $text-color;
+	text-shadow: none;
+	&:hover {
+		@include gradient-bg($styled-icons-bg-color, 1);
+		color: $color-contrast-light;
+		border-color: #444;
+	}
+}
+
+.i-plain {
+	width: $styled-icons-plain-size !important;
+	height: $styled-icons-plain-size !important;
+	font-size: round($styled-icons-plain-size / 1.28);
+	line-height: $styled-icons-plain-size !important;
+	color: $text-color;
+	text-shadow: 1px 1px 1px $styled-icons-color;
+	&:hover { color: #777; }
+}
+
+.i-circled { border-radius: 50%; }
+
+.i-light {
+	@include gradient-bg($styled-icons-light-color);
+	color: $color-contrast-light;
+	text-shadow: 1px 1px 1px $styled-icons-color;
+	box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
+}
+
+.i-alt {
+	background-image: url('images/icons/iconalt.svg');
+	background-position: center center;
+	background-size: 100% 100%;
+}
+
+
+.i-rounded:hover,
+.i-circled:hover {
+	@include gradient-bg($theme-color);
+	color: $color-contrast-light;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+	box-shadow: 0 0 0 rgba(0,0,0,0.2);
+}
+
+
+
+/* Icon Size - Small
+-----------------------------------------------------------------*/
+.i-small {
+	&.i-rounded,
+	&.i-plain,
+	&.i-circled,
+	&.i-bordered {
+		margin: 4px 11px 7px 0;
+		font-size: round($styled-icons-size / 3.71);
+	}
+	&.i-rounded,
+	&.i-circled,
+	&.i-bordered {
+		width: round($styled-icons-size / 1.86) !important;
+		height: round($styled-icons-size / 1.86) !important;
+		line-height: round($styled-icons-size / 1.86) !important;
+	}
+	&.i-bordered { line-height: (round($styled-icons-size / 1.86) - ($styled-icons-border-width * 2)) !important; }
+	&.i-plain {
+		width: round($styled-icons-plain-size / 2) !important;
+		height: round($styled-icons-plain-size / 2) !important;
+		font-size: round($styled-icons-plain-size / 2.571);
+		line-height: round($styled-icons-plain-size / 2) !important;
+	}
+}
+
+
+/* Icon Size - Small
+-----------------------------------------------------------------*/
+.i-medium {
+	&.i-rounded,
+	&.i-plain,
+	&.i-circled,
+	&.i-bordered {
+		margin: 6px 13px 9px 0;
+		font-size: round($styled-icons-size / 2.48);
+	}
+
+	&.i-rounded,
+	&.i-circled,
+	&.i-bordered {
+		width: round($styled-icons-size / 1.45) !important;
+		height: round($styled-icons-size / 1.45) !important;
+		line-height: round($styled-icons-size / 1.45) !important;
+	}
+
+	&.i-bordered { line-height: (round($styled-icons-size / 1.45) - ($styled-icons-border-width * 2)) !important; }
+
+	&.i-plain {
+		width: round($styled-icons-plain-size / 1.285) !important;
+		height: round($styled-icons-plain-size / 1.285) !important;
+		font-size: round($styled-icons-plain-size / 1.8);
+		line-height: round($styled-icons-plain-size / 1.285) !important;
+	}
+}
+
+/* Icon Size - Large
+-----------------------------------------------------------------*/
+.i-large {
+	&.i-rounded,
+	&.i-plain,
+	&.i-circled,
+	&.i-bordered {
+		margin: 4px 11px 7px 0;
+		font-size: round($styled-icons-size / 1.23);
+	}
+
+	&.i-rounded,
+	&.i-circled,
+	&.i-bordered {
+		width: round($styled-icons-size * 1.23) !important;
+		height: round($styled-icons-size * 1.23) !important;
+		line-height: round($styled-icons-size * 1.23) !important;
+	}
+
+	&.i-bordered { line-height: (round($styled-icons-size * 1.23) - ($styled-icons-border-width * 2)) !important; }
+
+	&.i-plain {
+		width: round($styled-icons-plain-size * 1.333) !important;
+		height: round($styled-icons-plain-size * 1.333) !important;
+		font-size: round($styled-icons-plain-size * 1.16);
+		line-height: round($styled-icons-plain-size * 1.333) !important;
+	}
+}
+
+
+/* Icon Size - Extra Large
+-----------------------------------------------------------------*/
+.i-xlarge {
+	&.i-rounded,
+	&.i-plain,
+	&.i-circled,
+	&.i-bordered {
+		margin: 4px 11px 7px 0;
+		font-size: round($styled-icons-size * 1.08);
+	}
+
+	&.i-rounded,
+	&.i-circled,
+	&.i-bordered {
+		width: round($styled-icons-size * 1.61) !important;
+		height: round($styled-icons-size * 1.61) !important;
+		line-height: round($styled-icons-size * 1.61) !important;
+	}
+
+	&.i-bordered { line-height: (round($styled-icons-size * 1.61) - ($styled-icons-border-width * 2))  !important; }
+
+	&.i-plain {
+		width: round($styled-icons-plain-size * 1.78) !important;
+		height: round($styled-icons-plain-size * 1.78) !important;
+		font-size: round($styled-icons-plain-size * 1.55);
+		line-height: round($styled-icons-plain-size * 1.78) !important;
+	}
+}
+
+
+/* Icon Size - Extra Extra Large
+-----------------------------------------------------------------*/
+.i-xxlarge {
+	&.i-rounded,
+	&.i-plain,
+	&.i-circled,
+	&.i-bordered {
+		margin: 6px 15px 10px 0;
+		font-size: round($styled-icons-size * 1.23);
+	}
+
+	&.i-rounded,
+	&.i-circled,
+	&.i-bordered {
+		width: round($styled-icons-size * 1.85) !important;
+		height: round($styled-icons-size * 1.85) !important;
+		line-height: round($styled-icons-size * 1.85) !important;
+	}
+
+	&.i-bordered { line-height: (round($styled-icons-size * 1.85) - ($styled-icons-border-width * 2)) !important; }
+
+	&.i-plain {
+		width: round($styled-icons-plain-size * 2.222) !important;
+		height: round($styled-icons-plain-size * 2.222) !important;
+		font-size: round($styled-icons-plain-size * 1.78);
+		line-height: round($styled-icons-plain-size * 2.222) !important;
+	}
+}

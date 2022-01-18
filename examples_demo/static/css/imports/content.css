@@ -1,0 +1,47 @@
+                 /* ----------------------------------------------------------------
+
+	content.scss
+
+-----------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Content
+-----------------------------------------------------------------*/
+
+[class*="col-"]:not([class*="sticky-"]):not([class*="position-"]) {
+  position: relative;
+}
+#content {
+  position: relative;
+  background-color: #FFF;
+}
+#content p {
+  line-height: 1.8;
+}
+#content .content-wrap {
+  position: relative;
+  padding: 80px 0;
+  overflow: hidden;
+}
+#content .container {
+  position: relative;
+}
+
+.grid-container,
+.grid-inner {
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.grid-inner {
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+body:not(.device-touch) .grid-container {
+  -webkit-transition: height .4s ease;
+  -o-transition: height .4s ease;
+  transition: height .4s ease;
+}

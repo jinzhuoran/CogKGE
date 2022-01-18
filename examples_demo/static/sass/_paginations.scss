@@ -1,0 +1,101 @@
+/* ----------------------------------------------------------------
+
+	Paginations.scss
+
+-----------------------------------------------------------------*/
+
+
+/* ----------------------------------------------------------------
+	Styled Paginations
+-----------------------------------------------------------------*/
+.pagination {
+	&#{&}-circle {
+		.page-item .page-link {
+			width: 35px;
+			height: 35px;
+			line-height: 33px;
+			text-align: center;
+			padding: 0;
+			border-radius: 50%;
+		}
+
+		&.pagination-lg .page-item .page-link {
+			width: 56px;
+			height: 56px;
+			line-height: 54px;
+		}
+
+		&.pagination-sm .page-item .page-link {
+			width: 26px;
+			height: 26px;
+			line-height: 24px;
+		}
+	}
+
+	/* Pagination Rounded */
+	&#{&}-rounded .page-item .page-link { border-radius: 4px; }
+
+	/* Pagination Margins */
+	&#{&}-circle .page-item:not(:first-child) .page-link,
+	&#{&}-rounded .page-item:not(:first-child) .page-link { margin-left: 5px; }
+
+	&#{&}-circle.pagination-lg .page-item:not(:first-child) .page-link,
+	&#{&}-rounded.pagination-lg .page-item:not(:first-child) .page-link { margin-left: 8px; }
+
+	&#{&}-circle.pagination-sm .page-item:not(:first-child) .page-link,
+	&#{&}-rounded.pagination-sm .page-item:not(:first-child) .page-link { margin-left: 3px; }
+
+	/* Pagination 3d */
+	&#{&}-3d .page-item .page-link { border-bottom: 3px solid rgba(0,0,0,0.15) !important; }
+
+	/* Pagination Transparent */
+	&#{&}-transparent .page-item .page-link { border: 0; }
+
+	/* Pagination Transparent */
+	&#{&}-inside-transparent .page-item .page-link:not(:hover) { color: #222; }
+
+	/* Pagination Inside Transparent */
+	&#{&}-inside-transparent .page-item:not(:first-child):not(:nth-child(2)):not(:nth-last-child(1)) .page-link { border-left: 0; }
+
+	&#{&}-inside-transparent .page-item.active .page-link,
+	&#{&}-inside-transparent .page-link:hover,
+	&#{&}-inside-transparent .page-link:focus { border-color: transparent !important; }
+
+	/* Pagination Button */
+	&#{&}-inside-transparent.pagination-button .page-item:not(:first-child):not(:nth-last-child(1)) .page-link { border: 0; }
+
+	/* Pagination Pill */
+	&#{&}-pill .page-item:first-child .page-link {
+		border-top-left-radius: 10rem;
+		border-bottom-left-radius: 10rem;
+	}
+
+	&#{&}-pill .page-item:last-child .page-link {
+		border-top-right-radius: 10rem;
+		border-bottom-right-radius: 10rem;
+	}
+
+	  @each $name, $hex in $theme-colors {
+    	&#{&}-#{$name} .page-item .page-link {
+    		background-color: $hex;
+			border-color: $hex;
+			color: #FFF;
+    	}
+
+    	/* Pagination Bootstrap Background */
+		&#{&}-#{$name} {
+			.page-item.active .page-link,
+			.page-link:hover,
+			.page-link:focus {
+				background-color: #222 !important;
+				border-color: #222 !important;
+				color: #FFF;
+			}
+		}
+	  }
+
+	/* Pagination light */
+	&#{&}-light .page-item .page-link {
+		color: #222;
+	}
+}

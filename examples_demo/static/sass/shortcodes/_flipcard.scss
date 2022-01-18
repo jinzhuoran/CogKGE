@@ -1,0 +1,133 @@
+
+/* ----------------------------------------------------------------
+
+	Flip Cards
+
+-----------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Flip Cards
+-----------------------------------------------------------------*/
+
+.flip-card {
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	-webkit-perspective: 1000px;
+	perspective: 1000px;
+
+	&-front,
+	&-back {
+		background-size: cover;
+		background-position: center;
+		@include transition(transform $flipcard-transition);
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		width: 100%;
+		height: $flipcard-height;
+		border-radius: $flipcard-border-radius;
+		color: $flipcard-color;
+		font-size: $flipcard-font-size;
+		&.no-after::after { content: none }
+
+		&::after {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			width: 100%;
+			height: 100%;
+			content: "";
+			display: block;
+			opacity: $flipcard-bg-overlay-op;
+			background-color: $flipcard-bg-overlay;
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+			border-radius: $flipcard-border-radius;
+		}
+
+		&:hover & {
+			@include transition(transform $flipcard-transition);
+		}
+	}
+
+	&-back {
+		background-color: #666;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+	}
+
+	&-inner {
+		-webkit-transform: $flipcard-inner-tranform;
+		transform: $flipcard-inner-tranform;
+		top: 50%;
+		position: absolute;
+		left: 0;
+		width: 100%;
+		padding: $flipcard-inner-padding;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+		outline: 1px solid transparent;
+		-webkit-perspective: inherit;
+		perspective: inherit;
+		z-index: 2;
+	}
+
+	&-back {
+		-webkit-transform: rotateY(180deg);
+		transform: rotateY(180deg);
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+		.top-to-bottom & {
+			-webkit-transform: rotateX(180deg);
+			transform: rotateX(180deg);
+			-webkit-transform-style: preserve-3d;
+			transform-style: preserve-3d;
+		}
+	}
+
+	&-front,
+	&:hover &-back {
+		-webkit-transform: rotateY(0deg);
+		transform: rotateY(0deg);
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+	}
+
+	&:hover &-front {
+		-webkit-transform: rotateY(-180deg);
+		transform: rotateY(-180deg);
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+	}
+
+	.top-to-bottom &-front,
+	.top-to-bottom:hover &-back {
+		-webkit-transform: rotateX(0deg);
+		transform: rotateX(0deg);
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+	}
+
+	.top-to-bottom:hover &-front {
+		-webkit-transform: rotateX(-180deg);
+		transform: rotateX(-180deg);
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+	}
+
+	&-inner {
+		span {
+			font-size: 18px;
+			line-height: 20px;
+			font-weight: 300;
+		}
+		p {
+			position: relative;
+			font-size: $font-size-base;
+			margin-bottom: 0;
+			color: rgba($white, 0.7);
+		}
+	}
+}

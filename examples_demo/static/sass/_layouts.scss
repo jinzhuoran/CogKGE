@@ -1,0 +1,112 @@
+
+/* ----------------------------------------------------------------
+
+	Layouts.scss
+
+-----------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Bootstrap Adjustments
+-----------------------------------------------------------------*/
+/*	Custom Bootstap Columns */
+
+.col-1-5,
+.col-sm-1-5,
+.col-md-1-5,
+.col-lg-1-5,
+.col-xl-1-5,
+.col-xxl-1-5 {
+	position: relative;
+	width: 100%;
+	padding-right: $container-padding-x;
+	padding-left: $container-padding-x;
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+	@include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+		.col#{$infix}-1-5 {
+			-ms-flex: 0 0 20%;
+			flex: 0 0 20%;
+			max-width: 20%;
+		}
+	}
+}
+
+#wrapper {
+	position: relative;
+	float: none;
+	width: 100%;
+	margin: 0 auto;
+	background-color: $body-bg;
+	box-shadow: 0 0 10px rgba(0,0,0,0.1);
+	-moz-box-shadow: 0 0 10px rgba(0,0,0,0.1);
+	-webkit-box-shadow: 0 0 10px rgba(0,0,0,0.1);
+	body:not(.stretched) & {
+		@include media-breakpoint-up(xl) {
+			max-width: map-get($grid-breakpoints, "xl");
+		}
+		@include media-breakpoint-up(xxl) {
+			max-width: map-get($grid-breakpoints, "xxl");
+		}
+	}
+	.stretched & {
+		width: 100%;
+		margin: 0;
+		box-shadow: none;
+	}
+}
+
+
+/* ----------------------------------------------------------------
+	Sections
+-----------------------------------------------------------------*/
+
+.section {
+	position: relative;
+	width: 100%;
+	margin: $section-margin 0;
+	padding: $section-padding 0;
+	background-color: $section-bg;
+	overflow: hidden;
+	.container { z-index: 2;
+		+ .video-wrap { z-index: 1; }
+	}
+}
+
+.parallax {
+	background-color: transparent;
+	background-attachment: fixed;
+	background-position: 50% 0;
+	background-repeat: no-repeat;
+	overflow: hidden;
+	will-change: auto;
+}
+
+.mobile-parallax,
+.video-placeholder {
+	background-size: cover !important;
+	background-attachment: scroll !important;
+	background-position: center center !important;
+}
+
+.revealer-image {
+	position: relative;
+	bottom: -100px;
+	transition: bottom .3s ease-in-out;
+	-webkit-transition: bottom .3s ease-in-out;
+	-o-transition: bottom .3s ease-in-out;
+
+	.section:hover & { bottom: -50px; }
+}
+
+
+/* ----------------------------------------------------------------
+	Columns & Grids
+-----------------------------------------------------------------*/
+
+
+.postcontent,
+.sidebar {
+	position: relative;
+}

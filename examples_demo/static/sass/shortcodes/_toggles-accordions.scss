@@ -1,0 +1,193 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: toggles-accordions.scss
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Toggle
+-----------------------------------------------------------------*/
+$toggle-prefix: toggle;
+$accordion-prefix: accordion;
+
+.#{$toggle-prefix} {
+	display: block;
+	position: relative;
+	margin: 0 0 20px 0;
+}
+
+.#{$toggle-prefix},
+.#{$accordion-prefix} {
+	&-header {
+		position: relative;
+		display: -ms-flexbox;
+		display: flex;
+		-ms-flex-wrap: wrap;
+		flex-wrap: wrap;
+		margin: 0 -5px;
+		cursor: pointer;
+		color: $toggle-base-color;
+		font-size: $toggle-font-size;
+		font-weight: 700;
+	}
+}
+
+.#{$toggle-prefix},
+.#{$accordion-prefix} {
+	&-icon {
+		-ms-flex: 0 0 auto;
+		flex: 0 0 auto;
+		width: auto;
+		max-width: 100%;
+		padding: 0 5px;
+		text-align: center;
+	}
+}
+
+.#{$toggle-prefix}-icon {
+	i,
+	span {
+		width: $toggle-font-size;
+	}
+}
+
+.#{$toggle-prefix},
+.#{$accordion-prefix} {
+		&-title {
+		-ms-flex-preferred-size: 0;
+		flex-basis: 0;
+		-ms-flex-positive: 1;
+		flex-grow: 1;
+		max-width: 100%;
+		padding: 0 5px;
+	}
+}
+
+.#{$toggle-prefix} {
+	&:not(.#{$toggle-prefix}-active) .#{$toggle-prefix}-open,
+	&-active .#{$toggle-prefix}-closed { display: none; }
+}
+
+.#{$toggle-prefix}-active .#{$toggle-prefix}-open { display: inline-block; }
+
+.#{$toggle-prefix},
+.#{$accordion-prefix}{
+	&-content {
+		display: none;
+		position: relative;
+		padding: $toggle-content-padding 0;
+	}
+}
+
+
+/* Toggle - with Title Background
+-----------------------------------------------------------------*/
+
+.#{$toggle-prefix}-bg {
+	.#{$toggle-prefix}-header {
+		background-color: $toggle-bg-color;
+		margin: 0;
+		padding: $toggle-content-padding;
+		border-radius: 2px;
+	}
+	.#{$toggle-prefix}-content {
+		padding: 1rem $toggle-content-padding;
+	}
+}
+
+
+/* Toggle - Bordered
+-----------------------------------------------------------------*/
+
+.#{$toggle-prefix}-border {
+	border: $toggle-border-size solid $toggle-border-color;
+	@include border-radius($toggle-border-radius);
+	.#{$toggle-prefix}-header {
+		padding: $toggle-content-padding;
+		margin: 0;
+	}
+	.#{$toggle-prefix}-content {
+		padding: 1rem;
+		padding-top: 0;
+	}
+}
+
+/* Toggle - FAQs
+-----------------------------------------------------------------*/
+
+.faqs {
+	.#{$toggle-prefix} {
+		border-bottom: 1px solid $toggle-bg-color;
+		padding-bottom: 12px;
+		margin-bottom: 12px;
+		&-content { padding-bottom: 10px; }
+	}
+}
+
+
+/* ----------------------------------------------------------------
+	Accordions
+-----------------------------------------------------------------*/
+
+.#{$accordion-prefix} {
+	margin-bottom: 20px;
+	&-header {
+		padding: $toggle-content-padding 0;
+		border-top: $accordion-border-size dotted $accordion-border-color;
+		cursor: pointer;
+		&:first-child { border-top: none; }
+	}
+	&:not([data-collapsible="true"]) .#{$accordion-prefix}-header.#{$accordion-prefix}-active { cursor: auto; }
+
+	&-header:not(.#{$accordion-prefix}-active) .#{$accordion-prefix}-open,
+	&-active .#{$accordion-prefix}-closed { display: none; }
+	&-active .#{$accordion-prefix}-open { display: inline-block; }
+	&-content {
+		padding-top: 0;
+		padding-bottom: $accordion-content-padding;
+	}
+}
+
+
+/* Accordion - with Title Background
+-----------------------------------------------------------------*/
+
+.#{$accordion-prefix}-bg {
+	.#{$accordion-prefix}-header {
+		background-color: $toggle-bg-color;;
+		padding: $toggle-content-padding;
+		border-radius: 2px;
+		margin: 0;
+		margin-bottom: 5px;
+		border-top: 0;
+	}
+	.#{$accordion-prefix}-content {
+		padding: $toggle-content-padding $toggle-content-padding $accordion-content-padding;
+	}
+}
+
+
+/* Accordion - Bordered
+-----------------------------------------------------------------*/
+
+.#{$accordion-prefix}-border {
+	border: $accordion-border-size solid $accordion-border-color;
+	border-radius: $toggle-border-radius;
+	.#{$accordion-prefix}-header {
+		border-color: darken($accordion-border-color, 6.67%);
+		padding: $toggle-content-padding;
+		margin: 0;
+	}
+	.#{$accordion-prefix}-content {
+		padding: 0 1.125rem $accordion-content-padding;
+	}
+}
+
+
+/* Accordion - Large
+-----------------------------------------------------------------*/
+
+.#{$accordion-prefix}-lg .#{$accordion-prefix}-header {
+	font-size: 1.25rem;
+}

@@ -1,0 +1,494 @@
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: buttons.scss
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Buttons
+-----------------------------------------------------------------*/
+
+$btn-prefix: button;
+
+.#{$btn-prefix} {
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+	outline: none;
+	white-space: nowrap;
+	margin: 5px;
+	padding: $button-padding-y $button-padding-x;
+	font-size: $button-font-size;
+	line-height: $button-l-height;
+	@include gradient-bg($button-theme-color);
+	color: $color-contrast-light;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	border: none;
+	text-shadow: 1px 1px 1px $button-text-shadow;
+	i {
+		position: relative;
+		margin-right: $button-icon-margin;
+		width: 16px;
+		text-align: center;
+	}
+	&.text-end {
+		i { margin: 0 0 0 $button-icon-margin; }
+	}
+	body:not(.device-touch) & {
+		@include transition(all $button-transition-speed);
+	}
+
+	&#{&}-dark { background-color: $button-dark;
+		&:hover { background-color: $button-theme-color; }
+	}
+
+	&#{&}-light {
+		@if $buttons-color == true {
+			background-color: $button-light;
+			color: darken($text-color, 6.67);
+		} @else {
+			background-color: $button-theme-color;
+			color: #FFF;
+		}
+		text-shadow: none !important;
+	}
+	&:hover {
+		background-color: $text-color;
+		color: #FFF;
+		text-shadow: 1px 1px 1px $button-text-shadow;
+	}
+
+	&-mini {
+		padding: $button-mini-padding-y $button-mini-padding-x;
+		font-size: $button-mini-font-size;
+		line-height: $button-mini-l-height;
+		i { margin-right: $button-icon-margin - 2; }
+		&.text-end i { margin: 0 0 0 $button-icon-margin - 2; }
+	}
+
+	&-small {
+		padding: $button-sm-padding-y $button-sm-padding-x;
+		font-size: $button-sm-font-size;
+		line-height: $button-sm-l-height;
+		i { margin-right: $button-icon-margin - 1; }
+		&.text-end i { margin: 0 0 0 $button-icon-margin - 1; }
+	}
+
+	&-large {
+		padding: $button-lg-padding-y $button-lg-padding-x;
+		font-size: $button-lg-font-size;
+		line-height: $button-lg-l-height;
+	}
+
+	&-xlarge {
+		padding: $button-xl-padding-y $button-xl-padding-x;
+		font-size: $button-xl-font-size;
+		letter-spacing: 2px;
+		line-height: $button-xl-l-height;
+		i {
+			margin-right: $button-icon-margin + 3;
+		}
+		&.text-end i { margin: 0 0 0 $button-icon-margin + 3; }
+	}
+
+	&-desc {
+		text-align: left;
+		padding: 24px 34px;
+		font-size: $button-font-size / 0.7;
+		height: auto;
+		line-height: 1;
+		font-family: $heading-font;
+		span {
+			display: block;
+			margin-top: 10px;
+			font-size: $button-font-size;
+			font-weight: 400;
+			letter-spacing: 1px;
+			font-family: $secondary-font;
+			font-style: italic;
+			text-transform: none;
+		}
+		i {
+			font-size: ($button-font-size / 0.7) * 2.4;
+			width: ($button-font-size / 0.7) * 2.4;
+			text-align: center;
+			margin-right: 12px;
+		}
+		&.text-end i { margin: 0 0 0 12px; }
+		div { display: inline-block; }
+	}
+
+	&-rounded { border-radius: $button-rounded; }
+
+	/* Buttons - Border
+	-----------------------------------------------------------------*/
+
+	&.#{$btn-prefix}-border {
+		border: $button-border-width solid $button-dark;
+		background: transparent;
+		color: darken($button-dark, 6.67);
+		font-weight: 700;
+		text-shadow: none;
+		&-thin {
+			border-width: $button-border-thin-width;
+		}
+
+		&.#{$btn-prefix}-desc { line-height: 1; }
+
+		&:not(.#{$btn-prefix}-fill):hover {
+			background-color: $button-dark;
+			color: #FFF;
+			border-color: transparent !important;
+			text-shadow: 1px 1px 1px $button-text-shadow;
+		}
+
+		&.#{$btn-prefix}-light {
+			@if $buttons-color == true {
+				border-color: #FFF;
+				color: #FFF;
+			} @else {
+				border-color: $button-dark;
+				color: darken($button-dark, 6.67);
+			}
+			&:hover {
+				@if $buttons-color == true {
+					background-color: #FFF;
+					color: darken($button-dark, 6.67);
+					text-shadow: none;
+				} @else {
+					border-color: $button-dark;
+					color: #FFF;
+				}
+			}
+		}
+	}
+
+	/* Buttons - 3D
+-----------------------------------------------------------------*/
+
+	&.#{$btn-prefix}-3d {
+		border-radius: $button-rounded;
+		box-shadow: inset 0 (-$button-3d-border) 0 rgba(black,0.15);
+		@include transition(none);
+		&:hover {
+			background-color: $button-theme-color;
+			opacity: 0.9;
+		}
+	}
+
+	&.#{$btn-prefix}-3d,
+	&.#{$btn-prefix}-reveal{
+		&.#{$btn-prefix}-light:hover {
+			text-shadow: none;
+			color: darken($button-dark, 6.67);
+		}
+	}
+
+
+	/* Buttons - Icon Reveal
+	-----------------------------------------------------------------*/
+	$button-reveal-mini-icon: ($button-reveal-icon - 10);
+	$button-reveal-small-icon: ($button-reveal-icon - 6);
+	$button-reveal-lg-icon: ($button-reveal-icon + 6);
+	$button-reveal-xl-icon: ($button-reveal-icon + 12);
+
+	&.#{$btn-prefix}-reveal {
+		padding-left: $button-reveal-padding-x;
+		padding-right: $button-reveal-padding-x;
+		overflow: hidden;
+		i {
+			display: block;
+			position: absolute;
+			top: 0;
+			left: -$button-reveal-icon;
+			width: $button-reveal-icon;
+			height: 100%;
+			display: -ms-flexbox;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0;
+			background-color: rgba(0,0,0,0.1);
+		}
+		&.#{$btn-prefix}-border i { top: -2px; }
+		&.text-end i {
+			left: auto;
+			right: -$button-reveal-icon;
+		}
+		&.#{$btn-prefix}-3d i,
+		&.#{$btn-prefix}-rounded i { border-radius: $button-rounded 0 0 $button-rounded;
+			&.text-end i { border-radius: 0 $button-rounded $button-rounded 0; }
+		}
+		span {
+			display: inline-block;
+			position: relative;
+			left: 0;
+		}
+
+		&.#{$btn-prefix}-mini {
+			padding-left: ($button-mini-padding-x + 3);
+			padding-right: ($button-mini-padding-x + 3);
+			i {
+				left: -($button-reveal-mini-icon);
+				width: $button-reveal-mini-icon;
+			}
+			&.text-end i {
+				left: auto;
+				right: -($button-reveal-mini-icon);
+			}
+			&:hover span { left: round($button-reveal-mini-icon / 2); }
+			&.text-end:hover span { left: - round($button-reveal-mini-icon / 2); }
+		}
+
+		&.#{$btn-prefix}-small {
+			padding-left: $button-sm-padding-x + 5;
+			padding-right: $button-sm-padding-x + 5;
+			i {
+				left: -$button-reveal-small-icon;
+				width: $button-reveal-small-icon;
+			}
+			&.text-end i {
+				left: auto;
+				right: -$button-reveal-small-icon;
+			}
+			&:hover span { left: round($button-reveal-small-icon / 2); }
+			&.text-end:hover span { left: - round($button-reveal-small-icon / 2); }
+		}
+
+		&.#{$btn-prefix}-large {
+			padding-left: ($button-lg-padding-x + 6);
+			padding-right: ($button-lg-padding-x + 6);
+			i {
+				left: -($button-reveal-lg-icon);
+				width: ($button-reveal-lg-icon);
+			}
+			&.text-end i {
+				left: auto;
+				right: -($button-reveal-lg-icon);
+			}
+			&:hover span { left: round($button-reveal-lg-icon / 2); }
+			&.text-end:hover span { left: - round($button-reveal-lg-icon / 2); }
+		}
+
+		&.#{$btn-prefix}-xlarge {
+			padding-right: ($button-xl-padding-x + 8);
+			padding-left: ($button-xl-padding-x + 8);
+			i {
+				left: -($button-reveal-xl-icon);
+				width: ($button-reveal-xl-icon);
+			}
+			&.text-end i {
+				left: auto;
+				right: -($button-reveal-xl-icon);
+			}
+			&:hover span { left: round($button-reveal-xl-icon / 2); }
+			&.text-end:hover span { left: - round($button-reveal-xl-icon / 2); }
+		}
+
+		&:hover i { left: 0; }
+		&.text-end:hover i {
+			left: auto;
+			right: 0;
+		}
+		&:hover span { left: round($button-reveal-icon / 2); }
+		&.text-end:hover span { left: - round($button-reveal-icon / 2); }
+	}
+}
+
+body:not(.device-touch) .#{$btn-prefix}-reveal i,
+body:not(.device-touch) .#{$btn-prefix}-reveal span {
+	@include transition(left $button-reveal-transition-speed, right $button-reveal-transition-speed);
+}
+
+
+/* Buttons - Promo 100% Width
+-----------------------------------------------------------------*/
+
+.#{$btn-prefix} {
+	&.#{$btn-prefix}-full {
+		display: block;
+		width: 100%;
+		white-space: normal;
+		margin: 0;
+		height: auto;
+		line-height: 1.6;
+		padding: $button-full-padding 0;
+		font-size: $button-full-font-size;
+		font-weight: 300;
+		text-transform: none;
+		border-radius: 0;
+		text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+		&.#{$btn-prefix}-light { border-bottom: 1px solid rgba(0,0,0,0.15);
+			strong { border-bottom-color: $button-dark; }
+			&:hover strong { border-bottom-color: darken($body-bg, 6.67); }
+		}
+		strong {
+			font-weight: 700;
+			border-bottom: 2px solid darken($body-bg, 6.67);
+			body:not(.device-touch) & {
+				@include transition(all $button-transition-speed);
+			}
+		}
+	}
+}
+
+/* Buttons - Circle
+-----------------------------------------------------------------*/
+.#{$btn-prefix} {
+	&.#{$btn-prefix}-circle {
+		border-radius: round(($button-padding-y * 2) + (14 / 2) - 3);
+		&.#{$btn-prefix}-mini { border-radius: round(($button-mini-padding-y * 2) + $button-mini-font-size / 2); }
+		&.#{$btn-prefix}-small { border-radius: round(($button-sm-padding-y * 2) + $button-sm-font-size / 2) - 3; }
+		&.#{$btn-prefix}-large { border-radius: round(($button-lg-padding-y * 2) + $button-lg-font-size / 2) - 1; }
+		&.#{$btn-prefix}-xlarge { border-radius: round(($button-xl-padding-y * 2) + $button-xl-font-size / 2) - 1; }
+	}
+}
+
+
+/* Buttons - Fill Effect
+-----------------------------------------------------------------*/
+
+.#{$btn-prefix} {
+	&.#{$btn-prefix}-border {
+		&.#{$btn-prefix}-fill {
+			overflow: hidden;
+			transform-style: preserve-3d;
+			-webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
+			-webkit-backface-visibility: hidden;
+			span { position: relative; }
+			&:hover {
+				background: transparent !important;
+				color: #FFF;
+				text-shadow: 1px 1px 1px $button-text-shadow;
+			}
+
+			&.button-light{
+				&:hover {
+					border-color: $button-light !important;
+					color: $button-dark !important;
+					text-shadow: none;
+				}
+				::before { background-color: $button-light; }
+			}
+
+			&::before {
+				content: '';
+				position: absolute;
+				background-color: $button-dark;
+				top: 0;
+				left: 0;
+				width: 0;
+				height: 100%;
+				@include transition(all $button-fill-transition-speed);
+				-webkit-backface-visibility: hidden;
+				::before { width: 100%; }
+			}
+
+			&.fill-from-right::before {
+				left: auto;
+				right: 0;
+			}
+
+			&:hover::before { width: 100%; }
+
+			&.fill-from-top::before,
+			&.fill-from-bottom::before {
+				@include transition(all $button-reveal-transition-speed);
+			}
+
+			&.fill-from-top::before {
+				width: 100%;
+				height: 0;
+			}
+
+			&.fill-from-top:hover::before { height: 100%; }
+
+			&.fill-from-bottom::before {
+				width: 100%;
+				height: 0;
+				top: auto;
+				bottom: 0;
+			}
+
+			&.fill-from-bottom:hover::before { height: 100%; }
+		}
+	}
+}
+
+
+/* Buttons - States
+-----------------------------------------------------------------*/
+.#{$btn-prefix} {
+	&.disabled,
+	&:disabled {
+		opacity: 0.65 !important;
+		pointer-events: none !important;
+}
+
+
+/* Buttons - Colors
+-----------------------------------------------------------------*/
+
+@mixin gradient-bg($color, $imp:0) {
+	@if $imp == 1 {
+		@if $enable-gradients {
+			background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x !important;
+		} @else {
+			background-color: $color !important;
+		}
+	} @else {
+		@if $enable-gradients {
+			background: $color linear-gradient(180deg, mix($body-bg, $color, 15%), $color) repeat-x;
+		} @else {
+			background-color: $color;
+		}
+	}
+}
+
+//Buttons Colored - Mixin
+@mixin buttons-color($colors) {
+  @each $name, $hex in $colors {
+	.#{$btn-prefix}-#{$name} {
+		@include gradient-bg($hex);
+		&.#{$btn-prefix}-3d:hover,
+		&.#{$btn-prefix}-reveal:hover,
+		&.#{$btn-prefix}-border:hover,
+		&.#{$btn-prefix}-border.button-fill::before {
+			@include gradient-bg($hex, 1);
+		}
+	}
+	.#{$btn-prefix}-border {
+		&.#{$btn-prefix}-#{$name},
+		&.#{$btn-prefix}-light.button-#{$name} {
+			color: $hex;
+			border-color: $hex;
+		}
+	}
+  }
+}
+
+// Include Buttons Colored
+@if $buttons-color == true { @include buttons-color($button_colors); }
+
+.button-light.button-yellow { background-color: #ECD078; }
+.button-border.button-yellow:hover,
+.button-border.button-yellow.button-fill.button-light:hover { color: #333 !important; }
+.button-white { background-color: #F9F9F9; }
+.button-3d.button-white:hover,
+.button-reveal.button-white:hover { background-color: #F9F9F9 !important; }
+
+@if $buttons-social-colors == true { @include buttons-color($si-colors); } // Default False in Variables.scss
+
+/* Buttons - No Hover
+-----------------------------------------------------------------*/
+
+.#{$btn-prefix} {
+	&.#{$btn-prefix}-nohover:hover {
+		opacity: inherit !important;
+		background-color: inherit !important;
+		color: inherit !important;
+		border-color: inherit !important;
+	}
+}

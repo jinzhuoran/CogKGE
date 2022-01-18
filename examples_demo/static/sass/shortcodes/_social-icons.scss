@@ -1,0 +1,193 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: social-icons.scss
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Social Icons
+-----------------------------------------------------------------*/
+@mixin gradient-bg($color, $imp:0) {
+	@if $imp == 1 {
+		@if $enable-gradients {
+			background-color: $color !important;
+			background-image: linear-gradient(180deg, mix($body-bg, $color, 15%), $color) !important;
+			background-repeat: repeat-x;
+		}
+		@else {
+			background-color: $color !important;
+		}
+	} @else {
+		@if $enable-gradients {
+			background-color: $color;
+			background-image: linear-gradient(180deg, mix($body-bg, $color, 15%), $color);
+			background-repeat: repeat-x;
+		}
+		@else {
+			background-color: $color;
+		}
+	}
+}
+
+$sicon-prefix: social-icon;
+
+.#{$sicon-prefix} {
+	margin: 0 $social-margins $social-margins 0;
+	width: $social-icon-size;
+	height: $social-icon-size;
+	font-size: $social-icon-font-size;
+	line-height: round($social-icon-size - round($social-icon-border * 2)) !important;
+	color: $social-icon-color;
+	text-shadow: none;
+	border: $social-icon-border solid $social-icon-border-color;
+	border-radius: $social-icon-rounded;
+	overflow: hidden;
+	.d-flex > &,
+	.d-sm-flex > &,
+	.d-md-flex > &,
+	.d-lg-flex > &,
+	.d-xl-flex > & { float: none; }
+	i {
+		display: block;
+		position: relative;
+		body:not(.device-touch) & {
+			-webkit-transition: all .3s ease;
+			-o-transition: all .3s ease;
+			transition: all .3s ease;
+		}
+		&:last-child { color: #FFF !important; }
+	}
+	&:hover i:first-child { margin-top: - (round($social-icon-size - round($social-icon-border * 2))); }
+
+	/* Social Icons - Large
+	-----------------------------------------------------------------*/
+	&.si-large {
+		margin: 0 ($social-margins * 2) ($social-margins * 2) 0;
+		width: $social-icon-lg-size;
+		height: $social-icon-lg-size;
+		font-size: $social-icon-lg-font-size;
+		line-height: round($social-icon-lg-size - round($social-icon-border * 2)) !important;
+		&:hover i:first-child { margin-top: - (round($social-icon-lg-size - round($social-icon-border * 2))); }
+	}
+
+	/* Social Icons - Small
+	-----------------------------------------------------------------*/
+	&.si-small {
+		width: $social-icon-sm-size;
+		height: $social-icon-sm-size;
+		font-size: $social-icon-sm-font-size;
+		line-height: round($social-icon-sm-size - round($social-icon-border * 2)) !important;
+		&:hover i:first-child { margin-top: - (round($social-icon-sm-size - round($social-icon-border * 2))); }
+	}
+
+	/* Social Icons - Hover
+		-----------------------------------------------------------------*/
+	&:hover {
+		color: $social-icon-color;
+		border-color: transparent;
+	}
+	&.si-colored { border-color: transparent; }
+}
+
+
+/* Social Icons - Rounded
+-----------------------------------------------------------------*/
+
+.si-rounded { border-radius: 50%; }
+
+/* Social Icons - Borderless
+-----------------------------------------------------------------*/
+
+.si-borderless { border-color: transparent !important; }
+
+/* Social Icons - Dark
+-----------------------------------------------------------------*/
+
+.si-dark {
+	@include gradient-bg($social-icon-dark-color);
+	color: $color-contrast-light !important;
+	border-color: transparent;
+}
+
+/* Social Icons - Light
+-----------------------------------------------------------------*/
+
+.si-light {
+	@include gradient-bg($social-icon-light-color);
+	color: $social-icon-color !important;
+	border-color: transparent;
+}
+
+/* Social Icons - Colored
+-----------------------------------------------------------------*/
+
+.si-colored { border-color: transparent !important;
+	i { color: #FFF; }
+}
+
+/* Social Icons - Sticky
+-----------------------------------------------------------------*/
+
+.si-sticky {
+	position: fixed;
+	top: 50%;
+	left: 5px;
+	width: 36px;
+	z-index: 499;
+	transform: translateY(-50%);
+	/* Social Icons - Sticky Right
+	-----------------------------------------------------------------*/
+	&.si-sticky-right {
+		left: auto;
+		right: 8px;
+	}
+}
+
+/* Social Icons - Share
+-----------------------------------------------------------------*/
+
+.si-share {
+	position: relative;
+	padding-left: 5px;
+	border-top: 1px solid darken($body-bg, 6.67);;
+	border-bottom: 1px solid darken($body-bg, 6.67);;
+	span {
+		line-height: 36px;
+		font-weight: bold;
+		font-size: 13px;
+	}
+	.social-icon {
+		margin: -1px 0;
+		border-radius: 0;
+		font-size: 15px;
+	}
+}
+// Social Icons With Classes - Mixin
+@mixin si-color($bg-active:false, $color-active:false) {
+  @each $name, $hex in $si-colors {
+	@if $bg-active == true {
+		.si-#{$name}:hover,
+		.si-colored.si-#{$name} {
+			@include gradient-bg($hex,1);
+		}
+	}
+	@if $color-active == true {
+		&.si-#{$name} i {
+			color: $hex;
+		}
+	}
+  }
+}
+
+/* Social Icons - bg-colors
+-----------------------------------------------------------------*/
+@include si-color($bg-active:$social-icon-enable-bg-classes);
+
+/* Social Icons - colors
+-----------------------------------------------------------------*/
+.si-text-color {
+	@include si-color($color-active: $social-icon-enable-tcolor-classes);
+	&:hover { color: $white; }
+}
+

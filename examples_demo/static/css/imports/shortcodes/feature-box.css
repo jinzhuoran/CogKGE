@@ -1,0 +1,503 @@
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: feature-box.scss
+
+-----------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Featured Boxes
+-----------------------------------------------------------------*/
+.feature-box {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+.feature-box:first-child {
+  margin-top: 0;
+}
+
+.fbox {
+  /* Feature Box - Icon Small
+  -----------------------------------------------------------------*/
+  /* Feature Box - Icon Large
+  -----------------------------------------------------------------*/
+  /* Feature Box - Icon X-Large
+  -----------------------------------------------------------------*/
+  /* Feature Box - Icon Outline
+  -----------------------------------------------------------------*/
+  /* Feature Box - Icon Rounded
+  -----------------------------------------------------------------*/
+  /* Feature Box - Light Background
+  -----------------------------------------------------------------*/
+  /* Feature Box - Dark Background
+  -----------------------------------------------------------------*/
+  /* Feature Box - Border
+  -----------------------------------------------------------------*/
+  /* Feature Box - Plain
+  -----------------------------------------------------------------*/
+  /* Feature Box - Center
+  -----------------------------------------------------------------*/
+  /* Feature Box - Subtitle
+  -----------------------------------------------------------------*/
+  /* Feature Box - Background
+  -----------------------------------------------------------------*/
+}
+.fbox-icon {
+  width: 5.5rem;
+  height: 4rem;
+  padding: 0 0.75rem;
+}
+.fbox-icon a,
+.fbox-icon i,
+.fbox-icon img {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: #FFF;
+}
+.fbox-icon i,
+.fbox-icon img {
+  border-radius: 50%;
+  background-color: #1ABC9C;
+}
+.fbox-icon i {
+  font-style: normal;
+  font-size: 1.75rem;
+  line-height: 4rem;
+  text-align: center;
+}
+.fbox-content {
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0 0.75rem;
+}
+.fbox-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  text-transform: uppercase;
+  margin-bottom: 0;
+  color: #333333;
+}
+.fbox-content p {
+  margin-top: 0.5rem;
+  margin-bottom: 0px;
+  color: #999;
+}
+.fbox-content .before-heading {
+  font-size: 0.875rem;
+}
+.fbox-content-sm h3,
+.fbox-content-sm p {
+  font-size: 0.875rem;
+}
+.fbox-content-sm .before-heading {
+  font-size: 0.75rem;
+}
+.fbox-content-lg h3 {
+  font-size: 1.25rem;
+}
+.fbox-content-lg p {
+  font-size: 1.125rem;
+  margin-top: 0.75rem;
+}
+.fbox-content-lg .before-heading {
+  font-size: 1rem;
+}
+.fbox-sm {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+.fbox-sm .fbox-icon {
+  width: 3rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+}
+.fbox-sm .fbox-icon i {
+  font-size: 1rem;
+  line-height: 2rem;
+}
+.fbox-sm .fbox-content {
+  padding: 0 0.5rem;
+}
+.fbox-lg .fbox-icon {
+  width: 7.5rem;
+  height: 6rem;
+}
+.fbox-lg .fbox-icon i {
+  font-size: 2.5rem;
+  line-height: 6rem;
+}
+.fbox-xl .fbox-icon {
+  width: 9.5rem;
+  height: 8rem;
+}
+.fbox-xl .fbox-icon i {
+  font-size: 4.5rem;
+  line-height: 8rem;
+}
+.fbox-outline {
+  /* Feature Box - Icon Outline Sizes
+  -----------------------------------------------------------------*/
+}
+.fbox-outline .fbox-icon a {
+  border: 1px solid #1ABC9C;
+  padding: 0.25rem;
+  border-radius: 50%;
+}
+.fbox-outline .fbox-icon i {
+  line-height: 3.5rem;
+}
+.fbox-outline.fbox-sm .fbox-icon i {
+  line-height: 1.5rem;
+}
+.fbox-outline.fbox-lg .fbox-icon i {
+  line-height: 5.5rem;
+}
+.fbox-outline.fbox-xl .fbox-icon i {
+  line-height: 7.5rem;
+}
+.fbox-rounded {
+  /* Feature Box - Icon Rounded Sizes
+  -----------------------------------------------------------------*/
+}
+.fbox-rounded .fbox-icon {
+  border-radius: 3px !important;
+}
+.fbox-rounded .fbox-icon i,
+.fbox-rounded .fbox-icon img {
+  border-radius: 3px !important;
+}
+.fbox-rounded .fbox-lg .fbox-icon {
+  border-radius: 4px !important;
+}
+.fbox-rounded .fbox-lg .fbox-icon i,
+.fbox-rounded .fbox-lg .fbox-icon img {
+  border-radius: 4px !important;
+}
+.fbox-rounded .fbox-xl .fbox-icon {
+  border-radius: 6px !important;
+}
+.fbox-rounded .fbox-xl .fbox-icon i,
+.fbox-rounded .fbox-xl .fbox-icon img {
+  border-radius: 6px !important;
+}
+.fbox-light.fbox-outline .fbox-icon a {
+  border-color: #e5e5e5;
+}
+.fbox-light .fbox-icon i,
+.fbox-light .fbox-icon img {
+  border: 1px solid #e5e5e5;
+  background-color: whitesmoke;
+  color: #444;
+}
+.fbox-dark.fbox-outline .fbox-icon a {
+  border-color: #4e4e4e;
+}
+.fbox-dark.fbox-outline .fbox-icon i,
+.fbox-dark.fbox-outline .fbox-icon img {
+  background-color: #3d3d3d;
+}
+.fbox-border {
+  /* Feature Box - Border - Light
+  -----------------------------------------------------------------*/
+  /* Feature Box - Border - Light / Dark
+  -----------------------------------------------------------------*/
+}
+.fbox-border .fbox-icon a {
+  border: 1px solid #1ABC9C;
+  border-radius: 50%;
+}
+.fbox-border .fbox-icon i,
+.fbox-border .fbox-icon img {
+  border: none;
+  background-color: transparent !important;
+  color: #1ABC9C;
+}
+.fbox-border.fbox-light .fbox-icon a {
+  border-color: #e5e5e5;
+}
+.fbox-border.fbox-light .fbox-icon i,
+.fbox-border.fbox-light .fbox-icon img {
+  color: #888;
+}
+.fbox-border.fbox-dark .fbox-icon a {
+  border-color: #4e4e4e;
+}
+.fbox-border.fbox-dark .fbox-icon i,
+.fbox-border.fbox-dark .fbox-icon img {
+  color: #444;
+}
+.fbox-plain {
+  /* Feature Box - Icon Plain Sizes
+  -----------------------------------------------------------------*/
+}
+.fbox-plain .fbox-icon {
+  border: none !important;
+  height: auto !important;
+}
+.fbox-plain .fbox-icon i,
+.fbox-plain .fbox-icon img {
+  border: none;
+  background-color: transparent;
+  color: #1ABC9C;
+  border-radius: 0;
+}
+.fbox-plain .fbox-icon i {
+  font-size: 3rem;
+  line-height: 1;
+}
+.fbox-plain .fbox-icon img {
+  height: auto;
+}
+.fbox-plain.fbox-image .fbox-icon {
+  width: auto;
+}
+.fbox-plain.fbox-image .fbox-icon img {
+  width: auto;
+  display: inline-block;
+}
+.fbox-plain.fbox-light .fbox-icon i,
+.fbox-plain.fbox-light .fbox-icon img {
+  color: #888;
+}
+.fbox-plain.fbox-dark .fbox-icon i,
+.fbox-plain.fbox-dark .fbox-icon img {
+  color: #444;
+}
+.fbox-plain.fbox-sm .fbox-icon i {
+  font-size: 2rem;
+}
+.fbox-plain.fbox-lg .fbox-icon i {
+  font-size: 4.5rem;
+}
+.fbox-plain.fbox-xl .fbox-icon i {
+  font-size: 6rem;
+}
+.fbox-center {
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: center;
+  align-items: center;
+  text-align: center;
+}
+.fbox-center .fbox-icon {
+  margin-bottom: 1.5rem;
+}
+.fbox-center .fbox-content {
+  -ms-flex-preferred-size: auto;
+}
+.fbox-content + .fbox-icon {
+  margin-top: 1.5rem;
+  margin-bottom: 0 !important;
+}
+.fbox-content h3 span.subtitle {
+  display: block;
+  margin-top: 5px;
+  color: #444;
+  font-weight: 300;
+  text-transform: none;
+}
+.fbox-center.fbox-sep:not(.fbox-bg) h3::after {
+  content: '';
+  display: block;
+  margin: 1.25rem auto;
+  width: 2rem;
+  height: 2px;
+  background-color: #555;
+  -webkit-transition: width .3s ease;
+  -o-transition: width .3s ease;
+  transition: width .3s ease;
+}
+.fbox-center.fbox-sep:not(.fbox-bg):hover h3::after {
+  width: 3rem;
+}
+.fbox-center.fbox-italic p {
+  font-style: italic;
+  font-family: "Lato", sans-serif;
+}
+.fbox-bg.fbox-center {
+  margin-top: 2rem;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0 2rem 2rem;
+  border: 1px solid whitesmoke;
+  border-radius: 5px;
+}
+.fbox-bg.fbox-center.fbox-icon {
+  margin-top: -2rem;
+  background-color: #FFF;
+}
+.fbox-bg.fbox-center.fbox-lg {
+  margin-top: 3rem;
+}
+.fbox-bg.fbox-center.fbox-lg .fbox-icon {
+  margin-top: -3rem;
+}
+.fbox-bg.fbox-center.fbox-xl {
+  margin-top: 4rem;
+}
+.fbox-bg.fbox-center.fbox-xl .fbox-icon {
+  margin-top: -4rem;
+}
+
+/* Animated Icon Hovers
+-----------------------------------------------------------------*/
+.fbox-effect .fbox-icon i {
+  z-index: 1;
+}
+.fbox-effect .fbox-icon i::after {
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  content: '';
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+.fbox-rounded.fbox-effect .fbox-icon i::after {
+  border-radius: 3px;
+}
+
+.fbox-effect .fbox-icon i {
+  -webkit-transition: background-color 0.3s, color 0.3s;
+  -o-transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
+}
+.fbox-effect .fbox-icon i::after {
+  top: -3px;
+  left: -3px;
+  padding: 3px;
+  box-shadow: 0 0 0 2px #3d3d3d;
+  -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+  -webkit-transform: scale(0.8);
+  -moz-transition: -moz-transform 0.3s, opacity 0.3s;
+  -moz-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transition: transform 0.3s, opacity 0.3s;
+  transform: scale(0.8);
+  opacity: 0;
+}
+.fbox-effect .fbox-icon i:hover, .fbox-effect:hover .fbox-icon i {
+  background-color: #3d3d3d;
+  color: #FFF;
+}
+.fbox-effect.fbox-dark .fbox-icon i::after {
+  box-shadow: 0 0 0 2px #1ABC9C;
+}
+.fbox-effect.fbox-dark .fbox-icon i:hover, .fbox-effect.fbox-dark:hover .fbox-icon i {
+  background-color: #1ABC9C;
+}
+.fbox-effect .fbox-icon i:hover::after, .fbox-effect:hover .fbox-icon i::after {
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Icon Effects - Bordered
+-----------------------------------------------------------------*/
+.fbox-border.fbox-effect .fbox-icon i {
+  -webkit-transition: color 0.5s, box-shadow 0.5s, background-color 0.5s;
+  -o-transition: color 0.5s, box-shadow 0.5s, background-color 0.5s;
+  transition: color 0.5s, box-shadow 0.5s, background-color 0.5s;
+}
+.fbox-border.fbox-effect .fbox-icon i::after {
+  top: -2px;
+  left: -2px;
+  padding: 2px;
+  z-index: -1;
+  box-shadow: none;
+  background-image: url("images/icons/iconalt.svg");
+  background-position: center center;
+  background-size: 100% 100%;
+  -webkit-transition: -webkit-transform 0.5s, opacity 0.5s, background-color 0.5s;
+  -o-transition: -moz-transform 0.5s, opacity 0.5s, background-color 0.5s;
+  transition: transform 0.5s, opacity 0.5s, background-color 0.5s;
+}
+.fbox-border.fbox-rounded.fbox-effect .fbox-icon i::after {
+  border-radius: 3px;
+}
+.fbox-border.fbox-effect .fbox-icon i:hover, .fbox-border.fbox-effect:hover .fbox-icon i {
+  color: #FFF;
+  box-shadow: 0 0 0 1px #3d3d3d;
+}
+.fbox-border.fbox-effect .fbox-icon i::after {
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+  -ms-transform: scale(1.3);
+  transform: scale(1.3);
+  opacity: 0;
+  background-color: #3d3d3d;
+}
+.fbox-border.fbox-effect.fbox-dark .fbox-icon i:hover, .fbox-border.fbox-effect.fbox-dark:hover .fbox-icon i {
+  box-shadow: 0 0 0 1px #1ABC9C;
+}
+.fbox-border.fbox-effect.fbox-dark .fbox-icon i::after {
+  background-color: #1ABC9C;
+}
+.fbox-border.fbox-effect .fbox-icon i:hover::after, .fbox-border.fbox-effect:hover .fbox-icon i::after {
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Media Featured Box
+-----------------------------------------------------------------*/
+.media-box {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.media-box .fbox-media {
+  margin: 0 0 1.5rem;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.media-box .fbox-media a,
+.media-box .fbox-media img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.media-box .fbox-media iframe {
+  display: block;
+}
+.media-box p {
+  margin-top: 1rem;
+}
+.media-box .fbox-content {
+  -ms-flex-preferred-size: auto;
+}
+.media-box.fbox-bg .fbox-media {
+  margin: 0;
+}
+.media-box.fbox-bg .fbox-media img {
+  border-radius: 5px 5px 0 0;
+}
+.media-box.fbox-bg .fbox-content {
+  padding: 1.5rem;
+  background-color: #FFF;
+  border: 1px solid whitesmoke;
+  border-top: 0;
+  border-radius: 0 0 5px 5px;
+}

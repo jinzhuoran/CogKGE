@@ -1,0 +1,341 @@
+
+/* ========================================================================
+	Dark - timepicker.css
+======================================================================== */
+.dark .bootstrap-datetimepicker-widget.dropdown-menu.bottom:before { border-bottom: 7px solid #444; }
+.dark .bootstrap-datetimepicker-widget.dropdown-menu.bottom:after { border-bottom-color: #222; }
+.dark .bootstrap-datetimepicker-widget.dropdown-menu.top:before { border-top-color: #DDD; }
+.dark .bootstrap-datetimepicker-widget.dropdown-menu.top:after { border-top-color: #222; }
+.dark .bootstrap-datetimepicker-widget table th.disabled,
+.dark .bootstrap-datetimepicker-widget table th.disabled:hover { color: #AAA; }
+.dark .bootstrap-datetimepicker-widget table thead tr:first-child th:hover { background: #444; }
+.dark .bootstrap-datetimepicker-widget table td.cw { color: #AAA; }
+.dark .bootstrap-datetimepicker-widget table td.day:hover,
+.dark .bootstrap-datetimepicker-widget table td.hour:hover,
+.dark .bootstrap-datetimepicker-widget table td.minute:hover,
+.dark .bootstrap-datetimepicker-widget table td.second:hover { background: #444; }
+.dark .bootstrap-datetimepicker-widget table td.old,
+.dark .bootstrap-datetimepicker-widget table td.new { color: #AAA; }
+.dark .bootstrap-datetimepicker-widget table td.active,
+.dark .bootstrap-datetimepicker-widget table td.active:hover { color: #222; }
+.dark .bootstrap-datetimepicker-widget table td.active.today:before { border-bottom-color: #222; }
+.dark .bootstrap-datetimepicker-widget table td.disabled,
+.dark .bootstrap-datetimepicker-widget table td.disabled:hover { color: #AAA; }
+.dark .bootstrap-datetimepicker-widget table td span:hover { background: #444; }
+.dark .bootstrap-datetimepicker-widget table td span.active { color: #222; }
+.dark .bootstrap-datetimepicker-widget table td span.old { color: #AAA; }
+.dark .bootstrap-datetimepicker-widget table td span.disabled,
+.dark .bootstrap-datetimepicker-widget table td span.disabled:hover { color: #AAA; }
+
+
+
+
+/* ========================================================================
+	select-boxes.css
+======================================================================== */
+.dark .select2-dropdown {
+	background-color: #333;
+	border-color: #555;
+}
+.dark .select2-close-mask { background-color: #333; }
+
+.dark .select2-container--default .select2-selection--single {
+	background-color: #333;
+	border-color: #555;
+}
+.dark .select2-container--default .select2-selection--single .select2-selection__rendered { color: #EEE; }
+.dark .select2-container--default .select2-selection--single .select2-selection__placeholder { color: #999; }
+
+.dark .select2-container--default .select2-selection--multiple {
+	background-color: #333;
+	border-color: #555;
+}
+.dark .select2-container--default .select2-selection--multiple .select2-selection__placeholder { color: #999; }
+.dark .select2-container--default .select2-selection--multiple .select2-selection__choice {
+	background-color: #444;
+	border-color:  #555;
+}
+.dark .select2-container--default .select2-selection--multiple .select2-selection__choice__remove { color: #999; }
+.dark .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover { color: #EEE; }
+
+.dark .select2-container--default.select2-container--disabled .select2-selection--multiple { background-color: #444; }
+
+.dark .select2-container--default .select2-search--dropdown .select2-search__field {
+	border-color: #555;
+	background-color: #555;
+	color: #EEE;
+}
+
+.dark .select2-container--default .select2-results__option[aria-disabled=true] { color: #999; }
+
+.dark .select2-container--default .select2-results__option[aria-selected=true] { background-color: #444; }
+
+.dark .select2-container--default .select2-results__option--highlighted[aria-selected] {
+	background-color: #5897fb;
+	color: #EEE; }
+
+.dark .select2-container--classic .select2-selection--single {
+	background-color: #444;
+	border-color: #555;
+	background-image: -webkit-linear-gradient(top, white 50%, #444 100%);
+	background-image: -o-linear-gradient(top, white 50%, #444 100%);
+	background-image: linear-gradient(to bottom, white 50%, #444 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#44444444', endColorstr='#44EEEEEE', GradientType=0);
+}
+.dark .select2-container--classic .select2-selection--single:focus { border: 1px solid #5897fb; }
+.dark .select2-container--classic .select2-selection--single .select2-selection__rendered { color: #444; }
+.dark .select2-container--classic .select2-selection--single .select2-selection__placeholder { color: #999; }
+.dark .select2-container--classic .select2-selection--single .select2-selection__arrow {
+	background-color: #444;
+	border-left-color: #555;
+	background-image: -webkit-linear-gradient(top, #444 50%, #444 100%);
+	background-image: -o-linear-gradient(top, #444 50%, #444 100%);
+	background-image: linear-gradient(to bottom, #444 50%, #444 100%);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#44EEEEEE', endColorstr='#44CCCCCC', GradientType=0);
+}
+
+.dark .select2-container--classic[dir="rtl"] .select2-selection--single .select2-selection__arrow { border-right-color: #555; }
+
+.dark .select2-container--classic.select2-container--open.select2-container--above .select2-selection--single {
+	background-image: -webkit-linear-gradient(top, white 0%, #444 50%);
+	background-image: -o-linear-gradient(top, white 0%, #444 50%);
+	background-image: linear-gradient(to bottom, white 0%, #444 50%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#44444444', endColorstr='#44EEEEEE', GradientType=0);
+}
+
+.dark .select2-container--classic.select2-container--open.select2-container--below .select2-selection--single {
+	background-image: -webkit-linear-gradient(top, #444 50%, white 100%);
+	background-image: -o-linear-gradient(top, #444 50%, white 100%);
+	background-image: linear-gradient(to bottom, #444 50%, white 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#44EEEEEE', endColorstr='#444', GradientType=0);
+}
+
+.dark .select2-container--classic .select2-selection--multiple {
+	background-color: #333;
+	border-color: #555;
+}
+
+.dark .select2-container--classic .select2-selection--multiple:focus { border-color: #5897fb; }
+.dark .select2-container--classic .select2-selection--multiple .select2-selection__choice {
+	background-color: #444;
+	border-color: #555;
+}
+.dark .select2-container--classic .select2-selection--multiple .select2-selection__choice__remove:hover { color: #EEE; }
+
+.dark .select2-container--classic .select2-search--dropdown .select2-search__field { border-color: #555; }
+
+.dark .select2-container--classic .select2-dropdown { background-color: #333;}
+
+.dark .select2-container--classic .select2-results__option[aria-disabled=true] { color: #444; }
+
+.dark .select2-container--classic .select2-results__option--highlighted[aria-selected] { color: #333; }
+
+.dark .select2-container--default.select2-container--disabled .select2-selection--single { background-color: rgba(255,255,255,0.1); }
+
+
+
+
+
+
+/* ========================================================================
+	radio-checkbox.css
+======================================================================== */
+
+.dark .checkbox-style-1-label:before,
+.dark .radio-style-1-label:before,
+.dark .checkbox-style-2-label:before,
+.dark .radio-style-2-label:before,
+.dark .checkbox-style-3-label:before,
+.dark .radio-style-3-label:before {
+	background: #333;
+	border-color: #444;
+}
+
+.dark .radio-style:checked + .radio-style-1-label:before { background: #CCC; }
+
+/* Checkbox-small + Radio-small */
+.dark .checkbox-style-1-label.checkbox-small:before,
+.dark .radio-style-1-label.radio-small:before,
+.dark .checkbox-style-2-label.checkbox-small:before,
+.dark .radio-style-2-label.radio-small:before,
+.dark .checkbox-style-3-label.checkbox-small:before,
+.dark .radio-style-3-label.radio-small:before { border-color: #444; }
+
+/* Style-2 */
+.dark .checkbox-style:checked + .checkbox-style-2-label:before { box-shadow: inset 0px 0px 0px 4px #000; }
+
+.dark .radio-style:checked + .radio-style-2-label:before {
+	background: #CCC;
+	box-shadow: inset 0px 0px 0px 4px #333;
+}
+
+.dark .checkbox-style:checked + .checkbox-style-2-label.checkbox-small:before { box-shadow: inset 0px 0px 0px 2px #000; }
+.dark .radio-style:checked + .radio-style-2-label.radio-small:before { box-shadow: inset 0px 0px 0px 2px #000; }
+
+/* style-3 */
+.dark .checkbox-style:checked + .checkbox-style-3-label:before,
+.dark .radio-style:checked + .radio-style-3-label:before { color: #222; }
+.dark .radio-style:checked + .radio-style-3-label:before {
+	color: #CCC;
+	border-color: #CCC;
+}
+
+/* style-3 - Small */
+.dark .checkbox-style + .checkbox-style-3-label.checkbox-small:before,
+.dark .radio-style + .radio-style-3-label.radio-small:before { border-color: #555; }
+
+
+
+
+
+
+
+/* ========================================================================
+	ion.rangeslider.css
+======================================================================== */
+.dark .irs-bar-edge,
+.dark .irs-line-mid,
+.dark .irs-line-left,
+.dark .irs-line-right { background-color: #444; }
+
+
+
+
+/*========================================================================
+	daterangepicker.css
+ ======================================================================== */
+.dark .daterangepicker {  background: #222; }
+
+.dark .daterangepicker.opensleft:before {
+	border-bottom-color: #444;
+	border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .daterangepicker.opensleft:after {
+	border-bottom-color: #555;
+	border-left-color: transparent;
+}
+
+.dark .daterangepicker.openscenter:before {
+	border-bottom-color: #444;
+	border-left-color: transparent;
+	border-bottom-color: rgba(0, 0, 0, 0.2);
+}
+
+.dark .daterangepicker.openscenter:after {
+	border-bottom-color: #222;
+	border-left-color: transparent;
+}
+
+.dark .daterangepicker.opensright:before {
+	border-bottom-color: #444;
+	border-left-color: transparent;
+	border-bottom-color: rgba(0, 0, 0, 0.2);
+}
+
+.dark .daterangepicker.opensright:after {
+	border-bottom-color: #222;
+	border-left-color: transparent;
+}
+
+.dark .daterangepicker.dropup:before{ border-top-color: #444; }
+
+.dark .daterangepicker.dropup:after{ border-top-color: #222; }
+
+.dark .daterangepicker .calendar-table {
+	border-color: #444;
+	background: #222;
+}
+
+.dark .daterangepicker td.off, .dark .daterangepicker td.off.in-range, .dark .daterangepicker td.off.start-date, .dark .daterangepicker td.off.end-date {
+	color: #999;
+	background: #222;
+}
+
+.dark .daterangepicker td.disabled, .dark .daterangepicker option.disabled { color: #999; }
+
+.dark .daterangepicker td.available:hover, .dark .daterangepicker th.available:hover { background: #555; }
+
+.dark .daterangepicker td.in-range {
+	background: #444;
+	border-radius: 0;
+}
+
+.dark .daterangepicker td.active, .dark .daterangepicker td.active:hover {
+	background-color: #357ebd;
+	border-color: #3071a9;
+	color: #EEE;
+}
+
+.dark .daterangepicker td.week, .dark .daterangepicker th.week { color: #444; }
+
+.dark .reportrange { border-color: #444 !important; }
+
+/* Text Input Above Each Calendar */
+.dark .daterangepicker .input-mini {
+	border-color: #444;
+	color: #555;
+}
+
+.dark .daterangepicker .input-mini.active { border-color: #357ebd; }
+
+.dark .daterangepicker .calendar-time select.disabled { color: #444; }
+
+.daterangepicker .daterangepicker_input i { color: #333; }
+
+	/* Predefined Ranges */
+.dark .daterangepicker .ranges li {
+	background: #333;
+	border-color: #333;
+	color: #EEE;
+}
+
+.dark .daterangepicker .ranges li.active, .dark .daterangepicker .ranges li:hover {
+	background: #08c;
+	border-color: #08c;
+	color: #EEE;
+}
+
+.dark .input-daterange .input-group-addon {
+	background-color: #222;
+	border-color: #111;
+	text-shadow: none;
+}
+
+
+
+
+/* ========================================================================
+* bs-switches.css
+* ====================================================================== */
+
+.dark .bootstrap-switch { border-color: #444; }
+
+.dark .bootstrap-switch .bootstrap-switch-label {
+	color: #EEE;
+	background: #222;
+}
+
+.dark .bootstrap-switch-label:after {
+    border-top-color: #444;
+    border-bottom-color: #444;
+}
+
+/*  Switches
+--------------------------------------------------------------  */
+.dark input.switch-toggle-round + label { background-color: #444; }
+
+.dark input.switch-toggle-round + label:before,
+.dark input.switch-toggle-flat + label:before { background-color: #222; }
+
+.dark input.switch-toggle-flat + label,
+.dark input.switch-toggle-flat + label:after { background-color: #AAA; }
+
+.dark input.switch-toggle-round + label:after {
+	background-color: #AAA;
+	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+

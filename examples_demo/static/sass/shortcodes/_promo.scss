@@ -1,0 +1,84 @@
+
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: promo.scss
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+	Promo Boxes
+-----------------------------------------------------------------*/
+
+$promo-prefix: promo;
+
+.#{$promo-prefix} {
+	position: relative;
+	h3 {
+		font-weight: bold;
+		margin-bottom: 0;
+		+ span {
+			display: block;
+			color: $promo-light-text-color;
+			font-weight: 300;
+			font-size: $promo-span-font-size;
+			margin-top: 6px;
+		}
+	}
+	@if $promo-uppercase == true {
+		&-uppercase { text-transform: uppercase;
+			h3 {
+				font-size: $promo-uppercase-font-size;
+				+ span {
+					font-size: $promo-uppercase-span-font-size;
+				}
+			}
+		}
+	}
+	&-border {
+		border: $promo-border;
+		border-radius: 3px;
+	}
+
+	/* Promo - Light
+	-----------------------------------------------------------------*/
+	&-light {
+		background-color: $promo-light;
+		border-radius: 3px;
+	}
+
+	/* Promo - Dark
+	-----------------------------------------------------------------*/
+	&-dark {
+		border: 0 !important;
+		background-color: $promo-dark;
+		text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+		border-radius: 3px;
+		h3 { color: $promo-dark-text-color;
+			+ span {
+				color: #EEE;
+				font-weight: 400;
+			}
+		}
+	}
+	/* Promo - 100% Full Width
+	-----------------------------------------------------------------*/
+	&-full {
+		border-radius: 0 !important;
+		border-left: 0 !important;
+		border-right: 0 !important;
+	}
+	/* Promo - Parallax
+	-----------------------------------------------------------------*/
+	&.parallax { padding: $promo-parallax-padding 0 !important; }
+
+	/* Promo - Mini
+	-----------------------------------------------------------------*/
+
+	&-mini {
+		text-align: left;
+		h3 {
+			font-size: $promo-uppercase-font-size;
+		}
+		&.#{$promo-prefix}-uppercase h3 { font-size: $promo-uppercase-span-font-size; }
+	}
+}

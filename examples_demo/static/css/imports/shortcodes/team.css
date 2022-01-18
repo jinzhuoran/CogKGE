@@ -1,0 +1,86 @@
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: team.scss
+
+-----------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Team
+-----------------------------------------------------------------*/
+.team, .team-image {
+  position: relative;
+  /* Team Center
+  -----------------------------------------------------------------*/
+  /* Team List
+  -----------------------------------------------------------------*/
+}
+.team-image > a,
+.team-image img {
+  display: block;
+  width: 100%;
+}
+.team-desc {
+  text-align: center;
+}
+.team-desc-bg {
+  background-color: #FFF;
+  padding: 10px 0 30px;
+}
+.team .si-share, .team-image .si-share {
+  margin-top: 30px;
+  text-align: left;
+}
+.team .si-share .social-icon, .team-image .si-share .social-icon {
+  font-size: 14px;
+  width: 32px;
+}
+.team-title {
+  position: relative;
+  padding-top: 20px;
+}
+.team-title h4 {
+  display: block;
+  margin-bottom: 0;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+.team-title span {
+  display: block;
+  color: 1rem;
+  font-weight: 400;
+  font-family: "PT Serif", serif;
+  font-style: italic;
+  font-size: 1rem;
+  margin-top: 5px;
+}
+.team-content {
+  margin-top: 1rem;
+  color: #777777;
+}
+.team-content p:last-child {
+  margin-bottom: 0;
+}
+.team.center .team-title::after, .center.team-image .team-title::after {
+  left: 50%;
+  margin-left: -40px;
+}
+.team-list .team-desc {
+  text-align: left;
+}
+.team-list .team-title {
+  padding-top: 0;
+}
+.team .team-desc > .social-icon, .team-image .team-desc > .social-icon {
+  margin-top: 20px;
+}
+.team .team-content ~ .social-icon, .team-image .team-content ~ .social-icon {
+  margin-top: 30px;
+}
+.team:not(.team-list) .social-icon, .team-image:not(.team-list) .social-icon {
+  display: inline-block !important;
+  vertical-align: middle;
+  float: none;
+  margin-left: 4px;
+  margin-right: 4px;
+}

@@ -1,0 +1,112 @@
+/*-----------------------------------------------------------------------------------
+
+	Shortcodes: dividers.scss
+
+-----------------------------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Divider
+-----------------------------------------------------------------*/
+.divider {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 3rem auto;
+  color: #e5e5e5;
+  width: 100%;
+  /* Divider - Icon Align Right
+  -----------------------------------------------------------------*/
+  /* Divider - Icon Align Center
+  -----------------------------------------------------------------*/
+  /* Divider - Rounded Icon
+  -----------------------------------------------------------------*/
+  /* Divider - Rounded & Border
+  -----------------------------------------------------------------*/
+  /* Divider - Line Only
+  -----------------------------------------------------------------*/
+}
+.divider.divider-margin-lg {
+  margin: 5rem auto;
+}
+.divider::after, .divider::before {
+  content: '';
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  max-width: 100%;
+  height: 1px;
+  background-color: #eeeeee;
+}
+.divider::before {
+  display: none;
+  margin-right: 0.5rem;
+}
+.divider::after {
+  margin-left: 0.5rem;
+}
+.divider.divider-thick::after, .divider.divider-thick::before {
+  height: 3px;
+}
+.divider.divider-sm {
+  width: 55%;
+}
+.divider.divider-xs {
+  width: 35%;
+}
+.divider i,
+.divider a, .divider-text {
+  position: relative;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: 24px;
+  max-width: 100%;
+  line-height: 1;
+  font-size: 18px !important;
+  text-align: center;
+}
+.divider a, .divider-text {
+  width: auto;
+  color: inherit;
+  -webkit-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease;
+}
+.divider a:hover, .divider-text:hover {
+  color: #888888;
+}
+.divider.divider-right::before {
+  display: block;
+}
+.divider.divider-right::after {
+  display: none;
+}
+.divider.divider-center::before {
+  display: block;
+}
+.divider.divider-rounded i, .divider.divider-border i {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  color: #bbbbbb;
+  background-color: whitesmoke;
+  border-radius: 50%;
+}
+.divider.divider-border::before, .divider.divider-border::after, .divider.divider-rounded::before, .divider.divider-rounded::after {
+  margin-left: 0;
+  margin-right: 0;
+}
+.divider.divider-border {
+  color: #e5e5e5;
+}
+.divider.divider-border i {
+  line-height: 38px;
+  background-color: transparent;
+  border: 1px solid #eeeeee;
+}
+.divider.divider-line::before, .divider.divider-line::after {
+  margin-left: 0;
+  margin-right: 0;
+}

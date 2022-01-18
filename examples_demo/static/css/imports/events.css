@@ -1,0 +1,142 @@
+/* ----------------------------------------------------------------
+
+	event.scss
+
+-----------------------------------------------------------------*/
+/* ----------------------------------------------------------------
+	Events
+-----------------------------------------------------------------*/
+.event.entry::after {
+  display: none !important;
+}
+.event .grid-inner {
+  background-color: #f9f9f9;
+  border-bottom: 3px solid #eeeeee;
+}
+.event .entry-image .entry-date {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #FFF;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  width: 4.0005rem;
+  height: 3.745rem;
+  text-align: center;
+  padding-top: 9px;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+.event .entry-image .entry-date span {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 7px;
+}
+
+.single-event .event-meta .iconlist li,
+.parallax .iconlist li {
+  margin: 5px 0;
+}
+
+.single-event .entry-overlay,
+.parallax .entry-overlay-meta {
+  position: absolute;
+  top: auto;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5rem;
+  background-color: rgba(0, 0, 0, 0.85);
+  text-align: center;
+  line-height: 5rem;
+  font-size: 1.25rem;
+  color: #FFF;
+  z-index: 5;
+}
+
+.single-event .countdown-section {
+  padding: 0 15px;
+  border-left-color: rgba(255, 255, 255, 0.3);
+  color: #CCC;
+}
+.single-event .countdown-section .countdown-amount {
+  color: #FFF;
+}
+
+.parallax .entry-overlay,
+.parallax .entry-overlay-meta {
+  background: transparent;
+  width: auto;
+  text-align: right;
+  left: auto;
+  right: 30px;
+  bottom: 30px;
+}
+.parallax .entry-overlay-meta {
+  padding: 20px;
+  font-size: 0.875rem;
+  text-align: left;
+  right: 38px;
+  bottom: 130px;
+  width: 368px;
+  height: auto;
+  line-height: inherit;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 3px;
+}
+.parallax.overlay-left .entry-overlay, .parallax.overlay-left .entry-overlay-meta {
+  right: auto;
+  left: 30px;
+}
+.parallax.overlay-left .entry-overlay-meta {
+  left: 38px;
+}
+@media (max-width: 575.98px) {
+  .parallax .entry-overlay-meta,
+  .parallax .entry-overlay {
+    left: 0 !important;
+    right: 0 !important;
+    width: 90%;
+    margin: 0 auto;
+  }
+}
+.parallax.overlay-center .entry-overlay, .parallax.overlay-center .entry-overlay-meta {
+  bottom: 100px;
+  right: auto;
+  left: 50%;
+  margin-left: -192px;
+}
+.parallax.overlay-center .entry-overlay-meta {
+  top: 100px;
+  bottom: auto;
+  margin-left: -184px;
+}
+.parallax .entry-overlay-meta h2 {
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+  padding-bottom: 17px;
+}
+.parallax .entry-overlay-meta h2 a {
+  color: #FFF;
+}
+.parallax .entry-overlay-meta h2 a:hover {
+  color: #DDD;
+}
+.parallax .countdown {
+  top: 0;
+}
+.parallax .countdown-section {
+  border-left: 0;
+  width: 4.0005rem;
+  height: 4.0005rem;
+  margin: 0 8px;
+  font-size: 13px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 3px;
+  padding-top: 14px;
+}
+.parallax .countdown-amount {
+  font-size: 28px;
+  margin-bottom: 6px;
+}

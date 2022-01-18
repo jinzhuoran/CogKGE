@@ -1,0 +1,222 @@
+/* ----------------------------------------------------------------
+
+	pagetitle.scss
+
+-----------------------------------------------------------------*/
+
+
+/* ----------------------------------------------------------------
+	Page Title
+-----------------------------------------------------------------*/
+$page_title-prefix: page-title;
+
+##{$page_title-prefix} {
+	position: relative;
+	padding: $page-title-padding 0;
+	background-color: $page-title-bg;
+	border-bottom: $page-title-border;
+	@include media-breakpoint-down(sm) {
+		padding: 2rem 0;
+		text-align: center;
+	}
+	.container {
+		position: relative;
+	}
+	 h1 {
+		padding: 0;
+		margin: 0;
+		line-height: 1;
+		font-weight: 600;
+		letter-spacing: 1px;
+		color: $page-title-bg-dark;
+		font-size: $page-title-size;
+		text-transform: uppercase;
+		@include media-breakpoint-down(sm) {
+			line-height: 1.5;
+			font-size: calc( 1rem + 2vw );
+		}
+	}
+	span {
+		display: block;
+		margin-top: 10px;
+		font-weight: 300;
+		color: #777;
+		font-size: $page-title-subtitle-size;
+	}
+
+	.breadcrumb {
+		position: absolute !important;
+		width: auto !important;
+		top: 50% !important;
+		left: auto !important;
+		right: 15px !important;
+		margin: 0 !important;
+		background-color: transparent !important;
+		padding: 0 !important;
+		font-size: 90%;
+		transform: translateY(-50%);
+		a { color: #555;
+			a:hover { color: $theme-color; }
+		}
+
+		i { width: auto !important; }
+
+		@include media-breakpoint-down(sm) {
+			position: relative !important;
+			top: 0 !important;
+			left: 0 !important;
+			right: 0 !important;
+			margin: 20px 0 0 !important;
+			justify-content: center;
+			-webkit-transform: translateY(0);
+			transform: translateY(0);
+		}
+	}
+}
+
+##{$page_title-prefix}.#{$page_title-prefix} {
+	&-dark {
+		background-color: #333;
+		text-shadow: 1px 1px 1px rgba(0,0,0,0.1) !important;
+		border-bottom: none;
+		h1 { color: rgba(255,255,255,0.9) !important; }
+
+		span { color: rgba(255,255,255,0.7) !important; }
+
+		.breadcrumb {
+			> .active { color: rgba(255,255,255,0.6); }
+			a { color: rgba(255,255,255,0.8);
+				&:hover { color: rgba(255,255,255,0.95); }
+			}
+		}
+
+		.breadcrumb-item + .breadcrumb-item::before {
+			color: #CCC;
+		}
+	}
+	/* Page Title - Right Aligned
+	-----------------------------------------------------------------*/
+	&-right {
+		text-align: right;
+		.breadcrumb {
+			left: 15px !important;
+			right: auto !important;
+		}
+	}
+
+	/* Page Title - Center Aligned
+	-----------------------------------------------------------------*/
+	&-center {
+		text-align: center;
+		span {
+			max-width: $page-title-center-mx-width;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.breadcrumb {
+			position: relative !important;
+			top: 0 !important;
+			left: 0 !important;
+			right: 0 !important;
+			margin: 20px 0 0 !important;
+			justify-content: center;
+			transform: translateY(0);
+		}
+	}
+
+	/* Page Title - Background Pattern
+	-----------------------------------------------------------------*/
+
+	&-pattern {
+		background-image: url('images/pattern.png');
+		background-repeat: repeat;
+		background-attachment: fixed;
+	}
+
+	/* Page Title - Parallax Background
+	-----------------------------------------------------------------*/
+
+	&-parallax {
+		padding: $page-title-parallax-padding 0;
+		text-shadow: none;
+		border-bottom: none;
+		background-color: transparent;
+		background-image: url('images/parallax/parallax-bg.jpg');
+		background-attachment: fixed;
+		background-position: 50% 0;
+		background-repeat: no-repeat;
+		h1 {
+			font-size: $page-title-parallax-font-size;
+			font-weight: 600;
+			letter-spacing: 2px;
+		}
+
+		span {
+			font-size: $page-title-parallax-subtitle-size;
+			@include media-breakpoint-down(sm) {
+				font-size: 1rem;
+			}
+		}
+		.breadcrumb {
+			font-size: 0.875rem;
+			.transparent-header +  & { margin-top: 35px !important; }
+		}
+	}
+
+
+	/* Page Title - Mini
+	-----------------------------------------------------------------*/
+
+	&-mini {
+		padding: $page-title-mini-padding 0;
+		h1 {
+			font-weight: 600;
+			font-size: $page-title-mini-size;
+			color: $text-color;
+		}
+
+		span { display: none; }
+	}
+
+
+	/* Page Title - No Background
+	-----------------------------------------------------------------*/
+
+	&-nobg {
+		background: transparent !important;
+		border-bottom: $page-title-border;
+	}
+
+
+	/* Page Title - Video
+	-----------------------------------------------------------------*/
+
+	&-video {
+		background: none;
+		position: relative;
+		overflow: hidden;
+		.container { z-index: 3; }
+
+		.video-wrap {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			video { width: 100%; }
+		}
+	}
+}
+
+
+@include media-breakpoint-down(sm) {
+
+	#page-title #portfolio-navigation,
+	#portfolio-ajax-title #portfolio-navigation {
+		position: relative;
+		top: 0;
+		left: 0;
+		margin: 15px auto 0;
+	}
+}
