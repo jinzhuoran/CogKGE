@@ -3,7 +3,7 @@ import datetime
 import json
 import os
 from collections import defaultdict
-
+from openTSNE import TSNE
 import torch
 import torch.nn.functional as F
 from mongoengine import StringField, IntField, FloatField, BooleanField, DateTimeField, Document
@@ -91,6 +91,7 @@ class Kr_Predictior:
         self._create_detailed_dict()  # 建立链接预测字典
         connect('eventkg', host='210.75.240.136', username='cipzhao2022', password='cipzhao2022', port=1234,
                 connect=False)
+
 
     def _create_summary_dict(self):
         """
@@ -372,6 +373,30 @@ class Kr_Predictior:
             relation_list.append(item)
 
         return relation_list
+
+    def show_img(self,node_id,visual_num=1000,filt=True):
+        node_embedding = torch.unsqueeze(self.model.entity_embedding_base(torch.tensor(node_id).to(self.device)), dim=0)
+        distance = F.pairwise_distance(node_embedding, self.all_node_embedding, p=2)
+        value, index = torch.topk(distance, visual_num, largest=False)
+        embedding = self.model.entity_embedding_base.weight.data[index].clone().cpu().numpy()
+        embedding = TSNE(negative_gradient_method="bh").fit(embedding)
+        label_dict = defaultdict(dict)
+        label_set=set()
+        for i in range(visual_num):
+            id = str(int(index[i]))
+            item = copy.deepcopy(self.detailed_node_dict[id])
+            if item["type"] not in label_set:
+                label_dict[item["type"]]["label"] = item["type"]
+                label_set.add(item["type"])
+                label_dict[item["type"]]["data"]=list()
+            label_dict[item["type"]]["data"].append({"x":embedding[i][0],"y":embedding[i][1],"name":item["name"],"confidence":value[i].item()})
+        visual_list=list()
+        for key , value in label_dict.items():
+                visual_list.append(value)
+
+
+        return visual_list
+
 
 
 class Entity(Document):
