@@ -8,6 +8,7 @@ import torch
 import torch.nn.functional as F
 from mongoengine import StringField, IntField, FloatField, BooleanField, DateTimeField, Document
 from mongoengine import connect
+from mongoengine.queryset.visitor import Q
 from tqdm import tqdm
 
 
@@ -187,22 +188,14 @@ class Kr_Predictior:
         :return: 模糊节点列表
         """
         if node_keyword is None:
-            return [self.summary_node_dict[0],
-                    self.summary_node_dict[1],
-                    self.summary_node_dict[2],
-                    self.summary_node_dict[3],
-                    self.summary_node_dict[4],
-                    self.summary_node_dict[5],
-                    self.summary_node_dict[6],
-                    self.summary_node_dict[7],
-                    self.summary_node_dict[8],
-                    self.summary_node_dict[9]]
-        else:
-            entities = Entity.objects(name__contains=node_keyword)
-            results = []
-            for i in range(min(self.predict_top_k, len(entities))):
-                results.append(entities[i].to_dict())
-            return results
+            node_keyword = ''
+        # entities = Entity.objects(Q(name__contains=node_keyword) | Q(
+        #     description__contains=node_keyword))
+        entities = Entity.objects(name__contains=node_keyword)
+        results = []
+        for i in range(min(self.fuzzy_query_top_k, len(entities))):
+            results.append(entities[i].to_dict())
+        return results
 
     def fuzzy_query_relation_keyword(self, relation_keyword=None):
         """
@@ -212,22 +205,13 @@ class Kr_Predictior:
         :return: 模糊关系列表
         """
         if relation_keyword is None:
-            return [self.summary_relation_dict[0],
-                    self.summary_relation_dict[1],
-                    self.summary_relation_dict[2],
-                    self.summary_relation_dict[3],
-                    self.summary_relation_dict[4],
-                    self.summary_relation_dict[5],
-                    self.summary_relation_dict[6],
-                    self.summary_relation_dict[7],
-                    self.summary_relation_dict[8],
-                    self.summary_relation_dict[9]]
-        else:
-            relations = Relation.objects(name__contains=relation_keyword)
-            results = []
-            for i in range(min(self.predict_top_k, len(relations))):
-                results.append(relations[i].to_dict())
-            return results
+            relation_keyword = ''
+        relations = Relation.objects(Q(name__contains=relation_keyword) | Q(
+            summary__contains=relation_keyword))
+        results = []
+        for i in range(min(self.fuzzy_query_top_k, len(relations))):
+            results.append(relations[i].to_dict())
+        return results
 
     def predict_similar_node(self, node_id):
         """
