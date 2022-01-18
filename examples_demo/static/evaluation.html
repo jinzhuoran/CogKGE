@@ -333,7 +333,10 @@
 				div_str += '</div>';
 				div_str += '</div>';
 				div_str += '<div class="toggle-content" style="display: none;">';
-				div_str += JSON.stringify(obj);
+				for(var key in obj){
+					div_str += key + ": " + JSON.stringify(obj[key]);
+					div_str += '</br>';
+				}
 				div_str += '</div>';
 				div_str += '</div>';
 				div_str += '</div>';
