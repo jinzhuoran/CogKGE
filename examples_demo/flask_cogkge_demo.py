@@ -3,9 +3,12 @@ import sys
 
 sys.path.append("..")
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__, static_url_path='/static')
 app.config['JSON_AS_ASCII'] = False
+app = Flask(__name__)
+cors = CORS(app)
 
 
 # CORS(app, resources={r"/*": {"origins": "*"}}, send_wildcard=True, supports_credentials=True)
@@ -15,27 +18,32 @@ app.config['JSON_AS_ASCII'] = False
 
 @app.route('/', methods=["GET"])
 def index():
-    return app.send_static_file('main.html')
+    return app.send_static_file('home.html')
 
 
 # 模糊查询节点
 @app.route('/fuzzy_query_node', methods=["GET", "POST"])
 def fuzzy_query_node():
-    if request.method == "POST":
-        keyword = request.form['keyword']
-    else:
-        keyword = request.args['keyword']
-    print(predictor.fuzzy_query_node_keyword(keyword))
+    try:
+        if request.method == "POST":
+            keyword = request.form['keyword']
+        else:
+            keyword = request.args['keyword']
+    except:
+        keyword = ''
     return jsonify(predictor.fuzzy_query_node_keyword(keyword))
 
 
 # 模糊查询关系
 @app.route('/fuzzy_query_relation', methods=["GET", "POST"])
 def fuzzy_query_relation():
-    if request.method == "POST":
-        keyword = request.form['keyword']
-    else:
-        keyword = request.args['keyword']
+    try:
+        if request.method == "POST":
+            keyword = request.form['keyword']
+        else:
+            keyword = request.args['keyword']
+    except:
+        keyword = ''
     return jsonify(predictor.fuzzy_query_relation_keyword(keyword))
 
 
@@ -50,8 +58,8 @@ def predict_similar_node():
 
 
 # 查询尾节点
-@app.route('/predcit_tail', methods=["GET", "POST"])
-def predcit_tail():
+@app.route('/predict_tail', methods=["GET", "POST"])
+def predict_tail():
     if request.method == "POST":
         head_id = request.form['head_id']
         relation_id = request.form['relation_id']
@@ -63,7 +71,7 @@ def predcit_tail():
 
 # 查询关系
 @app.route('/predict_relation', methods=["GET", "POST"])
-def predcit_relation():
+def predict_relation():
     if request.method == "POST":
         head_id = request.form['head_id']
         tail_id = request.form['tail_id']
@@ -75,7 +83,7 @@ def predcit_relation():
 
 # 查询头节点
 @app.route('/predict_head', methods=["GET", "POST"])
-def predcit_head():
+def predict_head():
     if request.method == "POST":
         tail_id = request.form['tail_id']
         relation_id = request.form['relation_id']

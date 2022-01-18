@@ -12,7 +12,7 @@ from torch.utils.data import RandomSampler
 
 from cogktr import *
 
-device = init_cogktr(device_id="3", seed=1)
+device = init_cogktr(device_id="5", seed=1)
 
 loader = FB15KLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -37,7 +37,7 @@ model = RotatE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=100)
 
-loss = MarginLoss(margin=1.0, C=0)
+loss = NegSamplingLoss(margin=1.0, alpha=0.5, neg_per_pos=3, C=0.01)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
@@ -51,9 +51,10 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     factor=0.5, min_lr=1e-9, verbose=True
 )
 
-negative_sampler = UnifNegativeSampler(triples=train_dataset,
-                                       entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
+negative_sampler = AdversarialSampler(triples=train_dataset,
+                                      entity_dict_len=len(node_lut),
+                                      relation_dict_len=len(relation_lut),
+                                      neg_per_pos=3)
 
 trainer = Kr_Trainer(
     train_dataset=train_dataset,

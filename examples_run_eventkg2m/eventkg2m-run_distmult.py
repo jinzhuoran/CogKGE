@@ -1,31 +1,37 @@
 import os
 import sys
-
 sys.path.append('/home/zhuoran/code/CogKGE/')
 sys.path.append('/home/zhuoran/CogKGE/')
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
 sys.path.append(os.path.split(rootPath)[0])
 sys.path.append(os.getcwd())
+
 import torch
 from torch.utils.data import RandomSampler
 
 from cogktr import *
+from cogktr.models.kr.distmult import DistMult
 
-device = init_cogktr(device_id="3", seed=1)
+device = init_cogktr(device_id="7", seed=1)
 
-loader = FB15KLoader(dataset_path="../dataset", download=True)
+loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
-node_lut, relation_lut = loader.load_all_lut()
+node_lut, relation_lut, time_lut = loader.load_all_lut()
 # loader.describe()
 # train_data.describe()
 # node_lut.describe()
 
-processor = FB15KProcessor(node_lut, relation_lut, reprocess=True)
+processor = EVENTKG2MProcessor(node_lut, relation_lut, time_lut,
+                               reprocess=True,
+                               type=False, time=False, description=False, path=False,
+                               time_unit="year",
+                               pretrain_model_name="roberta-base", token_len=10,
+                               path_len=10)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
-node_lut, relation_lut = processor.process_lut()
+node_lut, relation_lut, time_lut = processor.process_lut()
 # node_lut.print_table(front=3)
 # relation_lut.print_table(front=3)
 
@@ -33,9 +39,9 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = RotatE(entity_dict_len=len(node_lut),
-               relation_dict_len=len(relation_lut),
-               embedding_dim=100)
+model = DistMult(entity_dict_len=len(node_lut),
+                 relation_dict_len=len(relation_lut),
+                 embedding_dim=100)
 
 loss = MarginLoss(margin=1.0, C=0)
 
@@ -43,7 +49,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=30000,
+                         batch_size=5000000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -71,14 +77,14 @@ trainer = Kr_Trainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
-    trainer_batch_size=30000,
+    trainer_batch_size=100000,
     epoch=3000,
-    visualization=False,
+    visualization=1,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=50,
+    metric_step=200,
     save_step=200,
     metric_final_model=True,
     save_final_model=True,

@@ -43,13 +43,13 @@ predictor = Kr_Predictior(model_name="BoxE",
 #                    以上为模型加载，以下为调用的接口
 ###########################################################################
 
-#模糊查询节点
-result_node=predictor.fuzzy_query_node_keyword()
+# 模糊查询节点
+result_node = predictor.fuzzy_query_node_keyword()
 # result_node=predictor.fuzzy_query_node_keyword()
 print(result_node)
 
-#模糊查询关系
-result_relation=predictor.fuzzy_query_relation_keyword("sp")
+# 模糊查询关系
+result_relation = predictor.fuzzy_query_relation_keyword("sp")
 # result_relation=predictor.fuzzy_query_relation_keyword()
 print(result_relation)
 
