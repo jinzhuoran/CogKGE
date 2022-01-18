@@ -3,7 +3,7 @@ import datetime
 import json
 import os
 from collections import defaultdict
-
+from openTSNE import TSNE
 import torch
 import torch.nn.functional as F
 from mongoengine import StringField, IntField, FloatField, BooleanField, DateTimeField, Document
@@ -27,7 +27,6 @@ class Kr_Predictior:
                  predict_top_k=50):
         """
         三元组链接预测
-
         :param model: 模型
         :param pretrained_model_path: 知识表示预训练模型路径
         :param model_name: 模型名字
@@ -91,6 +90,7 @@ class Kr_Predictior:
         self._create_detailed_dict()  # 建立链接预测字典
         connect('eventkg', host='210.75.240.136', username='cipzhao2022', password='cipzhao2022', port=1234,
                 connect=False)
+
 
     def _create_summary_dict(self):
         """
@@ -183,7 +183,6 @@ class Kr_Predictior:
     def fuzzy_query_node_keyword(self, node_keyword=None):
         """
         模糊查询节点名字
-
         :param node_keyword: 输入节点名字,如果输入为空，则返回10个范例
         :return: 模糊节点列表
         """
@@ -200,7 +199,6 @@ class Kr_Predictior:
     def fuzzy_query_relation_keyword(self, relation_keyword=None):
         """
         模糊查询关系名字
-
         :param relation_keyword: 输入关系名字，如果输入为空，则返回10个范例
         :return: 模糊关系列表
         """
@@ -216,7 +214,6 @@ class Kr_Predictior:
     def predict_similar_node(self, node_id):
         """
         预测相似的节点
-
         :param node_id: 输入节点id
         :return: similar_node_list 相似节点列表
         """
@@ -238,7 +235,6 @@ class Kr_Predictior:
         """
         根据头节点和关系预测尾节点
         如果关系为空，则遍历所有关系，计算出每种关系得分最高的，选出前topk个节点
-
         :param head_id: 输入头节点id
         :param relation_id: 输入关系id
         :return: tail_list 尾实体列表
@@ -294,7 +290,6 @@ class Kr_Predictior:
         """
         根据尾节点和关系预测头节点
         如果关系为空，则遍历所有关系，计算出每种关系得分最高的，选出前topk个节点
-
         :param tail_id: 输入尾节点id
         :param relation_id: 输入关系id
         :return: head_list 头节点列表
@@ -349,7 +344,6 @@ class Kr_Predictior:
     def predict_relation(self, head_id, tail_id):
         """
         根据头节点和尾节点预测关系
-
         :param head_id: 输入头节点id
         :param tail_id: 输入尾节点id
         :return: relation_list 关系列表
@@ -372,6 +366,30 @@ class Kr_Predictior:
             relation_list.append(item)
 
         return relation_list
+
+    def show_img(self,node_id,visual_num=1000,filt=True):
+        node_embedding = torch.unsqueeze(self.model.entity_embedding_base(torch.tensor(node_id).to(self.device)), dim=0)
+        distance = F.pairwise_distance(node_embedding, self.all_node_embedding, p=2)
+        value, index = torch.topk(distance, visual_num, largest=False)
+        embedding = self.model.entity_embedding_base.weight.data[index].clone().cpu().numpy()
+        embedding = TSNE(negative_gradient_method="bh").fit(embedding)
+        label_dict = defaultdict(dict)
+        label_set=set()
+        for i in range(visual_num):
+            id = str(int(index[i]))
+            item = copy.deepcopy(self.detailed_node_dict[id])
+            if item["type"] not in label_set:
+                label_dict[item["type"]]["label"] = item["type"]
+                label_set.add(item["type"])
+                label_dict[item["type"]]["data"]=list()
+            label_dict[item["type"]]["data"].append({"x":embedding[i][0],"y":embedding[i][1],"name":item["name"],"confidence":value[i].item()})
+        visual_list=list()
+        for key , value in label_dict.items():
+                visual_list.append(value)
+
+
+        return visual_list
+
 
 
 class Entity(Document):
