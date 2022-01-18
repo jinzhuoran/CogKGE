@@ -43,15 +43,15 @@ predictor = Kr_Predictior(model_name="BoxE",
 #                    以上为模型加载，以下为调用的接口
 ###########################################################################
 
-# #模糊查询节点
-# result_node=predictor.fuzzy_query_node_keyword('Copa Colombia')
-# # result_node=predictor.fuzzy_query_node_keyword()
-# print(result_node)
-#
-# #模糊查询关系
-# result_relation=predictor.fuzzy_query_relation_keyword("sport")
-# # result_relation=predictor.fuzzy_query_relation_keyword()
-# print(result_relation)
+#模糊查询节点
+result_node=predictor.fuzzy_query_node_keyword()
+# result_node=predictor.fuzzy_query_node_keyword()
+print(result_node)
+
+#模糊查询关系
+result_relation=predictor.fuzzy_query_relation_keyword("sp")
+# result_relation=predictor.fuzzy_query_relation_keyword()
+print(result_relation)
 
 # 查询相似节点
 similar_node_list = predictor.predict_similar_node(node_id=0)
