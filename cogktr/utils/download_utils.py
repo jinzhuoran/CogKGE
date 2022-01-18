@@ -91,3 +91,10 @@ class Download_Data:
                       dataset_path=self.dataset_path,
                       url_path=self.url)
 
+    def COGNET680K(self):
+        download_data(task="kr",
+                      data_name="COGNET680K",
+                      zip_name="COGNET680K.zip",
+                      dataset_path=self.dataset_path,
+                      url_path=self.url)
+

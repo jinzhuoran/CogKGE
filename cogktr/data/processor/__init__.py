@@ -12,4 +12,5 @@ __all__=[
     "MOBILEWIKIDATA5MProcessor",
     "EVENTKG2MProcessor",
     "CSKGProcessor",
+    "COGNET680KProcessor",
 ]

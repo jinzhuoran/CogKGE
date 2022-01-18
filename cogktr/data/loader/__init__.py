@@ -12,4 +12,5 @@ __all__=[
     "MOBILEWIKIDATA5MLoader",
     "EVENTKG2MLoader",
     "CSKGLoader",
+    "COGNET680KLoader",
 ]
