@@ -20,24 +20,18 @@ class EVENTKG2MProcessor(BaseProcessor):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """
-        super().__init__(node_lut,relation_lut)
+        super().__init__("EVENTKG2M",node_lut,relation_lut,reprocess,
+                         time,type,description,path)
         self.time_lut = time_lut
-        self.time=time
-        self.type=type
-        self.description=description
-        self.path=path
-        self.reprocess=reprocess
+        self.time_vocab = time_lut.vocab
+
+        self.time_unit = time_unit
         self.pre_training_model_name = pretrain_model_name
         self.token_length = token_len
-
-        self.processed_path=node_lut.processed_path
-        self.time_vocab = time_lut.vocab
+        self.path_len = path_len
         self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
         self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
-        self.time_unit=time_unit
-        self.path_len=path_len
-        self.node_lut=node_lut
-        self.relation_lut=relation_lut
+
         self.node_type_vocab = Vocabulary()
         self.relation_type_vocab = Vocabulary()
         self.node_type_vocab.buildVocab(list(self.node_lut.data['type']))

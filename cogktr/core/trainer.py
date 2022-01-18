@@ -3,10 +3,14 @@ import os
 import time
 import sys
 import torch
+import random
+import numpy as np
 from tqdm import tqdm
 import torch.utils.data as Data
 # from accelerate import Accelerator
 from cogktr.core import DataLoaderX
+import matplotlib.pyplot as plt
+from openTSNE import TSNE
 from torch.utils.tensorboard import SummaryWriter
 from ..utils.kr_utils import cal_output_path
 from .log import save_logger
@@ -71,8 +75,18 @@ class Kr_Trainer(object):
         self.metric_final_model=metric_final_model
         self.save_final_model=save_final_model
 
+        self.data_name=train_dataset.data_name
+
+
+        self.visual_num=100 #降维可视化的样本个数
+        if self.lookuptable_E.type is not None:
+            self.visual_type=self.lookuptable_E.type[:self.visual_num].numpy()
+        else:
+            self.visual_type = np.arctan2(np.random.normal(0, 2, self.visual_num),
+                                          np.random.normal(0, 2, self.visual_num))
+
         #Set output_path
-        output_path=os.path.join(output_path,"kr","EVENTKG2M")
+        output_path=os.path.join(output_path,"kr",self.data_name)
         self.output_path = cal_output_path(output_path, self.model.name)
         self.output_path=self.output_path+"--{}epochs".format(self.epoch)
         if not os.path.exists(self.output_path):
@@ -238,6 +252,16 @@ class Kr_Trainer(object):
             if self.visualization :
                 self.writer.add_scalars("Loss", {"train_loss": train_epoch_loss,
                                                  "valid_loss": valid_epoch_loss}, current_epoch)
+                # img = np.zeros((3, 100, 100))
+                # img[0] = np.arange(0, 10000).reshape(100, 100) / 10000
+                # img[1] = 1 - np.arange(0, 10000).reshape(100, 100) / 10000
+                # self.writer.add_image("Dimensionality reduction image", img, current_epoch)
+                # image=np.ones((64,64,3))*random.randint(255)
+                # self.writer.add_image("Dimensionality reduction image", image,current_epoch , dataformats='HWC')
+                embedding=self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
+                embedding=TSNE(negative_gradient_method="bh").fit(embedding)
+                plt.scatter(embedding[:,0],embedding[:,1],c=self.visual_type)
+                plt.show()
                 if epoch == 0:
                     fake_data = torch.zeros(self.trainer_batch_size, 3).long()
                     self.writer.add_graph(self.model.cpu(), fake_data)

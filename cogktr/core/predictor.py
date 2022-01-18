@@ -9,6 +9,7 @@ import torch.nn.functional as F
 from mongoengine import StringField, IntField, FloatField, BooleanField, DateTimeField, Document
 from mongoengine import connect
 from mongoengine.queryset.visitor import Q
+from openTSNE import TSNE
 from tqdm import tqdm
 
 
@@ -27,7 +28,6 @@ class Kr_Predictior:
                  predict_top_k=50):
         """
         三元组链接预测
-
         :param model: 模型
         :param pretrained_model_path: 知识表示预训练模型路径
         :param model_name: 模型名字
@@ -183,7 +183,6 @@ class Kr_Predictior:
     def fuzzy_query_node_keyword(self, node_keyword=None):
         """
         模糊查询节点名字
-
         :param node_keyword: 输入节点名字,如果输入为空，则返回10个范例
         :return: 模糊节点列表
         """
@@ -191,32 +190,30 @@ class Kr_Predictior:
             node_keyword = ''
         # entities = Entity.objects(Q(name__contains=node_keyword) | Q(
         #     description__contains=node_keyword))
-        entities = Entity.objects(name__contains=node_keyword)
+        entities = Entity.objects(name__contains=str(node_keyword)).limit(self.fuzzy_query_top_k)
         results = []
-        for i in range(min(self.fuzzy_query_top_k, len(entities))):
-            results.append(entities[i].to_dict())
+        for entity in entities:
+            results.append(entity.to_dict())
         return results
 
     def fuzzy_query_relation_keyword(self, relation_keyword=None):
         """
         模糊查询关系名字
-
         :param relation_keyword: 输入关系名字，如果输入为空，则返回10个范例
         :return: 模糊关系列表
         """
         if relation_keyword is None:
             relation_keyword = ''
-        relations = Relation.objects(Q(name__contains=relation_keyword) | Q(
-            summary__contains=relation_keyword))
+        relations = Relation.objects(Q(name__contains=str(relation_keyword)) | Q(
+            summary__contains=str(relation_keyword))).limit(self.fuzzy_query_top_k)
         results = []
-        for i in range(min(self.fuzzy_query_top_k, len(relations))):
-            results.append(relations[i].to_dict())
+        for relation in relations:
+            results.append(relation.to_dict())
         return results
 
     def predict_similar_node(self, node_id):
         """
         预测相似的节点
-
         :param node_id: 输入节点id
         :return: similar_node_list 相似节点列表
         """
@@ -227,6 +224,7 @@ class Kr_Predictior:
         value = value[1:]
         index = index[1:]
         similar_node_list = []
+        value = to_confidence(value)
         for i in range(self.predict_top_k):
             id = str(int(index[i]))
             item = copy.deepcopy(self.detailed_node_dict[id])
@@ -238,7 +236,6 @@ class Kr_Predictior:
         """
         根据头节点和关系预测尾节点
         如果关系为空，则遍历所有关系，计算出每种关系得分最高的，选出前topk个节点
-
         :param head_id: 输入头节点id
         :param relation_id: 输入关系id
         :return: tail_list 尾实体列表
@@ -261,6 +258,7 @@ class Kr_Predictior:
                 tail_index = torch.tensor(tail_index_list)
                 value, relation_index = torch.topk(score, self.predict_top_k, largest=False)
                 tail_list = []
+                value = to_confidence(value)
                 for i in range(self.predict_top_k):
                     tail_id = int(tail_index[i])
                     relation_id = int(relation_index[i])
@@ -279,6 +277,7 @@ class Kr_Predictior:
             distance = self.model(triplet_id_matric)
             value, index = torch.topk(distance, self.predict_top_k, largest=False)
             tail_list = []
+            value = to_confidence(value)
             for i in range(self.predict_top_k):
                 tail_id = int(index[i])
                 item = copy.deepcopy(self.detailed_node_dict[str(tail_id)])
@@ -294,7 +293,6 @@ class Kr_Predictior:
         """
         根据尾节点和关系预测头节点
         如果关系为空，则遍历所有关系，计算出每种关系得分最高的，选出前topk个节点
-
         :param tail_id: 输入尾节点id
         :param relation_id: 输入关系id
         :return: head_list 头节点列表
@@ -317,6 +315,7 @@ class Kr_Predictior:
                 head_index = torch.tensor(head_index_list)
                 value, relation_index = torch.topk(score, self.predict_top_k, largest=False)
                 head_list = []
+                value = to_confidence(value)
                 for i in range(self.predict_top_k):
                     head_id = int(head_index[i])
                     relation_id = int(relation_index[i])
@@ -335,6 +334,7 @@ class Kr_Predictior:
             distance = self.model(triplet_id_matric)
             value, index = torch.topk(distance, self.predict_top_k, largest=False)
             node_list = []
+            value = to_confidence(value)
             for i in range(self.predict_top_k):
                 head_id = int(index[i])
                 item = copy.deepcopy(self.detailed_node_dict[str(head_id)])
@@ -349,7 +349,6 @@ class Kr_Predictior:
     def predict_relation(self, head_id, tail_id):
         """
         根据头节点和尾节点预测关系
-
         :param head_id: 输入头节点id
         :param tail_id: 输入尾节点id
         :return: relation_list 关系列表
@@ -362,6 +361,7 @@ class Kr_Predictior:
         distance = self.model(triplet_id_matric)
         value, index = torch.topk(distance, self.predict_top_k, largest=False)
         relation_list = []
+        value = to_confidence(value)
         for i in range(self.predict_top_k):
             relation_id = int(index[i])
             item = copy.deepcopy(self.detailed_relation_dict[str(relation_id)])
@@ -372,6 +372,29 @@ class Kr_Predictior:
             relation_list.append(item)
 
         return relation_list
+
+    def show_img(self, node_id, visual_num=1000, filt=True):
+        node_embedding = torch.unsqueeze(self.model.entity_embedding_base(torch.tensor(node_id).to(self.device)), dim=0)
+        distance = F.pairwise_distance(node_embedding, self.all_node_embedding, p=2)
+        value, index = torch.topk(distance, visual_num, largest=False)
+        embedding = self.model.entity_embedding_base.weight.data[index].clone().cpu().numpy()
+        embedding = TSNE(negative_gradient_method="bh").fit(embedding)
+        label_dict = defaultdict(dict)
+        label_set = set()
+        for i in range(visual_num):
+            id = str(int(index[i]))
+            item = copy.deepcopy(self.detailed_node_dict[id])
+            if item["type"] not in label_set:
+                label_dict[item["type"]]["label"] = item["type"]
+                label_set.add(item["type"])
+                label_dict[item["type"]]["data"] = list()
+            label_dict[item["type"]]["data"].append(
+                {"x": embedding[i][0], "y": embedding[i][1], "name": item["name"], "confidence": value[i].item()})
+        visual_list = list()
+        for key, value in label_dict.items():
+            visual_list.append(value)
+
+        return visual_list
 
 
 class Entity(Document):
@@ -415,3 +438,9 @@ def to_dict_helper(obj):
         else:
             return_data.append((field_name, data))
     return dict(return_data)
+
+
+def to_confidence(value):
+    min_value = torch.min(value)
+    max_value = torch.max(value)
+    return 1 - (value - min_value) / (max_value - min_value)

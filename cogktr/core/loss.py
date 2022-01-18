@@ -54,13 +54,14 @@ class NegSamplingLoss:
         n_score: (batch * neg_per_pos,)
         return: tensor form scalar
         """
-        n_score = torch.cat(
-            [torch.unsqueeze(n_score[i * self.neg_per_pos:(i + 1) * self.neg_per_pos], dim=1)
-             for i in range(int(n_score.shape[0] / self.neg_per_pos))]
-            , dim=-1
-        )  # tensor(neg_per_pos,batch)
+        # n_score = torch.cat(
+        #     [torch.unsqueeze(n_score[i * self.neg_per_pos:(i + 1) * self.neg_per_pos], dim=1)
+        #      for i in range(int(n_score.shape[0] / self.neg_per_pos))]
+        #     , dim=-1
+        # )  # tensor(neg_per_pos,batch)
+        # n_score = n_score.transpose(0, 1)  # tensor(batch,neg_per_pos)
 
-        n_score = n_score.transpose(0, 1)  # tensor(batch,neg_per_pos)
+        n_score = n_score.reshape(self.neg_per_pos,-1).T  #add
         n_log_score = torch.log(torch.sigmoid(n_score - self.margin))
         n_prob = torch.exp(self.alpha * n_score) / torch.sum(torch.exp(self.alpha * n_score), dim=-1,
                                                              keepdim=True)  # (batch,neg_per_pos)
