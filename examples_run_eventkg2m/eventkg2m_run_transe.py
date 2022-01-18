@@ -13,7 +13,7 @@ node_lut, relation_lut ,time_lut= loader.load_all_lut()
 
 processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,
                                reprocess=True,
-                               type=False,time=False,description=False,path=False,
+                               type=True,time=False,description=False,path=False,
                                time_unit="year",
                                pretrain_model_name="roberta-base",token_len=10,
                                path_len=10)
