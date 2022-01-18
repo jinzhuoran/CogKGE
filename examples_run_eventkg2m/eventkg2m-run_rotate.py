@@ -1,7 +1,7 @@
 import os
 import sys
-sys.path.append('/home/zhuoran/code/CogKTR/')
-sys.path.append('/home/zhuoran/CogKTR/')
+sys.path.append('/home/zhuoran/code/CogKGE/')
+sys.path.append('/home/zhuoran/CogKGE/')
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
 sys.path.append(os.path.split(rootPath)[0])
@@ -12,7 +12,7 @@ from torch.utils.data import RandomSampler
 
 from cogktr import *
 
-device = init_cogktr(device_id="3", seed=1)
+device = init_cogktr(device_id="4", seed=1)
 
 loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
