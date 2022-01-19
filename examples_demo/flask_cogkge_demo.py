@@ -5,9 +5,8 @@ sys.path.append("..")
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_url_path='')
 app.config['JSON_AS_ASCII'] = False
-app = Flask(__name__)
 cors = CORS(app)
 
 
@@ -96,7 +95,7 @@ def predict_head():
 if __name__ == "__main__":
     from cogktr import *
 
-    device = init_cogktr(device_id="9", seed=1)
+    device = init_cogktr(device_id="8", seed=1)
 
     loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
     train_data, valid_data, test_data = loader.load_all_data()
