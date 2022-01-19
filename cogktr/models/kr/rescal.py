@@ -11,8 +11,6 @@ class Rescal(nn.Module):
         self.relation_dict_len = relation_dict_len
         self.entity_embedding = nn.Embedding(entity_dict_len, embedding_dim)
         self.relation_embedding = nn.Embedding(relation_dict_len, embedding_dim * embedding_dim)
- 
-
         nn.init.xavier_uniform_(self.entity_embedding.weight.data)
         nn.init.xavier_uniform_(self.relation_embedding.weight.data)
 

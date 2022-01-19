@@ -1,5 +1,6 @@
 import os
 import sys
+
 sys.path.append('/home/zhuoran/code/CogKTR/')
 sys.path.append('/home/zhuoran/CogKTR/')
 curPath = os.path.abspath(os.path.dirname(__file__))
@@ -11,7 +12,7 @@ import torch
 from torch.utils.data import RandomSampler
 
 from cogktr import *
-from cogktr.models.kr.distmult import DistMult
+from cogktr.models.kr.complex import ComplEx
 
 device = init_cogktr(device_id="7", seed=1)
 
@@ -39,7 +40,7 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = DistMult(entity_dict_len=len(node_lut),
+model = ComplEx(entity_dict_len=len(node_lut),
                  relation_dict_len=len(relation_lut),
                  embedding_dim=100)
 

@@ -8,7 +8,7 @@ from flask_cors import CORS
 app = Flask(__name__, static_url_path='/static')
 app.config['JSON_AS_ASCII'] = False
 app = Flask(__name__)
-cors = CORS(app)
+# cors = CORS(app)
 
 
 # CORS(app, resources={r"/*": {"origins": "*"}}, send_wildcard=True, supports_credentials=True)

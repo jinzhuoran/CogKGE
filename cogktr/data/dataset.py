@@ -1,8 +1,9 @@
-from torch.utils.data import Dataset
 import torch
+from torch.utils.data import Dataset
+
 
 class Cog_Dataset(Dataset):
-    def __init__(self, data, task,descriptions=None):
+    def __init__(self, data, task, descriptions=None):
         """
 
         :param data: numpy array  (len,5) or (len,3)
@@ -11,7 +12,7 @@ class Cog_Dataset(Dataset):
         self.data = data
         self.task = task
         self.descriptions = descriptions
-        self.data_name=None
+        self.data_name = 'dataset'
 
     def __len__(self):
         return self.data.shape[0]
@@ -21,7 +22,7 @@ class Cog_Dataset(Dataset):
             if not self.descriptions:
                 return torch.tensor(self.data[index], dtype=torch.long)
             else:
-                return [torch.tensor(self.data[index], dtype=torch.long),*[
+                return [torch.tensor(self.data[index], dtype=torch.long), *[
                     self.descriptions[i][index] for i in range(len(self.descriptions))
                 ]]
 
