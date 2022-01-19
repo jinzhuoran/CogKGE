@@ -14,7 +14,7 @@ from torch.utils.data import RandomSampler
 from cogktr import *
 from cogktr.models.kr.complex import ComplEx
 
-device = init_cogktr(device_id="7", seed=1)
+device = init_cogktr(device_id="2", seed=1)
 
 loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -41,8 +41,8 @@ valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
 model = ComplEx(entity_dict_len=len(node_lut),
-                 relation_dict_len=len(relation_lut),
-                 embedding_dim=100)
+                relation_dict_len=len(relation_lut),
+                embedding_dim=50)
 
 loss = MarginLoss(margin=1.0, C=0)
 
@@ -80,7 +80,7 @@ trainer = Kr_Trainer(
     log=True,
     trainer_batch_size=100000,
     epoch=3000,
-    visualization=1,
+    visualization=False,
     apex=True,
     dataloaderX=True,
     num_workers=4,
