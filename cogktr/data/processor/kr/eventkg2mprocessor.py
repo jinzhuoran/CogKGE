@@ -1,11 +1,13 @@
-from transformers import RobertaTokenizer
-from transformers import RobertaModel
-from ...dataset import Cog_Dataset
-from .baseprocessor import BaseProcessor
-from tqdm import tqdm
-import torch
-import pickle
 import os
+import pickle
+
+import torch
+from tqdm import tqdm
+from transformers import RobertaModel
+from transformers import RobertaTokenizer
+
+from .baseprocessor import BaseProcessor
+from ...dataset import Cog_Dataset
 from ...lut import LookUpTable
 from ...vocabulary import Vocabulary
 
@@ -13,15 +15,15 @@ from ...vocabulary import Vocabulary
 class EVENTKG2MProcessor(BaseProcessor):
     def __init__(self, node_lut, relation_lut, time_lut,
                  reprocess,
-                 time,type,description,path,
+                 time, type, description, path,
                  time_unit,
-                 pretrain_model_name,token_len,
+                 pretrain_model_name, token_len,
                  path_len):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """
-        super().__init__("EVENTKG2M",node_lut,relation_lut,reprocess,
-                         time,type,description,path)
+        super().__init__("EVENTKG2M", node_lut, relation_lut, reprocess,
+                         time, type, description, path)
         self.time_lut = time_lut
         self.time_vocab = time_lut.vocab
 
@@ -29,8 +31,6 @@ class EVENTKG2MProcessor(BaseProcessor):
         self.pre_training_model_name = pretrain_model_name
         self.token_length = token_len
         self.path_len = path_len
-        self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
-        self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
 
         self.node_type_vocab = Vocabulary()
         self.relation_type_vocab = Vocabulary()
@@ -40,14 +40,17 @@ class EVENTKG2MProcessor(BaseProcessor):
         preprocessed_node_lut_file = os.path.join(self.processed_path, "processed_node_lut.pkl")
         preprocessed_relation_lut_file = os.path.join(self.processed_path, "processed_relation_lut.pkl")
 
-        if not self.reprocess and os.path.exists(preprocessed_node_lut_file) and os.path.exists(preprocessed_relation_lut_file):
+        if not self.reprocess and os.path.exists(preprocessed_node_lut_file) and os.path.exists(
+                preprocessed_relation_lut_file):
             self.node_lut = LookUpTable()
             self.node_lut.read_from_pickle(preprocessed_node_lut_file)
             self.relation_lut = LookUpTable()
             self.relation_lut.read_from_pickle(preprocessed_relation_lut_file)
 
         if self.description:
-            if self.reprocess or not os.path.exists(preprocessed_node_lut_file) :
+            self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
+            self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
+            if self.reprocess or not os.path.exists(preprocessed_node_lut_file):
                 tokens_list = []
                 masks_list = []
                 for i in tqdm(range(len(self.node_lut))):
@@ -63,61 +66,57 @@ class EVENTKG2MProcessor(BaseProcessor):
                     masks_list.append(encoded_text['attention_mask'])
                 self.node_lut.add_column(tokens_list, "input_ids")
                 self.node_lut.add_column(masks_list, "attention_mask")
-                self.node_lut.add_token(torch.cat(tokens_list,dim=0))
-                self.node_lut.add_mask(torch.cat(masks_list,dim=0))
+                self.node_lut.add_token(torch.cat(tokens_list, dim=0))
+                self.node_lut.add_mask(torch.cat(masks_list, dim=0))
                 self.node_lut.save_to_pickle(preprocessed_node_lut_file)
 
         if self.type:
             if self.reprocess or not os.path.exists(preprocessed_node_lut_file):
-                node_type_list=[]
+                node_type_list = []
                 for i in tqdm(range(len(node_lut))):
-                    label=self.node_lut["type"][i]
-                    label_id=torch.unsqueeze(torch.tensor(self.node_type_vocab.word2idx[label]),dim=0)
+                    label = self.node_lut["type"][i]
+                    label_id = torch.unsqueeze(torch.tensor(self.node_type_vocab.word2idx[label]), dim=0)
                     node_type_list.append(label_id)
-                self.node_lut.add_type(torch.cat(node_type_list,dim=0))
+                self.node_lut.add_type(torch.cat(node_type_list, dim=0))
                 self.node_lut.save_to_pickle(preprocessed_node_lut_file)
 
-
-
-
             if self.reprocess or not os.path.exists(preprocessed_relation_lut_file):
-                relation_type_list=[]
+                relation_type_list = []
                 for i in tqdm(range(len(self.relation_lut))):
-                    label=self.relation_lut["name"][i]
-                    label_id=torch.unsqueeze(torch.tensor(self.relation_type_vocab.word2idx[label]),dim=0)
+                    label = self.relation_lut["name"][i]
+                    label_id = torch.unsqueeze(torch.tensor(self.relation_type_vocab.word2idx[label]), dim=0)
                     relation_type_list.append(label_id)
-                self.relation_lut.add_type(torch.cat(relation_type_list,dim=0))
+                self.relation_lut.add_type(torch.cat(relation_type_list, dim=0))
                 self.relation_lut.save_to_pickle(preprocessed_relation_lut_file)
 
         if self.time:
-            if time_unit=="day":
+            if time_unit == "day":
                 pass
-            if time_unit=="month":
-                time_list=[]
-                month_time_vocab=Vocabulary()
+            if time_unit == "month":
+                time_list = []
+                month_time_vocab = Vocabulary()
                 for key in tqdm(self.time_lut.vocab.word2idx.keys()):
-                    if key=='-1':
+                    if key == '-1':
                         time_list.append(-1)
                     else:
                         time_list.append(key[:7])
                 month_time_vocab.buildVocab(time_list)
-                self.time_vocab=month_time_vocab
-                self.time_lut.vocab=month_time_vocab
-            if time_unit=="year":
-                time_list=[]
-                day_time_vocab=Vocabulary()
+                self.time_vocab = month_time_vocab
+                self.time_lut.vocab = month_time_vocab
+            if time_unit == "year":
+                time_list = []
+                day_time_vocab = Vocabulary()
                 for key in tqdm(self.time_lut.vocab.word2idx.keys()):
-                    if key==-1:
+                    if key == -1:
                         time_list.append(-1)
                     else:
                         time_list.append(key[:4])
                 day_time_vocab.buildVocab(time_list)
-                self.time_vocab=day_time_vocab
-                self.time_lut.vocab=day_time_vocab
+                self.time_vocab = day_time_vocab
+                self.time_lut.vocab = day_time_vocab
 
         if self.path:
             pass
-
 
     def _datable2numpy(self, data):
         """
@@ -125,46 +124,44 @@ class EVENTKG2MProcessor(BaseProcessor):
         :param data: datable (dataset_len,5)
         :return: numpy array
         """
-        data.str2idx("head",self.node_vocab)
-        data.str2idx("tail",self.node_vocab)
-        data.str2idx("relation",self.relation_vocab)
+        data.str2idx("head", self.node_vocab)
+        data.str2idx("tail", self.node_vocab)
+        data.str2idx("relation", self.relation_vocab)
         if self.time:
-            if self.time_unit=="month":
-                data.data["start"]=data.data.apply(lambda x: x["start"][:7], axis = 1)
-                data.data["end"]=data.data.apply(lambda x: x["end"][:7], axis = 1)
-            if self.time_unit=="year":
-                data.data["start"]=data.data.apply(lambda x: x["start"][:4], axis = 1)
-                data.data["end"]=data.data.apply(lambda x: x["end"][:4], axis = 1)
+            if self.time_unit == "month":
+                data.data["start"] = data.data.apply(lambda x: x["start"][:7], axis=1)
+                data.data["end"] = data.data.apply(lambda x: x["end"][:7], axis=1)
+            if self.time_unit == "year":
+                data.data["start"] = data.data.apply(lambda x: x["start"][:4], axis=1)
+                data.data["end"] = data.data.apply(lambda x: x["end"][:4], axis=1)
                 # for index,row in tqdm(data.data.iterrows(),total=data.data.shape[0]):
                 #     data.data.loc[index,"start"]=row["start"][:4]
                 #     data.data.loc[index,"end"]=row["end"][:4]
 
-        data.str2idx("start",self.time_vocab)
-        data.str2idx("end",self.time_vocab)
+        data.str2idx("start", self.time_vocab)
+        data.str2idx("end", self.time_vocab)
         return data.to_numpy()
 
     def process(self, data):
-        path=os.path.join(self.processed_path,"{}_dataset.pkl".format(data.data_type))
+        path = os.path.join(self.processed_path, "{}_dataset.pkl".format(data.data_type))
         if os.path.exists(path) and not self.reprocess:
             print("load {} dataset".format(data.data_type))
-            with open(path,"rb") as new_file:
-                new_data=pickle.loads(new_file.read())
+            with open(path, "rb") as new_file:
+                new_data = pickle.loads(new_file.read())
             return new_data
         else:
             data = self._datable2numpy(data)
             if not self.time:
-                data=data[:,:3]
-            dataset=Cog_Dataset(data, task='kr')
-            file=open(path ,"wb")
+                data = data[:, :3]
+            dataset = Cog_Dataset(data, task='kr')
+            file = open(path, "wb")
             file.write(pickle.dumps(dataset))
             file.close()
 
             return dataset
 
     def process_lut(self):
-        return self.node_lut,self.relation_lut,self.time_lut
-
-
+        return self.node_lut, self.relation_lut, self.time_lut
 
         # head_input_ids = []
         # head_attention_mask = []
@@ -202,10 +199,6 @@ class EVENTKG2MProcessor(BaseProcessor):
         # file.close()
         #
         # return dataset
-
-
-
-
 
 # from ...dataset import Cog_Dataset
 # class EVENTKGProcessor:
