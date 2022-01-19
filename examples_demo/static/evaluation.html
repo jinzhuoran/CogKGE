@@ -109,7 +109,9 @@
 
                             <ul class="tab-nav clearfix ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header" role="tablist">
                                 <li role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active" aria-controls="tabs-tail-entity" aria-labelledby="ui-id-tail-entity" aria-selected="true" aria-expanded="true"><a href="#tabs-tail-entity" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-tail-entity">Predict Tail Entity</a></li>
-                                <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-entity-relation" aria-labelledby="ui-id-entity-relation" aria-selected="false" aria-expanded="false"><a href="#tabs-entity-relation" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-entity-relation">Predict Relation</a></li>
+                                <li role="tab" tabindex="1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-entity-relation" aria-labelledby="ui-id-entity-relation" aria-selected="false" aria-expanded="false"><a href="#tabs-entity-relation" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-entity-relation">Predict Relation</a></li>
+                                <li role="tab" tabindex="2" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-head-entity"" aria-labelledby="ui-id-head-entity"" aria-selected="false" aria-expanded="false"><a href="#tabs-head-entity"" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-head-entity">Predict Head Entity</a></li>
+                                <li role="tab" tabindex="3" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-similar-entity"" aria-labelledby="ui-id-similar-entity"" aria-selected="false" aria-expanded="false"><a href="#tabs-similar-entity"" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-similar-entity">Predict Similar Entity</a></li>
                             </ul>
 
                             <div class="tab-container">
@@ -134,11 +136,11 @@
                                 <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-entity-relation" aria-labelledby="ui-id-entity-relation" role="tabpanel" aria-hidden="true" style="display: none;">
                                     <div class="row col-mb-50 mb-0">
                                         <div class="col-md-5">
-                                            <h7>Select An Entity</h7>
+                                            <h7>Select A Head Entity</h7>
                                             <select id="entity_select_2" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
                                         </div>
                                         <div class="col-md-5">
-                                            <h7>Select Another Entity</h7>
+                                            <h7>Select A Tail Entity</h7>
                                             <select id="entity_select_3" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
                                         </div>
                                         <div class="col-md-2">    
@@ -146,6 +148,38 @@
                                         </div>
                                     </div>
 									<div id="predict_relation_result" class="row mb-0">
+									</div>
+                                </div>
+                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-head-entity" aria-labelledby="ui-id-head-entity" role="tabpanel" aria-hidden="true" style="display: none;">
+                                    <div class="row col-mb-50 mb-0">
+                                        <div class="col-md-5">
+                                            <h7>Select A Relation</h7>
+                                            <select id="relation_select_2" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h7>Select A Tail Entity</h7>
+                                            <select id="entity_select_4" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
+                                        </div>
+                                        <div class="col-md-2">    
+                                            <a href="#" onclick="predict_head()" class="button button-3d button-rounded gradient-horizon"><i class="icon-beaker"></i>Predict</a>
+                                        </div>
+                                    </div>
+									<div id="predict_head_result" class="row mb-0">
+									</div>
+                                </div>
+                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-similar-entity" aria-labelledby="ui-id-similar-entity" role="tabpanel" aria-hidden="true" style="display: none;">
+                                    <div class="row col-mb-50 mb-0">
+                                        <div class="col-md-5">
+                                            <h7>Select An Entity</h7>
+                                            <select id="entity_select_5" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
+                                        </div>
+                                        <div class="col-md-5">
+                                        </div>
+                                        <div class="col-md-2">    
+                                            <a href="#" onclick="predict_similar()" class="button button-3d button-rounded gradient-horizon"><i class="icon-beaker"></i>Predict</a>
+                                        </div>
+                                    </div>
+									<div id="predict_similar_result" class="row mb-0">
 									</div>
                                 </div>
                             </div>
@@ -221,12 +255,17 @@
         var relation_select_1 = $("#relation_select_1");
         var entity_select_2 = $("#entity_select_2");
         var entity_select_3 = $("#entity_select_3");
+        var relation_select_2 = $("#relation_select_2");
+        var entity_select_4 = $("#entity_select_4");
+        var entity_select_5 = $("#entity_select_5");
         var col_width = 3;
+        var urlHost = ""; if (window.location.href.startsWith("file:///")) { urlHost = "http://210.75.240.136:5050/" }
+			
         jQuery(document).ready( function($){
             entity_select_1.select2({
-                placeholder: 'Input and select an entity',
+                placeholder: 'Search and select a head entity',
                 ajax: {
-                    url: 'http://210.75.240.136:5050/fuzzy_query_node',
+                    url: urlHost + 'fuzzy_query_node',
                     data: function (params) {
                         var query = {
                             keyword: params.term
@@ -247,9 +286,9 @@
                 }
             })
             entity_select_2.select2({
-                placeholder: 'Input and select an entity',
+                placeholder: 'Search and select a head entity',
                 ajax: {
-                    url: 'http://210.75.240.136:5050/fuzzy_query_node',
+                    url: urlHost + 'fuzzy_query_node',
                     data: function (params) {
                         var query = {
                             keyword: params.term
@@ -270,9 +309,55 @@
                 }
             })
             entity_select_3.select2({
-                placeholder: 'Input and select an entity',
+                placeholder: 'Search and select a tail entity',
                 ajax: {
-                    url: 'http://210.75.240.136:5050/fuzzy_query_node',
+                    url: urlHost + 'fuzzy_query_node',
+                    data: function (params) {
+                        var query = {
+                            keyword: params.term
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        var result_list = []
+                        for(var i in data){
+                            var entity = data[i];
+                            result_list.push({id:entity["idd"],text:entity["name"]})
+                        }
+                        return {
+                            results: result_list
+                        };
+                    }
+                }
+            })
+            entity_select_4.select2({
+                placeholder: 'Search and select a tail entity',
+                ajax: {
+                    url: urlHost + 'fuzzy_query_node',
+                    data: function (params) {
+                        var query = {
+                            keyword: params.term
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        var result_list = []
+                        for(var i in data){
+                            var entity = data[i];
+                            result_list.push({id:entity["idd"],text:entity["name"]})
+                        }
+                        return {
+                            results: result_list
+                        };
+                    }
+                }
+            })
+            entity_select_5.select2({
+                placeholder: 'Search and select an entity',
+                ajax: {
+                    url: urlHost + 'fuzzy_query_node',
                     data: function (params) {
                         var query = {
                             keyword: params.term
@@ -293,9 +378,33 @@
                 }
             })
             relation_select_1.select2({
-                placeholder: 'Input and select an entity',
+                placeholder: 'Search and select a relation',
                 ajax: {
-                    url: 'http://210.75.240.136:5050/fuzzy_query_relation',
+                    url: urlHost + 'fuzzy_query_relation',
+                    dataType: "json",
+                    data: function (params) {
+                        var query = {
+                            keyword: params.term
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        var result_list = []
+                        for(var i in data){
+                            var entity = data[i];
+                            result_list.push({id:entity["idd"],text:entity["name"]})
+                        }
+                        return {
+                            results: result_list
+                        };
+                    }
+                }
+            })
+            relation_select_2.select2({
+                placeholder: 'Search and select a relation',
+                ajax: {
+                    url: urlHost + 'fuzzy_query_relation',
                     dataType: "json",
                     data: function (params) {
                         var query = {
@@ -349,7 +458,7 @@
 				$.ajax({
 					type: "post",
 					async: true,
-					url: 'http://210.75.240.136:5050/predict_tail',
+					url: urlHost + 'predict_tail',
 					dataType: "json",
 					data: {"head_id": head_data[0].id,"relation_id":relation_data[0].id},
 					success: function (json) {
@@ -381,7 +490,7 @@
 				$.ajax({
 					type: "post",
 					async: true,
-					url: 'http://210.75.240.136:5050/predict_relation',
+					url: urlHost + 'predict_relation',
 					dataType: "json",
 					data: {"head_id": head_data[0].id,"tail_id":tail_data[0].id},
 					success: function (json) {
@@ -399,6 +508,69 @@
 							}
 						}
 						$("#predict_relation_result").html(result_rows);
+						SEMICOLON.widget.toggles();//初始化弹出
+					},
+					error: function () {
+					}
+				});
+			}
+		}
+        function predict_head(){
+			var relation_data = relation_select_2.select2("data");
+			var tail_data = entity_select_4.select2("data");
+			if(relation_data.length > 0 && tail_data.length > 0){
+				$.ajax({
+					type: "post",
+					async: true,
+					url: urlHost + 'predict_head',
+					dataType: "json",
+					data: {"relation_id": relation_data[0].id,"tail_id":tail_data[0].id},
+					success: function (json) {
+						var result_rows = "";
+						for(var i = 0,col_index = 0; i < json.length; i ++){
+							var current_data = json[i];
+							if(col_index = 0){
+								result_rows += '<div class="row col-mb-50 mb-0">';
+							}
+							col_index ++;
+							result_rows += obj_to_div(current_data["name"],col_width,current_data)
+							if(col_index * col_width >= 12){
+								result_rows += '</div>';
+								col_index = 0;
+							}
+						}
+						$("#predict_head_result").html(result_rows);
+						SEMICOLON.widget.toggles();//初始化弹出
+					},
+					error: function () {
+					}
+				});
+			}
+		}
+        function predict_similar(){
+			var entity_data = entity_select_5.select2("data");
+			if(entity_data.length > 0){
+				$.ajax({
+					type: "post",
+					async: true,
+					url: urlHost + 'predict_similar_node',
+					dataType: "json",
+					data: {"id": entity_data[0].id},
+					success: function (json) {
+						var result_rows = "";
+						for(var i = 0,col_index = 0; i < json.length; i ++){
+							var current_data = json[i];
+							if(col_index = 0){
+								result_rows += '<div class="row col-mb-50 mb-0">';
+							}
+							col_index ++;
+							result_rows += obj_to_div(current_data["name"],col_width,current_data)
+							if(col_index * col_width >= 12){
+								result_rows += '</div>';
+								col_index = 0;
+							}
+						}
+						$("#predict_similar_result").html(result_rows);
 						SEMICOLON.widget.toggles();//初始化弹出
 					},
 					error: function () {
