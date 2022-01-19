@@ -384,6 +384,8 @@ class Kr_Predictior:
         for i in range(visual_num):
             id = str(int(index[i]))
             item = copy.deepcopy(self.detailed_node_dict[id])
+            if item["type"] == -1 or item["type"] == '-1':
+                item["type"] = 'normal'
             if item["type"] not in label_set:
                 label_dict[item["type"]]["label"] = item["type"]
                 label_set.add(item["type"])
