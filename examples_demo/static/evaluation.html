@@ -116,7 +116,7 @@
                             <div class="col-lg-6 offset-lg-1">
                                 <div>
                                     <h3 class="fw-bolder display-4 mb-3">Link <span class="gradient-text gradient-horizon">Prediction</span></h3>
-                                    <p class="lead mb-0">Input keyword to search entitys.</p>
+                                    <p class="lead mb-0">Use CogKGE to predict head entity, tail entity, relation or similar entity.</p>
                                 </div>
                             </div>
                         </div>
@@ -129,6 +129,7 @@
                                 <li role="tab" tabindex="1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-entity-relation" aria-labelledby="ui-id-entity-relation" aria-selected="false" aria-expanded="false"><a href="#tabs-entity-relation" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-entity-relation">Predict Relation</a></li>
                                 <li role="tab" tabindex="2" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-head-entity"" aria-labelledby="ui-id-head-entity"" aria-selected="false" aria-expanded="false"><a href="#tabs-head-entity"" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-head-entity">Predict Head Entity</a></li>
                                 <li role="tab" tabindex="3" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-similar-entity"" aria-labelledby="ui-id-similar-entity"" aria-selected="false" aria-expanded="false"><a href="#tabs-similar-entity"" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-similar-entity">Predict Similar Entity</a></li>
+                                <li role="tab" tabindex="4" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" aria-controls="tabs-similar-visualization"" aria-labelledby="ui-id-similar-visualization"" aria-selected="false" aria-expanded="false"><a href="#tabs-similar-visualization"" role="presentation" tabindex="-1" class="ui-tabs-anchor" id="ui-id-similar-visualization">Similar Entity Visualization</a></li>
                             </ul>
 
                             <div class="tab-container">
@@ -199,6 +200,26 @@
 									<div id="predict_similar_result" class="row mb-0">
 									</div>
                                 </div>
+                                <div class="tab-content clearfix ui-tabs-panel ui-corner-bottom ui-widget-content" id="tabs-similar-visualization" aria-labelledby="ui-id-similar-visualization" role="tabpanel" aria-hidden="true" style="display: none;">
+                                    <div class="row col-mb-50 mb-0">
+                                        <div class="col-md-5">
+                                            <h7>Select An Entity</h7>
+                                            <select id="entity_select_6" class="select-data-array form-select bottommargin-sm" style="width:100%;"></select>
+                                        </div>
+                                        <div class="col-md-5">
+                                        </div>
+                                        <div class="col-md-2">    
+                                            <a href="#" onclick="similar_visualization()" class="button button-3d button-rounded gradient-horizon"><i class="icon-inbox"></i>Visualise</a>
+                                        </div>
+                                    </div>
+									<div id="similar_visualization_result" class="row mb-0">
+                                        <!-- Charts Area Start -->
+                                        <div class="bottommargin mx-auto" style="max-width: 1150px; min-height: 350px;">
+                                            <canvas id="similar-entity-chart"></canvas>
+                                        <!-- Charts Area End -->
+                                        </div>
+									</div>
+                                </div>
                             </div>
 
                         </div>
@@ -266,6 +287,12 @@
     <!-- Footer Scripts
     ============================================= -->
     <script src="js/functions.js"></script>
+
+    <!-- Charts JS
+	============================================= -->
+	<script src="js/chart.js"></script>
+	<script src="js/chart-utils.js"></script>
+
     <script>
         var data = [{ id: 0, text: 'enhancement' }, { id: 1, text: 'bug' }, { id: 2, text: 'duplicate' }, { id: 3, text: 'invalid' }, { id: 4, text: 'wontfix' }];
         var entity_select_1 = $("#entity_select_1");
@@ -275,6 +302,7 @@
         var relation_select_2 = $("#relation_select_2");
         var entity_select_4 = $("#entity_select_4");
         var entity_select_5 = $("#entity_select_5");
+        var entity_select_6 = $("#entity_select_6");
         var col_width = 3;
         var urlHost = ""; if (window.location.href.startsWith("file:///")) { urlHost = "http://210.75.240.136:5050/" }
 			
@@ -394,6 +422,29 @@
                     }
                 }
             })
+            entity_select_6.select2({
+                placeholder: 'Search and select an entity',
+                ajax: {
+                    url: urlHost + 'fuzzy_query_node',
+                    data: function (params) {
+                        var query = {
+                            keyword: params.term
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        var result_list = []
+                        for(var i in data){
+                            var entity = data[i];
+                            result_list.push({id:entity["idd"],text:entity["name"]})
+                        }
+                        return {
+                            results: result_list
+                        };
+                    }
+                }
+            })
             relation_select_1.select2({
                 placeholder: 'Search and select a relation',
                 ajax: {
@@ -443,9 +494,11 @@
                 }
             })
         });
+
 		function confidence_color(confidence){
 			return "rgba("+166+","+166+","+255+","+confidence+")";
 		}
+
 		function obj_to_div(name,col_width,obj){
 			var div_str = '<div class="col-md-'+col_width+'">';
 				div_str += '<div class="toggle toggle-border" style="background:'+confidence_color(obj["confidence"])+'">';
@@ -595,6 +648,89 @@
 				});
 			}
 		}
+
+        function str_hash_code(str) {
+            var hash = 0, i, chr;
+            if (str.length === 0) return hash;
+            for (i = 0; i < str.length; i++) {
+                chr   = str.charCodeAt(i);
+                hash  = ((hash << 5) - hash) + chr;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return hash;
+        };
+
+        function random_color(str,a){
+            var hash = str_hash_code(str);
+            var r = hash * 1579 % 116 + 120;
+            var g = hash * 1583 % 116 + 120;
+            var b = hash * 1597 % 116 + 120;
+            return "rgba("+r+","+g+","+b+","+a+")";
+        }
+
+		var scatterChartData = {
+			datasets: []
+		};
+        var scatterChart = null;
+
+        function similar_visualization(){
+			var entity_data = entity_select_6.select2("data");
+			if(entity_data.length > 0){
+				$.ajax({
+					type: "post",
+					async: true,
+                    url: urlHost + 'show_img',
+					// url: urlHost + 'predict_similar_node',
+					dataType: "json",
+					data: {"id": entity_data[0].id},
+					success: function (json) {
+                        for(var i in json){
+                            var one_class_json = json[i];
+                            one_class_json["borderColor"] = random_color(one_class_json["label"],1);
+                            one_class_json["backgroundColor"] = random_color(one_class_json["label"],0.2);
+                        }
+                        scatterChartData["datasets"] = json;
+                        const footer = (tooltipItems) => {
+                        let sum = 0;
+
+                        tooltipItems.forEach(function(tooltipItem) {
+                            sum += tooltipItem.parsed.y;
+                        });
+                        return 'Sum: ' + sum;
+                        };
+                        if(scatterChart == null){
+                            var ctx = document.getElementById("similar-entity-chart").getContext("2d");
+                            scatterChart = Chart.Scatter(ctx, {
+                                data: scatterChartData,
+                                options: {
+                                    title: {
+                                        display: true,
+                                        text: 'Entity Embedding Chart'
+                                    },
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function(tooltipItem, data) {
+                                                var class_label = data.datasets[tooltipItem.datasetIndex].label || '';
+                                                console.log(JSON.stringify(tooltipItem))
+                                                var name_label = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].name || '';
+    
+                                                return name_label + "["+class_label+"]" + "("+Math.floor(tooltipItem.xLabel*100)/100+","+Math.floor(tooltipItem.yLabel*100)/100+")";
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }else{
+                            scatterChart.update();
+                        }
+						SEMICOLON.widget.toggles();//初始化弹出
+					},
+					error: function () {
+					}
+				});
+			}
+		}
+
     </script>
 </body>
 </html>
