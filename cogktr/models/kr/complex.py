@@ -37,10 +37,10 @@ class ComplEx(nn.Module):
         )
 
     def get_score(self, triplet_idx):
-        head_embedding, relation_embedding, tail_embedding = self._forward(triplet_idx)  # (batch,3,embedding_dim)
-        re_head, im_head = torch.chunk(head_embedding, 2, dim=2)
-        re_relation, im_relation = torch.chunk(relation_embedding, 2, dim=2)
-        re_tail, im_tail = torch.chunk(tail_embedding, 2, dim=2)
+        head_embedding, relation_embedding, tail_embedding = self._forward(triplet_idx)
+        re_head, im_head = torch.chunk(head_embedding, 2, dim=1)
+        re_relation, im_relation = torch.chunk(relation_embedding, 2, dim=1)
+        re_tail, im_tail = torch.chunk(tail_embedding, 2, dim=1)
 
         if self.mode == 'head-batch':
             re_score = re_relation * re_tail + im_relation * im_tail
@@ -51,7 +51,7 @@ class ComplEx(nn.Module):
             im_score = re_head * im_relation + im_head * re_relation
             score = re_score * re_tail + im_score * im_tail
 
-        score = score.sum(dim=2)
+        score = score.sum(dim=1)
         return score
 
     def get_embedding(self, triplet_idx):
