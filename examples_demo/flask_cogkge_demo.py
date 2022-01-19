@@ -92,6 +92,16 @@ def predict_head():
     return jsonify(predictor.predict_head(tail_id=int(tail_id), relation_id=int(relation_id)))
 
 
+# 可视化降维
+@app.route('/show_img', methods=["GET", "POST"])
+def show_img():
+    if request.method == "POST":
+        id = request.form['id']
+    else:
+        id = request.args['id']
+    return jsonify(predictor.show_img(node_id=int(id), visual_num=100))
+
+
 if __name__ == "__main__":
     from cogktr import *
 
