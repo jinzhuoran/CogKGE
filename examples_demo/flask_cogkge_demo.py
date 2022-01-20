@@ -106,7 +106,7 @@ def show_img():
 if __name__ == "__main__":
     from cogktr import *
 
-    connect('eventkg', host='127.0.0.1', username='cipzhao2022', password='cipzhao2022', port=1234,
+    connect('eventkg', host='127.0.0.1', username='cipzhao2022', password='cipzhao2022', port=12345,
             connect=False)
 
     device = init_cogktr(device_id="8", seed=1)
