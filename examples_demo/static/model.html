@@ -26,7 +26,7 @@
 	<link rel="stylesheet" href="css/recbole.css" type="text/css" />
 	
     <link rel="stylesheet" href="demos/freelancer/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-	<link rel="stylesheet" href="demos/freelancer/css/recbole.css" type="text/css" />
+	<!-- <link rel="stylesheet" href="demos/freelancer/css/recbole.css" type="text/css" /> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <!-- Document Title
 	============================================= -->
@@ -65,14 +65,14 @@
 						<nav class="primary-menu">
 
 							<ul class="menu-container">
-								<li class="menu-item"><a class="menu-link" href="demo-freelancer.html"><div>Home</div></a></li>
+								<li class="menu-item"><a class="menu-link" href="home.html"><div>Home</div></a></li>
 								<li class="menu-item current"><a class="menu-link" href="model.html"><div>Model</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="dataset.html"><div>Dataset</div></a></li>
+								<li class="menu-item"><a class="menu-link" href="home.html"><div>Dataset</div></a></li>
 								<li class="menu-item"><a class="menu-link" href="evaluation.html"><div>Evaluation</div></a></li>
-								<li class="menu-item"><a class="menu-link" href="demo-freelancer-works.html"><div>about</div></a></li>
+								<li class="menu-item"><a class="menu-link" href="http://159.226.21.226/financial_graph/"><div>about</div></a></li>
 								<li class="menu-item"><a class="menu-link" href="https://github.com/jinzhuoran/CogKGE"><div>GitHub</div></a></li>
 								<li class="menu-item"><a class="menu-link" href="#" data-scrollto="#footer" data-easing="easeInOutExpo" data-speed="1250" data-offset="70"><div>Contact</div></a></li>
-
+								
 								<li class="menu-item sub-menu">
 									<a class='menu-link' href="#">
 										<div>
@@ -82,10 +82,10 @@
 									</a>
 									<ul class='sub-menu-container' style>
 										<li class="menu-item" style="">
-											<a class="menu-link" href="demo-freelancer-install.html"><div>Install</div></a>
+											<a class="dropdown-item" href="install.html"><div>Install</div></a>
 										</li>
 										<li class="menu-item" style="">
-											<a class="menu-link" href="#"><div>Quick Start</div></a>
+											<a class="dropdown-item" href="home.html"><div>Quick Start</div></a>
 										</li>
 									</ul>
 											
@@ -104,557 +104,156 @@
 		<!-- Content
 		============================================= -->
 		
+
 		<section class="probootstrap-section">
 			<div class="container mycontent">
 				<br>
 				<h2>Model list</h2>
-				<div class="line2"></div>
-				<p>In the latest version, we implement RecBole recommendation models covering general recommendation,
-					sequential recommendation, context-aware recommendation and knowledge-based recommendation. We summarize
-					the models in the following table:</p>
-				<table class="greyGridTable" style="width: 100%;">
-					<thead>
-						<tr class="header">
-							<th>Category</th>
-							<th style="width: 150px">Model</th>
-							<th style="width: 150px">Conference</th>
-							<th style="width: 150px">Year</th>
-							<th>Paper</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="odd">
-							<td rowspan="25" style="width: 100px"><b> General recommendation</b></td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/pop.html">popularity</a></td>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/itemknn.html">ItemKNN</a></td>
-							<td>TOIS</td>
-							<td>2004</td>
-							<td>《Item-based top-N recommendation algorithms》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/bpr.html">BPR</a></td>
-							<td>UAI</td>
-							<td>2009</td>
-							<td>《BPR: Bayesian Personalized Ranking from Implicit Feedback》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/neumf.html">NeuMF</a></td>
-							<td>WWW</td>
-							<td>2017</td>
-							<td>《Neural Collaborative Filtering》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/convncf.html">ConvNCF</a></td>
-							<td>IJCAI</td>
-							<td>2017</td>
-							<td>《Outer Product-based Neural Collaborative Filtering》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/dmf.html">DMF</a></td>
-							<td>IJCAI</td>
-							<td>2017</td>
-							<td>《Deep Matrix Factorization Models for Recommender Systems》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/fism.html">FISM</a></td>
-							<td>SIGKDD</td>
-							<td>2013</td>
-							<td>《FISM: Factored Item Similarity Models for Top-N Recommender Systems》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/nais.html">NAIS</a></td>
-							<td>TKDE</td>
-							<td>2018</td>
-							<td>《NAIS: Neural Attentive Item Similarity Model for Recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/spectralcf.html">SpectralCF</a></td>
-							<td>RecSys</td>
-							<td>2018</td>
-							<td>《Spectral Collaborative Filtering》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/gcmc.html">GCMC</a></td>
-							<td>SIGKDD</td>
-							<td>2018</td>
-							<td>《Graph Convolutional Matrix Completion》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/ngcf.html">NGCF</a></td>
-							<td>SIGIR</td>
-							<td>2019</td>
-							<td>《Neural Graph Collaborative Filtering》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/lightgcn.html">LightGCN</a></td>
-							<td>SIGIR</td>
-							<td>2020</td>
-							<td>《LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/dgcf.html">DGCF</a></td>
-							<td>SIGIR</td>
-							<td>2020</td>
-							<td>《Disentangled Graph Collaborative Filtering》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/multivae.html">MultiVAE</a></td>
-							<td>WWW</td>
-							<td>2018</td>
-							<td>《Variational&nbsp;Autoencoders&nbsp;for&nbsp;Collaborative&nbsp;Filtering》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/multidae.html">MultiDAE</a></td>
-							<td>WWW</td>
-							<td>2018</td>
-							<td>《Variational&nbsp;Autoencoders&nbsp;for&nbsp;Collaborative&nbsp;Filtering》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/cdae.html">CDAE</a></td>
-							<td>WSDM</td>
-							<td>2016</td>
-							<td>《Collaborative&nbsp;denoising&nbsp;auto-encoders&nbsp;for&nbsp;top-n&nbsp;recommender&nbsp;systems》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/macridvae.html">MacridVAE</a></td>
-							<td>NeurIPS</td>
-							<td>2019</td>
-							<td>《Learning Disentangled Representations for Recommendation》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/line.html">LINE</a></td>
-							<td>WWW</td>
-							<td>2015</td>
-							<td>《Large-scale Information Network Embedding》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/ease.html">EASE</a></td>
-							<td>WWW</td>
-							<td>2019</td>
-							<td>《Embarrassingly Shallow Autoencoders for Sparse Data》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/ract.html">RaCT</a></td>
-							<td>ICLR</td>
-							<td>2020</td>
-							<td>《RaCT: Towards Amortized Ranking-Critical Training for Collaborative Filtering.》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/recvae.html">RecVAE</a></td>
-							<td>WSDM</td>
-							<td>2020</td>
-							<td>《RecVAE: A new variational autoencoder for Top-N recommendations with implicit feedback.》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/nncf.html">NNCF</a></td>
-							<td>CIKM</td>
-							<td>2017</td>
-							<td>《A Neural Collaborative Filtering Model with Interaction-based Neighborhood.》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/general/enmf.html">ENMF</a></td>
-							<td>TOIS</td>
-							<td>2020</td>
-							<td>《Efficient Neural Matrix Factorization without Sampling for Recommendation.》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/general/slimelastic.html">SLIMElastic</a></td>
-							<td>ICDM</td>
-							<td>2011</td>
-							<td>《SLIM: Sparse Linear Methods for Top-N Recommender Systems》</td>
-						</tr>
-	
-						<tr style="background: #FFFFFF;">
-							<td rowspan="19"><b>Context-aware recommendation</b> </td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/context/lr.html">LR</a></td>
-							<td>WWW</td>
-							<td>2007</td>
-							<td style="">《Predicting Clicks Estimating the Click-Through Rate for New Ads》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/context/fm.html">FM</a></td>
-							<td>ICDM</td>
-							<td>2010</td>
-							<td>《Factorization Machines》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/context/nfm.html">NFM</a></td>
-							<td>SIGIR</td>
-							<td>2017</td>
-							<td>《Neural Factorization Machines for Sparse Predictive Analytics》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/context/deepfm.html">DeepFM</a></td>
-							<td>IJCAI</td>
-							<td>2017</td>
-							<td>《DeepFM A Factorization-Machine based Neural Network for CTR Prediction》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/context/xdeepfm.html">xDeepFM</a></td>
-							<td>SIGKDD</td>
-							<td>2018</td>
-							<td>《xDeepFM: Combining Explicit and Implicit Feature Interactions for Recommender Systems》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/context/afm.html">AFM</a></td>
-							<td>IJCAI</td>
-							<td>2017</td>
-							<td>《Attentional Factorization Machines: Learning the Weight of Feature Interactions via
-								Attention Networks》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/context/ffm.html">FFM</a></td>
-							<td>RecSys</td>
-							<td>2016</td>
-							<td>《Field-aware&nbsp;Factorization&nbsp;Machines for CTR Prediction》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/context/fwfm.html">FwFM</a></td>
-							<td>WWW</td>
-							<td>2018</td>
-							<td>《Field-weighted Factorization Machines for Click-Through Rate Prediction in Display
-								Advertising》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/context/fnn.html">FNN(DNN)</a></td>
-							<td>ECIR</td>
-							<td>2016</td>
-							<td>《Deep Learning over Multi-field Categorical Data》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/context/pnn.html">PNN</a></td>
-							<td>ICDM</td>
-							<td>2016</td>
-							<td>《Product-based Neural Networks for User Response Prediction》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/context/dssm.html">DSSM</a></td>
-							<td>CIKM</td>
-							<td>2013</td>
-							<td>《Learning Deep Structured Semantic Models for Web Search using Clickthrough Data》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/context/widedeep.html">Wide&amp;Deep</a></td>
-							<td>RecSys</td>
-							<td>2016</td>
-							<td>《Wide &amp; Deep Learning for Recommender Systems》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/context/din.html">DIN</a></td>
-							<td>SIGKDD</td>
-							<td>2018</td>
-							<td>《Deep Interest Network for Click-Through Rate Prediction》 </td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/context/dcn.html">DCN</a></td>
-							<td>ADKDD</td>
-							<td>2017</td>
-							<td>《Deep &amp; Cross Network for Ad Click Predictions》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/context/autoint.html">AutoInt</a></td>
-							<td>CIKM</td>
-							<td>2019</td>
-							<td>《AutoInt:&nbsp;Automatic&nbsp;Feature&nbsp;Interaction&nbsp;Learning&nbsp;via&nbsp;Self-Attentive Neural Networks》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/context/xgboost.html">XGBoost</a></td>
-							<td>KDD</td>
-							<td>2016</td>
-							<td>《XGBoost: A Scalable Tree Boosting System》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/context/lightgbm.html">LightGBM</a></td>
-							<td>NIPS</td>
-							<td>2017</td>
-							<td>《LightGBM: A Highly Efficient Gradient Boosting Decision Tree》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/context/dien.html">DIEN</a></td>
-							<td>AAAI</td>
-							<td>2019</td>
-							<td>《Deep&nbsp;Interest&nbsp;Evolution&nbsp;Network&nbsp;for&nbsp;Click-Through&nbsp;Rate&nbsp;Prediction》</td>
-						</tr>
-	
-						<tr style="background: #FFFFFF;">
-							<td rowspan="24"><b>Sequential recommendation</b></td>
-						</tr>
-	
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/fpmc.html">FPMC</a></td>
-							<td>WWW</td>
-							<td>2010</td>
-							<td>《Factorizing Personalized Markov Chains for Next-Basket Recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/gru4rec.html">Improved GRU-Rec</a></td>
-							<td>DLRS</td>
-							<td>2016</td>
-							<td>《Improved recurrent neural networks for session-based recommendations》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/narm.html">NARM</a></td>
-							<td>CIKM</td>
-							<td>2017</td>
-							<td>《Neural attentive session-based recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/stamp.html">STAMP</a></td>
-							<td>SIGKDD</td>
-							<td>2018</td>
-							<td>《STAMP: short-term attention/memory priority model for session-based recommendation.》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/caser.html">Caser</a></td>
-							<td>WSDM</td>
-							<td>2018</td>
-							<td>《Personalized Top-N Sequential Recommendation via Convolutional Sequence Embedding》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/nextitnet.html">NextItnet</a></td>
-							<td>WSDM</td>
-							<td>2019</td>
-							<td>《A simple convolutional generative network for next item recommendation》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/transrec.html">TransRec</a></td>
-							<td>RecSys</td>
-							<td>2017</td>
-							<td>《Translation-based Recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/sasrec.html">SASRec</a></td>
-							<td>ICDM</td>
-							<td>2018</td>
-							<td>《Self-Attentive Sequential Recommendation》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/bert4rec.html">BERT4Rec</a></td>
-							<td>CIKM</td>
-							<td>2019</td>
-							<td>《BERT4Rec: Sequential Recommendation with Bidirectional Encoder Representations from
-								Transformer》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/srgnn.html">SRGNN</a></td>
-							<td>AAAI</td>
-							<td>2019</td>
-							<td>《Session-Based Recommendation with Graph Neural Networks》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/gcsan.html">GCSAN</a></td>
-							<td>IJCAI</td>
-							<td>2019</td>
-							<td>《Graph contextualized self-attention network for session-based recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/gru4recf.html">GRU4RecF(+feature embedding)</a>
-							</td>
-							<td>RecSys</td>
-							<td>2016</td>
-							<td>《Parallel Recurrent Neural Network Architectures for Feature-rich Session-based
-								Recommendations》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/sasrecf.html">SASRecF(+feature embedding)</a>
-							</td>
-							<td>IJCAI</td>
-							<td>2019</td>
-							<td>《Feature-level Deeper Self-Attention Network for Sequential Recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/fdsa.html">FDSA</a></td>
-							<td>IJCAI</td>
-							<td>2019</td>
-							<td>《Feature-level Deeper Self-Attention Network for Sequential Recommendation》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/s3rec.html">S3Rec</a></td>
-							<td>CIKM</td>
-							<td>2020</td>
-							<td>《S^3-Rec: Self-Supervised Learning for Sequential Recommendation with Mutual Information
-								Maximization》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/gru4reckg.html">GRU+KG Embedding</a></td>
-							<td>-</td>
-							<td>-</td>
-							<td>-</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/ksr.html">KSR</a></td>
-							<td>SIGIR</td>
-							<td>2018</td>
-							<td>《Improving Sequential Recommendation with Knowledge-Enhanced Memory Networks》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/fossil.html">Fossil</a></td>
-							<td>ICDM</td>
-							<td>2016</td>
-							<td>《Fusing similarity models with Markov chains for sparse sequential recommendation》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/repeatnet.html">RepeatNet</a></td>
-							<td>AAAI</td>
-							<td>2019</td>
-							<td>《A Repeat Aware Neural Recommendation Machine for Session-based Recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/shan.html">SHAN</a></td>
-							<td>IJCAI</td>
-							<td>2018</td>
-							<td>《Sequential Recommender System based on Hierarchical Attention Network》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/npe.html">NPE</a></td>
-							<td>IJCAI</td>
-							<td>2018</td>
-							<td>《Neural Personalized Embedding for Collaborative Filtering》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/sequential/hrm.html">HRM</a></td>
-							<td>SIGIR</td>
-							<td>2015</td>
-							<td>《Learning Hierarchical Representation Model for Next Basket Recommendation》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/sequential/hgn.html">HGN</a></td>
-							<td>SIGKDD</td>
-							<td>2019</td>
-							<td>《Hierarchical Gating Networks for Sequential Recommendation》</td>
-						</tr>
-	
-						<tr style="background: #FFFFFF;">
-							<td rowspan="18"><b>Knowledge-based recommendation</b></td>
-						</tr>
-	
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/knowledge/cke.html">CKE</a></td>
-							<td>SIGKDD</td>
-							<td>2016</td>
-							<td>《Collaborative Knowledge Base Embedding for Recommender Systems》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/knowledge/cfkg.html">CFKG</a></td>
-							<td>MDPI</td>
-							<td>2018</td>
-							<td>《Learning Heterogeneous Knowledge Base Embeddings for Explainable Recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/knowledge/ktup.html">KTUP</a></td>
-							<td>WWW</td>
-							<td>2019</td>
-							<td>《Unifying Knowledge Graph Learning and Recommendation:Towards a Better Understanding of User
-								Preferences》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/knowledge/kgat.html">KGAT</a></td>
-							<td>SIGKDD</td>
-							<td>2019</td>
-							<td>《KGAT Knowledge Graph Attention Network for Recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/knowledge/ripplenet.html">RippleNet</a></td>
-							<td>CIKM</td>
-							<td>2018</td>
-							<td>《RippleNet Propagating User Preferences on the Knowledge Graph for Recommender Systems.》
-							</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/knowledge/mkr.html">MKR</a></td>
-							<td>WWW</td>
-							<td>2019</td>
-							<td>《Multi-Task Feature Learning for Knowledge Graph Enhanced Recommendation》</td>
-						</tr>
-						<tr class="even">
-							<td><a href="/docs/user_guide/model/knowledge/kgcn.html">KGCN</a></td>
-							<td>WWW</td>
-							<td>2019</td>
-							<td>《Knowledge graph convolution networks for recommender systems》</td>
-						</tr>
-						<tr class="odd">
-							<td><a href="/docs/user_guide/model/knowledge/kgnnls.html">KGNN-LS</a></td>
-							<td>SIGKDD</td>
-							<td>2019</td>
-							<td>《Knowledge-aware Graph Neural Networks with Label Smoothness Regularization for Recommender
-								Systems》</td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="line1"></div>
 				<br>
-				<p style="text-align:justify; text-justify:inter-ideograph;"> <b>NOTE</b>: For some recommendation
-					algorithms,
-					we cannot find the original implementation, and we implemented them according to our understanding of
-					the original
-					paper. Besides, parameter tuning or learning algorithm may not be the optimal way as originally
-					expected.
-					If this case was found, please contact us to help improve the algorithm implementation. </p>
+				<p>BaseModel class is the base class of all models in CogKGE. BaseModel class organizes code into three basic sections: (1) forward function for training, (2) embedding function for getting the embedding of entities and relations, (3) scoring function for computing the score of triples. Model module consists of four parts: translation distance models, semantic matching models, graph neural network-based models and transformer-based models.
+					We summarize the models in the following table:</p>
+					<table class="greyGridTable" >
+						<thead>
+							<tr >
+								<th >Category</th>
+								<th >Model</th>
+								<th>Conference</th>
+								<th>Paper</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td rowspan="7" >Translation Distance Models</td>
+								<td>
+									<a href="https://proceedings.neurips.cc/paper/2013/file/1cecc7a77928ca8133fa24680a88d2f9-Paper.pdf">TransE</a> 
+								</td>
+								<td>NIPS 2013</td>
+								<td>Translating embeddings for modeling multi-relational data</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.486.2800&rep=rep1&type=pdf">TransH</a> 
+								</td>
+								<td>AAAI 2014</td>
+								<td>Knowledge Graph Embedding by Translating on Hyperplanes</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/viewFile/9571/9523">TransR</a> 
+								</td>
+								<td>AAAI 2015</td>
+								<td>Learning Entity and Relation Embeddings for Knowledge Graph Completion</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://www.aclweb.org/anthology/P15-1067.pdf">TransD</a> 
+								</td>
+								<td>ACL 2015</td>
+								<td>Knowledge Graph Embedding via Dynamic Mapping Matrix</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://arxiv.org/pdf/1509.05490.pdf">TransA</a> 
+								</td>
+								<td>AAAI 2015</td>
+								<td>TransA: An Adaptive Approach for Knowledge Graph Embedding</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://arxiv.org/pdf/2007.06267.pdf">BoxE</a> 
+								</td>
+								<td>NIPS 2020</td>
+								<td>BoxE: A Box Embedding Model for Knowledge Base Completion</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://arxiv.org/pdf/2011.03798.pdf">PairRE</a> 
+								</td>
+								<td>ACL 2021</td>
+								<td>PairRE: Knowledge Graph Embeddings via Paired Relation Vectorss</td>
+							</tr>
+
+							<tr>
+								<td rowspan="5">Semantic Matching Models</td>
+								<td>
+									<a href="https://icml.cc/2011/papers/438_icmlpaper.pdf">RESCAL</a> 
+								</td>
+								<td>ICML 2011</td>
+								<td>A Three-Way Model for Collective Learning on Multi-Relational Data</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://arxiv.org/pdf/1412.6575.pdf">DistMult</a> 
+								</td>
+								<td> ICLR 2015</td>
+								<td>Embedding Entities and Relations for Learning and Inference in Knowledge Bases</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://arxiv.org/pdf/1802.04868.pdf">SimpleIE</a> 
+								</td>
+								<td>NIPS 2018</td>
+								<td>SimplE Embedding for Link Prediction in Knowledge Graphs</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://arxiv.org/pdf/1901.09590.pdf">TuckER</a> 
+								</td>
+								<td>ACL 2019</td>
+								<td>TuckER: Tensor Factorization for Knowledge Graph Completion</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://arxiv.org/pdf/1902.10197.pdf">RotatE</a> 
+								</td>
+								<td>ICLR 2019</td>
+								<td>RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space</td>
+							</tr>
+							
+							
+							<tr>
+								<td rowspan="2">Graph Neural Network-based Models</td>
+								<td>
+									<a href="https://arxiv.org/pdf/1703.06103.pdf">R-GCN</a> 
+								</td>
+								<td>ESWC 2018</td>
+								<td>Modeling Relational Data with Graph Convolutional Networks</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://arxiv.org/pdf/1911.03082.pdf">CompGCN</a> 
+								</td>
+								<td>ICLR 2020</td>
+								<td>Composition-based Multi-Relational Graph Convolutional Networks</td>
+							</tr>
+
+							<tr>
+								<td rowspan="2">Transformer-based Models</td>
+								<td>
+									<a href="https://arxiv.org/pdf/2008.12813.pdf">HittER</a> 
+								</td>
+								<td>EMNLP 2021</td>
+								<td>HittER: Hierarchical Transformers for Knowledge Graph Embeddings</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://www.researchgate.net/profile/Jian-Tang-46/publication/337273572_KEPLER_A_Unified_Model_for_Knowledge_Embedding_and_Pre-trained_Language_Representation/links/6072896c299bf1c911c2051a/KEPLER-A-Unified-Model-for-Knowledge-Embedding-and-Pre-trained-Language-Representation.pdf">KEPLER</a> 
+								</td>
+								<td>TACL 2021</td>
+								<td>KEPLER: A Unified Model for Knowledge Embedding and Pre-trained Language Representation</td>
+							</tr>
+
+						</tbody>
+					</table>
 				<br>
-				<h2>Time and memory costs</h2>
-				<div class="line2"></div>
-				<p>We constructed preliminary experiments to test the time and memory cost on three different-sized datasets
-					(small, medium and large).
-					For detailed information, you can click the following links.</p>
-				<div class="my_a">
-					<ul>
-						<li><a href="https://github.com/RUCAIBox/RecBole/blob/master/asset/time_test_result/General_recommendation.md">General_recommendation</a>
-						</li>
-						<li><a href="https://github.com/RUCAIBox/RecBole/blob/master/asset/time_test_result/Context-aware_recommendation.md">Context-aware_recommendation</a>
-						</li>
-						<li><a href="https://github.com/RUCAIBox/RecBole/blob/master/asset/time_test_result/Sequential_recommendation.md">Sequential_recommendation</a>
-						</li>
-						<li><a href="https://github.com/RUCAIBox/RecBole/blob/master/asset/time_test_result/Knowledge-based_recommendation.md">Knowledge-based_recommendation</a>
-						</li>
-					</ul>
-				</div>
-				<p>NOTE: Our test results only gave the approximate time and memory cost of our implementations in the
-					RecBole library (based on our machine server). Any feedback or suggestions about the implementations and
-					test are welcome. We will keep improving our implementations, and update these test results.</p>
+				
 		</div></section>
 
 
 		
 
-			<section id="content">
-
-				<div class="content-wrap pb-0">
-	
-					
-	
-					<div class="section text-center mb-0">
-						<div class="mw-xs mx-auto ">
-							<h3 class="display-4 fw-bolder text-uppercase">We Do It for <span class="gradient-text gradient-horizon">Them</span></h3>
-							<p class="mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam necessitatibus quaerat, rem delectus</p>
-	
-							<div class="clear"></div>
-	
-							<div class="row justify-content-center align-items-center mt-4 col-mb-30">
-								<div class="col-md-4 col-6 center"><img src="demos/freelancer/images/clients/amazon.svg" alt="Clients"></div>
-								<div class="col-md-4 col-6 center"><img src="demos/freelancer/images/clients/netflix.svg" alt="Clients"></div>
-								<div class="col-md-4 col-6 center"><img src="demos/freelancer/images/clients/google.svg" alt="Clients"></div>
-								<div class="col-md-4 col-6 center"><img src="demos/freelancer/images/clients/paypal.svg" alt="Clients"></div>
-								<div class="col-md-4 col-6 center"><img src="demos/freelancer/images/clients/skype.svg" alt="Clients"></div>
-								<div class="col-md-4 col-6 center"><img src="demos/freelancer/images/clients/ps.svg" alt="Clients"></div>
-								<div class="col-md-4 col-6 center"><img src="demos/freelancer/images/clients/slack.svg" alt="Clients"></div>
-								<div class="col-md-4 col-6 center"><img src="demos/freelancer/images/clients/applemusic.svg" alt="Clients"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-	
-			</section><!-- #content end -->
-
-		
-
+			
 		<!-- Footer
 		============================================= -->
 		<footer id="footer" class="border-0" style="background-color: #C9D6CF;">
