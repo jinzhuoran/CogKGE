@@ -48,6 +48,7 @@ class TransR(nn.Module):
 
         h = F.normalize(h, p=2.0,dim=-1)
         t = F.normalize(t, p=2.0, dim=-1) # ||h|| <= 1  ||t|| <= 1
+        r = F.normalize(r,p=2.0,dim=-1)
 
         h = self.transfer(h,r_transfer)
         t = self.transfer(t,r_transfer)
@@ -62,4 +63,3 @@ class TransR(nn.Module):
 
         return torch.cat((h,r,t),dim=1)
 
- 

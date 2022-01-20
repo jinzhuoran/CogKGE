@@ -9,7 +9,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogktr import *
-device=init_cogktr(device_id="1",seed=1)
+device=init_cogktr(device_id="0",seed=1)
 
 loader =COGNET680KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -30,9 +30,12 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE(entity_dict_len=len(node_lut),
-               relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+#model = TransE(entity_dict_len=len(node_lut),
+#               relation_dict_len=len(relation_lut),
+#               embedding_dim=50)
+model = BoxE(entity_dict_len=len(node_lut),
+             relation_dict_len=len(relation_lut),
+             embedding_dim=50)
 
 loss = MarginLoss(margin=1.0,C=0)
 
@@ -40,7 +43,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=700000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(

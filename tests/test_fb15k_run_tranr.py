@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from pathlib import Path
 import sys
+
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0].parents[0]  # CogKGE root directory
 if str(ROOT) not in sys.path:
@@ -9,16 +10,17 @@ if str(ROOT) not in sys.path:
 
 
 from cogktr import *
-device=init_cogktr(device_id="1",seed=1)
+device=init_cogktr(device_id="2",seed=1)
 
-loader =COGNET680KLoader(dataset_path="../dataset",download=True)
+loader = FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
 # loader.describe()
 # train_data.describe()
 # node_lut.describe()
 
-processor = COGNET680KProcessor(node_lut, relation_lut)
+# processor = COGNET680KProcessor(node_lut, relation_lut)
+processor = FB15KProcessor(node_lut,relation_lut,reprocess=True)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
@@ -29,10 +31,11 @@ node_lut,relation_lut=processor.process_lut()
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
-
-model = TransE(entity_dict_len=len(node_lut),
+ 
+model = TransR(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+               dim_entity=50,
+               dim_relation=50)
 
 loss = MarginLoss(margin=1.0,C=0)
 
@@ -40,7 +43,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=50000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -52,7 +55,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Kr_Trainer(
+trainer = Kr_Trainer( 
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
