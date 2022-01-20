@@ -4,6 +4,7 @@ import sys
 sys.path.append("..")
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from mongoengine import connect
 
 app = Flask(__name__, static_url_path='')
 app.config['JSON_AS_ASCII'] = False
@@ -104,6 +105,9 @@ def show_img():
 
 if __name__ == "__main__":
     from cogktr import *
+
+    connect('eventkg', host='210.75.240.136', username='cipzhao2022', password='cipzhao2022', port=1234,
+            connect=False)
 
     device = init_cogktr(device_id="8", seed=1)
 
