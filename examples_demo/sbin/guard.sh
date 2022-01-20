@@ -1,6 +1,6 @@
 #!/bin/bash
-line_count=$(curl --speed-time 5 --speed-limit 1 127.0.0.1:5050/main.html | wc -l);
-if [ $line_count -lt 50 ];
+pid=$(ps -aux | grep 'flask_cogkge_demo' | grep -v "grep" |awk '{print $2}')
+if [ -z "$pid" ];
 then
     echo "server is stoped, restart it."
     ./restart.sh
