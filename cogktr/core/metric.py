@@ -261,6 +261,7 @@ class Link_Prediction(object):
             self._current_result["Raw_Hits10"]= round((torch.sum(current_raw_rank<= 10) / (2 * len(metric_dataset)) * 100).item(), 3)
             self._current_result["Raw_MR"]= round(torch.mean(current_raw_rank).item(), 3)
             self._current_result["Raw_MRR"]= round(torch.mean(1/current_raw_rank).item(), 3)
+            print(current_raw_rank)
         if self.link_prediction_filt:
             current_filt_rank=torch.tensor(self._filt_rank_list,dtype= torch.float64)
             self._current_result["Filt_Hits1"]= round((torch.sum((current_filt_rank <= 1)) / (2 * len(metric_dataset)) * 100).item(), 3)
@@ -333,7 +334,7 @@ class Link_Prediction(object):
                         self._current_result["Filt_MRR"]])
         print(tb)
 
-    def print_best_table(self,front=3,key="Raw_MR"):
+    def print_best_table(self,front=3,key="Filt_Hits10"):
         front=len(self._metric_result_list) if len(self._metric_result_list)<front else front
         strat_index=5 if self.link_prediction_raw and self.link_prediction_filt else 0
         type_dict={"Raw_Hits@1":[1,True],
