@@ -32,23 +32,20 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
  
-# model = TransR(entity_dict_len=len(node_lut),
-#                relation_dict_len=len(relation_lut),
-#                dim_entity=50,
-#                dim_relation=50)
-
-model = BoxE(entity_dict_len=len(node_lut),
+model = SimplE(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
-             embedding_dim=50)
+             embedding_dim=200)
+    
 
-loss = MarginLoss(margin=1.0,C=0)
+# loss = MarginLoss(margin=1.0,C=0)
+loss = NegLogLikehoodLoss(C=0.03)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
                          batch_size=50000,
-                         reverse=False)
+                         reverse=True)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
