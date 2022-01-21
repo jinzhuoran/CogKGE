@@ -371,7 +371,7 @@ class Link_Prediction(object):
             table_row_title=["Epoch"]+raw_table_row_title+filt_table_row_title
         for i in range(len(table_row_title)):
             tb.add_row([table_row_title[i]]+result_list_T[i][:front+1])
-        print("\n")
+        self.logger.info("\n")
         self.logger.info(tb)
         # if self.link_prediction_raw:
         #     self.logger.info(tb)
