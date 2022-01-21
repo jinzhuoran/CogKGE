@@ -56,7 +56,7 @@ class Kr_Evaluator(object):
 
         # Set logger
         if log:
-            logger = save_logger(os.path.join(self.output_path, "run.log"))
+            logger = save_logger(os.path.join(self.output_path, "evaluator_run.log"))
             logger.info("Data Experiment Output Path:{}".format(self.output_path))
             self.logger = logger
 
