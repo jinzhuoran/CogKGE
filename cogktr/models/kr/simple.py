@@ -15,6 +15,10 @@ class SimplE(nn.Module):
         self.relation_inverse_embedding = nn.Embedding(relation_dict_len, embedding_dim)
         self.r = None
         self.r_ = None
+        self.h = None
+        self.h_ = None
+        self.t = None
+        self.t_ = None
  
 
         nn.init.xavier_uniform_(self.head_embedding.weight.data)
@@ -29,8 +33,10 @@ class SimplE(nn.Module):
         self.r = r
         t = self.tail_embedding(batch_t)
 
-        h = F.normalize(h, p=2.0,dim=-1)
-        t = F.normalize(t, p=2.0, dim=-1)
+        # h = F.normalize(h, p=2.0,dim=-1)
+        # t = F.normalize(t, p=2.0, dim=-1)
+        self.h = h
+        self.t = t
         score_front = torch.sum(h * r * t,dim=1) # (batch,)
        
         h_ = self.head_embedding(batch_t)
@@ -39,8 +45,10 @@ class SimplE(nn.Module):
         t_ = self.tail_embedding(batch_h)
 
 
-        h_ = F.normalize(h_, p=2.0,dim=-1)
-        t_ = F.normalize(t_, p=2.0, dim=-1)
+        # h_ = F.normalize(h_, p=2.0,dim=-1)
+        # t_ = F.normalize(t_, p=2.0, dim=-1)
+        self.h_ = h_
+        self.t_ = t_
         score_reverse = torch.sum(h_ * r_ * t_,dim=1) # (batch,)
 
         return (score_front + score_reverse) / 2
@@ -49,5 +57,5 @@ class SimplE(nn.Module):
         return self.forward(sample)
     
     def get_penalty(self):
-        return torch.norm(torch.mean(self.r + self.r_))
+        return torch.norm(torch.mean(self.r + self.r_ + self.t + self.t_ + self.h + self.h_))
         # return torch.mean(torch.norm(self.r) + torch.norm(self.r_)) 
