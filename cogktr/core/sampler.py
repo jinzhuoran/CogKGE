@@ -47,8 +47,8 @@ class BernNegativeSampler():
         entity_number = torch.randint(self.entity_dict_len, (batch_neg.size()[0],)).to(self.device)
         relation=batch_pos[:,1]
         mask = torch.rand(batch_neg.size()[0])
-        head_mask = (mask < self.P_remove_head[relation[:]]).to(self.device)
-        tail_mask = (mask >= self.P_remove_head[relation[:]]).to(self.device)
+        head_mask = (mask < self.P_remove_head[relation]).to(self.device)
+        tail_mask = (mask >= self.P_remove_head[relation]).to(self.device)
         batch_neg[head_mask, 0] = entity_number[head_mask].to(self.device)
         batch_neg[tail_mask, 2] = entity_number[tail_mask].to(self.device)
         return batch_neg
@@ -80,16 +80,17 @@ class AdversarialSampler:
         return batch_neg
 
 if __name__ == "__main__":
-    fake_triples=torch.tensor([[4,2,1],
-                               [0,3,4],
-                               [3,0,2],
-                               [3,0,1],
-                               [0,1,1]]).to("cuda:0")
+    fake_triples=torch.tensor([[1,0,0],
+                               [1,0,4],
+                               [1,0,3],
+                               [5,0,3],
+                               [2,1,5],
+                               [4,2,2]]).to("cuda:0")
     batch_pos=torch.tensor([[4,2,1],
                             [0,3,4]]).to("cuda:0")
     # sampler=UnifNegativeSampler(fake_triples,5,4)
     # batch_neg=sampler.create_negative(batch_pos)
-    sampler=BernNegativeSampler(fake_triples,5,4)
+    sampler=BernNegativeSampler(fake_triples,6,3)
     batch_neg=sampler.create_negative(batch_pos)
     # sampler=AdversarialSampler(fake_triples,5,4,3)
     # batch_neg=sampler.create_negative(batch_pos)
