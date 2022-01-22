@@ -14,11 +14,11 @@ from ...vocabulary import Vocabulary
 
 class EVENTKG2MProcessor(BaseProcessor):
     def __init__(self, node_lut, relation_lut, time_lut,
-                 reprocess,
-                 time, type, description, path,
-                 time_unit,
-                 pretrain_model_name, token_len,
-                 path_len):
+                 reprocess=True,
+                 time=False, type=False, description=False, path=False,
+                 time_unit="year",
+                 pretrain_model_name="roberta-base", token_len=10,
+                 path_len=10):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """

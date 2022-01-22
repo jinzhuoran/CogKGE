@@ -36,7 +36,7 @@ model = TransH(entity_dict_len=len(node_lut),
                embedding_dim=50,
                p=2)
 
-loss = MarginLoss(margin=0.5,C=0)
+loss = MarginLoss(margin=0.5,C=0.1)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=0)
 

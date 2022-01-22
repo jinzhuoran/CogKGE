@@ -8,7 +8,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 from cogktr import *
 
-device=init_cogktr(device_id="0",seed=1)
+device=init_cogktr(device_id="6",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -26,27 +26,29 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE(entity_dict_len=len(node_lut),
-               relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+model = PairRE(entity_dict_len=len(node_lut),
+             relation_dict_len=len(relation_lut),
+             embedding_dim=50)
 
-loss = MarginLoss(margin=1.0,C=0)
+
+loss = NegSamplingLoss(alpha=1,neg_per_pos=3)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
                          batch_size=5000000,
-                         reverse=False)
+                         reverse=True)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
     factor=0.5, min_lr=1e-9, verbose=True
 )
 
-negative_sampler = UnifNegativeSampler(triples=train_dataset,
+negative_sampler = AdversarialSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
+                                       relation_dict_len=len(relation_lut),
+                                       neg_per_pos=3)
 
 trainer = Kr_Trainer(
     train_dataset=train_dataset,

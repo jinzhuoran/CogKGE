@@ -248,28 +248,15 @@ class Kr_Trainer(object):
             if self.visualization:
                 self.writer.add_scalars("Loss", {"train_loss": train_epoch_loss,
                                                  "valid_loss": valid_epoch_loss}, current_epoch)
-                # img = np.zeros((3, 100, 100))
-                # img[0] = np.arange(0, 10000).reshape(100, 100) / 10000
-                # img[1] = 1 - np.arange(0, 10000).reshape(100, 100) / 10000
-                # self.writer.add_image("Dimensionality reduction image", img, current_epoch)
-                # image=np.ones((64,64,3))*random.randint(255)
-                # self.writer.add_image("Dimensionality reduction image", image,current_epoch , dataformats='HWC')
-                if self.model.entity_embedding is not None:
-                    embedding = self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
-                    embedding = TSNE(negative_gradient_method="bh").fit(embedding)
-                    plt.scatter(embedding[:, 0], embedding[:, 1], c=self.visual_type)
-                    plt.show()
-                    if epoch == 0:
-                        fake_data = torch.zeros(self.trainer_batch_size, 3).long()
-                        self.writer.add_graph(self.model.cpu(), fake_data)
-                        self.model.to(self.device)
-                # for name, param in self.model.named_parameters():
-                #     self.writer.add_histogram(name + '_grad', param.grad, epoch)
-                #     self.writer.add_histogram(name + '_data', param, epoch)
+                # if self.model.entity_embedding is not None:
+                #     embedding = self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
+                #     embedding = TSNE(negative_gradient_method="bh").fit(embedding)
+                #     plt.scatter(embedding[:, 0], embedding[:, 1], c=self.visual_type)
+                #     plt.show()
                 # if epoch == 0:
-                #     embedding_data = torch.rand(10, 20)
-                #     embedding_label = ["篮球", "足球", "乒乓球", "羽毛球", "保龄球", "游泳", "爬山", "旅游", "赛车", "写代码"]
-                #     self.writer.add_embedding(mat=embedding_data, metadata=embedding_label)
+                #     fake_data = torch.zeros(self.trainer_batch_size, 3).long()
+                #     self.writer.add_graph(self.model.cpu(), fake_data)
+                #     self.model.to(self.device)
 
             # Save Checkpoint and Final Model Process
             if (self.save_step and (current_epoch) % self.save_step == 0) or (current_epoch) == self.epoch:

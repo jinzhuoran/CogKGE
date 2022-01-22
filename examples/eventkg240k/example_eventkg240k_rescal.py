@@ -8,7 +8,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 from cogktr import *
 
-device=init_cogktr(device_id="0",seed=1)
+device=init_cogktr(device_id="2",seed=1)
 
 loader =EVENTKG2MLoader(dataset_path="../../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -26,7 +26,7 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE(entity_dict_len=len(node_lut),
+model = Rescal(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50)
 
@@ -36,7 +36,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=500000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
