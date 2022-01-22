@@ -26,7 +26,7 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE(entity_dict_len=len(node_lut),
+model = BoxE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50)
 
