@@ -13,6 +13,12 @@ class ComplEx(nn.Module):
         self.mode = mode
         self.gamma = gamma
         self.epsilon = epsilon
+        self.penalty_re_head=None
+        self.penalty_im_head = None
+        self.penalty_re_relation = None
+        self.penalty_im_relation = None
+        self.penalty_re_tail = None
+        self.penalty_im_tail = None
         self.gamma = nn.Parameter(
             torch.Tensor([gamma]),
             requires_grad=False
@@ -42,6 +48,13 @@ class ComplEx(nn.Module):
         re_relation, im_relation = torch.chunk(relation_embedding, 2, dim=1)
         re_tail, im_tail = torch.chunk(tail_embedding, 2, dim=1)
 
+        self.penalty_re_head=re_head
+        self.penalty_im_head = im_head
+        self.penalty_re_relation = re_relation
+        self.penalty_im_relation = im_relation
+        self.penalty_re_tail = re_tail
+        self.penalty_im_tail = im_tail
+
         if self.mode == 'head-batch':
             re_score = re_relation * re_tail + im_relation * im_tail
             im_score = re_relation * im_tail - im_relation * re_tail
@@ -65,3 +78,20 @@ class ComplEx(nn.Module):
         relation_embedding = self.relation_embedding(triplet_idx[:, 1])
         tail_embedding = self.entity_embedding(triplet_idx[:, 2])
         return head_embedding, relation_embedding, tail_embedding
+
+    def get_penalty(self):
+        penalty_re_head = self.penalty_re_head
+        penalty_im_head = self.penalty_im_head
+        penalty_re_relation = self.penalty_re_relation
+        penalty_im_relation = self.penalty_im_relation
+        penalty_re_tail = self.penalty_re_tail
+        penalty_im_tail = self.penalty_im_tail
+
+        regul = (torch.mean(penalty_re_head ** 2) +
+                 torch.mean(penalty_im_head ** 2) +
+                 torch.mean(penalty_re_relation ** 2) +
+                 torch.mean(penalty_im_relation ** 2) +
+                 torch.mean(penalty_re_tail ** 2) +
+                 torch.mean(penalty_im_tail ** 2)) / 6
+        return regul
+
