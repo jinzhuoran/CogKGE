@@ -37,7 +37,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
                          batch_size=5000000,
-                         reverse=False)
+                         reverse=True)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
