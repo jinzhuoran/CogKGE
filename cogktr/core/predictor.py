@@ -89,8 +89,6 @@ class Kr_Predictior:
 
         self._create_summary_dict()  # 建立模糊查询字典
         self._create_detailed_dict()  # 建立链接预测字典
-        connect('eventkg', host='210.75.240.136', username='cipzhao2022', password='cipzhao2022', port=1234,
-                connect=False)
 
     def _create_summary_dict(self):
         """
