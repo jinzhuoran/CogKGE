@@ -335,3 +335,23 @@ evaluator.evaluate()
         </tr>
     </tbody>
 </table>
+
+## Dataset
+
+### [EventKG240K](https://eventkg.l3s.uni-hannover.de/)
+
+EventKG is a event-centric temporal knowledge graph, which incorporates over 690 thousand contemporary and historical events and over 2.3 million temporal relations. To our best knowledge, EventKG240K is the first event-centric KGE dataset. We use EventKG V3.0 data to construct the dataset.
+First, we filter entities and events based on their degrees. Then, we select the triple facts when both nodes' degrees are greater than 10. At last, we add text descriptions and node types for nodes and translate triples to quadruples by temporal information. The whole dataset contains 238,911 nodes, 822 relations and 2,333,986 triples.
+
+### [CogNet360K](http://cognet.top/)
+
+CogNet is a multi-source heterogeneous KG dedicated to integrating linguistic, world and commonsense knowledge. To build a subset as the dataset, we count the number of occurrences for each node. Then, we sort frame instances by the minimum occurrences of their connected nodes. After we have the sorted list, we filter the triple facts according to the preset frame categories. Finally, we find the nodes that participate in these triple facts and complete their information. The final dataset contains 360,637 nodes and 1,470,488 triples.
+
+## Other KGE open-source project
+
+ - [Graphvite](https://graphvite.io/)
+ - [OpenKE](https://github.com/thunlp/OpenKE)
+ - [PyKEEN](https://github.com/SmartDataAnalytics/PyKEEN)
+ - [Pykg2vec](https://github.com/Sujit-O/pykg2vec)
+ - [LIBKGE](https://github.com/uma-pi1/kge)
+ - [KnowledgeGraphEmbedding](https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding)
