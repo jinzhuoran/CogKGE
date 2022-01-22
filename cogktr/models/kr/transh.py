@@ -1,38 +1,31 @@
+import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class TransH(nn.Module):
 
-    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim=100, p_norm=1, mode='head_batch'):
+    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim=50, p=2):
         super(TransH, self).__init__()
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.dim = embedding_dim
-        self.p_norm = p_norm
+        self.p = p
         self.name = "TransH"
-        self.mode = mode
         self.entity_embedding = nn.Embedding(self.entity_dict_len, self.dim)
         self.relation_embedding = nn.Embedding(self.relation_dict_len, self.dim)
-        self.norm_vector = nn.Embedding(self.relation_dict_len, self.dim)
+        self.w_vector = nn.Embedding(self.relation_dict_len, self.dim)
 
         nn.init.xavier_uniform_(self.entity_embedding.weight.data)
         nn.init.xavier_uniform_(self.relation_embedding.weight.data)
-        nn.init.xavier_uniform_(self.norm_vector.weight.data)
+        nn.init.xavier_uniform_(self.w_vector.weight.data)
 
     def get_score(self, triplet_idx):
-        h, r, t = self._forward(triplet_idx)
-        h = F.normalize(h, 2, -1)
-        r = F.normalize(r, 2, -1)
-        t = F.normalize(t, 2, -1)
-        if self.mode != 'normal':
-            h = h.view(-1, r.shape[0], h.shape[-1])
-            t = t.view(-1, r.shape[0], t.shape[-1])
-            r = r.view(-1, r.shape[0], r.shape[-1])
-        if self.mode == 'head_batch':
-            score = h + (r - t)
-        else:
-            score = (h + r) - t
-        score = torch.norm(score, self.p_norm, -1).flatten()
+        #(batch,3)
+
+        output = self._forward(triplet_idx)  # (batch,3,embedding_dim)
+        score = F.pairwise_distance(output[:, 0] + output[:, 1], output[:, 2], p=self.p)
+
         return score
 
     def get_embedding(self, triplet_idx):
@@ -42,23 +35,93 @@ class TransH(nn.Module):
         return self.get_score(triplet_idx)
 
     def _forward(self, triplet_idx):
+        #(batch,d)
         head_embedding = self.entity_embedding(triplet_idx[:, 0])
         relation_embedding = self.relation_embedding(triplet_idx[:, 1])
         tail_embedding = self.entity_embedding(triplet_idx[:, 2])
-        r_norm = self.norm_vector(triplet_idx[:, 1])
+
+        r_norm = self.w_vector(triplet_idx[:, 1])  #(batch,d)
         head_embedding = self._transfer(head_embedding, r_norm)
         tail_embedding = self._transfer(tail_embedding, r_norm)
-        return head_embedding, relation_embedding, tail_embedding
 
-    def _transfer(self, e, norm):
-        norm = F.normalize(norm, p=2, dim=-1)
-        if e.shape[0] != norm.shape[0]:
-            e = e.view(-1, norm.shape[0], e.shape[-1])
-            norm = norm.view(-1, norm.shape[0], norm.shape[-1])
-            e = e - torch.sum(e * norm, -1, True) * norm
-            return e.view(-1, e.shape[-1])
-        else:
-            return e - torch.sum(e * norm, -1, True) * norm
+        head_embedding = F.normalize(head_embedding, p=2, dim=1)
+        relation_embedding = F.normalize(relation_embedding, p=2, dim=1)
+        tail_embedding = F.normalize(tail_embedding, p=2, dim=1)
+
+        head_embedding = torch.unsqueeze(head_embedding , 1)
+        relation_embedding = torch.unsqueeze(relation_embedding , 1)
+        tail_embedding = torch.unsqueeze(tail_embedding, 1)
+        triplet_embedding = torch.cat([head_embedding, relation_embedding, tail_embedding], dim=1)
+
+        output = triplet_embedding
+
+        return output
+
+    def _transfer(self, node_embedding, w_vector):
+        w_vector= F.normalize(w_vector, p=2, dim=-1)
+        return node_embedding - torch.sum(node_embedding * w_vector, -1, True) * w_vector
+
+# class TransH(nn.Module):
+#
+#     def __init__(self, entity_dict_len, relation_dict_len, embedding_dim=100, p_norm=1, mode='head_batch'):
+#         super(TransH, self).__init__()
+#         self.entity_dict_len = entity_dict_len
+#         self.relation_dict_len = relation_dict_len
+#         self.dim = embedding_dim
+#         self.p_norm = p_norm
+#         self.name = "TransH"
+#         self.mode = mode
+#         self.entity_embedding = nn.Embedding(self.entity_dict_len, self.dim)
+#         self.relation_embedding = nn.Embedding(self.relation_dict_len, self.dim)
+#         self.norm_vector = nn.Embedding(self.relation_dict_len, self.dim)
+#
+#         nn.init.xavier_uniform_(self.entity_embedding.weight.data)
+#         nn.init.xavier_uniform_(self.relation_embedding.weight.data)
+#         nn.init.xavier_uniform_(self.norm_vector.weight.data)
+#
+#     def get_score(self, triplet_idx):
+#         #(batch,3)
+#         h, r, t = self._forward(triplet_idx)
+#         h = F.normalize(h, 2, -1)
+#         r = F.normalize(r, 2, -1)
+#         t = F.normalize(t, 2, -1)
+#         if self.mode != 'normal':
+#             h = h.view(-1, r.shape[0], h.shape[-1])
+#             t = t.view(-1, r.shape[0], t.shape[-1])
+#             r = r.view(-1, r.shape[0], r.shape[-1])
+#         if self.mode == 'head_batch':
+#             score = h + (r - t)
+#         else:
+#             score = (h + r) - t
+#         score = torch.norm(score, self.p_norm, -1).flatten()
+#         return score
+#
+#     def get_embedding(self, triplet_idx):
+#         return self._forward(triplet_idx)
+#
+#     def forward(self, triplet_idx):
+#         return self.get_score(triplet_idx)
+#
+#     def _forward(self, triplet_idx):
+#         #(batch,d)
+#         head_embedding = self.entity_embedding(triplet_idx[:, 0])
+#         relation_embedding = self.relation_embedding(triplet_idx[:, 1])
+#         tail_embedding = self.entity_embedding(triplet_idx[:, 2])
+#
+#         r_norm = self.norm_vector(triplet_idx[:, 1])  #(batch,d)
+#         head_embedding = self._transfer(head_embedding, r_norm)
+#         tail_embedding = self._transfer(tail_embedding, r_norm)
+#         return head_embedding, relation_embedding, tail_embedding
+#
+#     def _transfer(self, e, norm):
+#         norm = F.normalize(norm, p=2, dim=-1)
+#         if e.shape[0] != norm.shape[0]:
+#             e = e.view(-1, norm.shape[0], e.shape[-1])
+#             norm = norm.view(-1, norm.shape[0], norm.shape[-1])
+#             e = e - torch.sum(e * norm, -1, True) * norm
+#             return e.view(-1, e.shape[-1])
+#         else:
+#             return e - torch.sum(e * norm, -1, True) * norm
 
 
 #
@@ -131,6 +194,3 @@ class TransH(nn.Module):
 #     #     t = torch.unsqueeze(t,1)
 #
 #     #     return torch.cat((h,r,t),dim=1) # return:(batch,3,embedding_dim)
-import torch
-import torch.nn as nn
-import torch.nn.functional as F

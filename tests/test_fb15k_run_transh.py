@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogktr import *
-device=init_cogktr(device_id="9",seed=1)
+device=init_cogktr(device_id="0",seed=1)
 
 loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -31,13 +31,14 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE(entity_dict_len=len(node_lut),
+model = TransH(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+               embedding_dim=50,
+               p=2)
 
-loss = MarginLoss(margin=1.0,C=0)
+loss = MarginLoss(margin=0.5,C=0)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
@@ -49,7 +50,7 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     factor=0.5, min_lr=1e-9, verbose=True
 )
 
-negative_sampler = UnifNegativeSampler(triples=train_dataset,
+negative_sampler = BernNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
@@ -69,7 +70,7 @@ trainer = Kr_Trainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
-    trainer_batch_size=100000,
+    trainer_batch_size=1200,
     epoch=1000,
     visualization=False,
     apex=True,
@@ -103,5 +104,4 @@ evaluator = Kr_Evaluator(
     trained_model_path=None
 )
 evaluator.evaluate()
-
 
