@@ -104,6 +104,9 @@ visual_list = predictor.show_img(node_id=100, visual_num=1000)
 ```
 
 ### Programming Framework for Training Models
+
+## Model
+
 <table class="greyGridTable" >
     <thead>
         <tr >
