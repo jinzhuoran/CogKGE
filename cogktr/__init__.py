@@ -1,3 +1,4 @@
+from .adapter import *
 from .core import *
 from .data import *
 from .models import *
@@ -80,5 +81,11 @@ __all__ = [
     "AdversarialSampler",
 
     "Vocabulary",
+
+    # adapter
+    "description",
+    "graph",
+    "nodetype",
+    "time"
    
 ]
