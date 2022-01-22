@@ -42,9 +42,8 @@ class NegLogLikehoodLoss:
 
 
 class NegSamplingLoss:
-    def __init__(self, margin, alpha, neg_per_pos, C=0):
+    def __init__(self, alpha, neg_per_pos, C=0):
         self.alpha = alpha
-        self.margin = margin
         self.neg_per_pos = neg_per_pos
         self.C = C
 
@@ -61,16 +60,21 @@ class NegSamplingLoss:
         # )  # tensor(neg_per_pos,batch)
         # n_score = n_score.transpose(0, 1)  # tensor(batch,neg_per_pos)
 
-        n_score = n_score.reshape(self.neg_per_pos,-1).T  #add
-        n_log_score = torch.log(torch.sigmoid(n_score - self.margin))
-        n_prob = torch.exp(self.alpha * n_score) / torch.sum(torch.exp(self.alpha * n_score), dim=-1,
-                                                             keepdim=True)  # (batch,neg_per_pos)
+        # n_score = n_score.reshape(self.neg_per_pos,-1).T  #add
+        # n_log_score = torch.log(torch.sigmoid(n_score - self.margin))
+        # n_prob = torch.exp(self.alpha * n_score) / torch.sum(torch.exp(self.alpha * n_score), dim=-1,
+        #                                                      keepdim=True)  # (batch,neg_per_pos)
 
-        negative_loss = -torch.sum(n_log_score * n_prob, dim=-1)  # (batch,)
-        positive_loss = -torch.log(torch.sigmoid(self.margin - p_score))  # (batch,)
-        return torch.mean(positive_loss + negative_loss) + self.C * penalty
+        # negative_loss = -torch.sum(n_log_score * n_prob, dim=-1)  # (batch,)
+        # positive_loss = -torch.log(torch.sigmoid(self.margin - p_score))  # (batch,)
+        # return torch.mean(positive_loss + negative_loss) + self.C * penalty
 
+        n_score = n_score.reshape(-1,self.neg_per_pos) # (batch,neg_per_pos)
+        negative_loss = (F.softmax(n_score * self.alpha,dim=1).detach() * F.logsigmoid(-n_score)).sum(dim=1) #(batch,)
+        positive_loss = F.logsigmoid(p_score)
+        return torch.mean(-positive_loss - negative_loss)
 
+ 
 # Still working on this...
 class TransALoss:
     pass
