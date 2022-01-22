@@ -28,7 +28,7 @@ test_sampler = RandomSampler(test_dataset)
 
 model = RotatE(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
-             embedding_dim=500)
+             embedding_dim=50)
 
 loss = NegSamplingLoss(alpha=1,neg_per_pos=3)
 
@@ -36,7 +36,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=500000,
                          reverse=True)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
