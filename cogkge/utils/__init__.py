@@ -6,5 +6,4 @@ __all__ = [
     'import_class',
     'cal_output_path',
     'init_cogkge'
-
 ]

@@ -76,5 +76,7 @@ __all__ = [
     "AdversarialSampler",
 
     "Vocabulary",
+    "GCN",
+    "GAT",
 
 ]

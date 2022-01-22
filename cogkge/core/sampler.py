@@ -1,7 +1,7 @@
 import torch
 
 
-class UnifNegativeSampler():
+class UnifNegativeSampler:
     def __init__(self, triples, entity_dict_len, relation_dict_len, device=torch.device('cuda:0')):
         # tensor(len,3)
         self.triples = triples
@@ -21,7 +21,7 @@ class UnifNegativeSampler():
         return batch_neg
 
 
-class BernNegativeSampler():
+class BernNegativeSampler:
     def __init__(self, triples, entity_dict_len, relation_dict_len, device=torch.device('cuda:0')):
         # tensor(len,3)
         self.triples = triples

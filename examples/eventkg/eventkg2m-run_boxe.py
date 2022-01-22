@@ -5,7 +5,7 @@ from cogkge import *
 
 device = init_cogkge(device_id="2", seed=1)
 
-loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
+loader = EVENTKG2MLoader(dataset_path="../../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut, time_lut = loader.load_all_lut()
 # loader.describe()
@@ -61,7 +61,7 @@ trainer = Trainer(
     optimizer=optimizer,
     negative_sampler=negative_sampler,
     device=device,
-    output_path="../dataset",
+    output_path="../../dataset",
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,

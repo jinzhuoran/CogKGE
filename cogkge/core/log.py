@@ -1,9 +1,9 @@
 import logging.config
 
-def save_logger(logfile_path="../dataset/cogkge.log"):
 
+def save_logger(logfile_path="../dataset/cogkge.log"):
     standard_format = '[%(asctime)s][%(threadName)s:%(thread)d][task_id:%(name)s][%(filename)s:%(lineno)d]' \
-                    '[%(levelname)s][%(message)s]'
+                      '[%(levelname)s][%(message)s]'
     # simple_format = '[%(asctime)s] - [%(name)s] - [%(levelname)s] - [%(message)s]'
     simple_format = '[%(asctime)s] - [%(message)s]'
     LOGGING_DIC = {
@@ -52,6 +52,5 @@ def save_logger(logfile_path="../dataset/cogkge.log"):
     logging.config.dictConfig(LOGGING_DIC)
     logger = logging.getLogger(__name__)
     return logger
-
 
 # logger = save_logger()

@@ -3,7 +3,7 @@ from torch.utils.data import RandomSampler
 
 from cogkge import *
 
-device = init_cogkge(device_id="9", seed=1)
+device = init_cogkge(device_id="2", seed=1)
 
 loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -14,7 +14,7 @@ node_lut, relation_lut, time_lut = loader.load_all_lut()
 
 processor = EVENTKG2MProcessor(node_lut, relation_lut, time_lut,
                                reprocess=True,
-                               type=True, time=False, description=False, path=False,
+                               type=False, time=False, description=False, path=False,
                                time_unit="year",
                                pretrain_model_name="roberta-base", token_len=10,
                                path_len=10)
@@ -29,18 +29,18 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE(entity_dict_len=len(node_lut),
+model = Rescal(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50)
 
-loss = MarginLoss(margin=1.0, C=0)
+loss = NegLogLikehoodLoss(C=0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
-                         reverse=False)
+                         batch_size=500000,
+                         reverse=True)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
@@ -74,7 +74,7 @@ trainer = Trainer(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=200,
+    metric_step=500,
     save_step=200,
     metric_final_model=True,
     save_final_model=True,
@@ -82,7 +82,7 @@ trainer = Trainer(
 )
 trainer.train()
 
-evaluator = Evaluatoraluator(
+evaluator = Evaluator(
     test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,
