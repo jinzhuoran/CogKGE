@@ -76,8 +76,12 @@ class TransALoss:
     pass
 
 
-class RotatELoss:
-    pass
+class RotatELoss(nn.Module):
+    def __init__(self): 
+        super(RotatELoss,self).__init__()
+     
+    def forward(self, p_score, n_score,penalty=None):
+        return torch.mean(-F.logsigmoid(p_score) - F.logsigmoid(-n_score))
 
 
 class TuckERLoss:
