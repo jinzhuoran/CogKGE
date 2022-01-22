@@ -104,3 +104,131 @@ visual_list = predictor.show_img(node_id=100, visual_num=1000)
 ```
 
 ### Programming Framework for Training Models
+<table class="greyGridTable" >
+    <thead>
+        <tr >
+            <th >Category</th>
+            <th >Model</th>
+            <th>Conference</th>
+            <th>Paper</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="7" >Translation Distance Models</td>
+            <td>
+                <a href="https://proceedings.neurips.cc/paper/2013/file/1cecc7a77928ca8133fa24680a88d2f9-Paper.pdf">TransE</a> 
+            </td>
+            <td>NIPS 2013</td>
+            <td>Translating embeddings for modeling multi-relational data</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.486.2800&rep=rep1&type=pdf">TransH</a> 
+            </td>
+            <td>AAAI 2014</td>
+            <td>Knowledge Graph Embedding by Translating on Hyperplanes</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/viewFile/9571/9523">TransR</a> 
+            </td>
+            <td>AAAI 2015</td>
+            <td>Learning Entity and Relation Embeddings for Knowledge Graph Completion</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://www.aclweb.org/anthology/P15-1067.pdf">TransD</a> 
+            </td>
+            <td>ACL 2015</td>
+            <td>Knowledge Graph Embedding via Dynamic Mapping Matrix</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://arxiv.org/pdf/1509.05490.pdf">TransA</a> 
+            </td>
+            <td>AAAI 2015</td>
+            <td>TransA: An Adaptive Approach for Knowledge Graph Embedding</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://arxiv.org/pdf/2007.06267.pdf">BoxE</a> 
+            </td>
+            <td>NIPS 2020</td>
+            <td>BoxE: A Box Embedding Model for Knowledge Base Completion</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://arxiv.org/pdf/2011.03798.pdf">PairRE</a> 
+            </td>
+            <td>ACL 2021</td>
+            <td>PairRE: Knowledge Graph Embeddings via Paired Relation Vectorss</td>
+        </tr>
+        <tr>
+            <td rowspan="5">Semantic Matching Models</td>
+            <td>
+                <a href="https://icml.cc/2011/papers/438_icmlpaper.pdf">RESCAL</a> 
+            </td>
+            <td>ICML 2011</td>
+            <td>A Three-Way Model for Collective Learning on Multi-Relational Data</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://arxiv.org/pdf/1412.6575.pdf">DistMult</a> 
+            </td>
+            <td> ICLR 2015</td>
+            <td>Embedding Entities and Relations for Learning and Inference in Knowledge Bases</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://arxiv.org/pdf/1802.04868.pdf">SimpleIE</a> 
+            </td>
+            <td>NIPS 2018</td>
+            <td>SimplE Embedding for Link Prediction in Knowledge Graphs</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://arxiv.org/pdf/1901.09590.pdf">TuckER</a> 
+            </td>
+            <td>ACL 2019</td>
+            <td>TuckER: Tensor Factorization for Knowledge Graph Completion</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://arxiv.org/pdf/1902.10197.pdf">RotatE</a> 
+            </td>
+            <td>ICLR 2019</td>
+            <td>RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space</td>
+        </tr>
+        <tr>
+            <td rowspan="2">Graph Neural Network-based Models</td>
+            <td>
+                <a href="https://arxiv.org/pdf/1703.06103.pdf">R-GCN</a> 
+            </td>
+            <td>ESWC 2018</td>
+            <td>Modeling Relational Data with Graph Convolutional Networks</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://arxiv.org/pdf/1911.03082.pdf">CompGCN</a> 
+            </td>
+            <td>ICLR 2020</td>
+            <td>Composition-based Multi-Relational Graph Convolutional Networks</td>
+        </tr>
+        <tr>
+            <td rowspan="2">Transformer-based Models</td>
+            <td>
+                <a href="https://arxiv.org/pdf/2008.12813.pdf">HittER</a> 
+            </td>
+            <td>EMNLP 2021</td>
+            <td>HittER: Hierarchical Transformers for Knowledge Graph Embeddings</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://www.researchgate.net/profile/Jian-Tang-46/publication/337273572_KEPLER_A_Unified_Model_for_Knowledge_Embedding_and_Pre-trained_Language_Representation/links/6072896c299bf1c911c2051a/KEPLER-A-Unified-Model-for-Knowledge-Embedding-and-Pre-trained-Language-Representation.pdf">KEPLER</a> 
+            </td>
+            <td>TACL 2021</td>
+            <td>KEPLER: A Unified Model for Knowledge Embedding and Pre-trained Language Representation</td>
+        </tr>
+    </tbody>
+</table>
