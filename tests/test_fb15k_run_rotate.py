@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogktr import *
-device=init_cogktr(device_id="3",seed=1)
+device=init_cogktr(device_id="6",seed=1)
 
 loader = FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -32,13 +32,12 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
  
-model = SimplE(entity_dict_len=len(node_lut),
+model = RotatE(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
-             embedding_dim=200)
-    
+             embedding_dim=500)
 
 # loss = MarginLoss(margin=1.0,C=0)
-loss = NegLogLikehoodLoss(C=0.03)
+loss = RotatELoss()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
