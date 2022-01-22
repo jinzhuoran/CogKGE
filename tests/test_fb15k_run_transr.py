@@ -10,17 +10,16 @@ if str(ROOT) not in sys.path:
 
 
 from cogktr import *
-device=init_cogktr(device_id="2",seed=1)
+device=init_cogktr(device_id="7",seed=1)
 
-loader = FB15KLoader(dataset_path="../dataset",download=True)
+loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
-node_lut, relation_lut = loader.load_all_lut()
+node_lut, relation_lut= loader.load_all_lut()
 # loader.describe()
 # train_data.describe()
 # node_lut.describe()
 
-# processor = COGNET680KProcessor(node_lut, relation_lut)
-processor = FB15KProcessor(node_lut,relation_lut,reprocess=True)
+processor = FB15KProcessor(node_lut, relation_lut,reprocess=True)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
@@ -31,7 +30,7 @@ node_lut,relation_lut=processor.process_lut()
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
- 
+
 model = TransR(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                dim_entity=50,
@@ -39,7 +38,7 @@ model = TransR(entity_dict_len=len(node_lut),
 
 loss = MarginLoss(margin=1.0,C=0)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
@@ -55,11 +54,11 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Kr_Trainer( 
+trainer = Kr_Trainer(
     train_dataset=train_dataset,
-    valid_dataset=valid_dataset,
+    valid_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=valid_sampler,
+    valid_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
@@ -72,14 +71,14 @@ trainer = Kr_Trainer(
     lr_scheduler=lr_scheduler,
     log=True,
     trainer_batch_size=100000,
-    epoch=3000,
-    visualization=0,
+    epoch=1000,
+    visualization=False,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=50,
-    save_step=200,
+    metric_step=100,
+    save_step=100,
     metric_final_model=True,
     save_final_model=True,
     load_checkpoint= None
@@ -105,4 +104,5 @@ evaluator = Kr_Evaluator(
     trained_model_path=None
 )
 evaluator.evaluate()
+
 

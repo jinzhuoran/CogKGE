@@ -14,7 +14,7 @@ from torch.utils.data import RandomSampler
 from cogktr import *
 from cogktr.models.kr.complex import ComplEx
 
-device = init_cogktr(device_id="2", seed=1)
+device = init_cogktr(device_id="3", seed=1)
 
 loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -50,7 +50,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=500000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(

@@ -59,7 +59,7 @@ class TransH(nn.Module):
         tail_embedding=tail_embedding - torch.sum(tail_embedding * w_r, 1, True) * w_r
 
         # head_embedding = F.normalize(head_embedding, p=2, dim=1)
-        relation_embedding = F.normalize(relation_embedding, p=2, dim=1)
+        # relation_embedding = F.normalize(relation_embedding, p=2, dim=1)
         # tail_embedding = F.normalize(tail_embedding, p=2, dim=1)
 
         head_embedding = torch.unsqueeze(head_embedding , 1)
@@ -76,10 +76,12 @@ class TransH(nn.Module):
         # constraint_2=torch.sum(nn.ReLU(inplace=False)(self.tail_batch_embedding ** 2-1/len(self.tail_batch_embedding)))
         # constraint_3=sum(sum((self.relation_batch_embedding*self.w_r_batch_embedding)** 2)/sum(self.relation_batch_embedding**2)-self.epsilon**2)
         # penalty=constraint_1+constraint_2+constraint_3
-        penalty = (torch.mean(self.head_batch_embedding ** 2) +
+        penalty = (
+                          torch.mean(self.head_batch_embedding ** 2) +
                    torch.mean(self.relation_batch_embedding ** 2) +
-                   torch.mean(self.tail_batch_embedding ** 2) +
-                   torch.mean(self.w_r_batch_embedding ** 2)) / 4
+                   torch.mean(self.tail_batch_embedding ** 2)
+                   # torch.mean(self.w_r_batch_embedding ** 2)
+                  ) / 3
         return penalty
 
 # class TransH(nn.Module):

@@ -254,14 +254,15 @@ class Kr_Trainer(object):
                 # self.writer.add_image("Dimensionality reduction image", img, current_epoch)
                 # image=np.ones((64,64,3))*random.randint(255)
                 # self.writer.add_image("Dimensionality reduction image", image,current_epoch , dataformats='HWC')
-                embedding = self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
-                embedding = TSNE(negative_gradient_method="bh").fit(embedding)
-                plt.scatter(embedding[:, 0], embedding[:, 1], c=self.visual_type)
-                plt.show()
-                if epoch == 0:
-                    fake_data = torch.zeros(self.trainer_batch_size, 3).long()
-                    self.writer.add_graph(self.model.cpu(), fake_data)
-                    self.model.to(self.device)
+                if self.model.entity_embedding is not None:
+                    embedding = self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
+                    embedding = TSNE(negative_gradient_method="bh").fit(embedding)
+                    plt.scatter(embedding[:, 0], embedding[:, 1], c=self.visual_type)
+                    plt.show()
+                    if epoch == 0:
+                        fake_data = torch.zeros(self.trainer_batch_size, 3).long()
+                        self.writer.add_graph(self.model.cpu(), fake_data)
+                        self.model.to(self.device)
                 # for name, param in self.model.named_parameters():
                 #     self.writer.add_histogram(name + '_grad', param.grad, epoch)
                 #     self.writer.add_histogram(name + '_data', param, epoch)
@@ -295,4 +296,4 @@ class Kr_Trainer(object):
 
         # Show Best Metric Result
         if self.metric_step:
-            self.metric.print_best_table(front=5, key="Raw_MR")
+            self.metric.print_best_table(front=5, key="Filt_Hits@10")
