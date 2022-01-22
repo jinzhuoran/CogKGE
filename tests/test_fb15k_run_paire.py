@@ -10,9 +10,9 @@ if str(ROOT) not in sys.path:
 
 
 from cogktr import *
-device=init_cogktr(device_id="9",seed=1)
+device=init_cogktr(device_id="1",seed=1)
 
-loader = FB15KLoader(dataset_path="./dataset",download=True)
+loader = FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
 # loader.describe()
@@ -32,19 +32,19 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
  
-model = RotatE(entity_dict_len=len(node_lut),
+model = PairRE(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
              embedding_dim=500)
 
 # loss = MarginLoss(margin=1.0,C=0)
 # loss = RotatELoss()
-loss = NegSamplingLoss(alpha=1,neg_per_pos=1)
+loss = NegSamplingLoss(alpha=1,neg_per_pos=10)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000,
+                         batch_size=50000,
                          reverse=True)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -58,7 +58,7 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
 negative_sampler = AdversarialSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut),
-                                       neg_per_pos=1)
+                                       neg_per_pos=10)
 
 trainer = Kr_Trainer( 
     train_dataset=train_dataset,
