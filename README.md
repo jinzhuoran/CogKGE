@@ -45,7 +45,7 @@ pip install cogkge
 from cogkge import *
 
 # loader lut
-device = init_cogktr(device_id="0", seed=1)
+device = init_cogkge(device_id="0", seed=1)
 loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut, time_lut = loader.load_all_lut()
@@ -110,7 +110,7 @@ import torch
 from torch.utils.data import RandomSampler
 from cogkge import *
 
-device = init_cogktr(device_id="0", seed=1)
+device = init_cogkge(device_id="0", seed=1)
 
 loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -355,3 +355,4 @@ CogNet is a multi-source heterogeneous KG dedicated to integrating linguistic, w
  - [Pykg2vec](https://github.com/Sujit-O/pykg2vec)
  - [LIBKGE](https://github.com/uma-pi1/kge)
  - [KnowledgeGraphEmbedding](https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding)
+
