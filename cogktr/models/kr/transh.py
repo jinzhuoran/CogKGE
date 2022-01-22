@@ -5,13 +5,15 @@ import torch.nn.functional as F
 
 class TransH(nn.Module):
 
-    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim=50, p=2):
+    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim=50, p=2,epsilon=0.01):
         super(TransH, self).__init__()
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.dim = embedding_dim
         self.p = p
+        self.epsilon=epsilon
         self.name = "TransH"
+
         self.entity_embedding = nn.Embedding(self.entity_dict_len, self.dim)
         self.relation_embedding = nn.Embedding(self.relation_dict_len, self.dim)
         self.w_vector = nn.Embedding(self.relation_dict_len, self.dim)
@@ -19,6 +21,11 @@ class TransH(nn.Module):
         nn.init.xavier_uniform_(self.entity_embedding.weight.data)
         nn.init.xavier_uniform_(self.relation_embedding.weight.data)
         nn.init.xavier_uniform_(self.w_vector.weight.data)
+
+        self.head_batch_embedding=None
+        self.relation_batch_embedding=None
+        self.tail_batch_embedding = None
+        self.w_r_batch_embedding=None
 
     def get_score(self, triplet_idx):
         #(batch,3)
@@ -39,14 +46,21 @@ class TransH(nn.Module):
         head_embedding = self.entity_embedding(triplet_idx[:, 0])
         relation_embedding = self.relation_embedding(triplet_idx[:, 1])
         tail_embedding = self.entity_embedding(triplet_idx[:, 2])
+        w_r = self.w_vector(triplet_idx[:, 1])  #(batch,d)
+        w_r = F.normalize(w_r, p=2, dim=1)
 
-        r_norm = self.w_vector(triplet_idx[:, 1])  #(batch,d)
-        head_embedding = self._transfer(head_embedding, r_norm)
-        tail_embedding = self._transfer(tail_embedding, r_norm)
+        self.head_batch_embedding = head_embedding
+        self.relation_batch_embedding = relation_embedding
+        self.tail_batch_embedding = tail_embedding
+        self.w_r_batch_embedding = w_r
 
-        head_embedding = F.normalize(head_embedding, p=2, dim=1)
+
+        head_embedding=head_embedding - torch.sum(head_embedding * w_r, 1, True) * w_r
+        tail_embedding=tail_embedding - torch.sum(tail_embedding * w_r, 1, True) * w_r
+
+        # head_embedding = F.normalize(head_embedding, p=2, dim=1)
         relation_embedding = F.normalize(relation_embedding, p=2, dim=1)
-        tail_embedding = F.normalize(tail_embedding, p=2, dim=1)
+        # tail_embedding = F.normalize(tail_embedding, p=2, dim=1)
 
         head_embedding = torch.unsqueeze(head_embedding , 1)
         relation_embedding = torch.unsqueeze(relation_embedding , 1)
@@ -57,9 +71,16 @@ class TransH(nn.Module):
 
         return output
 
-    def _transfer(self, node_embedding, w_vector):
-        w_vector= F.normalize(w_vector, p=2, dim=-1)
-        return node_embedding - torch.sum(node_embedding * w_vector, -1, True) * w_vector
+    def get_penalty(self):
+        # constraint_1=torch.sum(nn.ReLU(inplace=False)(self.head_batch_embedding ** 2-1/len(self.head_batch_embedding)))
+        # constraint_2=torch.sum(nn.ReLU(inplace=False)(self.tail_batch_embedding ** 2-1/len(self.tail_batch_embedding)))
+        # constraint_3=sum(sum((self.relation_batch_embedding*self.w_r_batch_embedding)** 2)/sum(self.relation_batch_embedding**2)-self.epsilon**2)
+        # penalty=constraint_1+constraint_2+constraint_3
+        penalty = (torch.mean(self.head_batch_embedding ** 2) +
+                   torch.mean(self.relation_batch_embedding ** 2) +
+                   torch.mean(self.tail_batch_embedding ** 2) +
+                   torch.mean(self.w_r_batch_embedding ** 2)) / 4
+        return penalty
 
 # class TransH(nn.Module):
 #

@@ -12,21 +12,11 @@ processor = EVENTKG2MProcessor(node_lut, relation_lut, time_lut,
                                time_unit="year",
                                pretrain_model_name="roberta-base", token_len=10,
                                path_len=10)
-train_dataset = processor.process(train_data)
-valid_dataset = processor.process(valid_data)
-test_dataset = processor.process(test_data)
 node_lut, relation_lut, time_lut = processor.process_lut()
 
 model = BoxE(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
              embedding_dim=50)
-
-loss = MarginLoss(margin=1.0, C=0)
-
-metric = Link_Prediction(link_prediction_raw=True,
-                         link_prediction_filt=False,
-                         batch_size=5000000,
-                         reverse=False)
 
 predictor = Kr_Predictior(model_name="BoxE",
                           data_name="EVENTKG2M",

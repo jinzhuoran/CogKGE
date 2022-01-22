@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogktr import *
-device=init_cogktr(device_id="0",seed=1)
+device=init_cogktr(device_id="5",seed=1)
 
 loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -42,7 +42,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.005, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=500000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -70,7 +70,7 @@ trainer = Kr_Trainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
-    trainer_batch_size=1200,
+    trainer_batch_size=4800,
     epoch=1000,
     visualization=False,
     apex=True,
