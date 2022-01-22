@@ -16,6 +16,8 @@ __all__=[
     "KEPLER",
     "PairRE",
     "BoxE",
+    "ComplEx",
+    "DistMult",
     "TransE_baseline",
     "TransE_Add_Description",
     "TransE_Add_Time",

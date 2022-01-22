@@ -10,6 +10,8 @@ from .tucker import *
 from .pairre import *
 from .kepler import *
 from .boxe import *
+from .complex import *
+from .distmult import *
 from .ttd import *
 
 __all__=[
@@ -37,6 +39,10 @@ __all__=[
     "PairRE",
 
     "BoxE",
+
+    "ComplEx",
+
+    "DistMult",
 
     "TransE_baseline",
     "TransE_Add_Description",
