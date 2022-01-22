@@ -163,6 +163,7 @@ class EVENTKG2MProcessor(BaseProcessor):
     def process_lut(self):
         return self.node_lut, self.relation_lut, self.time_lut
 
+
         # head_input_ids = []
         # head_attention_mask = []
         # tail_intput_ids = []

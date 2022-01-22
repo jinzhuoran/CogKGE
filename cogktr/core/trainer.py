@@ -242,7 +242,7 @@ class Kr_Trainer(object):
                 print("-----------------------------------------------------------------------")
 
                 # Scheduler Progress
-                self.lr_scheduler.step(self.metric.get_Raw_MR())
+                # self.lr_scheduler.step(self.metric.get_Raw_MR())
 
             # Visualization Process
             if self.visualization:
@@ -295,4 +295,4 @@ class Kr_Trainer(object):
 
         # Show Best Metric Result
         if self.metric_step:
-            self.metric.print_best_table(front=5, key="Raw_MR")
+            self.metric.print_best_table(front=5, key="Filt_Hits@10")

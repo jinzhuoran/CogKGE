@@ -1,36 +1,29 @@
-import os
-import sys
-sys.path.append('/home/zhuoran/code/CogKGE/')
-sys.path.append('/home/zhuoran/CogKGE/')
-curPath = os.path.abspath(os.path.dirname(__file__))
-rootPath = os.path.split(curPath)[0]
-sys.path.append(os.path.split(rootPath)[0])
-sys.path.append(os.getcwd())
-
 import torch
 from torch.utils.data import RandomSampler
+from pathlib import Path
+import sys
+
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[0].parents[0]  # CogKGE root directory
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
+
 
 from cogktr import *
+device=init_cogktr(device_id="7",seed=1)
 
-device = init_cogktr(device_id="6", seed=1)
-
-loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
+loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
-node_lut, relation_lut, time_lut = loader.load_all_lut()
+node_lut, relation_lut= loader.load_all_lut()
 # loader.describe()
 # train_data.describe()
 # node_lut.describe()
 
-processor = EVENTKG2MProcessor(node_lut, relation_lut, time_lut,
-                               reprocess=True,
-                               type=False, time=False, description=False, path=False,
-                               time_unit="year",
-                               pretrain_model_name="roberta-base", token_len=10,
-                               path_len=10)
+processor = FB15KProcessor(node_lut, relation_lut,reprocess=True)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
-node_lut, relation_lut, time_lut = processor.process_lut()
+node_lut,relation_lut=processor.process_lut()
 # node_lut.print_table(front=3)
 # relation_lut.print_table(front=3)
 
@@ -38,17 +31,18 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = RotatE(entity_dict_len=len(node_lut),
+model = TransR(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+               dim_entity=50,
+               dim_relation=50)
 
-loss = NegSamplingLoss(margin=1.0, alpha=0.5, neg_per_pos=3, C=0.01)
+loss = MarginLoss(margin=1.0,C=0)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=50000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -56,39 +50,38 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     factor=0.5, min_lr=1e-9, verbose=True
 )
 
-negative_sampler = AdversarialSampler(triples=train_dataset,
-                                      entity_dict_len=len(node_lut),
-                                      relation_dict_len=len(relation_lut),
-                                      neg_per_pos=3)
+negative_sampler = UnifNegativeSampler(triples=train_dataset,
+                                       entity_dict_len=len(node_lut),
+                                       relation_dict_len=len(relation_lut))
 
 trainer = Kr_Trainer(
     train_dataset=train_dataset,
-    valid_dataset=valid_dataset,
+    valid_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=valid_sampler,
+    valid_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
     negative_sampler=negative_sampler,
     device=device,
     output_path="../dataset",
-    lookuptable_E=node_lut,
-    lookuptable_R=relation_lut,
+    lookuptable_E= node_lut,
+    lookuptable_R= relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
     trainer_batch_size=100000,
-    epoch=3000,
-    visualization=1,
+    epoch=1000,
+    visualization=False,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=200,
-    save_step=200,
+    metric_step=100,
+    save_step=100,
     metric_final_model=True,
     save_final_model=True,
-    load_checkpoint=None
+    load_checkpoint= None
 )
 trainer.train()
 
@@ -101,13 +94,15 @@ evaluator = Kr_Evaluator(
     output_path="../dataset",
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
-    lookuptable_E=node_lut,
-    lookuptable_R=relation_lut,
+    lookuptable_E= node_lut,
+    lookuptable_R= relation_lut,
     log=True,
     evaluator_batch_size=50000,
     dataloaderX=True,
-    num_workers=4,
+    num_workers= 4,
     pin_memory=True,
     trained_model_path=None
 )
 evaluator.evaluate()
+
+

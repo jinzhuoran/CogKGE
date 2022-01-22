@@ -10,6 +10,9 @@ node_lut, relation_lut ,time_lut= loader.load_all_lut()
 # loader.describe()
 # train_data.describe()
 # node_lut.describe()
+loader.summary(train_data)
+loader.summary(valid_data)
+loader.summary(test_data)
 
 processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,
                                reprocess=True,

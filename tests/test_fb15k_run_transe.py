@@ -33,7 +33,7 @@ test_sampler = RandomSampler(test_dataset)
 
 model = TransE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=50,
+               embedding_dim=200,
                p=1)
 
 loss = MarginLoss(margin=1.0,C=0)
@@ -42,7 +42,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=50000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(

@@ -10,6 +10,7 @@ from ....utils.download_utils import Download_Data
 from ...vocabulary import Vocabulary
 import json
 import prettytable as pt
+from tqdm import tqdm
 
 from .baseloader import BaseLoader
 
@@ -130,6 +131,24 @@ class EVENTKG2MLoader(BaseLoader):
         tb.field_names = [self.data_name,"train","valid","test","node","relation","time"]
         tb.add_row(["num",self.train_len,self.valid_len,self.test_len,len(self.node_vocab),len(self.relation_vocab),len(self.time_vocab)])
         print(tb)
+
+    def summary(self,data):
+        E_E=0
+        E_Q=0
+        Q_E=0
+        Q_Q=0
+        for i in tqdm(range(len(data))):
+            if data[i]["head"][0]=="E" and data[i]["tail"][0]=="E":
+                E_E=E_E+1
+            if data[i]["head"][0]=="E" and data[i]["tail"][0]=="Q":
+                E_Q=E_Q+1
+            if data[i]["head"][0]=="Q" and data[i]["tail"][0]=="E":
+                Q_E=Q_E+1
+            if data[i]["head"][0]=="Q" and data[i]["tail"][0]=="Q":
+                Q_Q=Q_Q+1
+        print("E_E",E_E,"E_Q",E_Q,"Q_E",Q_E,"Q_Q",Q_Q)
+
+
 
 
 # class EVENTKG2MLoader:
