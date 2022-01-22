@@ -1,26 +1,27 @@
 import torch
 from torch.utils.data import RandomSampler
-from cogktr import *
 
-device=init_cogktr(device_id="9",seed=1)
+from cogkge import *
 
-loader =EVENTKG2MLoader(dataset_path="../dataset",download=True)
+device = init_cogkge(device_id="9", seed=1)
+
+loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
-node_lut, relation_lut ,time_lut= loader.load_all_lut()
+node_lut, relation_lut, time_lut = loader.load_all_lut()
 # loader.describe()
 # train_data.describe()
 # node_lut.describe()
 
-processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,
+processor = EVENTKG2MProcessor(node_lut, relation_lut, time_lut,
                                reprocess=True,
-                               type=True,time=False,description=False,path=False,
+                               type=True, time=False, description=False, path=False,
                                time_unit="year",
-                               pretrain_model_name="roberta-base",token_len=10,
+                               pretrain_model_name="roberta-base", token_len=10,
                                path_len=10)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
-node_lut,relation_lut,time_lut=processor.process_lut()
+node_lut, relation_lut, time_lut = processor.process_lut()
 # node_lut.print_table(front=3)
 # relation_lut.print_table(front=3)
 
@@ -32,7 +33,7 @@ model = TransE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50)
 
-loss = MarginLoss(margin=1.0,C=0)
+loss = MarginLoss(margin=1.0, C=0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
@@ -50,7 +51,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Kr_Trainer(
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -61,8 +62,8 @@ trainer = Kr_Trainer(
     negative_sampler=negative_sampler,
     device=device,
     output_path="../dataset",
-    lookuptable_E= node_lut,
-    lookuptable_R= relation_lut,
+    lookuptable_E=node_lut,
+    lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
@@ -77,11 +78,11 @@ trainer = Kr_Trainer(
     save_step=200,
     metric_final_model=True,
     save_final_model=True,
-    load_checkpoint= None
+    load_checkpoint=None
 )
 trainer.train()
 
-evaluator = Kr_Evaluator(
+evaluator = Evaluatoraluator(
     test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,
@@ -90,14 +91,13 @@ evaluator = Kr_Evaluator(
     output_path="../dataset",
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
-    lookuptable_E= node_lut,
-    lookuptable_R= relation_lut,
+    lookuptable_E=node_lut,
+    lookuptable_R=relation_lut,
     log=True,
     evaluator_batch_size=50000,
     dataloaderX=True,
-    num_workers= 4,
+    num_workers=4,
     pin_memory=True,
     trained_model_path=None
 )
 evaluator.evaluate()
-

@@ -1,4 +1,4 @@
-# add cogktr directory to sys.path
+# add cogkge directory to sys.path
 from logging import config
 import sys
 from pathlib import Path
@@ -20,8 +20,8 @@ import yaml
 import shutil
 from torch.utils.data import RandomSampler
 
-# cogktr模块
-from cogktr import *
+# cogkge模块
+from cogkge import *
 
 
 # init the random seeds

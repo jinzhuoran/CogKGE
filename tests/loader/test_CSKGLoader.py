@@ -1,5 +1,5 @@
 
-from cogktr import *
+from cogkge import *
 import time
 
 

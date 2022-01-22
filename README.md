@@ -1,24 +1,35 @@
 ---
 
+# <img src="docs/images/CogKGE.png" alt="CogKGE: A Knowledge Graph Embedding Toolkit and Benckmark for Representing Multi-source and Heterogeneous Knowledge" width="20%">
 
-# <img src="docs/images/CogKGE.png" alt="CogKGE: A Knowledge Graph Embedding Toolkit and Benckmark for Representing Multi-source and Heterogeneous Knowledge" width="20%"> 
 **CogKGE: A Knowledge Graph Embedding Toolkit and Benckmark for Representing Multi-source and Heterogeneous Knowledge**
 
 **Demo system and more information is available at http://cognlp.com/cogkge**
 
+## Description
 
-## Description   
-CogKGE is a knowledge graph embedding toolkit that aims to represent **multi-source** and **heterogeneous** knowledge. CogKGE currently supports 17 models, 11 datasets including two multi-source heterogeneous KGs, five evaluation metrics, four knowledge adapters, four loss functions, three samplers and three built-in data containers.
+CogKGE is a knowledge graph embedding toolkit that aims to represent **multi-source** and **heterogeneous** knowledge.
+CogKGE currently supports 17 models, 11 datasets including two multi-source heterogeneous KGs, five evaluation metrics,
+four knowledge adapters, four loss functions, three samplers and three built-in data containers.
 
 This easy-to-use python package has the following advantages:
 
-- **Multi-source and heterogeneous knowledge representation.** CogKGE explores the unified representation of knowledge from diverse sources. Moreover, our toolkit not only contains the triple fact-based embedding models, but also supports the fusion representation of additional information, including text descriptions, node types and temporal information.
+- **Multi-source and heterogeneous knowledge representation.** CogKGE explores the unified representation of knowledge
+  from diverse sources. Moreover, our toolkit not only contains the triple fact-based embedding models, but also
+  supports the fusion representation of additional information, including text descriptions, node types and temporal
+  information.
 
-- **Comprehensive models and benchmark datasets.** CogKGE implements lots of classic KGE models in the four categories of translation distance models, semantic matching models, graph neural network-based models and transformer-based models. Besides out-of-the-box models, we release two large benchmark datasets for further evaluating KGE methods, called EventKG240K and CogNet360K.
-- **Extensible and modularized framework.** CogKGE provides a programming framework for KGE tasks. Based on the extensible architecture, CogKGE can meet the requirements of module extension and secondary development, and pre-trained knowledge embeddings can be directly applied to downstream tasks.
-- **Open source and visualization demo.** Besides the toolkit, we also release an online system to discover knowledge visually. Source code, datasets and pre-trained embeddings are publicly available.
+- **Comprehensive models and benchmark datasets.** CogKGE implements lots of classic KGE models in the four categories
+  of translation distance models, semantic matching models, graph neural network-based models and transformer-based
+  models. Besides out-of-the-box models, we release two large benchmark datasets for further evaluating KGE methods,
+  called EventKG240K and CogNet360K.
+- **Extensible and modularized framework.** CogKGE provides a programming framework for KGE tasks. Based on the
+  extensible architecture, CogKGE can meet the requirements of module extension and secondary development, and
+  pre-trained knowledge embeddings can be directly applied to downstream tasks.
+- **Open source and visualization demo.** Besides the toolkit, we also release an online system to discover knowledge
+  visually. Source code, datasets and pre-trained embeddings are publicly available.
 
-## Install 
+## Install
 
 ### Install from git
 
@@ -31,6 +42,7 @@ cd cogkge
 pip install -e .   
 pip install -r requirements.txt
 ```
+
 ### Install from pip
 
 ```bash
@@ -63,17 +75,17 @@ model = BoxE(entity_dict_len=len(node_lut),
              embedding_dim=50)
 
 # load predictor
-predictor = Kr_Predictior(model_name="BoxE",
-                          data_name="EVENTKG2M",
-                          model=model,
-                          device=device,
-                          node_lut=node_lut,
-                          relation_lut=relation_lut,
-                          pretrained_model_path="data/BoxE_Model.pkl",
-                          processed_data_path="data",
-                          reprocess=False,
-                          fuzzy_query_top_k=10,
-                          predict_top_k=10)
+predictor = Predictor(model_name="BoxE",
+                      data_name="EVENTKG2M",
+                      model=model,
+                      device=device,
+                      node_lut=node_lut,
+                      relation_lut=relation_lut,
+                      pretrained_model_path="data/BoxE_Model.pkl",
+                      processed_data_path="data",
+                      reprocess=False,
+                      fuzzy_query_top_k=10,
+                      predict_top_k=10)
 
 # fuzzy query node
 result_node = predictor.fuzzy_query_node_keyword('champion')
@@ -153,7 +165,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Kr_Trainer(
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -184,7 +196,7 @@ trainer = Kr_Trainer(
 )
 trainer.train()
 
-evaluator = Kr_Evaluator(
+evaluator = Evaluatoraluator(
     test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,
@@ -340,19 +352,27 @@ evaluator.evaluate()
 
 ### [EventKG240K](https://eventkg.l3s.uni-hannover.de/)
 
-EventKG is a event-centric temporal knowledge graph, which incorporates over 690 thousand contemporary and historical events and over 2.3 million temporal relations. To our best knowledge, EventKG240K is the first event-centric KGE dataset. We use EventKG V3.0 data to construct the dataset.
-First, we filter entities and events based on their degrees. Then, we select the triple facts when both nodes' degrees are greater than 10. At last, we add text descriptions and node types for nodes and translate triples to quadruples by temporal information. The whole dataset contains 238,911 nodes, 822 relations and 2,333,986 triples.
+EventKG is a event-centric temporal knowledge graph, which incorporates over 690 thousand contemporary and historical
+events and over 2.3 million temporal relations. To our best knowledge, EventKG240K is the first event-centric KGE
+dataset. We use EventKG V3.0 data to construct the dataset. First, we filter entities and events based on their degrees.
+Then, we select the triple facts when both nodes' degrees are greater than 10. At last, we add text descriptions and
+node types for nodes and translate triples to quadruples by temporal information. The whole dataset contains 238,911
+nodes, 822 relations and 2,333,986 triples.
 
 ### [CogNet360K](http://cognet.top/)
 
-CogNet is a multi-source heterogeneous KG dedicated to integrating linguistic, world and commonsense knowledge. To build a subset as the dataset, we count the number of occurrences for each node. Then, we sort frame instances by the minimum occurrences of their connected nodes. After we have the sorted list, we filter the triple facts according to the preset frame categories. Finally, we find the nodes that participate in these triple facts and complete their information. The final dataset contains 360,637 nodes and 1,470,488 triples.
+CogNet is a multi-source heterogeneous KG dedicated to integrating linguistic, world and commonsense knowledge. To build
+a subset as the dataset, we count the number of occurrences for each node. Then, we sort frame instances by the minimum
+occurrences of their connected nodes. After we have the sorted list, we filter the triple facts according to the preset
+frame categories. Finally, we find the nodes that participate in these triple facts and complete their information. The
+final dataset contains 360,637 nodes and 1,470,488 triples.
 
 ## Other KGE open-source project
 
- - [Graphvite](https://graphvite.io/)
- - [OpenKE](https://github.com/thunlp/OpenKE)
- - [PyKEEN](https://github.com/SmartDataAnalytics/PyKEEN)
- - [Pykg2vec](https://github.com/Sujit-O/pykg2vec)
- - [LIBKGE](https://github.com/uma-pi1/kge)
- - [KnowledgeGraphEmbedding](https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding)
+- [Graphvite](https://graphvite.io/)
+- [OpenKE](https://github.com/thunlp/OpenKE)
+- [PyKEEN](https://github.com/SmartDataAnalytics/PyKEEN)
+- [Pykg2vec](https://github.com/Sujit-O/pykg2vec)
+- [LIBKGE](https://github.com/uma-pi1/kge)
+- [KnowledgeGraphEmbedding](https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding)
 

@@ -1,7 +1,7 @@
 import os
 import torch
 from torch.utils.data import RandomSampler
-from cogktr import *
+from cogkge import *
 
 output_path = cal_output_path("../dataset/kr/FB15K/raw_data", "TransE")
 if not os.path.exists(output_path):
@@ -51,7 +51,7 @@ test_relation=relation_candidate[10]
 print(test_entity)
 print(test_relation)
 
-evaluator = Kr_Evaluator(
+evaluator = Evaluatoraluator(
     test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,

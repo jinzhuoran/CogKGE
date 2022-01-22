@@ -1,4 +1,4 @@
-from cogktr import *
+from cogkge import *
 
 vocabulary1 = Vocabulary()
 vocabulary2 = Vocabulary()

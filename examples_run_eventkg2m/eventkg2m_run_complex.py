@@ -11,10 +11,9 @@ sys.path.append(os.getcwd())
 import torch
 from torch.utils.data import RandomSampler
 
-from cogktr import *
-from cogktr.models.kr.complex import ComplEx
+from cogkge import *
 
-device = init_cogktr(device_id="2", seed=1)
+device = init_cogkge(device_id="2", seed=1)
 
 loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -62,7 +61,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Kr_Trainer(
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -93,7 +92,7 @@ trainer = Kr_Trainer(
 )
 trainer.train()
 
-evaluator = Kr_Evaluator(
+evaluator = Evaluatoraluator(
     test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,

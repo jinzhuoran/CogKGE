@@ -4,7 +4,7 @@ import random
 import numpy as np
 from torch.utils.data import RandomSampler
 
-from cogktr import *
+from cogkge import *
 
 class Init_CogKTR():
     def __init__(self,seed,device_id,data_path,model_name):
@@ -98,7 +98,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        relation_dict_len=len(relation_lut))
 
 
-trainer = Kr_Trainer(
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -129,7 +129,7 @@ trainer = Kr_Trainer(
 )
 trainer.train()
 
-evaluator = Kr_Evaluator(
+evaluator = Evaluatoraluator(
     test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,

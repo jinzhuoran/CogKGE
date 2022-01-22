@@ -1,4 +1,4 @@
-from cogktr import *
+from cogkge import *
 import time
 
 loader = EVENTKG2MLoader(path='/home/hongbang/CogKTR/dataset/kr/EVENTKG2M/raw_data',
