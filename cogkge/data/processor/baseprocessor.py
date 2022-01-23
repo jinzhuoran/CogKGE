@@ -7,7 +7,7 @@ from ..dataset import Cog_Dataset
 
 class BaseProcessor:
     def __init__(self, data_name, node_lut, relation_lut, reprocess=True,
-                 time=None, type=None, description=None, path=None):
+                 time=None, nodetype=None, description=None, graph=None):
         """
         :param vocabs: node_vocab,relation_vocab from node_lut relation_lut
         """
@@ -18,9 +18,9 @@ class BaseProcessor:
         self.relation_lut = relation_lut
         self.reprocess = reprocess
         self.time = time
-        self.type = type
+        self.nodetype = nodetype
         self.description = description
-        self.path = path
+        self.graph = graph
         self.processed_path = node_lut.processed_path
         # self.node_vocab = node_vocab
         # self.relation_vocab = relation_vocab

@@ -1,9 +1,9 @@
+from .adapter import *
 from .core import *
 from .data import *
 from .models import *
 from .modules import *
 from .utils import *
-from .adapter import *
 
 __all__ = [
     # core
@@ -60,6 +60,7 @@ __all__ = [
     "RGCN",
     "GCN",
     "HittER",
+    "TransE_Adapter",
 
     "TransE_baseline",
     "TransE_Add_Description",
@@ -79,6 +80,13 @@ __all__ = [
     "AdversarialSampler",
 
     "Vocabulary",
+
+    # adapter
+    "description",
+    "graph",
+    "nodetype",
+    "time",
+   
 
     "GAT",
     "GCN",

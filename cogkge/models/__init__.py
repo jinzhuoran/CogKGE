@@ -16,6 +16,7 @@ from .tucker import *
 from .rgcn import *
 from .compgcn import *
 from .hitter import *
+from .transe_adapter import *
 
 __all__ = [
     # transe
@@ -52,6 +53,7 @@ __all__ = [
     "CompGCN",
 
     "HittER",
+    "TransE_Adapter",
 
     "TransE_baseline",
     "TransE_Add_Description",
