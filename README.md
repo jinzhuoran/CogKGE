@@ -63,17 +63,17 @@ model = BoxE(entity_dict_len=len(node_lut),
              embedding_dim=50)
 
 # load predictor
-predictor = Kr_Predictior(model_name="BoxE",
-                          data_name="EVENTKG2M",
-                          model=model,
-                          device=device,
-                          node_lut=node_lut,
-                          relation_lut=relation_lut,
-                          pretrained_model_path="data/BoxE_Model.pkl",
-                          processed_data_path="data",
-                          reprocess=False,
-                          fuzzy_query_top_k=10,
-                          predict_top_k=10)
+predictor = Predictor(model_name="BoxE",
+                      data_name="EVENTKG2M",
+                      model=model,
+                      device=device,
+                      node_lut=node_lut,
+                      relation_lut=relation_lut,
+                      pretrained_model_path="data/BoxE_Model.pkl",
+                      processed_data_path="data",
+                      reprocess=False,
+                      fuzzy_query_top_k=10,
+                      predict_top_k=10)
 
 # fuzzy query node
 result_node = predictor.fuzzy_query_node_keyword('champion')
@@ -153,7 +153,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Kr_Trainer(
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -184,7 +184,7 @@ trainer = Kr_Trainer(
 )
 trainer.train()
 
-evaluator = Kr_Evaluator(
+evaluator = Evaluator(
     test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,

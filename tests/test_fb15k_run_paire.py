@@ -60,7 +60,7 @@ negative_sampler = AdversarialSampler(triples=train_dataset,
                                        relation_dict_len=len(relation_lut),
                                        neg_per_pos=10)
 
-trainer = Kr_Trainer( 
+trainer = Trainer( 
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -91,7 +91,7 @@ trainer = Kr_Trainer(
 )
 trainer.train()
 
-evaluator = Kr_Evaluator(
+evaluator = Evaluator(
     test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,
