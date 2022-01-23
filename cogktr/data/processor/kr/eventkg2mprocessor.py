@@ -15,22 +15,20 @@ from ...vocabulary import Vocabulary
 class EVENTKG2MProcessor(BaseProcessor):
     def __init__(self, node_lut, relation_lut, time_lut,
                  reprocess=True,
-                 time=False, type=False, description=False, path=False,
+                 time=False, nodetype=False, description=False, graph=False,
                  time_unit="year",
-                 pretrain_model_name="roberta-base", token_len=10,
-                 path_len=10):
+                 pretrain_model_name="roberta-base", token_len=10):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """
         super().__init__("EVENTKG2M", node_lut, relation_lut, reprocess,
-                         time, type, description, path)
+                         time, nodetype, description, graph)
         self.time_lut = time_lut
         self.time_vocab = time_lut.vocab
 
         self.time_unit = time_unit
         self.pre_training_model_name = pretrain_model_name
         self.token_length = token_len
-        self.path_len = path_len
         self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
         self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
 
@@ -70,7 +68,7 @@ class EVENTKG2MProcessor(BaseProcessor):
                 self.node_lut.add_mask(torch.cat(masks_list, dim=0))
                 self.node_lut.save_to_pickle(preprocessed_node_lut_file)
 
-        if self.type:
+        if self.nodetype:
             if self.reprocess or not os.path.exists(preprocessed_node_lut_file):
                 node_type_list = []
                 for i in tqdm(range(len(node_lut))):
@@ -115,7 +113,7 @@ class EVENTKG2MProcessor(BaseProcessor):
                 self.time_vocab = day_time_vocab
                 self.time_lut.vocab = day_time_vocab
 
-        if self.path:
+        if self.graph:
             pass
 
     def _datable2numpy(self, data):

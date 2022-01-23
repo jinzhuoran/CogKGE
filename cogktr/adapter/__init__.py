@@ -1,7 +1,4 @@
-from .adapter_description import *
-from .adapter_graph import *
-from .adapter_nodetype import *
-from .adapter_time import *
+from .adapter import *
 
 __all__ = [
     # adapter

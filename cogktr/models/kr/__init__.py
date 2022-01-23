@@ -13,6 +13,7 @@ from .boxe import *
 from .complex import *
 from .distmult import *
 from .ttd import *
+from .transe_adapter import *
 
 __all__=[
     #transe
@@ -43,6 +44,8 @@ __all__=[
     "ComplEx",
 
     "DistMult",
+
+    "TransE_Adapter",
 
     "TransE_baseline",
     "TransE_Add_Description",

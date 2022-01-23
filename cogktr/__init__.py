@@ -61,6 +61,7 @@ __all__ = [
     "BoxE",
     "ComplEx",
     "DistMult",
+    "TransE_Adapter",
 
     "TransE_baseline",
     "TransE_Add_Description",
