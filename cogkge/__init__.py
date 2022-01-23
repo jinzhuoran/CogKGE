@@ -57,6 +57,9 @@ __all__ = [
     "BoxE",
     "ComplEx",
     "DistMult",
+    "RGCN",
+    "GCN",
+    "HittER",
     "TransE_Adapter",
 
     "TransE_baseline",
