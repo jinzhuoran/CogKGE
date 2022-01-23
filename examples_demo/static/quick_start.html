@@ -117,7 +117,7 @@
 					
 					loader lut
 <pre class="my_code" >
-device = init_cogktr(device_id="0", seed=1)
+device = init_cogkge(device_id="0", seed=1)
 loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut, time_lut = loader.load_all_lut()
@@ -136,7 +136,7 @@ model = BoxE(entity_dict_len=len(node_lut),
 		embedding_dim=50)</pre>
 						
 					load predictor
-<pre class="my_code" >predictor = Kr_Predictior(model_name="BoxE",
+<pre class="my_code" >predictor = Predictior(model_name="BoxE",
 			data_name="EVENTKG2M",
 			model=model,
 			device=device,
@@ -183,7 +183,7 @@ visual_list = predictor.show_img(node_id=100, visual_num=1000)
 from torch.utils.data import RandomSampler
 from cogkge import *</pre>
 					
-					<pre class="my_code">device = init_cogktr(device_id="0", seed=1)
+					<pre class="my_code">device = init_cogkge(device_id="0", seed=1)
 
 loader = EVENTKG2MLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -225,7 +225,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
 					entity_dict_len=len(node_lut),
 					relation_dict_len=len(relation_lut))
 						
-trainer = Kr_Trainer(
+trainer = Trainer(
 	train_dataset=train_dataset,
 	valid_dataset=valid_dataset,
 	train_sampler=train_sampler,
@@ -255,7 +255,7 @@ trainer = Kr_Trainer(
 	load_checkpoint=None)
 trainer.train()
 						
-evaluator = Kr_Evaluator(
+evaluator = Evaluator(
 	test_dataset=test_dataset,
 	test_sampler=test_sampler,
 	model=model,
