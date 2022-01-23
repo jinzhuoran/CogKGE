@@ -13,7 +13,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
-import cogktr
+import cogkge
 
 
 # -- Project information -----------------------------------------------------
@@ -65,7 +65,7 @@ source_suffix = ['.rst', '.md']
 master_doc = 'index'
 
 language = 'zh_cn'
-rst_context = {'CogKTR': cogktr}
+rst_context = {'CogKTR': cogkge}
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

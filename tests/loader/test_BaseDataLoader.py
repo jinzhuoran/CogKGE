@@ -1,4 +1,4 @@
-from cogktr import *
+from cogkge import *
 import time
 
 # print("Testing FB15K dataloader...")
