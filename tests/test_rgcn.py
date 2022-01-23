@@ -37,7 +37,7 @@ test_sampler = RandomSampler(test_dataset)
 #                dim_entity=50,
 #                dim_relation=50)
 
-model = BoxE(entity_dict_len=len(node_lut),
+model = RGCN(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
              embedding_dim=500)
 
