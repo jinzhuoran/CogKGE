@@ -8,8 +8,8 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 
 
-from cogktr import *
-device=init_cogktr(device_id="1",seed=1)
+from cogkge import *
+device=init_cogkge(device_id="1",seed=1)
 
 loader =COGNET680KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -52,7 +52,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Kr_Trainer(
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -75,7 +75,7 @@ trainer = Kr_Trainer(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=50,
+    metric_step=200,
     save_step=200,
     metric_final_model=True,
     save_final_model=True,
@@ -83,7 +83,7 @@ trainer = Kr_Trainer(
 )
 trainer.train()
 
-evaluator = Kr_Evaluator(
+evaluator = Evaluator(
     test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,

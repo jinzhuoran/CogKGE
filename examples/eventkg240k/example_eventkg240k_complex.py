@@ -1,34 +1,34 @@
+import sys
+from pathlib import Path
+
 import torch
 from torch.utils.data import RandomSampler
-from pathlib import Path
-import sys
+
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0].parents[0].parents[0]  # CogKGE root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
-from cogktr import *
+from cogkge import *
 
-device=init_cogktr(device_id="8",seed=1)
+device = init_cogkge(device_id="8", seed=1)
 
-loader =EVENTKG2MLoader(dataset_path="../../dataset",download=True)
+loader = EVENTKG2MLoader(dataset_path="../../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
-node_lut, relation_lut ,time_lut= loader.load_all_lut()
+node_lut, relation_lut, time_lut = loader.load_all_lut()
 
-
-processor = EVENTKG2MProcessor(node_lut, relation_lut,time_lut,reprocess=True)
+processor = EVENTKG2MProcessor(node_lut, relation_lut, time_lut, reprocess=True)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
-node_lut,relation_lut,time_lut=processor.process_lut()
-
+node_lut, relation_lut, time_lut = processor.process_lut()
 
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
 model = ComplEx(entity_dict_len=len(node_lut),
-               relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+                relation_dict_len=len(relation_lut),
+                embedding_dim=50)
 
 loss = NegLogLikehoodLoss(C=0.1)
 
@@ -48,7 +48,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Kr_Trainer(
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=test_dataset,
     train_sampler=train_sampler,
@@ -59,8 +59,8 @@ trainer = Kr_Trainer(
     negative_sampler=negative_sampler,
     device=device,
     output_path="../../dataset",
-    lookuptable_E= node_lut,
-    lookuptable_R= relation_lut,
+    lookuptable_E=node_lut,
+    lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
@@ -75,7 +75,6 @@ trainer = Kr_Trainer(
     save_step=200,
     metric_final_model=True,
     save_final_model=True,
-    load_checkpoint= None
+    load_checkpoint=None
 )
 trainer.train()
-

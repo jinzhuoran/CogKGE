@@ -1,4 +1,4 @@
-from cogktr import *
+from cogkge import *
 import time
 import torch.utils.data as Data
 
