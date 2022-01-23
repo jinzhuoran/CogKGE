@@ -7,6 +7,7 @@ setup(
     url="https://github.com/jinzhuoran/CogKGE/",
     author="CogNLP Team",
     author_email="zhuoran.jin@nlpr.ia.ac.cn",
+    license='MIT',
     install_requires=[
         "torch==1.10.1",
         "transformers==4.15.0",
