@@ -64,16 +64,16 @@ model = BoxE(entity_dict_len=len(node_lut),
 
 # load predictor
 predictor = Predictor(model_name="BoxE",
-                          data_name="EVENTKG2M",
-                          model=model,
-                          device=device,
-                          node_lut=node_lut,
-                          relation_lut=relation_lut,
-                          pretrained_model_path="data/BoxE_Model.pkl",
-                          processed_data_path="data",
-                          reprocess=False,
-                          fuzzy_query_top_k=10,
-                          predict_top_k=10)
+                      data_name="EVENTKG2M",
+                      model=model,
+                      device=device,
+                      node_lut=node_lut,
+                      relation_lut=relation_lut,
+                      pretrained_model_path="data/BoxE_Model.pkl",
+                      processed_data_path="data",
+                      reprocess=False,
+                      fuzzy_query_top_k=10,
+                      predict_top_k=10)
 
 # fuzzy query node
 result_node = predictor.fuzzy_query_node_keyword('champion')
