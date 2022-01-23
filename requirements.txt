@@ -1,4 +1,4 @@
-torch==1.10.1
+torch==1.10.1+cu113
 transformers==4.15.0
 openTSNE
 mongoengine
