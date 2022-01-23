@@ -9,7 +9,7 @@ class WIKIDATA5M_Filter:
         self.path_wikidata5m = path_wikidata5m
         self.path_mobilewikidata5m = path_mobilewikidata5m
         self.threshold = threshold
-        self.entity_set=set()
+        self.entity_set = set()
 
     def filter_triplet(self, input_data_name, output_data_name, data_type):
         path_input = os.path.join(self.path_wikidata5m, input_data_name)
@@ -38,7 +38,7 @@ class WIKIDATA5M_Filter:
             for line in file_input:
                 text_list = line.strip().split("\t")
                 if text_list[0] in self.entity_set:
-                # if int(text_list[0][1:]) < self.threshold and text_list[0] in self.entity_set:
+                    # if int(text_list[0][1:]) < self.threshold and text_list[0] in self.entity_set:
 
                     file_output.write(line)
         file_output.close()
@@ -48,7 +48,7 @@ class WIKIDATA5M_Filter:
             raise ValueError("Path_wikidata5m is incorrect!Please download WIKIDATA5M!")
         if not os.path.exists(self.path_mobilewikidata5m):
             os.makedirs(self.path_mobilewikidata5m)
-            print(self.path_mobilewikidata5m +"\t"+'Create successfully!')
+            print(self.path_mobilewikidata5m + "\t" + 'Create successfully!')
         else:
             print(self.path_mobilewikidata5m + 'The path has been existed!')
         self.filter_triplet(input_data_name="wikidata5m_transductive_train.txt",

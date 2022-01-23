@@ -45,4 +45,3 @@ def init_cogkge(device_id, seed):
         assert torch.cuda.is_available(), f'CUDA unavailable, invalid device {device_list} requested'  # check availability
     device = torch.device('cuda' if torch.cuda.is_available() == True else "cpu")
     return device
-
