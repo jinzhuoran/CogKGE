@@ -13,6 +13,7 @@ from .transh import *
 from .transr import *
 from .ttd import *
 from .tucker import *
+from .hitter import *
 
 __all__ = [
     # transe
@@ -43,6 +44,8 @@ __all__ = [
     "ComplEx",
 
     "DistMult",
+
+    "HittER",
 
     "TransE_baseline",
     "TransE_Add_Description",
