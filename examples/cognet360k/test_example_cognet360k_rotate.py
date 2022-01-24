@@ -19,7 +19,7 @@ node_lut, relation_lut = loader.load_all_lut()
 # train_data.describe()
 # node_lut.describe()
 
-processor = COGNET680KProcessor(node_lut, relation_lut) 
+processor = COGNET680KProcessor(node_lut, relation_lut)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
@@ -30,10 +30,10 @@ node_lut,relation_lut=processor.process_lut()
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
- 
+
 model = RotatE(entity_dict_len=len(node_lut),
-             relation_dict_len=len(relation_lut),
-             embedding_dim=50)
+               relation_dict_len=len(relation_lut),
+               embedding_dim=50)
 
 # loss = MarginLoss(margin=1.0,C=0)
 # loss = RotatELoss()
@@ -55,10 +55,10 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
 #                                        entity_dict_len=len(node_lut),
 #                                        relation_dict_len=len(relation_lut))
 negative_sampler = AdversarialSampler(triples=train_dataset,
-                                       entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut),
-                                       neg_per_pos=1)
-trainer = Kr_Trainer( 
+                                      entity_dict_len=len(node_lut),
+                                      relation_dict_len=len(relation_lut),
+                                      neg_per_pos=1)
+trainer = Kr_Trainer(
     train_dataset=train_dataset,
     valid_dataset=test_dataset,
     train_sampler=train_sampler,
