@@ -2,14 +2,67 @@ import torch
 import torch.nn as nn
 
 
+# TODO: add classification trainer
+class HittER(torch.nn.Module):
+    def __init__(self, embedding_dim=320, dropout=0.1):
+        super(HittER, self).__init__()
+        self.name = "HittER"
+        self.embedding_dim = embedding_dim
+        self.dropout = dropout
+
+        self.gcls_emb = torch.nn.parameter.Parameter(torch.zeros(self.embedding_dim))
+        nn.init.uniform_(self.gcls_emb.data)
+        self.inter_type_emb = torch.nn.parameter.Parameter(torch.zeros(self.embedding_dim))
+        nn.init.uniform_(self.inter_type_emb.data)
+        self.other_type_emb = torch.nn.parameter.Parameter(torch.zeros(self.embedding_dim))
+        nn.init.uniform_(self.other_type_emb.data)
+
+        self.encoder_layer = torch.nn.TransformerEncoderLayer(
+            d_model=self.embedding_dim,
+            nhead=8,
+            dim_feedforward=1280,
+            dropout=self.dropout,
+            activation='relu',
+        )
+        self.encoder = torch.nn.TransformerEncoder(
+            self.encoder_layer, num_layers=6
+        )
+
+    def get_embedding(self, embeddings):
+        return self._forward(embeddings)
+
+    def _forward(self, embeddings):
+        batch_size = embeddings.size()[0]
+        out = torch.concat(
+            (
+                self.gcls_emb.repeat((batch_size, 1)).unsqueeze(dim=1),
+                (embeddings[:, 0, :] + self.inter_type_emb.unsqueeze(0)).unsqueeze(dim=1),
+                embeddings[:, 1:, :] + self.other_type_emb.unsqueeze(0),
+            ),
+            dim=1,
+        )
+        out = self.encoder.forward(out)
+        out = out[:, 0, :]
+        return out
+
+    def get_score(self, embeddings):
+        out = self.get_embedding(embeddings)
+        score = torch.nn.functional.softmax(out, dim=1)
+        return score
+
+    def forward(self, embeddings):
+        return self.get_score(embeddings)
+
+
 # [CLS] embedding
 # source entity token embedding + source entity type embedding
 # predicate token embedding + predicate type embedding
 # dot product with [CLS] embedding and target entity embedding to produce score
-class HittER(torch.nn.Module):
+# Entity Transformer
+class Entity_Transformer(torch.nn.Module):
     def __init__(self, entity_dict_len, relation_dict_len, embedding_dim=320, dropout=0.1):
-        super(HittER, self).__init__()
-        self.name = "HittER"
+        super(Entity_Transformer, self).__init__()
+        self.name = "Entity Transformer"
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.embedding_dim = embedding_dim
@@ -50,20 +103,8 @@ class HittER(torch.nn.Module):
                 nn.init.xavier_uniform_(layer.self_attn.v_proj_weight)
 
     def get_score(self, triplet_idx):
-        h, r, t = self.get_embedding(triplet_idx)
-        batch_size = h.size()[0]
-        embeddings = torch.stack(
-            (
-                self.cls_emb.repeat((batch_size, 1)),
-                h + self.sub_type_emb.unsqueeze(0),
-                r + self.rel_type_emb.unsqueeze(0),
-            ),
-            dim=0,
-        )
-
-        out = self.encoder.forward(embeddings)
-        out = out[0, ::]
-        score = torch.nn.functional.softmax(torch.mm(out, self.entity_embedding.weight.data.t()), dim=1)
+        embeddings = self.get_embedding(triplet_idx)
+        score = torch.nn.functional.softmax(torch.mm(embeddings, self.entity_embedding.weight.data.t()), dim=1)
         return score
 
     def forward(self, triplet_idx):
@@ -73,13 +114,21 @@ class HittER(torch.nn.Module):
         return self._forward(triplet_idx)
 
     def _forward(self, triplet_idx):
-        head_embedding = self.entity_embedding(triplet_idx[:, 0])
-        relation_embedding = self.relation_embedding(triplet_idx[:, 1])
-        tail_embedding = self.entity_embedding(triplet_idx[:, 2])
-        self.head_batch_embedding = head_embedding
-        self.relation_batch_embedding = relation_embedding
-        self.tail_batch_embedding = tail_embedding
-        return head_embedding, relation_embedding, tail_embedding
+        h = self.entity_embedding(triplet_idx[:, 0])
+        r = self.relation_embedding(triplet_idx[:, 1])
+        t = self.entity_embedding(triplet_idx[:, 2])
+        batch_size = h.size()[0]
+        embeddings = torch.stack(
+            (
+                self.cls_emb.repeat((batch_size, 1)),
+                h + self.sub_type_emb.unsqueeze(0),
+                r + self.rel_type_emb.unsqueeze(0),
+            ),
+            dim=0,
+        )
+        embeddings = self.encoder.forward(embeddings)
+        embeddings = embeddings[0, ::]
+        return embeddings
 
     def loss(self, triplet_idx, loss_function=nn.CrossEntropyLoss()):
         score = self.forward(triplet_idx)
@@ -90,7 +139,10 @@ class HittER(torch.nn.Module):
 
 
 if __name__ == '__main__':
-    hitter = HittER(entity_dict_len=100, relation_dict_len=10, embedding_dim=320, dropout=0.1)
+    et = Entity_Transformer(entity_dict_len=100, relation_dict_len=10, embedding_dim=320, dropout=0.1)
     a = torch.IntTensor([[1, 2, 3], [3, 5, 6], [66, 7, 86]])
-    score = hitter.loss(a)
+    b = et.get_embedding(a)
+    c = torch.stack((b, b))
+    hitter = HittER()
+    hitter.get_score(c)
     print(1)

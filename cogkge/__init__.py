@@ -60,6 +60,7 @@ __all__ = [
     "RGCN",
     "GCN",
     "HittER",
+    "Entity_Transformer",
     "TransE_Adapter",
 
     "TransE_baseline",
