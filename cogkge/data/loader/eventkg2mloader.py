@@ -13,8 +13,8 @@ from ..vocabulary import Vocabulary
 class EVENTKG2MLoader(BaseLoader):
     def __init__(self, dataset_path, download=False):
         super().__init__(dataset_path, download,
-                         raw_data_path="kr/EVENTKG2M/raw_data",
-                         processed_data_path="kr/EVENTKG2M/processed_data",
+                         raw_data_path="EVENTKG2M/raw_data",
+                         processed_data_path="EVENTKG2M/processed_data",
                          train_name="eventkg2m_train.txt",
                          valid_name="eventkg2m_valid.txt",
                          test_name="eventkg2m_test.txt",
