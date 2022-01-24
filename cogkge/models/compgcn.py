@@ -3,10 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class HittER(nn.Module):
+class CompGCN(nn.Module):
     def __init__(self, entity_dict_len, relation_dict_len, embedding_dim, gamma=6.0):
-        super(HittER, self).__init__()
-        self.name = "HittER"
+        super(CompGCN, self).__init__()
+        self.name = "CompGCN"
         self.embedding_dim = embedding_dim
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len

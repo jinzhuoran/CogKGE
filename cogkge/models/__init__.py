@@ -13,7 +13,10 @@ from .transh import *
 from .transr import *
 from .ttd import *
 from .tucker import *
+from .rgcn import *
+from .compgcn import *
 from .hitter import *
+from .transe_adapter import *
 
 __all__ = [
     # transe
@@ -45,7 +48,12 @@ __all__ = [
 
     "DistMult",
 
+    "RGCN",
+
+    "CompGCN",
+
     "HittER",
+    "TransE_Adapter",
 
     "TransE_baseline",
     "TransE_Add_Description",
