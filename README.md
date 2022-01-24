@@ -355,4 +355,6 @@ CogNet is a multi-source heterogeneous KG dedicated to integrating linguistic, w
  - [Pykg2vec](https://github.com/Sujit-O/pykg2vec)
  - [LIBKGE](https://github.com/uma-pi1/kge)
  - [KnowledgeGraphEmbedding](https://github.com/DeepGraphLearning/KnowledgeGraphEmbedding)
+ - [PyG](https://github.com/pyg-team/pytorch_geometric)
+ - [CogDL](https://github.com/THUDM/cogdl)
 
