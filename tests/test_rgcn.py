@@ -9,6 +9,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 
 
+
 from cogkge import *
 device=init_cogkge(device_id="0",seed=1)
 
@@ -37,9 +38,9 @@ test_sampler = RandomSampler(test_dataset)
 #                dim_entity=50,
 #                dim_relation=50)
 
-model = RGCN(entity_dict_len=len(node_lut),
+model = CompGCN(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
-             embedding_dim=500)
+             embedding_dim=200)
 
 loss = MarginLoss(margin=1.0,C=0)
 
