@@ -1,43 +1,75 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 
-class HittER(nn.Module):
-    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim, gamma=6.0):
+class HittER(torch.nn.Module):
+    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim=320, dropout=0.1):
         super(HittER, self).__init__()
         self.name = "HittER"
-        self.embedding_dim = embedding_dim
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
+        self.embedding_dim = embedding_dim
+        self.dropout = dropout
 
-        self.entity_embedding = nn.Embedding(entity_dict_len, embedding_dim)
-        self.relation_embedding_head = nn.Embedding(relation_dict_len, embedding_dim)
-        self.relation_embedding_tail = nn.Embedding(relation_dict_len, embedding_dim)
+        self.entity_embedding = nn.Embedding(self.entity_dict_len, self.embedding_dim)
+        self.relation_embedding = nn.Embedding(self.relation_dict_len, self.embedding_dim)
+        nn.init.xavier_uniform_(self.entity_embedding.weight.data)
+        nn.init.xavier_uniform_(self.relation_embedding.weight.data)
 
-        self.gamma = nn.Parameter(
-            torch.Tensor([gamma]),
-            requires_grad=False
+        self.encoder_layer = torch.nn.TransformerEncoderLayer(
+            d_model=self.embedding_dim,
+            nhead=8,
+            dim_feedforward=1280,
+            dropout=self.dropout,
+            activation='relu',
+        )
+        self.encoder = torch.nn.TransformerEncoder(
+            self.encoder_layer, num_layers=3
         )
 
-        nn.init.xavier_uniform_(self.entity_embedding.weight.data)
-        nn.init.xavier_uniform_(self.relation_embedding_head.weight.data)
-        nn.init.xavier_uniform_(self.relation_embedding_head.weight.data)
+        for layer in self.encoder.layers:
+            nn.init.xavier_uniform_(layer.linear1.weight.data)
+            nn.init.xavier_uniform_(layer.linear2.weight.data)
+            nn.init.xavier_uniform_(layer.self_attn.out_proj.weight.data)
+            if layer.self_attn._qkv_same_embed_dim:
+                nn.init.xavier_uniform_(layer.self_attn.in_proj_weight)
+            else:
+                nn.init.xavier_uniform_(layer.self_attn.q_proj_weight)
+                nn.init.xavier_uniform_(layer.self_attn.k_proj_weight)
+                nn.init.xavier_uniform_(layer.self_attn.v_proj_weight)
 
-    def forward(self, sample):
-        batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
+    def get_score(self, triplet_idx):
+        h, r, t = self.get_embedding(triplet_idx)
+        batch_size = h.size()[0]
+        out = self.encoder.forward(
+            torch.stack(
+                (
+                    self.cls_emb.repeat((batch_size, 1)),
+                    h + self.sub_type_emb.unsqueeze(0),
+                    r + self.rel_type_emb.unsqueeze(0),
+                ),
+                dim=0,
+            )
+        )
+        out = out[0, ::]
+        score = (out * t).sum(-1)
+        return score.view(batch_size, -1)
 
-        h = self.entity_embedding(batch_h)
-        r_h = self.relation_embedding_head(batch_r)
-        r_t = self.relation_embedding_tail(batch_r)
-        t = self.entity_embedding(batch_t)  # (batch,dim_entity)
+    def forward(self, triplet_idx):
+        return self.get_score(triplet_idx)
 
-        # constraint is only added on entity embeddings
-        h = F.normalize(h, p=2.0, dim=-1)
-        t = F.normalize(t, p=2.0, dim=-1)
+    def get_embedding(self, triplet_idx):
+        return self._forward(triplet_idx)
 
-        score = torch.norm(h * r_h - t * r_t, p=1, dim=-1)  # (batch,)
-        return self.gamma.item() - score
+    def _forward(self, triplet_idx):
+        head_embedding = self.entity_embedding(triplet_idx[:, 0])
+        relation_embedding = self.relation_embedding(triplet_idx[:, 1])
+        tail_embedding = self.entity_embedding(triplet_idx[:, 2])
+        self.head_batch_embedding = head_embedding
+        self.relation_batch_embedding = relation_embedding
+        self.tail_batch_embedding = tail_embedding
+        return head_embedding, relation_embedding, tail_embedding
 
-    def get_score(self, sample):
-        return self.forward(sample)
+
+if __name__ == '__main__':
+    print(1)
