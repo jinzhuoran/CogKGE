@@ -58,7 +58,7 @@ __all__ = [
     "ComplEx",
     "DistMult",
     "RGCN",
-    "GCN",
+    "CompGCN",
     "HittER",
     "Entity_Transformer",
     "TransE_Adapter",

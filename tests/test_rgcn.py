@@ -8,11 +8,11 @@ ROOT = FILE.parents[0].parents[0]  # CogKGE root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 
-
 from cogkge import *
-device=init_cogkge(device_id="0",seed=1)
 
-loader = FB15KLoader(dataset_path="../dataset",download=True)
+device = init_cogkge(device_id="0", seed=1)
+loader = FB15KLoader(dataset_path="../dataset", download=True)
+
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
 # loader.describe()
@@ -20,26 +20,42 @@ node_lut, relation_lut = loader.load_all_lut()
 # node_lut.describe()
 
 # processor = COGNET680KProcessor(node_lut, relation_lut)
-processor = FB15KProcessor(node_lut,relation_lut,reprocess=True)
+processor = FB15KProcessor(node_lut, relation_lut, reprocess=True)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
-node_lut,relation_lut=processor.process_lut()
+node_lut, relation_lut = processor.process_lut()
 # node_lut.print_table(front=3)
 # relation_lut.print_table(front=3)
 
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
- 
-# model = TransR(entity_dict_len=len(node_lut),
-#                relation_dict_len=len(relation_lut),
-#                dim_entity=50,
-#                dim_relation=50)
 
-model = RGCN(entity_dict_len=len(node_lut),
-             relation_dict_len=len(relation_lut),
-             embedding_dim=500)
+
+def construct_adj(train_dataset, entity_dict_len, device):
+    edge_index, edge_type = [], []
+    for sub, rel, obj in train_dataset.data:
+        edge_index.append((sub, obj))
+        edge_type.append(rel)
+
+    for sub, rel, obj in train_dataset.data:
+        edge_index.append((obj, sub))
+        edge_type.append(rel + entity_dict_len)
+
+    edge_index = torch.LongTensor(edge_index).to(device).t()
+    edge_type = torch.LongTensor(edge_type).to(device)
+
+    return edge_index, edge_type
+
+
+edge_index, edge_type = construct_adj(train_dataset, entity_dict_len=len(node_lut), device=device)
+
+model = CompGCN(edge_index=edge_index,
+                edge_type=edge_type,
+                entity_dict_len=len(node_lut),
+                relation_dict_len=len(relation_lut),
+                embedding_dim=200)
 
 loss = MarginLoss(margin=1.0,C=0)
 
@@ -59,7 +75,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Trainer( 
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
@@ -109,4 +125,3 @@ evaluator = Evaluator(
     trained_model_path=None
 )
 evaluator.evaluate()
-

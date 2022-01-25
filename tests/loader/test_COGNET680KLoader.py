@@ -1,10 +1,20 @@
+import torch
+from torch.utils.data import RandomSampler
+from pathlib import Path
+import sys
+
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[0].parents[0].parents[0] # CogKGE root directory
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
+
 
 from cogkge import *
 import time
 
 
 print("Testing COGNET680K dataloader...")
-loader = COGNET680KLoader(dataset_path='/home/hongbang/CogKTR/dataset/',
+loader = COGNET680KLoader(dataset_path='/data/hongbang/CogKGE/dataset/',
                     download=True,
                     )
 

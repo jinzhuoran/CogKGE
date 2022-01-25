@@ -37,14 +37,14 @@ model = TransH(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
              embedding_dim=50)
 
-loss = MarginLoss(margin=0.5,C=0.1)
+loss = MarginLoss(margin=1.0,C=0.1)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
                          batch_size=500000,
-                         reverse=True)
+                         reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
