@@ -2,7 +2,7 @@ import numpy as np, sys, os, random, pdb, json, uuid, time, argparse
 from pprint import pprint
 import logging, logging.config
 from collections import defaultdict as ddict
-from ordered_set import OrderedSet
+# from ordered_set import OrderedSet
 
 # PyTorch related imports
 import torch
@@ -10,7 +10,8 @@ from torch.nn import functional as F
 from torch.nn.init import xavier_normal_
 from torch.utils.data import DataLoader
 from torch.nn import Parameter
-from torch_scatter import scatter_add
+# from torch_scatter import scatter_add
+from .util_scatter import scatter_add
 
 try:
     from torch import irfft
@@ -25,6 +26,8 @@ except ImportError:
         return irfft2(torch.complex(x[:,:,0], x[:,:,1]), s = signal_sizes, dim = (-d))
 
 np.set_printoptions(precision=4)
+
+
 
 def set_gpu(gpus):
 	"""

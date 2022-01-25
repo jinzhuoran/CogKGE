@@ -1,5 +1,6 @@
 import inspect, torch
-from torch_scatter import scatter
+# from torch_scatter import scatter
+from .util_scatter import scatter
 
 def scatter_(name, src, index, dim_size=None):
 	r"""Aggregates all values from the :attr:`src` tensor at the indices
