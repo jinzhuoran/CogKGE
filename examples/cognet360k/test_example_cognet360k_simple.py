@@ -54,7 +54,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Trainer( 
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=test_dataset,
     train_sampler=train_sampler,
@@ -78,7 +78,7 @@ trainer = Trainer(
     num_workers=4,
     pin_memory=True,
     metric_step=50,
-    save_step=200,
+    save_step=50,
     metric_final_model=True,
     save_final_model=True,
     load_checkpoint= None

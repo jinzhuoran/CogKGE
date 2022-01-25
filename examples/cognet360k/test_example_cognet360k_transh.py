@@ -55,7 +55,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Trainer( 
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=test_dataset,
     train_sampler=train_sampler,
