@@ -12,14 +12,14 @@ if str(ROOT) not in sys.path:
 from cogkge import *
 device=init_cogkge(device_id="7",seed=1)
 
-loader =FB15KLoader(dataset_path="../dataset",download=True)
+loader =CSKGLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut= loader.load_all_lut()
 # loader.describe()
 # train_data.describe()
 # node_lut.describe()
 
-processor = FB15KProcessor(node_lut, relation_lut,reprocess=True)
+processor = CSKGProcessor(node_lut, relation_lut,reprocess=True)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)

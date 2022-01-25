@@ -35,6 +35,7 @@ __all__ = [
     "CODEXLLoader",
     "CODEXSLoader",
     "CODEXMLoader",
+    "CSKGLoader",
 
 
     "FB15KProcessor",
@@ -48,6 +49,7 @@ __all__ = [
     "CODEXLProcessor",
     "CODEXSProcessor",
     "CODEXMProcessor",
+    "CSKGProcessor",
 
     # models
     "TransE",

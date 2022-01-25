@@ -17,6 +17,7 @@ __all__ = [
     "CODEXLLoader",
     "CODEXMLoader",
     "CODEXSLoader",
+    "CSKGLoader",
 
     # processor
     "FB15KProcessor",
@@ -30,6 +31,7 @@ __all__ = [
     "CODEXLProcessor",
     "CODEXSProcessor",
     "CODEXMProcessor",
+    "CSKGProcessor",
 
     "Cog_Dataset",
 

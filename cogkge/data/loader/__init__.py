@@ -9,6 +9,7 @@ from .cognet360kloader import *
 from .codexlloader import *
 from .codexmloader import *
 from .codexsloader import *
+from .cskgloader import *
 
 __all__=[
     "FB15KLoader",
@@ -21,5 +22,6 @@ __all__=[
     "COGNET360KLoader",
     "CODEXLLoader",
     "CODEXMLoader",
-    "CODEXSLoader"
+    "CODEXSLoader",
+    "CSKGLoader"
 ]

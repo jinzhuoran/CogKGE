@@ -9,6 +9,7 @@ from .cognet360kprocessor import *
 from .codexlprocessor import *
 from .codexmprocessor import *
 from .codexsprocessor import *
+from .cskgprocessor import *
 
 __all__=[
     "FB15KProcessor",
@@ -21,6 +22,7 @@ __all__=[
     "COGNET360KProcessor",
     "CODEXLProcessor",
     "CODEXSProcessor",
-    "CODEXMProcessor"
+    "CODEXMProcessor",
+    "CSKGProcessor"
 
 ]
