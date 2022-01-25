@@ -10,7 +10,7 @@ class CompGCNConv(MessagePassing):
 		self.out_channels	= out_channels
 		self.num_rels 		= num_rels
 		self.act 		= act
-		# self.device		= None
+		self.device		= None
 
 		self.w_loop		= get_param((in_channels, out_channels))
 		self.w_in		= get_param((in_channels, out_channels))
@@ -24,8 +24,8 @@ class CompGCNConv(MessagePassing):
 		if self.p.bias: self.register_parameter('bias', Parameter(torch.zeros(out_channels)))
 
 	def forward(self, x, edge_index, edge_type, rel_embed): 
-		# if self.device is None:
-		# 	self.device = edge_index.device
+		if self.device is None:
+			self.device = edge_index.device
 
 		rel_embed = torch.cat([rel_embed, self.loop_rel], dim=0)
 		num_edges = edge_index.size(1) // 2
@@ -34,10 +34,10 @@ class CompGCNConv(MessagePassing):
 		self.in_index, self.out_index = edge_index[:, :num_edges], edge_index[:, num_edges:]
 		self.in_type,  self.out_type  = edge_type[:num_edges], 	 edge_type [num_edges:]
 
-		# self.loop_index  = torch.stack([torch.arange(num_ent), torch.arange(num_ent)]).to(self.device)
-		# self.loop_type   = torch.full((num_ent,), rel_embed.size(0)-1, dtype=torch.long).to(self.device)
-		self.loop_index  = torch.stack([torch.arange(num_ent), torch.arange(num_ent)])
-		self.loop_type   = torch.full((num_ent,), rel_embed.size(0)-1, dtype=torch.long)
+		self.loop_index  = torch.stack([torch.arange(num_ent), torch.arange(num_ent)]).to(self.device)
+		self.loop_type   = torch.full((num_ent,), rel_embed.size(0)-1, dtype=torch.long).to(self.device)
+		# self.loop_index  = torch.stack([torch.arange(num_ent), torch.arange(num_ent)]).to(edge_type.device)
+		# self.loop_type   = torch.full((num_ent,), rel_embed.size(0)-1, dtype=torch.long).to(edge_type.device)
 
 		self.in_norm     = self.compute_norm(self.in_index,  num_ent)
 		self.out_norm    = self.compute_norm(self.out_index, num_ent)
