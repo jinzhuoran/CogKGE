@@ -11,7 +11,6 @@ from .transd import *
 from .transe import *
 from .transh import *
 from .transr import *
-from .ttd import *
 from .tucker import *
 from .rgcn import *
 from .compgcn import *
@@ -51,13 +50,10 @@ __all__ = [
     "RGCN",
 
     "CompGCN",
-    "HittER",
-    "Entity_Transformer",
-    "TransE_Adapter",
 
-    "TransE_baseline",
-    "TransE_Add_Description",
-    "TransE_Add_Time",
-    "TransE_Add_Type",
-    "TransE_Add_Path"
+    "HittER",
+
+    "Entity_Transformer",
+
+    "TransE_Adapter",
 ]

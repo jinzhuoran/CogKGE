@@ -46,10 +46,10 @@ class TransE_Adapter(nn.Module):
     def forward(self,triplet_idx):
         return self.get_score(triplet_idx)
 
-    # @description
+    @description
     # @graph
     # @nodetype
-    @time
+    # @time
     def get_embedding(self,triplet_idx,
                       node_lut=None,
                       nodetype_transfer_matrix=None,

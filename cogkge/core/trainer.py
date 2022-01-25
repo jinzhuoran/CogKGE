@@ -1,20 +1,14 @@
 import os
 import re
 import sys
-
 import numpy as np
 import torch
 import torch.utils.data as Data
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
-
-# from accelerate import Accelerator
 from cogkge.core import DataLoaderX
 from .log import save_logger
 from ..utils.kr_utils import cal_output_path
-
-
-# from .log import *
 
 
 class Trainer(object):
@@ -76,7 +70,7 @@ class Trainer(object):
 
         self.data_name = train_dataset.data_name
 
-        self.visual_num = 100  # 降维可视化的样本个数
+        self.visual_num = 100
         if self.lookuptable_E.type is not None:
             self.visual_type = self.lookuptable_E.type[:self.visual_num].numpy()
         else:
@@ -84,7 +78,6 @@ class Trainer(object):
                                           np.random.normal(0, 2, self.visual_num))
 
         # Set output_path
-        # output_path = os.path.join(output_path, "kr", self.data_name)
         output_path = os.path.join(output_path, self.data_name)
         self.output_path = cal_output_path(output_path, self.model.name)
         self.output_path = self.output_path + "--{}epochs".format(self.epoch)
@@ -106,13 +99,6 @@ class Trainer(object):
                 from apex import amp
                 self.model, self.optimizer = amp.initialize(self.model.to(self.device), self.optimizer, opt_level="O1")
 
-        # if self.apex:
-        #     try:
-        #         from apex import amp
-        #     except ImportError:
-        #         raise ImportError("Please install apex.")
-        #     self.model , self.optimizer = amp.initialize(self.model.to(self.device) , self.optimizer, opt_level="O1")
-
         # Load Data
         if self.dataloaderX:
             self.train_loader = DataLoaderX(dataset=self.train_dataset, sampler=self.train_sampler,
@@ -131,12 +117,6 @@ class Trainer(object):
                                                     batch_size=self.trainer_batch_size, num_workers=self.num_workers,
                                                     pin_memory=self.pin_memory)
 
-        # Load Lookuptable
-        # TODO: add lut_loader
-        # for example
-        # if self.lookuptable_E and self.lookuptable_E:
-        #     self.model.load_lookuotable(self.lookuptable_E, self.lookuptable_R)
-
         # Load Checkpoint
         self.trained_epoch = 0
         if self.load_checkpoint:
@@ -151,11 +131,7 @@ class Trainer(object):
             else:
                 raise FileExistsError("Checkpoint path doesn't exist!")
 
-        # Load Dataparallel Training
-        # self.accelerator = Accelerator()
-        # self.device = self.accelerator.device
-        # self.model, my_optimizer, my_training_dataloader = self.accelerate.prepare(
-        #     +     my_model, my_optimizer, my_training_dataloader)
+
         print("Available cuda devices:", torch.cuda.device_count())
         self.parallel_model = torch.nn.DataParallel(self.model)
         self.parallel_model = self.parallel_model.to(self.device)
@@ -202,7 +178,6 @@ class Trainer(object):
                 train_negative_score = self.parallel_model(train_negative)
                 penalty = self.model.get_penalty() if hasattr(self.model, 'get_penalty') else 0
                 train_loss = self.loss(train_positive_score, train_negative_score, penalty)
-                # self.accelerate.backward(train_loss)
 
                 self.optimizer.zero_grad()
                 if self.apex:

@@ -4,8 +4,8 @@ from .wn18loader import *
 from .wn18rrloader import *
 from .wikidata5mloader import *
 from .mobilewikidata5mloader import *
-from .eventkg2mloader import *
-from .cognet680kloader import *
+from .eventkg240kloader import *
+from .cognet360kloader import *
 
 __all__=[
     "FB15KLoader",
@@ -14,6 +14,6 @@ __all__=[
     "WN18RRLoader",
     "WIKIDATA5MLoader",
     "MOBILEWIKIDATA5MLoader",
-    "EVENTKG2MLoader",
-    "COGNET680KLoader",
+    "EVENTKG240KLoader",
+    "COGNET360KLoader",
 ]

@@ -13,14 +13,14 @@ if str(ROOT) not in sys.path:
 from cogkge import *
 device=init_cogkge(device_id="6",seed=1)
 
-loader =COGNET680KLoader(dataset_path="../../dataset",download=True)
+loader =COGNET360KLoader(dataset_path="../../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
 # loader.describe()
 # train_data.describe()
 # node_lut.describe()
 
-processor = COGNET680KProcessor(node_lut, relation_lut) 
+processor = COGNET360KProcessor(node_lut, relation_lut)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
