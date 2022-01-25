@@ -21,8 +21,20 @@ class CompGCN(nn.Module):
         self.act = torch.tanh
         self.bceloss = torch.nn.BCELoss()
 
-        self.edge_index = edge_index
-        self.edge_type = edge_type
+        self.edge_index = nn.Parameter(
+            torch.LongTensor(edge_index).t(),
+            requires_grad=False
+        )
+        self.edge_type = nn.Parameter(
+            torch.LongTensor(edge_type),
+            requires_grad=False
+        )
+
+        # edge_index = torch.LongTensor(edge_index).t()
+        # edge_type = torch.LongTensor(edge_type)
+        #
+        # self.edge_index = edge_index
+        # self.edge_type = edge_type
         self.num_bases = num_bases
 
         self.gcn_dim = embedding_dim

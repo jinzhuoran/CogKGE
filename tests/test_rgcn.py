@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import RandomSampler
 from pathlib import Path
 import sys
+import numpy as np
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0].parents[0]  # CogKGE root directory
@@ -43,8 +44,8 @@ def construct_adj(train_dataset, entity_dict_len, device):
         edge_index.append((obj, sub))
         edge_type.append(rel + entity_dict_len)
 
-    edge_index = torch.LongTensor(edge_index).to(device).t()
-    edge_type = torch.LongTensor(edge_type).to(device)
+    # edge_index = torch.LongTensor(edge_index).to(device).t()
+    # edge_type = torch.LongTensor(edge_type).to(device)
 
     return edge_index, edge_type
 
@@ -57,7 +58,7 @@ model = CompGCN(edge_index=edge_index,
                 relation_dict_len=len(relation_lut),
                 embedding_dim=200)
 
-loss = MarginLoss(margin=1.0,C=0)
+loss = MarginLoss(margin=1.0, C=0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
@@ -86,12 +87,12 @@ trainer = Trainer(
     negative_sampler=negative_sampler,
     device=device,
     output_path="../dataset",
-    lookuptable_E= node_lut,
-    lookuptable_R= relation_lut,
+    lookuptable_E=node_lut,
+    lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
-    trainer_batch_size=100000,
+    trainer_batch_size=128,
     epoch=1000,
     visualization=0,
     apex=True,
@@ -102,7 +103,7 @@ trainer = Trainer(
     save_step=200,
     metric_final_model=True,
     save_final_model=True,
-    load_checkpoint= None
+    load_checkpoint=None
 )
 trainer.train()
 
@@ -115,12 +116,12 @@ evaluator = Evaluator(
     output_path="../dataset",
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
-    lookuptable_E= node_lut,
-    lookuptable_R= relation_lut,
+    lookuptable_E=node_lut,
+    lookuptable_R=relation_lut,
     log=True,
     evaluator_batch_size=50000,
     dataloaderX=True,
-    num_workers= 4,
+    num_workers=4,
     pin_memory=True,
     trained_model_path=None
 )
