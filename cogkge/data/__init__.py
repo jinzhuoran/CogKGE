@@ -14,6 +14,9 @@ __all__ = [
     "MOBILEWIKIDATA5MLoader",
     "EVENTKG240KLoader",
     "COGNET360KLoader",
+    "CODEXLLoader",
+    "CODEXMLoader",
+    "CODEXSLoader",
 
     # processor
     "FB15KProcessor",
@@ -24,6 +27,9 @@ __all__ = [
     "MOBILEWIKIDATA5MProcessor",
     "EVENTKG240KProcessor",
     "COGNET360KProcessor",
+    "CODEXLProcessor",
+    "CODEXSProcessor",
+    "CODEXMProcessor",
 
     "Cog_Dataset",
 

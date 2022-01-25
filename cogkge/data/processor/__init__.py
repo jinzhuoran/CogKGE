@@ -6,6 +6,9 @@ from .wikidata5mprocessor import *
 from .mobilewikidata5mprocessor import *
 from .eventkg240kprocessor import *
 from .cognet360kprocessor import *
+from .codexlprocessor import *
+from .codexmprocessor import *
+from .codexsprocessor import *
 
 __all__=[
     "FB15KProcessor",
@@ -16,5 +19,8 @@ __all__=[
     "MOBILEWIKIDATA5MProcessor",
     "EVENTKG240KProcessor",
     "COGNET360KProcessor",
+    "CODEXLProcessor",
+    "CODEXSProcessor",
+    "CODEXMProcessor"
 
 ]
