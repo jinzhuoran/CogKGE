@@ -33,9 +33,10 @@ class CompGCNConv(MessagePassing):
 
 		self.in_index, self.out_index = edge_index[:, :num_edges], edge_index[:, num_edges:]
 		self.in_type,  self.out_type  = edge_type[:num_edges], 	 edge_type [num_edges:]
+		current_device = "cuda:%s" % (torch.cuda.current_device())
 
-		self.loop_index  = torch.stack([torch.arange(num_ent), torch.arange(num_ent)]).to(self.device)
-		self.loop_type   = torch.full((num_ent,), rel_embed.size(0)-1, dtype=torch.long).to(self.device)
+		self.loop_index  = torch.stack([torch.arange(num_ent), torch.arange(num_ent)]).to(current_device)
+		self.loop_type   = torch.full((num_ent,), rel_embed.shape[0]-1, dtype=torch.long).to(current_device)
 		# self.loop_index  = torch.stack([torch.arange(num_ent), torch.arange(num_ent)]).to(edge_type.device)
 		# self.loop_type   = torch.full((num_ent,), rel_embed.size(0)-1, dtype=torch.long).to(edge_type.device)
 

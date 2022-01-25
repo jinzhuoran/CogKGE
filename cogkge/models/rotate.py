@@ -62,9 +62,6 @@ class RotatE(torch.nn.Module):
         score = self.gamma.item() - score.sum(dim=1)
         return score
 
-        # output = self._forward(triplet_idx)  # (batch,3,embedding_dim)
-        # score = F.pairwise_distance(output[:, 0] * output[:, 1], output[:, 2], p=2)
-        # return score  # (batch,)
 
     def get_embedding(self, triplet_idx):
         return self._forward(triplet_idx)
@@ -76,9 +73,4 @@ class RotatE(torch.nn.Module):
         head_embedding = self.entity_embedding(triplet_idx[:, 0])
         relation_embedding = self.relation_embedding(triplet_idx[:, 1])
         tail_embedding = self.entity_embedding(triplet_idx[:, 2])
-        # head_embedding = F.normalize(head_embedding, p=2, dim=2)
-        # tail_embedding = F.normalize(tail_embedding, p=2, dim=2)
-        # relation_embedding = F.normalize(relation_embedding, p=2, dim=2)
-        # triplet_embedding = torch.cat([head_embedding, relation_embedding, tail_embedding], dim=1)
-        # output = triplet_embedding
         return head_embedding, relation_embedding, tail_embedding

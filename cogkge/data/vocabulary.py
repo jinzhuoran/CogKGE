@@ -20,11 +20,5 @@ class Vocabulary:
     def getIdx2word(self):
         return self.idx2word
 
-    # def word2idx(self,word):
-    #     return self.word2idx[word]
-    #
-    # def idx2word(self,idx):
-    #     return self.idx2word[idx]
-
     def __len__(self):
         return len(self.word2idx)

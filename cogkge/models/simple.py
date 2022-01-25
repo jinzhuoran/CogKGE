@@ -32,8 +32,6 @@ class SimplE(nn.Module):
         self.r = r
         t = self.tail_embedding(batch_t)
 
-        # h = F.normalize(h, p=2.0,dim=-1)
-        # t = F.normalize(t, p=2.0, dim=-1)
         self.h = h
         self.t = t
         score_front = torch.sum(h * r * t, dim=1)  # (batch,)
@@ -43,8 +41,6 @@ class SimplE(nn.Module):
         self.r_ = r_
         t_ = self.tail_embedding(batch_h)
 
-        # h_ = F.normalize(h_, p=2.0,dim=-1)
-        # t_ = F.normalize(t_, p=2.0, dim=-1)
         self.h_ = h_
         self.t_ = t_
         score_reverse = torch.sum(h_ * r_ * t_, dim=1)  # (batch,)
@@ -56,4 +52,3 @@ class SimplE(nn.Module):
 
     def get_penalty(self):
         return torch.norm(torch.mean(self.r + self.r_ + self.t + self.t_ + self.h + self.h_))
-        # return torch.mean(torch.norm(self.r) + torch.norm(self.r_))

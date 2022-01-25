@@ -32,6 +32,10 @@ __all__ = [
     "MOBILEWIKIDATA5MLoader",
     "EVENTKG240KLoader",
     "COGNET360KLoader",
+    "CODEXLLoader",
+    "CODEXSLoader",
+    "CODEXMLoader",
+
 
     "FB15KProcessor",
     "FB15K237Processor",
@@ -41,6 +45,9 @@ __all__ = [
     "MOBILEWIKIDATA5MProcessor",
     "EVENTKG240KProcessor",
     "COGNET360KProcessor",
+    "CODEXLProcessor",
+    "CODEXSProcessor",
+    "CODEXMProcessor",
 
     # models
     "TransE",

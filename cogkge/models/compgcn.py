@@ -39,12 +39,12 @@ class CompGCN(nn.Module):
 
         self.gcn_dim = embedding_dim
         self.init_dim = embedding_dim  # 暂时还不太清楚这两者有什么区别 先保持一致
-        self.init_embed = get_param((entity_dict_len, self.init_dim))
+        self.init_embed = self.get_param((entity_dict_len, self.init_dim))
 
         if self.num_bases > 0:
-            self.init_rel = get_param((self.num_bases, self.init_dim))
+            self.init_rel = self.get_param((self.num_bases, self.init_dim))
         else:  # 先类似transe的写法
-            self.init_rel = get_param((relation_dict_len, self.init_dim))
+            self.init_rel = self.get_param((relation_dict_len, self.init_dim))
 
         if self.num_bases > 0:  # 先固定为一层的GCN网络
             self.conv1 = CompGCNConvBasis(self.init_dim, self.gcn_dim, relation_dict_len, self.num_bases, act=self.act,
@@ -54,6 +54,12 @@ class CompGCN(nn.Module):
             self.drop1 = nn.Dropout(self.p.dropout)
 
         self.register_parameter('bias', Parameter(torch.zeros(entity_dict_len)))
+    def get_param(self,shape):
+        param = Parameter(torch.Tensor(*shape))
+        xavier_normal_(param.data)
+        return param
+
+
 
     def forward(self, sample):
         batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
@@ -69,10 +75,6 @@ class CompGCN(nn.Module):
         return score
 
 
-def get_param(shape):
-    param = Parameter(torch.Tensor(*shape))
-    xavier_normal_(param.data)
-    return param
 
 
 # class CompGCN(nn.Module):

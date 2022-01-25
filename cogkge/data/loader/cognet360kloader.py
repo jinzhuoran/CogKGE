@@ -28,8 +28,6 @@ class COGNET360KLoader(BaseLoader):
             node_lut = LookUpTable()
             node_lut.add_vocab(self.node_vocab)
             node_lut.add_processed_path(self.processed_data_path)
-            # node_lut.read_json(os.path.join(self.raw_data_path,self.node_lut_name))
-            # node_lut.transpose()
             node_lut.save_to_pickle(preprocessed_file)
         return node_lut
 

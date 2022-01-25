@@ -34,7 +34,7 @@ valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
 
-def construct_adj(train_dataset, relation_dict_len, device):
+def construct_adj(train_dataset, relation_dict_len):
     edge_index, edge_type = [], []
     for sub, rel, obj in train_dataset.data:
         edge_index.append((sub, obj))
@@ -49,7 +49,7 @@ def construct_adj(train_dataset, relation_dict_len, device):
 
     return edge_index, edge_type
 
-edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut), device=device)
+edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut))
 
 model = CompGCN(edge_index=edge_index,
                 edge_type=edge_type,
@@ -119,7 +119,7 @@ evaluator = Evaluator(
     lookuptable_R=relation_lut,
     log=True,
     evaluator_batch_size=50000,
-    dataloaderX=True,
+    dataloaderX=False,
     num_workers=4,
     pin_memory=True,
     trained_model_path=None

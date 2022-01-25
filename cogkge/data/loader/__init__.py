@@ -6,6 +6,9 @@ from .wikidata5mloader import *
 from .mobilewikidata5mloader import *
 from .eventkg240kloader import *
 from .cognet360kloader import *
+from .codexlloader import *
+from .codexmloader import *
+from .codexsloader import *
 
 __all__=[
     "FB15KLoader",
@@ -16,4 +19,7 @@ __all__=[
     "MOBILEWIKIDATA5MLoader",
     "EVENTKG240KLoader",
     "COGNET360KLoader",
+    "CODEXLLoader",
+    "CODEXMLoader",
+    "CODEXSLoader"
 ]

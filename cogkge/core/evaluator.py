@@ -71,11 +71,6 @@ class Evaluator(object):
                                                batch_size=self.evaluator_batch_size, num_workers=self.num_workers,
                                                pin_memory=self.pin_memory)
 
-        # Load Lookuptable
-        # TODO: add lut_loader
-        # for example
-        # if self.lookuptable_E and self.lookuptable_E:
-        #     self.model.load_lookuotable(self.lookuptable_E, self.lookuptable_R)
 
         # Load Trained Model
         self.trained_epoch = 0

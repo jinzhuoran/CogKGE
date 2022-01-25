@@ -46,14 +46,9 @@ class DistMult(torch.nn.Module):
         return head_embedding, relation_embedding, tail_embedding
 
     def get_penalty(self):
-        # constraint_1=torch.sum(nn.ReLU(inplace=False)(self.head_batch_embedding ** 2-1/len(self.head_batch_embedding)))
-        # constraint_2=torch.sum(nn.ReLU(inplace=False)(self.tail_batch_embedding ** 2-1/len(self.tail_batch_embedding)))
-        # constraint_3=sum(sum((self.relation_batch_embedding*self.w_r_batch_embedding)** 2)/sum(self.relation_batch_embedding**2)-self.epsilon**2)
-        # penalty=constraint_1+constraint_2+constraint_3
         penalty = (
                           torch.mean(self.head_batch_embedding ** 2) +
                           torch.mean(self.relation_batch_embedding ** 2) +
                           torch.mean(self.tail_batch_embedding ** 2)
-                      # torch.mean(self.w_r_batch_embedding ** 2)
                   ) / 3
         return penalty

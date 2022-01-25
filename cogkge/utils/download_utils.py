@@ -96,3 +96,21 @@ class Download_Data:
                       zip_name="COGNET360K.zip",
                       dataset_path=self.dataset_path,
                       url_path=self.url)
+
+    def CODEXS(self):
+        download_data(data_name="CODEXS",
+                      zip_name="CoDExs.zip",
+                      dataset_path=self.dataset_path,
+                      url_path=self.url)
+
+    def CODEXM(self):
+        download_data(data_name="CODEXM",
+                      zip_name="CoDExm.zip",
+                      dataset_path=self.dataset_path,
+                      url_path=self.url)
+
+    def CODEXL(self):
+        download_data(data_name="CODEXL",
+                      zip_name="CoDExl.zip",
+                      dataset_path=self.dataset_path,
+                      url_path=self.url)
