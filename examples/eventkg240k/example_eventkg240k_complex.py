@@ -12,11 +12,11 @@ from cogkge import *
 
 device = init_cogkge(device_id="8", seed=1)
 
-loader = EVENTKG2MLoader(dataset_path="../../dataset", download=True)
+loader = EVENTKG240KLoader(dataset_path="../../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut, time_lut = loader.load_all_lut()
 
-processor = EVENTKG2MProcessor(node_lut, relation_lut, time_lut, reprocess=True)
+processor = EVENTKG240KProcessor(node_lut, relation_lut, time_lut, reprocess=True)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)

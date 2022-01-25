@@ -30,8 +30,8 @@ __all__ = [
     "WN18RRLoader",
     "WIKIDATA5MLoader",
     "MOBILEWIKIDATA5MLoader",
-    "EVENTKG2MLoader",
-    "COGNET680KLoader",
+    "EVENTKG240KLoader",
+    "COGNET360KLoader",
 
     "FB15KProcessor",
     "FB15K237Processor",
@@ -39,8 +39,8 @@ __all__ = [
     "WN18RRProcessor",
     "WIKIDATA5MProcessor",
     "MOBILEWIKIDATA5MProcessor",
-    "EVENTKG2MProcessor",
-    "COGNET680KProcessor",
+    "EVENTKG240KProcessor",
+    "COGNET360KProcessor",
 
     # models
     "TransE",
@@ -62,12 +62,6 @@ __all__ = [
     "HittER",
     "Entity_Transformer",
     "TransE_Adapter",
-
-    "TransE_baseline",
-    "TransE_Add_Description",
-    "TransE_Add_Time",
-    "TransE_Add_Type",
-    "TransE_Add_Path",
 
     # utils
     "Download_Data",

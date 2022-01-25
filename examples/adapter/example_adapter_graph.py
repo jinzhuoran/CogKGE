@@ -10,7 +10,7 @@ from cogkge import *
 
 device=init_cogkge(device_id="0",seed=1)
 
-loader =EVENTKG2MLoader(dataset_path="../../dataset",download=True)
+loader =EVENTKG240KLoader(dataset_path="../../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut ,time_lut= loader.load_all_lut()
 

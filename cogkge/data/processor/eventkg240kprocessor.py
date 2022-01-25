@@ -12,7 +12,7 @@ from ..lut import LookUpTable
 from ..vocabulary import Vocabulary
 
 
-class EVENTKG2MProcessor(BaseProcessor):
+class EVENTKG240KProcessor(BaseProcessor):
     def __init__(self, node_lut, relation_lut, time_lut,
                  reprocess=True,
                  time=False, nodetype=False, description=False, graph=False,
@@ -21,7 +21,7 @@ class EVENTKG2MProcessor(BaseProcessor):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """
-        super().__init__("EVENTKG2M", node_lut, relation_lut, reprocess,
+        super().__init__("EVENTKG240K", node_lut, relation_lut, reprocess,
                          time, nodetype, description, graph)
         self.time_lut = time_lut
         self.time_vocab = time_lut.vocab

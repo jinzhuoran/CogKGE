@@ -4,19 +4,19 @@ from .baseloader import BaseLoader
 from ..lut import LookUpTable
 
 
-class COGNET680KLoader(BaseLoader):
+class COGNET360KLoader(BaseLoader):
     def __init__(self, dataset_path, download=False):
         super().__init__(dataset_path, download,
-                         raw_data_path="COGNET680K/raw_data",
-                         processed_data_path="COGNET680K/processed_data",
+                         raw_data_path="COGNET360K/raw_data",
+                         processed_data_path="COGNET360K/processed_data",
                          train_name="train.txt",
                          valid_name="valid.txt",
                          test_name="test.txt",
-                         data_name="COGNET680K")
+                         data_name="COGNET360K")
         self.node_lut_name = "node_lut.json"
 
     def download_action(self):
-        self.downloader.COGNET680K()
+        self.downloader.COGNET360K()
 
     def load_node_lut(self):
         preprocessed_file = os.path.join(self.processed_data_path, "node_lut.pkl")

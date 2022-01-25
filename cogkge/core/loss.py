@@ -4,23 +4,22 @@ import torch.nn.functional as F
 
 
 class MarginLoss(torch.nn.Module):
-    def __init__(self, margin, C=0,reverse=False):
+    def __init__(self, margin, C=0, reverse=False):
         super(MarginLoss, self).__init__()
         self.margin = margin
         self.C = C
         if not isinstance(reverse, bool):
             raise TypeError("param reverse must be True or False!")
-        self.reverse=1 if reverse==False else -1
+        self.reverse = 1 if reverse == False else -1
 
     def forward(self, positive_score, negative_score, penalty=0.0):
-        output = torch.mean(F.relu(self.margin + self.reverse*(positive_score - negative_score))) + self.C * penalty
+        output = torch.mean(F.relu(self.margin + self.reverse * (positive_score - negative_score))) + self.C * penalty
         return output
 
 
 class NegLogLikehoodLoss(torch.nn.Module):
     def __init__(self, C=0):
         super(NegLogLikehoodLoss, self).__init__()
-        # self.lamda = lamda
         self.C = C
 
     def forward(self, positive_score, negative_score, penalty=0):
@@ -71,23 +70,3 @@ class TuckERLoss(nn.Module):
         p_score = -torch.mean(torch.log(p_score))
         n_score = -torch.mean(torch.log(1 - n_score))
         return (p_score + n_score) / 2
-
-
-# class KEPLERLoss:
-#     def __init__(self, margin):
-#         self.margin = margin
-#
-#     def KELoss(self, positive_score, negative_score):
-#         positive_loss = (-1) * torch.log(torch.sigmoid(self.margin - positive_score)).type(torch.FloatTensor)
-#         negative_loss = (-1) * torch.log(torch.sigmoid(negative_score - self.margin)).type(torch.FloatTensor)
-#         keloss = torch.mean(positive_loss + negative_loss)
-#
-#         return keloss
-#
-#     # def MLMLoss(self):
-#     #     return 0.0
-#
-#     def __call__(self, positive_score, negative_score):
-#         output_mean = self.KELoss(positive_score, negative_score)
-#         # output_mean=self.KELoss(positive_score,negative_score)+self.MLMLoss()
-#         return output_mean

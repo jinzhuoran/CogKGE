@@ -73,9 +73,9 @@ class Download_Data:
                       dataset_path=self.dataset_path,
                       url_path=self.url)
 
-    def EVENTKG2M(self):
-        download_data(data_name="EVENTKG2M",
-                      zip_name="EVENTKG2M.zip",
+    def EVENTKG240K(self):
+        download_data(data_name="EVENTKG240K",
+                      zip_name="EVENTKG240K.zip",
                       dataset_path=self.dataset_path,
                       url_path=self.url)
 
@@ -91,8 +91,8 @@ class Download_Data:
                       dataset_path=self.dataset_path,
                       url_path=self.url)
 
-    def COGNET680K(self):
-        download_data(data_name="COGNET680K",
-                      zip_name="COGNET680K.zip",
+    def COGNET360K(self):
+        download_data(data_name="COGNET360K",
+                      zip_name="COGNET360K.zip",
                       dataset_path=self.dataset_path,
                       url_path=self.url)
