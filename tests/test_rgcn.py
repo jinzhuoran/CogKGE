@@ -50,7 +50,7 @@ def construct_adj(train_dataset, entity_dict_len, device):
     return edge_index, edge_type
 
 
-edge_index, edge_type = construct_adj(train_dataset, entity_dict_len=len(node_lut), device=device)
+edge_index, edge_type = construct_adj(train_dataset, entity_dict_len=len(relation_lut), device=device)
 
 model = CompGCN(edge_index=edge_index,
                 edge_type=edge_type,
@@ -92,7 +92,7 @@ trainer = Trainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
-    trainer_batch_size=128,
+    trainer_batch_size=100000,
     epoch=1000,
     visualization=0,
     apex=True,
@@ -120,7 +120,7 @@ evaluator = Evaluator(
     lookuptable_R=relation_lut,
     log=True,
     evaluator_batch_size=50000,
-    dataloaderX=True,
+    dataloaderX=False,
     num_workers=4,
     pin_memory=True,
     trained_model_path=None

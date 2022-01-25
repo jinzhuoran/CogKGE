@@ -57,12 +57,6 @@ class LookUpTable:
             self.type = tmp["type"]
             self.processed_path = tmp["processed_path"]
 
-    # def save_to_pickle(self, *args, **kwargs):
-    #     self.data.to_pickle(*args, **kwargs)
-
-    # def read_from_pickle(self, *args, **kwargs):
-    #     self.data = pd.read_pickle(*args, **kwargs)
-
     def __getitem__(self, index):
         if isinstance(index, int):
             return self._get_row(index)
