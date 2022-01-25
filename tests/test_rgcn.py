@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
 
 from cogkge import *
 
-device = init_cogkge(device_id="0", seed=1)
+device = init_cogkge(device_id="2", seed=1)
 loader = FB15KLoader(dataset_path="../dataset", download=True)
 
 train_data, valid_data, test_data = loader.load_all_data()
@@ -34,7 +34,7 @@ valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
 
-def construct_adj(train_dataset, entity_dict_len, device):
+def construct_adj(train_dataset, relation_dict_len, device):
     edge_index, edge_type = [], []
     for sub, rel, obj in train_dataset.data:
         edge_index.append((sub, obj))
@@ -42,15 +42,14 @@ def construct_adj(train_dataset, entity_dict_len, device):
 
     for sub, rel, obj in train_dataset.data:
         edge_index.append((obj, sub))
-        edge_type.append(rel + entity_dict_len)
+        edge_type.append(rel + relation_dict_len)
 
     # edge_index = torch.LongTensor(edge_index).to(device).t()
     # edge_type = torch.LongTensor(edge_type).to(device)
 
     return edge_index, edge_type
 
-
-edge_index, edge_type = construct_adj(train_dataset, entity_dict_len=len(node_lut), device=device)
+edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut), device=device)
 
 model = CompGCN(edge_index=edge_index,
                 edge_type=edge_type,
@@ -92,14 +91,14 @@ trainer = Trainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
-    trainer_batch_size=128,
+    trainer_batch_size=10000,
     epoch=1000,
     visualization=0,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=100,
+    metric_step=50,
     save_step=200,
     metric_final_model=True,
     save_final_model=True,
