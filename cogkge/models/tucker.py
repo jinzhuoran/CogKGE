@@ -1,52 +1,52 @@
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
-
-class TuckER(nn.Module):
-    def __init__(self, entity_dict_len, relation_dict_len, dim_entity, dim_relation):
-        super(TuckER, self).__init__()
+import numpy as np
+from torch.nn.init import xavier_normal_
+class TuckER(torch.nn.Module):
+    def __init__(self,
+                 entity_dict_len,
+                 relation_dict_len,
+                 d1,
+                 d2,
+                 input_dropout=0.3,
+                 hidden_dropout1=0.4,
+                 hidden_dropout2=0.5):
+        super().__init__()
         self.name = "TuckER"
-        self.entity_dict_len = entity_dict_len
-        self.relation_dict_len = relation_dict_len
-        self.dim_entity = dim_entity
-        self.dim_relation = dim_relation
 
-        self.entity_embedding = nn.Embedding(entity_dict_len, dim_entity)
-        self.relation_embedding = nn.Embedding(relation_dict_len, dim_relation)
-        self.core_tensor = nn.Parameter(
-            torch.randn(dim_entity, dim_relation, dim_entity)
-        )
+        self.E = torch.nn.Embedding(entity_dict_len, d1)
+        self.R = torch.nn.Embedding(relation_dict_len, d2)
+        self.W = torch.nn.Parameter(torch.tensor(np.random.uniform(-1, 1, (d2, d1, d1)),
+                                                 dtype=torch.float, device="cuda", requires_grad=True))
 
-        nn.init.xavier_uniform_(self.entity_embedding.weight.data)
-        nn.init.xavier_uniform_(self.relation_embedding.weight.data)
-        nn.init.xavier_uniform_(self.core_tensor.data)
+        self.input_dropout = torch.nn.Dropout(input_dropout)
+        self.hidden_dropout1 = torch.nn.Dropout(hidden_dropout1)
+        self.hidden_dropout2 = torch.nn.Dropout(hidden_dropout2)
+        self.loss = torch.nn.BCELoss()
 
-    def forward(self, sample):
-        batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
-        # print(batch_h.shape)
-        h = self.entity_embedding(batch_h)
-        r = self.relation_embedding(batch_r)  # (batch,dim_relation)
-        t = self.entity_embedding(batch_t)  # (batch,dim_entity)
+        self.bn0 = torch.nn.BatchNorm1d(d1)
+        self.bn1 = torch.nn.BatchNorm1d(d1)
 
-        h = F.normalize(h, p=2.0, dim=-1)
-        t = F.normalize(t, p=2.0, dim=-1)
-        r = F.normalize(r, p=2.0, dim=-1)
-
-        r = r.view(-1, 1, 1, self.dim_relation)  # (batch,1,1,dim_relation)
-        h = torch.unsqueeze(h, dim=-1)  # (batch,dim_entity,1)
-        t = torch.unsqueeze(t, dim=1)  # (batch,1,dim_entity)
+        xavier_normal_(self.E.weight.data)
+        xavier_normal_(self.R.weight.data)
 
 
-        tmp = torch.matmul(r, self.core_tensor)  # (batch,dim_entity,1,dim_entity)
-        tmp = torch.squeeze(tmp, -2)  # (batch,dim_entity,dim_etity)
+    def forward(self, h_r_true):
+        e1_idx=h_r_true[:,0]
+        r_idx=h_r_true[:,1]
+        e1 = self.E(e1_idx)
+        x = self.bn0(e1)
+        x = self.input_dropout(x)
+        x = x.view(-1, 1, e1.size(1))
 
+        r = self.R(r_idx)
+        W_mat = torch.mm(r, self.W.view(r.size(1), -1))
+        W_mat = W_mat.view(-1, e1.size(1), e1.size(1))
+        W_mat = self.hidden_dropout1(W_mat)
 
-        score = torch.bmm(t, tmp)  # (batch,1,dim_entity)
-        score = torch.bmm(score, h)  # (batch,1,1)
-        score = score.view(score.shape[0])  # (batch,)
-        return torch.sigmoid(score)
-
-
-    def get_score(self, sample):
-        return self.forward(sample)
+        x = torch.bmm(x, W_mat)
+        x = x.view(-1, e1.size(1))
+        x = self.bn1(x)
+        x = self.hidden_dropout2(x)
+        x = torch.mm(x, self.E.weight.transpose(1, 0))
+        pred = torch.sigmoid(x)
+        return pred

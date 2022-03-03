@@ -12,25 +12,26 @@ from cogkge import *
 
 device = init_cogkge(device_id="0", seed=1)
 
-loader = EVENTKG240KLoader(dataset_path="../../dataset", download=True)
+loader = FB15KLoader(dataset_path="../../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
-node_lut, relation_lut, time_lut = loader.load_all_lut()
+node_lut, relation_lut = loader.load_all_lut()
 
-processor = EVENTKG240KProcessor(node_lut, relation_lut, time_lut, reprocess=True)
+processor = FB15KProcessor(node_lut, relation_lut, reprocess=True,train_pattern="classification_based")
+# processor = FB15KProcessor(node_lut, relation_lut, reprocess=True,train_pattern="score_based")
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
-node_lut, relation_lut, time_lut = processor.process_lut()
+node_lut, relation_lut= processor.process_lut()
 
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransE(entity_dict_len=len(node_lut),
-               relation_dict_len=len(relation_lut),
-               embedding_dim=50)
-
-loss = MarginLoss(margin=1.0, C=0)
+model=TuckER(entity_dict_len=len(node_lut),
+             relation_dict_len=len(relation_lut),
+             d1=200,
+             d2=200)
+loss = torch.nn.BCELoss()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
@@ -64,7 +65,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
 #     metric=metric,
 #     lr_scheduler=lr_scheduler,
 #     log=True,
-#     trainer_batch_size=100000,
+#     trainer_batch_size=1000,
 #     epoch=3000,
 #     visualization=1,
 #     apex=True,
@@ -96,7 +97,7 @@ trainer = ClassifyTrainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
-    trainer_batch_size=100000,
+    trainer_batch_size=128,
     epoch=3000,
     visualization=1,
     apex=True,

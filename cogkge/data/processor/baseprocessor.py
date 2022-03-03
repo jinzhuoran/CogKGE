@@ -1,13 +1,15 @@
 import copy
 import os
 import pickle
-
+from collections import defaultdict
+from tqdm import tqdm
 from ..dataset import Cog_Dataset
+import numpy as np
 
 
 class BaseProcessor:
     def __init__(self, data_name, node_lut, relation_lut, reprocess=True,
-                 time=None, nodetype=None, description=None, graph=None):
+                 time=None, nodetype=None, description=None, graph=None,train_pattern="score_based"):
         """
         :param vocabs: node_vocab,relation_vocab from node_lut relation_lut
         """
@@ -22,6 +24,7 @@ class BaseProcessor:
         self.description = description
         self.graph = graph
         self.processed_path = node_lut.processed_path
+        self.train_pattern=train_pattern
         # self.node_vocab = node_vocab
         # self.relation_vocab = relation_vocab
 
@@ -34,13 +37,45 @@ class BaseProcessor:
             return new_data
         else:
             data = self._datable2numpy(data)
-            dataset = Cog_Dataset(data, task='kr')
+            if self.train_pattern=="classification_based":
+                triplet_label_dict=self.create_triplet_label(data)
+                data=self.convert_label_construct(triplet_label_dict)
+            dataset = Cog_Dataset(data, task='kr',train_pattern=self.train_pattern)
             dataset.data_name = self.data_name
-            file = open(path, "wb")
-            file.write(pickle.dumps(dataset))
-            file.close()
+            # xx=dataset[0]
+            # yy=len(dataset)
+            if self.train_pattern == "scored_based":
+                file = open(path, "wb")
+                file.write(pickle.dumps(dataset))
+                file.close()
 
             return dataset
+
+    def convert_label_construct(self,triplet_label_dict):
+        h_r_list=list()
+        t_list=list()
+        for key,value in tqdm(triplet_label_dict.items()):
+            h_r_list.append(np.array(key))
+            vector_label=np.zeros((len(self.node_lut)))
+            for index in value:
+                vector_label[index]=1
+            t_list.append(vector_label)
+
+        t=np.array(t_list)
+        h_r=np.array(h_r_list)
+        return (h_r,t)
+
+
+    def create_triplet_label(self,data):
+        triplet_label_dict=defaultdict(list)
+        for i in tqdm(range(len(data))):
+            triplet_h_r=tuple(data[i][:2])
+            triplet_t=int(data[i][2].item())
+            triplet_label_dict[triplet_h_r].append(triplet_t)
+        return triplet_label_dict
+
+
+
 
     def _datable2numpy(self, data):
         """
