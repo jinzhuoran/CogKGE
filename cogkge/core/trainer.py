@@ -563,7 +563,11 @@ class ClassifyTrainer(BaseTrainer):
         h_r_true = data_positive[0].int().to(self.device)
         t_true=data_positive[1].float().to(self.device)
         data_positive_probability = self.parallel_model(h_r_true)
-        data_loss = self.loss(data_positive_probability,t_true)
+        if hasattr(self.model, 'get_sampel_label_index'):
+            sample_index=self.model.get_sampel_label_index(data_positive[0].shape[0])
+        else:
+            sample_index=torch.arange(0,data_positive.shape[0], step = 1)
+        data_loss = self.loss(data_positive_probability,t_true[sample_index])
         return data_loss
 
 
