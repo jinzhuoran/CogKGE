@@ -20,9 +20,9 @@ class BaseLoader:
         self.valid_name = valid_name
         self.test_name = test_name
         self.data_name = data_name
-        # if self.download:
-        #     self.downloader = Download_Data(dataset_path=self.dataset_path)
-        #     self.download_action()
+        if self.download:
+            self.downloader = Download_Data(dataset_path=self.dataset_path)
+            self.download_action()
         if not os.path.exists(self.processed_data_path):
             os.makedirs(self.processed_data_path)
 

@@ -11,8 +11,8 @@ if str(ROOT) not in sys.path:
 
 from cogkge import *
 
-device = init_cogkge(device_id="2", seed=1)
-loader = FB15KLoader(dataset_path="./dataset", download=True)
+device = init_cogkge(device_id="5,6,7,8,9", seed=1)
+loader = FB15KLoader(dataset_path="../dataset", download=True)
 
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
@@ -75,7 +75,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = Trainer(
+trainer = ScoreTrainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
     train_sampler=train_sampler,
