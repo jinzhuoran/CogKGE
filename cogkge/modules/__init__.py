@@ -4,4 +4,5 @@ __all__ = [
     "GCN",
     "CompGCNConv",
     "CompGCNConvBasis",
+    "construct_adj",
 ]

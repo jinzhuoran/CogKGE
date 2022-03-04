@@ -96,5 +96,6 @@ __all__ = [
 
     "GAT",
     "GCN",
+    "construct_adj",
 
 ]

@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
 
 from cogkge import *
 
-device = init_cogkge(device_id="4", seed=1)
+device = init_cogkge(device_id="3", seed=1)
 loader = FB15KLoader(dataset_path="../dataset", download=True)
 
 train_data, valid_data, test_data = loader.load_all_data()
@@ -32,22 +32,6 @@ node_lut, relation_lut = processor.process_lut()
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
-
-
-def construct_adj(train_dataset, relation_dict_len):
-    edge_index, edge_type = [], []
-    for sub, rel, obj in train_dataset.data:
-        edge_index.append((sub, obj))
-        edge_type.append(rel)
-
-    for sub, rel, obj in train_dataset.data:
-        edge_index.append((obj, sub))
-        edge_type.append(rel + relation_dict_len)
-
-    # edge_index = torch.LongTensor(edge_index).to(device).t()
-    # edge_type = torch.LongTensor(edge_type).to(device)
-
-    return edge_index, edge_type
 
 edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut))
 
