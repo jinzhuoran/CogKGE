@@ -12,7 +12,7 @@ if str(ROOT) not in sys.path:
 from cogkge import *
 
 device = init_cogkge(device_id="2", seed=1)
-loader = FB15KLoader(dataset_path="../dataset", download=True)
+loader = FB15KLoader(dataset_path="./dataset", download=True)
 
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
@@ -125,3 +125,5 @@ evaluator = Evaluator(
     trained_model_path=None
 )
 evaluator.evaluate()
+
+
