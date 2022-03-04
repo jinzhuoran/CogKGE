@@ -447,59 +447,59 @@ class BaseTrainer(object):
             print("Epoch{}/{}   Train Loss:".format(current_epoch, self.epoch), train_epoch_loss / (train_step + 1),
                   " Valid Loss:", valid_epoch_loss / (valid_step + 1))
 
-            # # Metric Progress
-            # if self.metric_step and (current_epoch) % self.metric_step == 0 or self.metric_final_model and (
-            #         current_epoch) == self.epoch:
-            #     print("Evaluating Model {} on Valid Dataset...".format(self.model.name))
-            #     self.metric.caculate(model=self.parallel_model, current_epoch=current_epoch)
-            #     self.metric.print_current_table()
-            #     self.metric.log()
-            #     self.metric.write()
-            #     print("-----------------------------------------------------------------------")
-            #
-            #     # Scheduler Progress
-            #     self.lr_scheduler.step(self.metric.get_Raw_MR())
+            # Metric Progress
+            if self.metric_step and (current_epoch) % self.metric_step == 0 or self.metric_final_model and (
+                    current_epoch) == self.epoch:
+                print("Evaluating Model {} on Valid Dataset...".format(self.model.name))
+                self.metric.caculate(model=self.parallel_model, current_epoch=current_epoch)
+                self.metric.print_current_table()
+                self.metric.log()
+                self.metric.write()
+                print("-----------------------------------------------------------------------")
+
+                # Scheduler Progress
+                self.lr_scheduler.step(self.metric.get_Raw_MR())
 
             # Visualization Process
-            # if self.visualization:
-            #     self.writer.add_scalars("Loss", {"train_loss": train_epoch_loss,
-            #                                      "valid_loss": valid_epoch_loss}, current_epoch)
-                # if self.model.entity_embedding is not None:
-                #     embedding = self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
-                #     embedding = TSNE(negative_gradient_method="bh").fit(embedding)
-                #     plt.scatter(embedding[:, 0], embedding[:, 1], c=self.visual_type)
-                #     plt.show()
-                # if epoch == 0:
-                #     fake_data = torch.zeros(self.trainer_batch_size, 3).long()
-                #     self.writer.add_graph(self.model.cpu(), fake_data)
-                #     self.model.to(self.device)
+            if self.visualization:
+                self.writer.add_scalars("Loss", {"train_loss": train_epoch_loss,
+                                                 "valid_loss": valid_epoch_loss}, current_epoch)
+                if self.model.entity_embedding is not None:
+                    embedding = self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
+                    embedding = TSNE(negative_gradient_method="bh").fit(embedding)
+                    plt.scatter(embedding[:, 0], embedding[:, 1], c=self.visual_type)
+                    plt.show()
+                if epoch == 0:
+                    fake_data = torch.zeros(self.trainer_batch_size, 3).long()
+                    self.writer.add_graph(self.model.cpu(), fake_data)
+                    self.model.to(self.device)
 
-            # # Save Checkpoint and Final Model Process
-            # if (self.save_step and (current_epoch) % self.save_step == 0) or (current_epoch) == self.epoch:
-            #     if not os.path.exists(os.path.join(self.output_path, "checkpoints",
-            #                                        "{}_{}epochs".format(self.model.name, current_epoch))):
-            #         os.makedirs(os.path.join(self.output_path, "checkpoints",
-            #                                  "{}_{}epochs".format(self.model.name, current_epoch)))
-            #         self.logger.info(os.path.join(self.output_path, "checkpoints",
-            #                                       "{}_{}epochs ".format(self.model.name,
-            #                                                             current_epoch)) + 'created successfully!')
-            #     torch.save(self.model.state_dict(), os.path.join(self.output_path, "checkpoints",
-            #                                                      "{}_{}epochs".format(self.model.name, current_epoch),
-            #                                                      "Model.pkl"))
-            #     torch.save(self.optimizer.state_dict(), os.path.join(self.output_path, "checkpoints",
-            #                                                          "{}_{}epochs".format(self.model.name,
-            #                                                                               current_epoch),
-            #                                                          "Optimizer.pkl"))
-            #     torch.save(self.lr_scheduler.state_dict(), os.path.join(self.output_path, "checkpoints",
-            #                                                             "{}_{}epochs".format(self.model.name,
-            #                                                                                  current_epoch),
-            #                                                             "Lr_Scheduler.pkl"))
-            #     self.logger.info(os.path.join(self.output_path, "checkpoints", "{}_{}epochs ".format(self.model.name,
-            #                                                                                          current_epoch)) + "saved successfully")
+            # Save Checkpoint and Final Model Process
+            if (self.save_step and (current_epoch) % self.save_step == 0) or (current_epoch) == self.epoch:
+                if not os.path.exists(os.path.join(self.output_path, "checkpoints",
+                                                   "{}_{}epochs".format(self.model.name, current_epoch))):
+                    os.makedirs(os.path.join(self.output_path, "checkpoints",
+                                             "{}_{}epochs".format(self.model.name, current_epoch)))
+                    self.logger.info(os.path.join(self.output_path, "checkpoints",
+                                                  "{}_{}epochs ".format(self.model.name,
+                                                                        current_epoch)) + 'created successfully!')
+                torch.save(self.model.state_dict(), os.path.join(self.output_path, "checkpoints",
+                                                                 "{}_{}epochs".format(self.model.name, current_epoch),
+                                                                 "Model.pkl"))
+                torch.save(self.optimizer.state_dict(), os.path.join(self.output_path, "checkpoints",
+                                                                     "{}_{}epochs".format(self.model.name,
+                                                                                          current_epoch),
+                                                                     "Optimizer.pkl"))
+                torch.save(self.lr_scheduler.state_dict(), os.path.join(self.output_path, "checkpoints",
+                                                                        "{}_{}epochs".format(self.model.name,
+                                                                                             current_epoch),
+                                                                        "Lr_Scheduler.pkl"))
+                self.logger.info(os.path.join(self.output_path, "checkpoints", "{}_{}epochs ".format(self.model.name,
+                                                                                                     current_epoch)) + "saved successfully")
 
-        # # Show Best Metric Result
-        # if self.metric_step:
-        #     self.metric.print_best_table(front=5, key="Filt_Hits@10")
+        # Show Best Metric Result
+        if self.metric_step:
+            self.metric.print_best_table(front=5, key="Filt_Hits@10")
 
 class ClassifyTrainer(BaseTrainer):
     def __init__(self,

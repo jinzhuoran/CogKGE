@@ -21,17 +21,17 @@ class CompGCNConvBasis(MessagePassing):
 		self.rel_basis 		= get_param((self.num_bases, in_channels))
 		self.rel_wt 		= get_param((self.num_rels*2, self.num_bases))
 		self.w_rel 		= get_param((in_channels, out_channels))
-		self.loop_rel 		= get_param((1, in_channels));
+		self.loop_rel 		= get_param((1, in_channels))
 
 		self.drop		= torch.nn.Dropout(self.p.dropout)
 		self.bn			= torch.nn.BatchNorm1d(out_channels)
 		
-		self.in_norm, self.out_norm,
-		self.in_index, self.out_index,
-		self.in_type, self.out_type,
+		self.in_norm, self.out_norm,self.in_index,\
+		self.out_index,self.in_type, self.out_type,\
 		self.loop_index, self.loop_type = None, None, None, None, None, None, None, None
 
-		if self.p.bias: self.register_parameter('bias', Parameter(torch.zeros(out_channels)))
+		if self.p.bias:
+			self.register_parameter('bias', Parameter(torch.zeros(out_channels)))
 
 	def forward(self, x, edge_index, edge_type, edge_norm=None, rel_embed=None):
 		if self.device is None:
@@ -59,7 +59,7 @@ class CompGCNConvBasis(MessagePassing):
 		out		= self.drop(in_res)*(1/3) + self.drop(out_res)*(1/3) + loop_res*(1/3)
 
 		if self.p.bias: out = out + self.bias
-		if self.b_norm: out = self.bn(out)
+		if self.p.b_norm: out = self.bn(out)
 
 		return self.act(out), torch.matmul(rel_embed, self.w_rel)[:-1]
 

@@ -8,13 +8,17 @@ from argparse import Namespace
 
 
 class CompGCN(nn.Module):
-    def __init__(self, edge_index, edge_type, entity_dict_len, relation_dict_len, embedding_dim, num_bases=-1):
+    def __init__(self, edge_index, edge_type, entity_dict_len, relation_dict_len, embedding_dim, num_bases=-1,opn="sub"):
         super(CompGCN, self).__init__()
         self.name = "CompGCN"
 
+        if opn not in ["sub","corr","mult"]:
+            raise ValueError("Operation {} is not supported!Please choose sub,corr or mult!".format(opn))
+
         args = Namespace(bias=True,
                          dropout=0.1,
-                         opn="sub",
+                         opn=opn,
+                         b_norm=False,
                          )
         self.p = args
 
@@ -54,12 +58,11 @@ class CompGCN(nn.Module):
             self.drop1 = nn.Dropout(self.p.dropout)
 
         self.register_parameter('bias', Parameter(torch.zeros(entity_dict_len)))
-    def get_param(self,shape):
+
+    def get_param(self, shape):
         param = Parameter(torch.Tensor(*shape))
         xavier_normal_(param.data)
         return param
-
-
 
     def forward(self, sample):
         batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
@@ -73,9 +76,6 @@ class CompGCN(nn.Module):
 
         score = F.pairwise_distance(head_embeddimg + relation_embeddimg, tail_embedding, 2)
         return score
-
-
-
 
 # class CompGCN(nn.Module):
 #     def __init__(self, entity_dict_len, relation_dict_len, embedding_dim, gamma=6.0):
