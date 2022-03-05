@@ -8,7 +8,7 @@ from argparse import Namespace
 
 
 class CompGCN(nn.Module):
-    def __init__(self, edge_index, edge_type, entity_dict_len, relation_dict_len, embedding_dim, num_bases=-1,opn="sub"):
+    def __init__(self, edge_index, edge_type, entity_dict_len, relation_dict_len, embedding_dim, num_bases=-1,opn="sub",dropout=0.1):
         super(CompGCN, self).__init__()
         self.name = "CompGCN"
 
@@ -16,7 +16,7 @@ class CompGCN(nn.Module):
             raise ValueError("Operation {} is not supported!Please choose sub,corr or mult!".format(opn))
 
         args = Namespace(bias=True,
-                         dropout=0.1,
+                         dropout=dropout,
                          opn=opn,
                          b_norm=False,
                          )

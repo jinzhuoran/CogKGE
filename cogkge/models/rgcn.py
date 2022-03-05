@@ -1,48 +1,56 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+from torch.nn import Parameter
+from torch.nn.init import xavier_normal_
+from ..modules import RGCNConv
+from argparse import Namespace
 
 class RGCN(nn.Module):
-    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim, gamma=6.0):
-            super(RGCN, self).__init__()
-            self.name = "RGCN"
+    def __init__(self, edge_index, edge_type, entity_dict_len,relation_dict_len, embedding_dim):
+        super(RGCN, self).__init__()
+        self.name = "RGCN"
 
-# class RGCN(nn.Module):
-#     def __init__(self, entity_dict_len, relation_dict_len, embedding_dim, gamma=6.0):
-#         super(RGCN, self).__init__()
-#         self.name = "RGCN"
-#         self.embedding_dim = embedding_dim
-#         self.entity_dict_len = entity_dict_len
-#         self.relation_dict_len = relation_dict_len
-#
-#         self.entity_embedding = nn.Embedding(entity_dict_len, embedding_dim)
-#         self.relation_embedding_head = nn.Embedding(relation_dict_len, embedding_dim)
-#         self.relation_embedding_tail = nn.Embedding(relation_dict_len, embedding_dim)
-#
-#         self.gamma = nn.Parameter(
-#             torch.Tensor([gamma]),
-#             requires_grad=False
-#         )
-#
-#         nn.init.xavier_uniform_(self.entity_embedding.weight.data)
-#         nn.init.xavier_uniform_(self.relation_embedding_head.weight.data)
-#         nn.init.xavier_uniform_(self.relation_embedding_head.weight.data)
-#
-#     def forward(self, sample):
-#         batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
-#
-#         h = self.entity_embedding(batch_h)
-#         r_h = self.relation_embedding_head(batch_r)
-#         r_t = self.relation_embedding_tail(batch_r)
-#         t = self.entity_embedding(batch_t)  # (batch,dim_entity)
-#
-#         # constraint is only added on entity embeddings
-#         h = F.normalize(h, p=2.0, dim=-1)
-#         t = F.normalize(t, p=2.0, dim=-1)
-#
-#         score = torch.norm(h * r_h - t * r_t, p=1, dim=-1)  # (batch,)
-#         return self.gamma.item() - score
-#
-#     def get_score(self, sample):
-#         return self.forward(sample)
+        args = Namespace(bias=False,
+                         dropout=0.1,
+                         b_norm=False,
+                         )
+        self.p = args
+        self.act = torch.tanh
+
+        self.edge_index = nn.Parameter(
+            torch.LongTensor(edge_index).t(),
+            requires_grad=False
+        )
+        self.edge_type = nn.Parameter(
+            torch.LongTensor(edge_type),
+            requires_grad=False
+        )
+
+        self.init_dim = embedding_dim
+        self.init_embed = self.get_param((entity_dict_len, self.init_dim))
+        self.init_rel = self.get_param((relation_dict_len,self.init_dim))
+
+        self.conv1 = RGCNConv(self.init_dim, self.init_dim, relation_dict_len,act=self.act,params=self.p)
+
+
+
+    def forward(self,sample):
+        batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
+
+        x = self.conv1(self.init_embed,self.edge_index)
+
+        head_embeddimg = torch.index_select(x, 0, batch_h)
+        tail_embedding = torch.index_select(x, 0, batch_t)
+        relation_embedding = torch.index_select(self.init_rel,0,batch_r)
+
+        # DisMult
+        # print(head_embeddimg.shape,self.init_rel.shape,tail_embedding.shape)
+        score = head_embeddimg * (relation_embedding * tail_embedding)
+
+        return score
+
+    def get_param(self, shape):
+        param = Parameter(torch.Tensor(*shape))
+        xavier_normal_(param.data)
+        return param

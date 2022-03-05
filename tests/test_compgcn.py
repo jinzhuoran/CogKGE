@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
 
 from cogkge import *
 
-device = init_cogkge(device_id="3", seed=1)
+device = init_cogkge(device_id="5,6,7,8", seed=1)
 loader = FB15KLoader(dataset_path="../dataset", download=True)
 
 train_data, valid_data, test_data = loader.load_all_data()
@@ -40,7 +40,7 @@ model = CompGCN(edge_index=edge_index,
                 entity_dict_len=len(node_lut),
                 relation_dict_len=len(relation_lut),
                 embedding_dim=200,
-                num_bases=10,
+                num_bases=10, # num_bases>0 or num_base=-1
                 opn="mult"  # options:sub,mult,corr
                 )
 
@@ -85,7 +85,7 @@ trainer = ScoreTrainer(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=50,
+    metric_step=1,
     save_step=200,
     metric_final_model=True,
     save_final_model=True,
