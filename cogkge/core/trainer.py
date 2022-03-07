@@ -561,7 +561,7 @@ class ClassifyTrainer(BaseTrainer):
                          save_final_model=save_final_model)
 
     def get_loss_strategy(self,data_positive):
-        h_r_true = data_positive[0].long().to(self.device)
+        h_r_true = data_positive[0][:,:2].long().to(self.device)
         t_true=data_positive[1].float().to(self.device)
         data_positive_probability = self.parallel_model(h_r_true)
         if hasattr(self.model, 'get_sampel_label_index'):

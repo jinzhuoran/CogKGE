@@ -39,7 +39,8 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
                          batch_size=5000000,
-                         reverse=False)
+                         reverse=False,
+                         metric_pattern="classification_based")
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
@@ -105,7 +106,7 @@ trainer = ClassifyTrainer(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=200,
+    metric_step=50,
     save_step=200,
     metric_final_model=True,
     save_final_model=True,

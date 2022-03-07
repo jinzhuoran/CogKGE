@@ -14,7 +14,9 @@ class Link_Prediction(object):
                  batch_size,
                  reverse,
                  link_prediction_raw=True,
-                 link_prediction_filt=False):
+                 link_prediction_filt=False,
+                 metric_pattern="score_based",
+                 ):
         """
         验证器的参数设置
 
@@ -22,11 +24,16 @@ class Link_Prediction(object):
         :param reverse: mr指标反转
         :param link_prediction_raw: raw类型的链接预测
         :param link_prediction_filt: filt类型的连接预测
+        :param metric_pattern: 选择score_based或者classification_based
         """
         self.batch_size = batch_size
         self.reverse = reverse
         self.link_prediction_raw = link_prediction_raw
         self.link_prediction_filt = link_prediction_filt
+        if metric_pattern not in ["classification_based","score_based"]:
+            raise ValueError("Metric pattern {} is not supported.Use \"classification_based\" or \"score_based\" instead."
+                             .format(metric_pattern))
+        self.metric_pattern = metric_pattern
 
         self.device = None
         self.total_epoch = None
@@ -91,6 +98,9 @@ class Link_Prediction(object):
         self.valid_dataset = valid_dataset
         self.test_dataset = test_dataset
 
+        # if self.metric_pattern == "classification_based":
+        #     print("hahahahha")
+
     # def establish_correct_triplets_dict(self):
     #     """
     #     建立正确的三元组元素字典
@@ -142,6 +152,19 @@ class Link_Prediction(object):
             self._correct_valid_node_dict = self._create_correct_node_dict(self.valid_dataset)
         if self.test_dataset != None:
             self._correct_test_node_dict = self._create_correct_node_dict(self.test_dataset)
+
+    def _calculate_rank_classification_based(self,single_sample):
+        with torch.no_grad():
+            data_batch = single_sample[0].to(self.device)
+            e2_idx = data_batch[:,2]
+            predictions = self._model(data_batch[:,:2])
+
+            sort_values, sort_idxs = torch.sort(predictions, dim=1, descending=True)
+            sort_idxs = sort_idxs.cpu().numpy()
+            ranks = [np.where(sort_idxs[j]==e2_idx[j].item())[0][0]+1 for j in range(data_batch.shape[0])]
+            self._raw_rank_list.append(ranks)
+
+
 
     def _caculate_rank(self, single_sample, entity_type):
         """
@@ -249,15 +272,18 @@ class Link_Prediction(object):
                                         batch_size=self._outer_batch_size,
                                         shuffle=False)
         for step, single_sample in enumerate(tqdm(metric_loader)):
-            single_sample = single_sample[:, :3]
-            self._single_batch_len = len(single_sample)  # (self._outer_batch_size,3)
-            single_sample = single_sample.permute(1, 0)  # (3,self._outer_batch_size)
-            single_sample = torch.unsqueeze(single_sample, dim=0)  # (1,3,self._outer_batch_size)
-            single_sample = single_sample.to(self.device)
-            self._caculate_rank(single_sample, "tail")
-            self._caculate_rank(single_sample, "head")
-            # if step>3:
-            #     break
+            if self.metric_pattern == "score_based":
+                single_sample = single_sample[:, :3]
+                self._single_batch_len = len(single_sample)  # (self._outer_batch_size,3)
+                single_sample = single_sample.permute(1, 0)  # (3,self._outer_batch_size)
+                single_sample = torch.unsqueeze(single_sample, dim=0)  # (1,3,self._outer_batch_size)
+                single_sample = single_sample.to(self.device)
+                self._caculate_rank(single_sample, "tail")
+                self._caculate_rank(single_sample, "head")
+                # if step>3:
+                #     break
+            else:
+                self._calculate_rank_classification_based(single_sample)
 
         if self.link_prediction_raw:
             self._raw_rank_list = sum(self._raw_rank_list, [])
