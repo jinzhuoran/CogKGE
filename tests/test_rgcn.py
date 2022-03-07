@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
 
 from cogkge import *
 
-device = init_cogkge(device_id="4,5,6,7", seed=1)
+device = init_cogkge(device_id="0,1,2,3,4", seed=1)
 loader = FB15KLoader(dataset_path="../dataset", download=True)
 
 train_data, valid_data, test_data = loader.load_all_data()
@@ -42,16 +42,16 @@ model = RGCN(edge_index=edge_index,
                 embedding_dim=200,
                 )
 
-# loss = MarginLoss(margin=1.0, C=0)
+loss = MarginLoss(margin=1.0, C=0)
 
-loss = NegLogLikehoodLoss(C=0.1)
+# loss = NegLogLikehoodLoss(C=0.1)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
                          batch_size=50000,
-                         reverse=True)
+                         reverse=False)
 
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(

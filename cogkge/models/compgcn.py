@@ -65,6 +65,7 @@ class CompGCN(nn.Module):
         return param
 
     def forward(self, sample):
+        # print("Hello World!")
         batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
 
         r = torch.cat([self.init_rel, -self.init_rel], dim=0)

@@ -46,7 +46,9 @@ class RGCN(nn.Module):
 
         # DisMult
         # print(head_embeddimg.shape,self.init_rel.shape,tail_embedding.shape)
-        score = head_embeddimg * (relation_embedding * tail_embedding)
+        # score = head_embeddimg * (relation_embedding * tail_embedding)
+
+        score = F.pairwise_distance(head_embeddimg + relation_embedding, tail_embedding, 2)
 
         return score
 
