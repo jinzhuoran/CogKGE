@@ -24,7 +24,8 @@ class Cog_Dataset(Dataset):
     def __getitem__(self, index):
         if self.task == 'kr':
             if self.train_pattern =="classification_based":
-                return self.data[0][index],self.data[1][index]
+                return torch.tensor(self.data[0][index],dtype=torch.long),\
+                       torch.tensor(self.data[1][index],dtype=torch.long)
 
             if self.train_pattern =="score_based":
                 if not self.descriptions:
