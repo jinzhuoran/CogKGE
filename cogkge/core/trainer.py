@@ -464,7 +464,8 @@ class BaseTrainer(object):
             if self.visualization:
                 self.writer.add_scalars("Loss", {"train_loss": train_epoch_loss,
                                                  "valid_loss": valid_epoch_loss}, current_epoch)
-                if self.model.entity_embedding is not None:
+                if hasattr(self.model, 'entity_embedding'):
+                # if self.model.entity_embedding is not None:
                     embedding = self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
                     embedding = TSNE(negative_gradient_method="bh").fit(embedding)
                     plt.scatter(embedding[:, 0], embedding[:, 1], c=self.visual_type)
@@ -566,7 +567,7 @@ class ClassifyTrainer(BaseTrainer):
         if hasattr(self.model, 'get_sampel_label_index'):
             sample_index=self.model.get_sampel_label_index(data_positive[0].shape[0])
         else:
-            sample_index=torch.arange(0,data_positive.shape[0], step = 1)
+            sample_index=torch.arange(0,data_positive[0].shape[0], step = 1)
         data_loss = self.loss(data_positive_probability,t_true[sample_index])
         return data_loss
 

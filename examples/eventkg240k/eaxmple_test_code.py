@@ -13,7 +13,7 @@ from cogkge import *
 
 device = init_cogkge(device_id="6", seed=1)
 
-loader = FB15KLoader(dataset_path="../../dataset", download=True)
+loader = FB15KLoader(dataset_path="../../dataset", download=False)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
 
@@ -28,11 +28,11 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-# model=TuckER(entity_dict_len=len(node_lut),
-#              relation_dict_len=len(relation_lut),
-#              d1=200,
-#              d2=200)
-model=HittER(embedding_dim=320, dropout=0.1,entity_dict_len=len(node_lut),relation_dict_len=len(relation_lut))
+model=TuckER(entity_dict_len=len(node_lut),
+             relation_dict_len=len(relation_lut),
+             d1=200,
+             d2=200)
+# model=HittER(embedding_dim=320, dropout=0.1,entity_dict_len=len(node_lut),relation_dict_len=len(relation_lut))
 loss = torch.nn.BCELoss()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
