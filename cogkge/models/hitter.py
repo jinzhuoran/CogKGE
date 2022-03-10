@@ -161,3 +161,49 @@ if __name__ == '__main__':
     output=hitter(input )
     id=hitter.get_sampel_label_index(5)
     print(1)
+
+# import torch.nn as nn
+# import torch
+#
+#
+# class Entity_Transformer(nn.Module):
+#     def __init__(self):
+#         super().__init__()
+#         self.encoder_layer=nn.TransformerEncoderLayer(d_model=512,nhead=8)
+#         self.encoder=nn.TransformerEncoder(self.encoder_layer,num_layers=6)
+#         self.other_type_emb = torch.nn.parameter.Parameter(torch.zeros(self.embedding_dim))
+#         self.other_type_emb = torch.nn.parameter.Parameter(torch.zeros(self.embedding_dim))
+#         self.other_type_emb = torch.nn.parameter.Parameter(torch.zeros(self.embedding_dim))
+#     def forward(self,x):
+#         x=self.encoder(src=x)
+#         return x
+#
+#
+# class Hitter(nn.Module):
+#     def __init__(self,
+#                  entity_vocab_size,
+#                  relation_vocab_size,
+#                  embedding_dim):
+#         super().__init__()
+#         self.entity_vocab_size = entity_vocab_size
+#         self.relation_vocab_size=relation_vocab_size
+#         self.embedding_dim=embedding_dim
+#         self.entity_transformer =Entity_Transformer()
+#
+#     def forward(self,x):
+#         x=self.entity_transformer(x)
+#         return x
+#
+#
+# if __name__ == "__main__":
+#     model = Hitter(entity_vocab_size=3,
+#                    relation_vocab_size=2,
+#                    embedding_dim=512)
+#     input=torch.tensor([[-1,1,0],
+#                         [-1,2,1],
+#                         [-1,0,0]])
+#     label=torch.tensor([[1],
+#                         [0],
+#                         [1]])
+#     output=model(input)
+#     print("end")
