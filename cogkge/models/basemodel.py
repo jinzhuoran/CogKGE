@@ -22,7 +22,6 @@ class BaseModel(nn.Module):
 
     def forward(self,data):
         #前向传播
-        data=self.get_batch(data)
         pass
 
     def get_realation_embedding(self,relation_ids):
@@ -43,6 +42,7 @@ class BaseModel(nn.Module):
 
     def loss(self,data):
         #计算损失
+        data = self.get_batch(data)
         pass
 
     def negative_sample(self,data):
