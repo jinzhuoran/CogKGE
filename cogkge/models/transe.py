@@ -81,7 +81,9 @@ class TransE(BaseModel):
 
     def forward(self,data):
         #前向传播
-        h,r,t=self.get_batch(data)
+        h = data[:, 0]
+        r = data[:, 1]
+        t = data[:, 2]
         h_embedding = self.e_embedding(h)
         r_embedding = self.r_embedding(r)
         t_embedding = self.e_embedding(t)
@@ -101,9 +103,11 @@ class TransE(BaseModel):
         #得到实体的embedding
         return self.e_embedding(entity_ids)
 
-    def get_triplet_embedding(self, tri):
+    def get_triplet_embedding(self,tri):
         # 得到三元组的embedding
-        h, r, t = self.get_batch(tri)
+        h = data[:, 0]
+        r = data[:, 1]
+        t = data[:, 2]
         h_embedding = self.e_embedding(h)
         r_embedding = self.r_embedding(r)
         t_embedding = self.e_embedding(t)
@@ -114,9 +118,9 @@ class TransE(BaseModel):
 
     def get_batch(self,data):
         #得到一个batch的数据
-        h=data[:,0]
-        r=data[:,1]
-        t=data[:,2]
+        h=data["h"]
+        r=data["r"]
+        t=data["t"]
         return h,r,t
 
     def penalty(self):
@@ -129,9 +133,12 @@ class TransE(BaseModel):
 
     def loss(self,data):
         # 计算损失
-        pos_data=data
-        neg_data=self.model_negative_sampler.create_negative(data)
-        return self.model_loss(pos_data,neg_data)+self.penalty()
+        h, r, t = self.get_batch(data)
+        pos_data=torch.cat((h.unsqueeze(1),r.unsqueeze(1),t.unsqueeze(1)),dim=1)
+        neg_data=self.model_negative_sampler.create_negative(pos_data)
+        pos_score=self.forward(pos_data)
+        neg_score=self.forward(neg_data)
+        return self.model_loss(pos_score,neg_score)+self.penalty()
 
     def metric(self,data):
         #模型评价
@@ -158,8 +165,10 @@ if __name__=="__main__":
             return data.shape[0]
 
         def __getitem__(self, index):
-            return data[index]
-    data=torch.ones((10,3),dtype=torch.long)
+            return {"h":self.data[index][0],
+                    "r":self.data[index][1],
+                    "t":self.data[index][2]}
+    data=torch.ones((100,3),dtype=torch.long)
     model=TransE(entity_dict_len=3,
                  relation_dict_len=2,
                  embedding_dim=50,
@@ -183,8 +192,8 @@ if __name__=="__main__":
                            model_negative_sampler=negative_sampler)
     train_loader=DataLoader(dataset=train_dataset,batch_size=10)
     train_epoch_loss=0.0
-    for batch in tqdm(train_dataset):
-        train_loss=model.loss(data)
+    for batch in tqdm(train_loader):
+        train_loss=model.loss(batch)
         optimizer.zero_grad()
         train_loss.backward()
         optimizer.step()
