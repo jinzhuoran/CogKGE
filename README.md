@@ -6,6 +6,10 @@
 
 **Demo system and more information is available at http://cognlp.com/cogkge**
 
+## What's New?
+- Mar 2022: We have supported node classification framework.
+- Jan 2022: We have released CogKGE v1.0.
+
 
 ## Description   
 CogKGE is a knowledge graph embedding toolkit that aims to represent **multi-source** and **heterogeneous** knowledge. CogKGE currently supports 17 models, 11 datasets including two multi-source heterogeneous KGs, five evaluation metrics, four knowledge adapters, four loss functions, three samplers and three built-in data containers.
