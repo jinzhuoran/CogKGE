@@ -19,9 +19,7 @@ __all__ = [
     "NegSamplingLoss",
 
     "Link_Prediction",
-    "BaseTrainer",
-    "ScoreTrainer",
-    "ClassifyTrainer",
+    "Trainer",
 
     "DataLoaderX",
 

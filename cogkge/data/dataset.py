@@ -23,17 +23,20 @@ class Cog_Dataset(Dataset):
 
     def __getitem__(self, index):
         if self.task == 'kr':
-            if self.train_pattern =="classification_based":
-                return torch.tensor(self.data[0][index],dtype=torch.long),\
-                       torch.tensor(self.data[1][index],dtype=torch.long)
-
-            if self.train_pattern =="score_based":
-                if not self.descriptions:
-                    return torch.tensor(self.data[index], dtype=torch.long)
-                else:
-                    return [torch.tensor(self.data[index], dtype=torch.long), *[
-                        self.descriptions[i][index] for i in range(len(self.descriptions))
-                    ]]
+            return {"h": self.data[index][0],
+                    "r": self.data[index][1],
+                    "t": self.data[index][2]}
+            # if self.train_pattern =="classification_based":
+            #     return torch.tensor(self.data[0][index],dtype=torch.long),\
+            #            torch.tensor(self.data[1][index],dtype=torch.long)
+            #
+            # if self.train_pattern =="score_based":
+            #     if not self.descriptions:
+            #         return torch.tensor(self.data[index], dtype=torch.long)
+            #     else:
+            #         return [torch.tensor(self.data[index], dtype=torch.long), *[
+            #             self.descriptions[i][index] for i in range(len(self.descriptions))
+            #         ]]
 
         else:
             raise ValueError("{} currently are not supported!".format(self.task))

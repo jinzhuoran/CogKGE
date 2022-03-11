@@ -30,9 +30,7 @@ __all__ = [
     "Predictor",
 
     # trainer
-    "BaseTrainer",
-    "ScoreTrainer",
-    "ClassifyTrainer",
+    "Trainer",
 
     # sampler
     "UnifNegativeSampler",

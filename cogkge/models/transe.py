@@ -48,6 +48,7 @@
 from cogkge.models.basemodel import BaseModel
 import torch.nn as nn
 import torch.nn.functional as F
+import torch
 
 class TransE(BaseModel):
     def __init__(self,
@@ -68,11 +69,12 @@ class TransE(BaseModel):
         self._reset_param()
 
 
-    def set_model_config(self,model_loss=None,model_metric=None,model_negative_sampler=None):
+    def set_model_config(self,model_loss=None,model_metric=None,model_negative_sampler=None,model_device=None):
         #设置模型使用的metric和loss
         self.model_loss=model_loss
         self.model_metrci=model_metric
         self.model_negative_sampler=model_negative_sampler
+        self.model_device=model_device
 
     def _reset_param(self):
         #重置参数
@@ -118,14 +120,14 @@ class TransE(BaseModel):
 
     def get_batch(self,data):
         #得到一个batch的数据
-        h=data["h"]
-        r=data["r"]
-        t=data["t"]
+        h=data["h"].to(self.model_device)
+        r=data["r"].to(self.model_device)
+        t=data["t"].to(self.model_device)
         return h,r,t
 
     def penalty(self):
         # 正则项
-        penalty_loss=torch.tensor(0.0)
+        penalty_loss=torch.tensor(0.0).to(self.model_device)
         for param in self.parameters():
             penalty_loss+=torch.sum(param**2)
         return self.penalty_weight*penalty_loss
@@ -189,7 +191,8 @@ if __name__=="__main__":
     #trainer内部
     model.set_model_config(model_loss=loss,
                            model_metric=metric,
-                           model_negative_sampler=negative_sampler)
+                           model_negative_sampler=negative_sampler,
+                           model_device="cpu")
     train_loader=DataLoader(dataset=train_dataset,batch_size=10)
     train_epoch_loss=0.0
     for batch in tqdm(train_loader):
