@@ -650,7 +650,7 @@ class Trainer(object):
                  loss,
                  optimizer,
                  negative_sampler,
-                 epoch,
+                 total_epoch,
                  device,
                  output_path,
                  valid_dataset=None,
@@ -670,6 +670,9 @@ class Trainer(object):
                  save_step=None,
                  metric_final_model=True,
                  save_final_model=True,
+                 use_metric_epoch=0.1,
+                 use_tensorboard_epoch=0.1,
+                 use_savemodel_epoch=0.1
                  ):
         self.train_dataset = train_dataset
         self.train_sampler = train_sampler
@@ -678,7 +681,7 @@ class Trainer(object):
         self.loss = loss
         self.optimizer = optimizer
         self.negative_sampler = negative_sampler
-        self.epoch = epoch
+        self.total_epoch = total_epoch
         self.device = device
         self.valid_dataset = valid_dataset
         self.valid_sampler = valid_sampler
@@ -697,6 +700,9 @@ class Trainer(object):
         self.save_step = save_step
         self.metric_final_model = metric_final_model
         self.save_final_model = save_final_model
+        self.use_metric_epoch = use_metric_epoch
+        self.use_tensorboard_epoch = use_tensorboard_epoch
+        self.use_savemodel_epoch = use_savemodel_epoch
 
         self.data_name = train_dataset.data_name
 
@@ -710,7 +716,7 @@ class Trainer(object):
         # Set output_path
         output_path = os.path.join(output_path, self.data_name)
         self.output_path = cal_output_path(output_path, self.model.model_name)
-        self.output_path = self.output_path + "--{}epochs".format(self.epoch)
+        self.output_path = self.output_path + "--{}epochs".format(self.total_epoch)
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
 
@@ -780,7 +786,7 @@ class Trainer(object):
         # Load Metric
         if self.metric:
             self.metric.initialize(device=self.device,
-                                   total_epoch=self.epoch,
+                                   total_epoch=self.total_epoch,
                                    metric_type="valid",
                                    node_dict_len=len(self.lookuptable_E),
                                    model_name=self.model.model_name,
@@ -799,15 +805,13 @@ class Trainer(object):
 
 
     def train(self):
-        if self.epoch - self.trained_epoch <= 0:
+        if self.total_epoch <= self.trained_epoch:
             raise ValueError("Trained_epoch is bigger than total_epoch!")
 
-        for epoch in range(self.epoch - self.trained_epoch):
+        for epoch in range(self.total_epoch - self.trained_epoch):
             current_epoch = epoch + 1 + self.trained_epoch
 
-            # Training Progress
-            train_epoch_loss = 0.0
-            train_step=0
+            # Train Progress
             for train_step, batch in enumerate(tqdm(self.train_loader)):
                 train_loss=self.model.loss(batch)
                 self.optimizer.zero_grad()
@@ -818,78 +822,36 @@ class Trainer(object):
                 else:
                     train_loss.backward()
                 self.optimizer.step()
-                train_epoch_loss = train_epoch_loss + train_loss.item()
 
-            print("Epoch{}/{}   Train Loss:".format(current_epoch, self.epoch), train_epoch_loss / (train_step + 1))
+            with torch.no_grad():
+                train_epoch_loss = 0.0
+                for batch in self.train_loader:
+                    train_loss = self.model.loss(batch)
+                    train_epoch_loss += train_loss.item()
+                valid_epoch_loss = 0.0
+                for batch in self.valid_loader:
+                    valid_loss = self.model.loss(batch)
+                    valid_epoch_loss += valid_loss.item()
+                print("Epoch{}/{}   Train Loss: {}   Valid Loss: {}".format(current_epoch,
+                                                                            self.total_epoch,
+                                                                            train_epoch_loss / len(self.train_dataset),
+                                                                            valid_epoch_loss / len(self.valid_dataset)))
 
-        #     valid_epoch_loss = 0.0
-        #     with torch.no_grad():
-        #         for valid_step, valid_positive in enumerate(self.valid_loader):
-        #             valid_positive = valid_positive.to(self.device)
-        #             valid_negative = self.negative_sampler.create_negative(valid_positive[:, :3])
-        #             valid_positive_score = self.parallel_model(valid_positive)
-        #             if len(valid_positive[0]) == 5:
-        #                 valid_negative = torch.cat((valid_negative, valid_positive[:, 3:]), dim=1)
-        #             valid_negative_score = self.parallel_model(valid_negative)
-        #             penalty = self.model.get_penalty() if hasattr(self.model, 'get_penalty') else 0
-        #             valid_loss = self.loss(valid_positive_score, valid_negative_score, penalty)
-        #             valid_epoch_loss = valid_epoch_loss + valid_loss.item()
-        #
-        #     print("Epoch{}/{}   Train Loss:".format(current_epoch, self.epoch), train_epoch_loss / (train_step + 1),
-        #           " Valid Loss:", valid_epoch_loss / (valid_step + 1))
-        #
-        #     # Metric Progress
-        #     if self.metric_step and (current_epoch) % self.metric_step == 0 or self.metric_final_model and (
-        #             current_epoch) == self.epoch:
-        #         print("Evaluating Model {} on Valid Dataset...".format(self.model.name))
-        #         self.metric.caculate(model=self.parallel_model, current_epoch=current_epoch)
-        #         self.metric.print_current_table()
-        #         self.metric.log()
-        #         self.metric.write()
-        #         print("-----------------------------------------------------------------------")
-        #
-        #         # Scheduler Progress
-        #         self.lr_scheduler.step(self.metric.get_Raw_MR())
-        #
-        #     # Visualization Process
-        #     if self.visualization:
-        #         self.writer.add_scalars("Loss", {"train_loss": train_epoch_loss,
-        #                                          "valid_loss": valid_epoch_loss}, current_epoch)
-        #         # if self.model.entity_embedding is not None:
-        #         #     embedding = self.model.entity_embedding.weight.data.clone().cpu().numpy()[:self.visual_num]
-        #         #     embedding = TSNE(negative_gradient_method="bh").fit(embedding)
-        #         #     plt.scatter(embedding[:, 0], embedding[:, 1], c=self.visual_type)
-        #         #     plt.show()
-        #         # if epoch == 0:
-        #         #     fake_data = torch.zeros(self.trainer_batch_size, 3).long()
-        #         #     self.writer.add_graph(self.model.cpu(), fake_data)
-        #         #     self.model.to(self.device)
-        #
-        #     # Save Checkpoint and Final Model Process
-        #     if (self.save_step and (current_epoch) % self.save_step == 0) or (current_epoch) == self.epoch:
-        #         if not os.path.exists(os.path.join(self.output_path, "checkpoints",
-        #                                            "{}_{}epochs".format(self.model.name, current_epoch))):
-        #             os.makedirs(os.path.join(self.output_path, "checkpoints",
-        #                                      "{}_{}epochs".format(self.model.name, current_epoch)))
-        #             self.logger.info(os.path.join(self.output_path, "checkpoints",
-        #                                           "{}_{}epochs ".format(self.model.name,
-        #                                                                 current_epoch)) + 'created successfully!')
-        #         torch.save(self.model.state_dict(), os.path.join(self.output_path, "checkpoints",
-        #                                                          "{}_{}epochs".format(self.model.name, current_epoch),
-        #                                                          "Model.pkl"))
-        #         torch.save(self.optimizer.state_dict(), os.path.join(self.output_path, "checkpoints",
-        #                                                              "{}_{}epochs".format(self.model.name,
-        #                                                                                   current_epoch),
-        #                                                              "Optimizer.pkl"))
-        #         torch.save(self.lr_scheduler.state_dict(), os.path.join(self.output_path, "checkpoints",
-        #                                                                 "{}_{}epochs".format(self.model.name,
-        #                                                                                      current_epoch),
-        #                                                                 "Lr_Scheduler.pkl"))
-        #         self.logger.info(os.path.join(self.output_path, "checkpoints", "{}_{}epochs ".format(self.model.name,
-        #                                                                                              current_epoch)) + "saved successfully")
-        #
-        # # Show Best Metric Result
-        # if self.metric_step:
-        #     self.metric.print_best_table(front=5, key="Filt_Hits@10")
+            # Metric Progress
+            if current_epoch%self.use_metric_epoch==0:
+                self.use_metric()
+            # Tensorboard Process
+            if current_epoch%self.use_tensorboard_epoch==0:
+                self.use_tensorboard()
+            # Savemodel Process
+            if current_epoch%self.use_savemodel_epoch==0:
+                self.use_savemodel()
 
+    def use_metric(self):
+        pass
 
+    def use_tensorboard(self):
+        pass
+
+    def use_savemodel(self):
+        pass
