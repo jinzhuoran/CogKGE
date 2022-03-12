@@ -10,7 +10,12 @@ class Cog_Dataset(Dataset):
         :param data: numpy array  (len,5) or (len,3)
         :param task: kr tr or ktr  currently only kr are supported
         """
-        self.data = data
+        self.label_data = None
+        if isinstance(data,tuple):
+            self.label_data = data[1]
+            self.data = data[0]
+        else:
+            self.data = data
         self.task = task
         self.descriptions = descriptions
         self.data_name = 'dataset'
@@ -22,10 +27,7 @@ class Cog_Dataset(Dataset):
         self.time = time
 
     def __len__(self):
-        if self.train_pattern == "classification_based":
-            return self.data[0].shape[0]
-        if self.train_pattern == "score_based":
-            return self.data.shape[0]
+        return self.data.shape[0]
 
     def update_sample(self,sample,index):
         if self.lookuptable_E:
@@ -42,19 +44,20 @@ class Cog_Dataset(Dataset):
                 sample.update({"r_type": self.lookuptable_R.type[self.data[index][1]]})
 
         if self.time:
-                sample.update({"start":self.data[index][3],
-                               "end":self.data[index][4]})
+            sample.update({"start":self.data[index][3],
+                            "end":self.data[index][4]})
         return sample
 
 
     def __getitem__(self, index):
         if self.task == 'kr':
-            sample = {"h": self.data[index][0],
-                      "r": self.data[index][1],
-                      "t": self.data[index][2]}
+            sample = {}
+            if self.train_pattern == "classification_based":
+                sample.update({"label":self.label_data[index]})
+            sample.update({"h": self.data[index][0],
+                           "r": self.data[index][1],
+                           "t": self.data[index][2]})
             return self.update_sample(sample,index)
-
-
         else:
             raise ValueError("{} currently are not supported!".format(self.task))
 

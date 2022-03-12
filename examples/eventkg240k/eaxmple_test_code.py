@@ -51,39 +51,7 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-# trainer = ScoreTrainer(
-#     train_dataset=train_dataset,
-#     valid_dataset=test_dataset,
-#     train_sampler=train_sampler,
-#     valid_sampler=test_sampler,
-#     model=model,
-#     loss=loss,
-#     optimizer=optimizer,
-#     negative_sampler=negative_sampler,
-#     device=device,
-#     output_path="../../dataset",
-#     lookuptable_E=node_lut,
-#     lookuptable_R=relation_lut,
-#     metric=metric,
-#     lr_scheduler=lr_scheduler,
-#     log=True,
-#     trainer_batch_size=1000,
-#     epoch=3000,
-#     visualization=1,
-#     apex=True,
-#     dataloaderX=True,
-#     num_workers=4,
-#     pin_memory=True,
-#     metric_step=200,
-#     save_step=200,
-#     metric_final_model=True,
-#     save_final_model=True,
-#     load_checkpoint=None
-# )
-# trainer.train()
-
-
-trainer = ClassifyTrainer(
+trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=test_dataset,
     train_sampler=train_sampler,
@@ -99,8 +67,8 @@ trainer = ClassifyTrainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     log=True,
-    trainer_batch_size=300,
-    epoch=1000,
+    trainer_batch_size=200000,
+    total_epoch=1000,
     visualization=1,
     apex=True,
     dataloaderX=True,
