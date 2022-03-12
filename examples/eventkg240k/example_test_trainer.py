@@ -32,6 +32,7 @@ model = TransE(entity_dict_len=len(node_lut),
                embedding_dim=50,
                p_norm=1)
 loss = MarginLoss(margin=1.0, reverse=False)
+
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
                          batch_size=5000000,
@@ -71,10 +72,12 @@ trainer = Trainer(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    use_tensorboard_epoch=10,
-    use_matplotlib_epoch=10,
+    # use_tensorboard_epoch=10,
+    # use_matplotlib_epoch=10,
     use_savemodel_epoch=10,
-    use_metric_epoch=10
+    # use_metric_epoch=10,
+    checkpoint_path="/data/mentianyi/code/CogKGE/dataset/FB15K/experimental_output/TransE2022-03-12--11-43-35.80--1000epochs/checkpoints/TransE_10epochs"
+
 )
 trainer.train()
 

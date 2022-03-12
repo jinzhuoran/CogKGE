@@ -72,7 +72,7 @@ class TransE(BaseModel):
     def set_model_config(self,model_loss=None,model_metric=None,model_negative_sampler=None,model_device=None):
         #设置模型使用的metric和loss
         self.model_loss=model_loss
-        self.model_metrci=model_metric
+        self.model_metric=model_metric
         self.model_negative_sampler=model_negative_sampler
         self.model_device=model_device
 

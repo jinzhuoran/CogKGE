@@ -716,6 +716,13 @@ class Trainer(object):
         if not os.path.exists(self.visualization_path):
             os.makedirs(self.visualization_path)
 
+        #Set Model
+        self.model.set_model_config(model_loss=self.loss,
+                                    model_metric=metric,
+                                    model_negative_sampler=negative_sampler,
+                                    model_device=self.device)
+        self.model = self.model.to(self.device)
+
         # Set Apex
         if self.apex:
             if "apex" not in sys.modules:
@@ -741,12 +748,7 @@ class Trainer(object):
             else:
                 raise FileExistsError("Checkpoint path doesn't exist!")
 
-        #Set Model
-        self.model.set_model_config(model_loss=self.loss,
-                                    model_metric=metric,
-                                    model_negative_sampler=negative_sampler,
-                                    model_device=self.device)
-        self.model = self.model.to(self.device)
+
 
 
         #Set Tensorboard
@@ -783,6 +785,7 @@ class Trainer(object):
 
             # Train Progress
             for train_step, batch in enumerate(tqdm(self.train_loader)):
+
                 train_loss=self.model.loss(batch)
                 self.optimizer.zero_grad()
                 if self.apex:
