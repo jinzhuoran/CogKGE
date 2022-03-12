@@ -12,7 +12,7 @@ class Cog_Dataset(Dataset):
         """
         self.label_data = None
         if isinstance(data,tuple):
-            self.label_data = data[1]
+            self.label_data = torch.tensor(data[1],dtype=torch.float)
             self.data = data[0]
         else:
             self.data = data

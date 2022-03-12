@@ -11,23 +11,17 @@ if str(ROOT) not in sys.path:
 
 from cogkge import *
 
-device = init_cogkge(device_id="0,1,2,3,4", seed=1)
+device = init_cogkge(device_id="5", seed=1)
 loader = FB15KLoader(dataset_path="../dataset", download=True)
 
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
-# loader.describe()
-# train_data.describe()
-# node_lut.describe()
 
-# processor = COGNET680KProcessor(node_lut, relation_lut)
-processor = FB15KProcessor(node_lut, relation_lut, reprocess=True)
+processor = FB15KProcessor(node_lut, relation_lut, reprocess=True,train_pattern="classification_based")
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
 node_lut, relation_lut = processor.process_lut()
-# node_lut.print_table(front=3)
-# relation_lut.print_table(front=3)
 
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
@@ -36,15 +30,13 @@ test_sampler = RandomSampler(test_dataset)
 edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut))
 
 model = RGCN(edge_index=edge_index,
-                edge_type=edge_type,
-                entity_dict_len=len(node_lut),
-                relation_dict_len=len(relation_lut),
-                embedding_dim=200,
-                )
+             edge_type=edge_type,
+             entity_dict_len=len(node_lut),
+             relation_dict_len=len(relation_lut),
+             embedding_dim=200,
+             )
 
-loss = MarginLoss(margin=1.0, C=0)
-
-# loss = NegLogLikehoodLoss(C=0.1)
+loss = torch.nn.BCELoss()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
@@ -63,11 +55,11 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
                                        relation_dict_len=len(relation_lut))
 
-trainer = ScoreTrainer(
+trainer = Trainer(
     train_dataset=train_dataset,
-    valid_dataset=valid_dataset,
+    valid_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=valid_sampler,
+    valid_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
@@ -78,40 +70,16 @@ trainer = ScoreTrainer(
     lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    log=True,
-    trainer_batch_size=10000,
-    epoch=1000,
-    visualization=0,
+    trainer_batch_size=128,
+    total_epoch=1000,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=100,
-    save_step=200,
-    metric_final_model=True,
-    save_final_model=True,
-    load_checkpoint=None
+    use_tensorboard_epoch=10,
+    use_matplotlib_epoch=10,
+    use_savemodel_epoch=10,
+    use_metric_epoch=100
 )
 trainer.train()
-
-evaluator = Evaluator(
-    test_dataset=test_dataset,
-    test_sampler=test_sampler,
-    model=model,
-    device=device,
-    metric=metric,
-    output_path="../dataset",
-    train_dataset=train_dataset,
-    valid_dataset=valid_dataset,
-    lookuptable_E=node_lut,
-    lookuptable_R=relation_lut,
-    log=True,
-    evaluator_batch_size=500,
-    dataloaderX=False,
-    num_workers=4,
-    pin_memory=True,
-    trained_model_path=None
-)
-evaluator.evaluate()
-
 
