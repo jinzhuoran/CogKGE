@@ -1,4 +1,3 @@
-
 ################################################################以下为最初版本###########################################################
 #
 # class Trainer(object):
@@ -632,15 +631,19 @@
 import os
 import re
 import sys
+
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.utils.data as Data
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
+
 from cogkge.core import DataLoaderX
 from .log import save_logger
 from ..utils.kr_utils import cal_output_path
-import matplotlib.pyplot as plt
+
+
 class Trainer(object):
     def __init__(self,
                  train_dataset,
@@ -669,7 +672,7 @@ class Trainer(object):
                  use_matplotlib_epoch=0.1,
                  checkpoint_path=None
                  ):
-        #传入参数
+        # 传入参数
         self.train_dataset = train_dataset
         self.train_sampler = train_sampler
         self.valid_dataset = valid_dataset
@@ -682,7 +685,8 @@ class Trainer(object):
         self.optimizer = optimizer
         self.total_epoch = total_epoch
         self.device = device
-        self.output_path=  cal_output_path(os.path.join(output_path,train_dataset.data_name), self.model.model_name)+ "--{}epochs".format(total_epoch)
+        self.output_path = cal_output_path(os.path.join(output_path, train_dataset.data_name),
+                                           self.model.model_name) + "--{}epochs".format(total_epoch)
         self.lookuptable_E = lookuptable_E
         self.lookuptable_R = lookuptable_R
         self.lr_scheduler = lr_scheduler
@@ -693,30 +697,28 @@ class Trainer(object):
         self.use_metric_epoch = use_metric_epoch
         self.use_tensorboard_epoch = use_tensorboard_epoch
         self.use_savemodel_epoch = use_savemodel_epoch
-        self.use_matplotlib_epoch=use_matplotlib_epoch
-        self.checkpoint_path=checkpoint_path
+        self.use_matplotlib_epoch = use_matplotlib_epoch
+        self.checkpoint_path = checkpoint_path
 
-
-
-        #全局变量
-        self.average_train_epoch_loss_list=[] #平均训练损失
-        self.average_valid_epoch_loss_list=[] #平均验证损失
-        self.current_epoch_list=[]#目前轮数list
-        self.writer = None #tensorboard
-        self.trained_epoch=0 #已经训练的轮数
-        self.logger=None #log
+        # 全局变量
+        self.average_train_epoch_loss_list = []  # 平均训练损失
+        self.average_valid_epoch_loss_list = []  # 平均验证损失
+        self.current_epoch_list = []  # 目前轮数list
+        self.writer = None  # tensorboard
+        self.trained_epoch = 0  # 已经训练的轮数
+        self.logger = None  # log
         self.visualization_path = os.path.join(self.output_path, "visualization", self.model.model_name)
         self.log_path = os.path.join(self.output_path, "trainer_run.log")
         self.data_name = train_dataset.data_name
-        self.model_name=self.model.model_name
+        self.model_name = self.model.model_name
 
-        #Set path
+        # Set path
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path)
         if not os.path.exists(self.visualization_path):
             os.makedirs(self.visualization_path)
 
-        #Set Model
+        # Set Model
         self.model.set_model_config(model_loss=self.loss,
                                     model_metric=metric,
                                     model_negative_sampler=negative_sampler,
@@ -735,7 +737,7 @@ class Trainer(object):
         self.logger = save_logger(self.log_path)
         self.logger.info("Data Experiment Output Path:{}".format(self.output_path))
 
-        #Set Checkpoint
+        # Set Checkpoint
         if self.checkpoint_path != None:
             if os.path.exists(self.checkpoint_path):
                 string = self.checkpoint_path
@@ -748,14 +750,11 @@ class Trainer(object):
             else:
                 raise FileExistsError("Checkpoint path doesn't exist!")
 
-
-
-
-        #Set Tensorboard
-        if use_tensorboard_epoch!=0.1:
+        # Set Tensorboard
+        if use_tensorboard_epoch != 0.1:
             self.writer = SummaryWriter(self.visualization_path)
 
-        #Set DataLoader
+        # Set DataLoader
         if self.dataloaderX:
             self.train_loader = DataLoaderX(dataset=self.train_dataset, sampler=self.train_sampler,
                                             batch_size=self.trainer_batch_size, num_workers=self.num_workers,
@@ -775,7 +774,6 @@ class Trainer(object):
 
         # Set Multi GPU
 
-
     def train(self):
         if self.total_epoch <= self.trained_epoch:
             raise ValueError("Trained_epoch is bigger than total_epoch!")
@@ -786,7 +784,7 @@ class Trainer(object):
             # Train Progress
             for train_step, batch in enumerate(tqdm(self.train_loader)):
 
-                train_loss=self.model.loss(batch)
+                train_loss = self.model.loss(batch)
                 self.optimizer.zero_grad()
                 if self.apex:
                     from apex import amp
@@ -805,8 +803,8 @@ class Trainer(object):
                 for batch in self.valid_loader:
                     valid_loss = self.model.loss(batch)
                     valid_epoch_loss += valid_loss.item()
-                average_train_epoch_loss=train_epoch_loss/len(self.train_dataset)
-                average_valid_epoch_loss=valid_epoch_loss/len(self.valid_dataset)
+                average_train_epoch_loss = train_epoch_loss / len(self.train_dataset)
+                average_valid_epoch_loss = valid_epoch_loss / len(self.valid_dataset)
                 self.average_train_epoch_loss_list.append(average_train_epoch_loss)
                 self.average_valid_epoch_loss_list.append(average_valid_epoch_loss)
                 self.current_epoch_list.append(self.current_epoch)
@@ -816,13 +814,13 @@ class Trainer(object):
                                                                             average_valid_epoch_loss))
 
             # Metric Progress
-            if self.current_epoch%self.use_metric_epoch==0:
+            if self.current_epoch % self.use_metric_epoch == 0:
                 self.use_metric()
             # Tensorboard Process
-            if self.current_epoch%self.use_tensorboard_epoch==0:
-                self.use_tensorboard(average_train_epoch_loss,average_valid_epoch_loss)
+            if self.current_epoch % self.use_tensorboard_epoch == 0:
+                self.use_tensorboard(average_train_epoch_loss, average_valid_epoch_loss)
             # Savemodel Process
-            if self.current_epoch%self.use_savemodel_epoch==0:
+            if self.current_epoch % self.use_savemodel_epoch == 0:
                 self.use_savemodel()
             # Matlotlib Process
             if self.current_epoch % self.use_matplotlib_epoch == 0:
@@ -831,18 +829,19 @@ class Trainer(object):
     def use_metric(self):
         pass
 
-    def use_tensorboard(self,average_train_epoch_loss,average_valid_epoch_loss):
-        self.writer.add_scalars("Loss", {"train_loss":average_train_epoch_loss,
-                                         "valid_loss":average_valid_epoch_loss},
+    def use_tensorboard(self, average_train_epoch_loss, average_valid_epoch_loss):
+        self.writer.add_scalars("Loss", {"train_loss": average_train_epoch_loss,
+                                         "valid_loss": average_valid_epoch_loss},
                                 self.current_epoch)
 
     def use_savemodel(self):
-        checkpoint_path=os.path.join(self.output_path,"checkpoints","{}_{}epochs".format(self.model_name,self.current_epoch))
+        checkpoint_path = os.path.join(self.output_path, "checkpoints",
+                                       "{}_{}epochs".format(self.model_name, self.current_epoch))
         if not os.path.exists(checkpoint_path):
             os.makedirs(checkpoint_path)
-        torch.save(self.model.state_dict(), os.path.join(checkpoint_path,"Model.pkl"))
-        torch.save(self.optimizer.state_dict(), os.path.join(checkpoint_path,"Optimizer.pkl"))
-        torch.save(self.lr_scheduler.state_dict(), os.path.join(checkpoint_path,"Lr_Scheduler.pkl"))
+        torch.save(self.model.state_dict(), os.path.join(checkpoint_path, "Model.pkl"))
+        torch.save(self.optimizer.state_dict(), os.path.join(checkpoint_path, "Optimizer.pkl"))
+        torch.save(self.lr_scheduler.state_dict(), os.path.join(checkpoint_path, "Lr_Scheduler.pkl"))
 
     def use_matplotlib(self):
         plt.figure()
