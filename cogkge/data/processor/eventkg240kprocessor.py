@@ -15,7 +15,7 @@ from ..vocabulary import Vocabulary
 class EVENTKG240KProcessor(BaseProcessor):
     def __init__(self, node_lut, relation_lut, time_lut,
                  reprocess=True,
-                 time=False, nodetype=False, description=False, graph=False,
+                 time=False, nodetype=False, description=False, graph=False,relationtype=False,
                  time_unit="year",
                  pretrain_model_name="roberta-base", token_len=10):
         """
@@ -25,6 +25,7 @@ class EVENTKG240KProcessor(BaseProcessor):
                          time, nodetype, description, graph)
         self.time_lut = time_lut
         self.time_vocab = time_lut.vocab
+        self.relationtype = relationtype
 
         self.time_unit = time_unit
         self.pre_training_model_name = pretrain_model_name
@@ -151,7 +152,14 @@ class EVENTKG240KProcessor(BaseProcessor):
             data = self._datable2numpy(data)
             if not self.time:
                 data = data[:, :3]
-            dataset = Cog_Dataset(data, task='kr')
+            dataset = Cog_Dataset(data, task='kr',
+                                  lookuptable_E=self.node_lut,
+                                  lookuptable_R=self.relation_lut,
+                                  node_type=self.nodetype,
+                                  descriptions=self.description,
+                                  time=self.time,
+                                  relation_type=self.relationtype,
+                                  )
             dataset.data_name = self.data_name
             file = open(path, "wb")
             file.write(pickle.dumps(dataset))

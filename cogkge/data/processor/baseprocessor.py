@@ -42,8 +42,6 @@ class BaseProcessor:
                 data=self.convert_label_construct(triplet_label_dict)
             dataset = Cog_Dataset(data, task='kr',train_pattern=self.train_pattern)
             dataset.data_name = self.data_name
-            # xx=dataset[0]
-            # yy=len(dataset)
             if self.train_pattern == "scored_based":
                 file = open(path, "wb")
                 file.write(pickle.dumps(dataset))
