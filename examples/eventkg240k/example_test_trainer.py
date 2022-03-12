@@ -12,7 +12,7 @@ from cogkge import *
 
 device = init_cogkge(device_id="7", seed=1)
 
-loader = FB15KLoader(dataset_path="../../dataset", download=False)
+loader = FB15KLoader(dataset_path="../../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
 
@@ -65,19 +65,16 @@ trainer = Trainer(
     lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    log=True,
     trainer_batch_size=200000,
     total_epoch=1000,
-    visualization=1,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=50,
-    save_step=200,
-    metric_final_model=True,
-    save_final_model=True,
-    load_checkpoint=None
+    use_tensorboard_epoch=10,
+    use_matplotlib_epoch=10,
+    use_savemodel_epoch=10,
+    use_metric_epoch=10
 )
 trainer.train()
 

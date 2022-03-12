@@ -26,7 +26,8 @@ def download_data(data_name, zip_name, dataset_path, url_path):
 
 class Download_Data:
     def __init__(self, dataset_path):
-        self.url = "http://49.232.8.218"
+        self.url = "http://49.232.8.218" #旧服务器
+        # self.url = "http://43.154.73.63" #新服务器
         self.dataset_path = dataset_path
         if not os.path.exists(self.dataset_path):
             response = input("Do you want to creat a new file?y/n\n")
