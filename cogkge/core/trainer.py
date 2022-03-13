@@ -782,6 +782,7 @@ class Trainer(object):
             self.current_epoch = epoch + 1 + self.trained_epoch
 
             # Train Progress
+            train_epoch_loss = 0.0
             for train_step, batch in enumerate(tqdm(self.train_loader)):
 
                 train_loss = self.model.loss(batch)
@@ -793,25 +794,22 @@ class Trainer(object):
                 else:
                     train_loss.backward()
                 self.optimizer.step()
+                train_loss = self.model.loss(batch)
+                train_epoch_loss += train_loss.item()
 
-            with torch.no_grad():
-                train_epoch_loss = 0.0
-                for batch in self.train_loader:
-                    train_loss = self.model.loss(batch)
-                    train_epoch_loss += train_loss.item()
-                valid_epoch_loss = 0.0
-                for batch in self.valid_loader:
-                    valid_loss = self.model.loss(batch)
-                    valid_epoch_loss += valid_loss.item()
-                average_train_epoch_loss = train_epoch_loss / len(self.train_dataset)
-                average_valid_epoch_loss = valid_epoch_loss / len(self.valid_dataset)
-                self.average_train_epoch_loss_list.append(average_train_epoch_loss)
-                self.average_valid_epoch_loss_list.append(average_valid_epoch_loss)
-                self.current_epoch_list.append(self.current_epoch)
-                print("Epoch{}/{}   Train Loss: {}   Valid Loss: {}".format(self.current_epoch,
-                                                                            self.total_epoch,
-                                                                            average_train_epoch_loss,
-                                                                            average_valid_epoch_loss))
+            valid_epoch_loss = 0.0
+            for batch in self.valid_loader:
+                valid_loss = self.model.loss(batch)
+                valid_epoch_loss += valid_loss.item()
+            average_train_epoch_loss = train_epoch_loss / len(self.train_dataset)
+            average_valid_epoch_loss = valid_epoch_loss / len(self.valid_dataset)
+            self.average_train_epoch_loss_list.append(average_train_epoch_loss)
+            self.average_valid_epoch_loss_list.append(average_valid_epoch_loss)
+            self.current_epoch_list.append(self.current_epoch)
+            print("Epoch{}/{}   Train Loss: {}   Valid Loss: {}".format(self.current_epoch,
+                                                                        self.total_epoch,
+                                                                        average_train_epoch_loss,
+                                                                        average_valid_epoch_loss))
 
             # Metric Progress
             if self.current_epoch % self.use_metric_epoch == 0:
