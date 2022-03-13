@@ -1,7 +1,9 @@
 import torch
 import numpy as np
 from torch.nn.init import xavier_normal_
-class TuckER(torch.nn.Module):
+from cogkge.models.basemodel import BaseModel
+
+class TuckER(BaseModel):
     def __init__(self,
                  entity_dict_len,
                  relation_dict_len,
@@ -10,8 +12,7 @@ class TuckER(torch.nn.Module):
                  input_dropout=0.3,
                  hidden_dropout1=0.4,
                  hidden_dropout2=0.5):
-        super().__init__()
-        self.name = "TuckER"
+        super().__init__(model_name="TuckER")
 
         self.E = torch.nn.Embedding(entity_dict_len, d1)
         self.R = torch.nn.Embedding(relation_dict_len, d2)
@@ -28,6 +29,13 @@ class TuckER(torch.nn.Module):
 
         xavier_normal_(self.E.weight.data)
         xavier_normal_(self.R.weight.data)
+
+    def set_model_config(self, model_loss=None, model_metric=None, model_negative_sampler=None, model_device=None):
+        # 设置模型使用的metric和loss
+        self.model_loss = model_loss
+        self.model_metric = model_metric
+        self.model_negative_sampler = model_negative_sampler
+        self.model_device = model_device
 
 
     def forward(self, h_r_true):
@@ -50,3 +58,15 @@ class TuckER(torch.nn.Module):
         x = torch.mm(x, self.E.weight.transpose(1, 0))
         pred = torch.sigmoid(x)
         return pred
+
+    def get_batch(self,data):
+        h = data["h"].to(self.model_device)
+        r = data["r"].to(self.model_device)
+        t = data["t"].to(self.model_device)
+        label = data["label"].to(self.model_device)
+        return h,r,t,label
+
+    def loss(self,data):
+        h,r,t,label = self.get_batch(data)
+        pred = self.forward(torch.cat([h.unsqueeze(1),r.unsqueeze(1)],dim=1))
+        return self.model_loss(pred,label)
