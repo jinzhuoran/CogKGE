@@ -41,7 +41,7 @@ loss = torch.nn.BCELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
-                         link_prediction_filt=False,
+                         link_prediction_filt=True,
                          batch_size=50000,
                          reverse=False,
                          metric_pattern="classification_based")

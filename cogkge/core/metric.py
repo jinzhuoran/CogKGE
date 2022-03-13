@@ -107,8 +107,10 @@ class Link_Prediction(object):
         if self.metric_pattern == "classification_based":
             hr_t_vocab = defaultdict(list)
             rt_h_vocab = defaultdict(list)
+
             for index in tqdm(range(len(dataset))):
-                h, r, t = dataset.data[0][index]
+                h,r,t = dataset.data[index]
+                # h, r, t = dataset.data[0][index]
                 hr_t_vocab[(h, r)].append(t)
                 rt_h_vocab[(r, t)].append(h)
             node_dict = {"head": rt_h_vocab, "tail": hr_t_vocab}
@@ -304,7 +306,7 @@ class Link_Prediction(object):
                 (torch.sum(current_raw_rank <= 10) / (2 * len(metric_dataset)) * 100).item(), 3)
             self._current_result["Raw_MR"] = round(torch.mean(current_raw_rank).item(), 3)
             self._current_result["Raw_MRR"] = round(torch.mean(1 / current_raw_rank).item(), 3)
-            print(current_raw_rank)
+            # print(current_raw_rank)
         if self.link_prediction_filt:
             if self.metric_pattern == 'classification_based':
                 # expand the nested list
