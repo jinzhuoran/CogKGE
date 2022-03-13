@@ -2,12 +2,13 @@ import torch
 
 
 class UnifNegativeSampler():
-    def __init__(self, triples, entity_dict_len, relation_dict_len, device=torch.device('cuda:0')):
+    def __init__(self, triples, entity_dict_len, relation_dict_len, node_lut,device=torch.device('cuda:0')):
         # tensor(len,3)
         self.triples = triples
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.device = device
+        self.node_lut = node_lut
 
     def create_negative(self, batch_pos):
         # tensor(batch,3)
@@ -18,6 +19,13 @@ class UnifNegativeSampler():
         tail_mask = (mask <= 0.5).to(self.device)
         batch_neg[head_mask, 0] = entity_number[head_mask].to(self.device)
         batch_neg[tail_mask, 2] = entity_number[tail_mask].to(self.device)
+        if self.node_lut.data:
+            batch_dict = {"h":batch_neg[:,0],
+                          "r":batch_neg[:,1],
+                          "t":batch_neg[:,2]}
+            batch_dict.update({"h_type":self.node_lut.type[batch_neg[:,0]],
+                               "t_type":self.node_lut.type[batch_neg[:,2]]})
+            return batch_dict
         return batch_neg
 
 

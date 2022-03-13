@@ -12,17 +12,19 @@ from cogkge import *
 
 device = init_cogkge(device_id="3", seed=1)
 
-loader = FB15KLoader(dataset_path="../../dataset", download=True)
+loader =EVENTKG240KLoader(dataset_path="../../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
-node_lut, relation_lut = loader.load_all_lut()
+node_lut, relation_lut ,time_lut= loader.load_all_lut()
 
-# processor = FB15KProcessor(node_lut, relation_lut, reprocess=True,train_pattern="classification_based")
-processor = FB15KProcessor(node_lut, relation_lut, reprocess=True,train_pattern="score_based")
+
+processor = EVENTKG240KProcessor(node_lut, relation_lut,time_lut,
+                               reprocess=True,
+                               nodetype=True,time=True,relationtype=False,description=False,graph=False,
+                               time_unit="year",pretrain_model_name="roberta-base",token_len=10)
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
-node_lut, relation_lut= processor.process_lut()
-
+node_lut,relation_lut,time_lut=processor.process_lut()
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
@@ -39,7 +41,8 @@ metric = Link_Prediction(link_prediction_raw=True,
                          reverse=False)
 negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
+                                       relation_dict_len=len(relation_lut),
+                                       node_lut = node_lut)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
@@ -70,7 +73,7 @@ trainer = Trainer(
     total_epoch=1000,
     apex=True,
     dataloaderX=True,
-    num_workers=4,
+    num_workers=1,
     pin_memory=True,
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
