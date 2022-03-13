@@ -48,7 +48,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
-
 from cogkge.models.basemodel import BaseModel
 
 

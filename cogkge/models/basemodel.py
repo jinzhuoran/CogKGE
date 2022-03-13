@@ -10,14 +10,27 @@ class BaseModel(nn.Module):
         self.model_negative_sampler = None
         self.model_name = model_name
         self.penalty_weight = penalty_weight
-        self.token = None
+        self.init_description_adapter=False
+        self.init_type_adapter=False
+        self.init_time_adapter=False
+        self.init_graph_adapter=False
+        self.time_dict_len=0
+        self.type_dict_len=0
 
-    def set_model_config(self, model_loss=None, model_metric=None, model_negative_sampler=None, model_device="cpu"):
+    def set_model_config(self,
+                         model_loss=None,
+                         model_metric=None,
+                         model_negative_sampler=None,
+                         model_device="cpu",
+                         time_dict_len=0,
+                         type_dict_len=0):
         # 设置模型使用的metric和loss
         self.model_loss = model_loss
         self.model_metrci = model_metric
         self.model_negative_sampler = model_negative_sampler
         self.model_device = model_device
+        self.time_dict_len=time_dict_len
+        self.type_dict_len=type_dict_len
 
     def _reset_param(self):
         # 重置参数
@@ -35,7 +48,7 @@ class BaseModel(nn.Module):
         # 得到实体的embedding
         pass
 
-    def get_triplet_embedding(self, h, r, t):
+    def get_triplet_embedding(self, h, r, t,batch):
         # 得到三元组的embedding
         pass
 
