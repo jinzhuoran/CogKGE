@@ -102,29 +102,6 @@ class Link_Prediction(object):
         if not train_dataset and not valid_dataset and not test_dataset:
             raise ValueError("Not one dataset is specified in metric!")
 
-    # def establish_correct_triplets_dict(self):
-    #     """
-    #     建立正确的三元组元素字典
-    #     {(correct_head,correct_relation):correct_tail}
-    #     {(correct_tail,correct_relation):correct_head}
-    #     """
-    #     self.correct_triplets_dict=defaultdict(dict)
-    #     dataset_list=[self.train_dataset,self.valid_dataset]
-    #     if self.test_dataset:
-    #         dataset_list.append(self.test_dataset)
-    #     for dataset in dataset_list:
-    #         for index in tqdm(range(len(dataset))):
-    #             r_t=tuple(dataset.data[index][1:3])
-    #             h_r=tuple(dataset.data[index][:2])
-    #             h=torch.tensor(dataset.data[index][0])
-    #             t=torch.tensor(dataset.data[index][2])
-    #             if r_t not in self.correct_triplets_dict["head"]:
-    #                 self.correct_triplets_dict["head"].setdefault(r_t,[])
-    #             self.correct_triplets_dict["head"][r_t].append(h)
-    #             if h_r not in self.correct_triplets_dict["tail"]:
-    #                 self.correct_triplets_dict["tail"].setdefault(h_r,[])
-    #             self.correct_triplets_dict["tail"][h_r].append(t)
-
     def _create_correct_node_dict(self, dataset):
         print("Creating correct index...")
         if self.metric_pattern == "classification_based":
@@ -166,9 +143,9 @@ class Link_Prediction(object):
 
     def _calculate_rank_classification_based(self, single_sample):
         with torch.no_grad():
-            data_batch = single_sample[0].to(self.device)
+            data_batch = single_sample.to(self.device)
             e2_idx = data_batch[:, 2]
-            predictions = self._model(data_batch[:, :2])
+            predictions = self._model(data_batch)
 
             if self.link_prediction_raw:
                 sort_values, sort_idxs = torch.sort(predictions, dim=1, descending=True)
@@ -273,6 +250,8 @@ class Link_Prediction(object):
                 correct_triplet_num = valid_correct_before_num + train_correct_before_num + test_correct_before_num
                 filt_correct_triplet_rank = correct_triplet_rank[i] - correct_triplet_num
                 self._filt_rank_list.append(filt_correct_triplet_rank)
+    def get_batch(self,data_batch):
+        return torch.cat([torch.unsqueeze(data_batch[index],dim=1) for index in ["h","r","t"]],dim=1) # (batch,3)
 
     def caculate(self, model, current_epoch):
         """
@@ -301,9 +280,9 @@ class Link_Prediction(object):
                                         batch_size=self._outer_batch_size,
                                         shuffle=False)
         for step, single_sample in enumerate(tqdm(metric_loader)):
+            single_sample = self.get_batch(single_sample)
             if self.metric_pattern == "score_based":
-                single_sample = single_sample[:, :3]
-                self._single_batch_len = len(single_sample)  # (self._outer_batch_size,3)
+                self._single_batch_len = single_sample.shape[0] # (self._outer_batch_size,3)
                 single_sample = single_sample.permute(1, 0)  # (3,self._outer_batch_size)
                 single_sample = torch.unsqueeze(single_sample, dim=0)  # (1,3,self._outer_batch_size)
                 single_sample = single_sample.to(self.device)

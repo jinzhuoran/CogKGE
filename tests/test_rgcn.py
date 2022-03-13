@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
 
 from cogkge import *
 
-device = init_cogkge(device_id="5", seed=1)
+device = init_cogkge(device_id="0", seed=1)
 loader = FB15KLoader(dataset_path="../dataset", download=True)
 
 train_data, valid_data, test_data = loader.load_all_data()
@@ -43,7 +43,8 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
                          batch_size=50000,
-                         reverse=False)
+                         reverse=False,
+                         metric_pattern="classification_based")
 
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -70,7 +71,7 @@ trainer = Trainer(
     lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    trainer_batch_size=128,
+    trainer_batch_size=2048,
     total_epoch=1000,
     apex=True,
     dataloaderX=True,
@@ -79,7 +80,7 @@ trainer = Trainer(
     use_tensorboard_epoch=10,
     use_matplotlib_epoch=10,
     use_savemodel_epoch=10,
-    use_metric_epoch=100
+    use_metric_epoch=1
 )
 trainer.train()
 

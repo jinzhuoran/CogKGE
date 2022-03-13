@@ -41,13 +41,15 @@ class RGCN(BaseModel):
         self.model_device=model_device
 
     def loss(self,data):
-        batch_h, batch_r, batch_t,batch_label = self.get_batch(data)
-        output = self.forward(batch_h,batch_r,batch_t,batch_label)
+        h, r, t,batch_label = self.get_batch(data)
+        data_batch = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1)
+        output = self.forward(data_batch)
         return self.model_loss(output,batch_label)
 
 
 
-    def forward(self,batch_h,batch_r,batch_t,label):
+    def forward(self,data_batch):
+        batch_h,batch_r,batch_t = data_batch[:,0],data_batch[:,1],data_batch[:,2]
         x = self.conv1(self.init_embed,self.edge_index)
 
         head_embedding = torch.index_select(x, 0, batch_h)

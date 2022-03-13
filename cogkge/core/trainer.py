@@ -771,6 +771,18 @@ class Trainer(object):
                                                 pin_memory=self.pin_memory)
 
         # Set Metric
+        if self.metric:
+            self.metric.initialize(device=self.device,
+                                   total_epoch=self.total_epoch,
+                                   metric_type="valid",
+                                   node_dict_len=len(self.lookuptable_E),
+                                   model_name=self.model.model_name,
+                                   logger=self.logger,
+                                   writer=self.writer,
+                                   train_dataset=self.train_dataset,
+                                   valid_dataset=self.valid_dataset)
+            if self.metric.link_prediction_filt:
+                self.metric.establish_correct_triplets_dict()
 
         # Set Multi GPU
 
@@ -782,9 +794,10 @@ class Trainer(object):
             self.current_epoch = epoch + 1 + self.trained_epoch
 
             # Train Progress
+            train_epoch_loss = 0.0
             for train_step, batch in enumerate(tqdm(self.train_loader)):
-
                 train_loss = self.model.loss(batch)
+                train_epoch_loss += train_loss.item()
                 self.optimizer.zero_grad()
                 if self.apex:
                     from apex import amp
@@ -795,10 +808,6 @@ class Trainer(object):
                 self.optimizer.step()
 
             with torch.no_grad():
-                train_epoch_loss = 0.0
-                for batch in self.train_loader:
-                    train_loss = self.model.loss(batch)
-                    train_epoch_loss += train_loss.item()
                 valid_epoch_loss = 0.0
                 for batch in self.valid_loader:
                     valid_loss = self.model.loss(batch)
@@ -814,7 +823,7 @@ class Trainer(object):
                                                                             average_valid_epoch_loss))
 
             # Metric Progress
-            if self.current_epoch % self.use_metric_epoch == 0:
+            if self.use_metric_epoch and self.current_epoch % self.use_metric_epoch == 0:
                 self.use_metric()
             # Tensorboard Process
             if self.current_epoch % self.use_tensorboard_epoch == 0:
@@ -827,7 +836,12 @@ class Trainer(object):
                 self.use_matplotlib()
 
     def use_metric(self):
-        pass
+        print("Evaluating Model {} on Valid Dataset...".format(self.model.model_name))
+        self.metric.caculate(model=self.model, current_epoch=self.current_epoch)
+        self.metric.print_current_table()
+        self.metric.log()
+        self.metric.write()
+        print("-----------------------------------------------------------------------")
 
     def use_tensorboard(self, average_train_epoch_loss, average_valid_epoch_loss):
         self.writer.add_scalars("Loss", {"train_loss": average_train_epoch_loss,
