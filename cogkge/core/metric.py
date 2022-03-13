@@ -33,7 +33,7 @@ class Link_Prediction(object):
         if metric_pattern not in ["classification_based", "score_based"]:
             raise ValueError(
                 "Metric pattern {} is not supported.Use \"classification_based\" or \"score_based\" instead."
-                .format(metric_pattern))
+                    .format(metric_pattern))
         self.metric_pattern = metric_pattern
 
         self.device = None
