@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 from cogkge import *
 
-device = init_cogkge(device_id="7", seed=1)
+device = init_cogkge(device_id="3", seed=1)
 
 loader = FB15KLoader(dataset_path="../../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -66,17 +66,16 @@ trainer = Trainer(
     lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    trainer_batch_size=200000,
+    trainer_batch_size=2048*2,
     total_epoch=1000,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    use_tensorboard_epoch=10,
-    use_matplotlib_epoch=10,
-    use_savemodel_epoch=10,
-    use_metric_epoch=10
-
+    use_tensorboard_epoch=100,
+    use_matplotlib_epoch=100,
+    use_savemodel_epoch=100,
+    use_metric_epoch=20
 )
 trainer.train()
 

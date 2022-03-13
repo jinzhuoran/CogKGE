@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 from cogkge import *
 
-device = init_cogkge(device_id="1", seed=1)
+device = init_cogkge(device_id="2", seed=1)
 
 loader = FB15KLoader(dataset_path="../dataset", download=False)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -30,11 +30,14 @@ test_sampler = RandomSampler(test_dataset)
 model=TuckER(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
              d1=200,
-             d2=200)
+             d2=200,
+             input_dropout=0.2,
+             hidden_dropout1=0.2,
+             hidden_dropout2=0.3)
 
 loss = torch.nn.BCELoss()
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=True,
