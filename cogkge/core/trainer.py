@@ -661,6 +661,7 @@ class Trainer(object):
                  output_path,
                  lookuptable_E=None,
                  lookuptable_R=None,
+                 time_lut=None,
                  lr_scheduler=None,
                  apex=False,
                  dataloaderX=False,
@@ -689,6 +690,7 @@ class Trainer(object):
                                            self.model.model_name) + "--{}epochs".format(total_epoch)
         self.lookuptable_E = lookuptable_E
         self.lookuptable_R = lookuptable_R
+        self.time_lut=time_lut
         self.lr_scheduler = lr_scheduler
         self.apex = apex
         self.dataloaderX = dataloaderX
@@ -719,10 +721,14 @@ class Trainer(object):
             os.makedirs(self.visualization_path)
 
         # Set Model
+        time_dict_len=len(time_lut.vocab) if time_lut.vocab!=None else 0
+        type_dict_len = len(set(lookuptable_E.type.numpy()))if lookuptable_E.type != None else 0
         self.model.set_model_config(model_loss=self.loss,
                                     model_metric=metric,
                                     model_negative_sampler=negative_sampler,
-                                    model_device=self.device)
+                                    model_device=self.device,
+                                    time_dict_len=time_dict_len,
+                                    type_dict_len=type_dict_len)
         self.model = self.model.to(self.device)
 
         # Set Apex
