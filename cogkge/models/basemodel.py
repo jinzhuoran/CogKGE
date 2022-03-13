@@ -10,6 +10,7 @@ class BaseModel(nn.Module):
         self.model_negative_sampler = None
         self.model_name = model_name
         self.penalty_weight = penalty_weight
+        self.token = None
 
     def set_model_config(self, model_loss=None, model_metric=None, model_negative_sampler=None, model_device="cpu"):
         # 设置模型使用的metric和loss
@@ -34,7 +35,7 @@ class BaseModel(nn.Module):
         # 得到实体的embedding
         pass
 
-    def get_triplet_embedding(self, tri):
+    def get_triplet_embedding(self, h, r, t):
         # 得到三元组的embedding
         pass
 

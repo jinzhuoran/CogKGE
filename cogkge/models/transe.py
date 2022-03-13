@@ -86,9 +86,8 @@ class TransE(BaseModel):
         h = data[:, 0]
         r = data[:, 1]
         t = data[:, 2]
-        h_embedding = self.e_embedding(h)
-        r_embedding = self.r_embedding(r)
-        t_embedding = self.e_embedding(t)
+
+        h_embedding, r_embedding, t_embedding = self.get_triplet_embedding(h=h, r=r, t=t)
 
         h_embedding = F.normalize(h_embedding, p=2, dim=1)
         t_embedding = F.normalize(t_embedding, p=2, dim=1)
@@ -105,17 +104,11 @@ class TransE(BaseModel):
         # 得到实体的embedding
         return self.e_embedding(entity_ids)
 
-    def get_triplet_embedding(self, tri):
+    def get_triplet_embedding(self, h, r, t):
         # 得到三元组的embedding
-        h = data[:, 0]
-        r = data[:, 1]
-        t = data[:, 2]
         h_embedding = self.e_embedding(h)
         r_embedding = self.r_embedding(r)
         t_embedding = self.e_embedding(t)
-
-        h_embedding = F.normalize(h_embedding, p=2, dim=1)
-        t_embedding = F.normalize(t_embedding, p=2, dim=1)
         return h_embedding, r_embedding, t_embedding
 
     def get_batch(self, data):

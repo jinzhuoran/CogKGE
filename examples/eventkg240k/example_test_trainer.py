@@ -72,11 +72,10 @@ trainer = Trainer(
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    # use_tensorboard_epoch=10,
-    # use_matplotlib_epoch=10,
+    use_tensorboard_epoch=10,
+    use_matplotlib_epoch=10,
     use_savemodel_epoch=10,
-    # use_metric_epoch=10,
-    checkpoint_path="/data/mentianyi/code/CogKGE/dataset/FB15K/experimental_output/TransE2022-03-12--11-43-35.80--1000epochs/checkpoints/TransE_10epochs"
+    use_metric_epoch=10
 
 )
 trainer.train()
