@@ -18,7 +18,7 @@ node_lut, relation_lut ,time_lut= loader.load_all_lut()
 
 
 processor = EVENTKG240KProcessor(node_lut, relation_lut,time_lut,
-                               reprocess=False,
+                               reprocess=True,
                                nodetype=True,time=True,relationtype=True,description=True,graph=False,
                                time_unit="year",pretrain_model_name="roberta-base",token_len=10)
 train_dataset = processor.process(train_data)

@@ -721,8 +721,8 @@ class Trainer(object):
             os.makedirs(self.visualization_path)
 
         # Set Model
-        time_dict_len=len(time_lut.vocab) if time_lut.vocab!=None else 0
-        type_dict_len = len(set(lookuptable_E.type.numpy()))if lookuptable_E.type != None else 0
+        time_dict_len=len(time_lut.vocab) if hasattr(time_lut,"vocab") else 0
+        type_dict_len = len(set(lookuptable_E.type.numpy()))if hasattr(lookuptable_E,"type") else 0
         self.model.set_model_config(model_loss=self.loss,
                                     model_metric=metric,
                                     model_negative_sampler=negative_sampler,
