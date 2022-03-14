@@ -10,23 +10,45 @@ class UnifNegativeSampler():
         self.device = device
         self.node_lut = node_lut
 
-    def create_negative(self, batch_pos):
-        # tensor(batch,3)
-        batch_neg = batch_pos.clone()
+    def create_negative(self, batch_pos_dict):
+        # {"h":tensor(batch,),"r":tensor(batch,),"t":tensor(batch,),...}
+        h,r,t = batch_pos_dict["h"],batch_pos_dict["r"],batch_pos_dict["t"]
+        batch_pos  = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1).to(self.device) # tensor(batch,3)
+        batch_neg = batch_pos.clone().to(self.device)
         entity_number = torch.randint(self.entity_dict_len, (batch_neg.size()[0],)).to(self.device)
         mask = torch.rand(batch_neg.size()[0])
         head_mask = (mask > 0.5).to(self.device)
         tail_mask = (mask <= 0.5).to(self.device)
         batch_neg[head_mask, 0] = entity_number[head_mask].to(self.device)
         batch_neg[tail_mask, 2] = entity_number[tail_mask].to(self.device)
-        if self.node_lut.data:
-            batch_dict = {"h":batch_neg[:,0],
-                          "r":batch_neg[:,1],
-                          "t":batch_neg[:,2]}
-            batch_dict.update({"h_type":self.node_lut.type[batch_neg[:,0]],
-                               "t_type":self.node_lut.type[batch_neg[:,2]]})
-            return batch_dict
-        return batch_neg
+
+        index_dict = {"h":0,"t":2}
+        batch_neg_dict = {}
+        for key,values in batch_pos_dict.items():
+            if len(key.split("_")) > 1 and key != "r_type":
+                index,attribute = key.split("_")
+                lut_values = getattr(self.node_lut,attribute)
+                batch_neg_dict.update({key:lut_values[batch_neg[:,index_dict[index]]]})
+            else:
+                batch_neg_dict.update({key:batch_pos_dict[key]})
+        batch_neg_dict.update({"h": batch_neg[:, 0],
+                               "r": batch_neg[:, 1],
+                               "t": batch_neg[:, 2]})
+
+        return batch_neg_dict
+
+        # if self.node_lut.data:
+        #     batch_dict = {"h":batch_neg[:,0],
+        #                   "r":batch_neg[:,1],
+        #                   "t":batch_neg[:,2]}
+        #     batch_dict.update({"h_type":self.node_lut.type[batch_neg[:,0]],
+        #                        "t_type":self.node_lut.type[batch_neg[:,2]]})
+        #     batch_dict.update({"h_token":self.node_lut.token[batch_neg[:,0]],
+        #                        "t_token":self.node_lut.token[batch_neg[:,2]],
+        #                        "h_mask":self.node_lut.mask[batch_neg[:,0]],
+        #                        "t_mask":self.node_lut.mask[batch_neg[:,2]]})
+        #     return batch_dict
+        # return batch_neg
 
 
 class BernNegativeSampler():

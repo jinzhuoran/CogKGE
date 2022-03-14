@@ -128,12 +128,14 @@ class TransE(BaseModel):
     def loss(self, data):
         # 计算损失
         h, r, t = self.get_batch(data)
+        h_, r_, t_ = self.get_batch(self.model_negative_sampler.create_negative(data))
+
         pos_data = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1)
-        neg_data = self.model_negative_sampler.create_negative(pos_data)
-        h,r,t = self.get_batch(neg_data)
-        neg_data = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1)
+        neg_data = torch.cat((h_.unsqueeze(1), r_.unsqueeze(1), t_.unsqueeze(1)), dim=1)
+
         pos_score = self.forward(pos_data)
         neg_score = self.forward(neg_data)
+
         return self.model_loss(pos_score, neg_score) + self.penalty()
 
     def metric(self, data):
