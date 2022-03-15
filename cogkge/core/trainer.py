@@ -824,12 +824,14 @@ class Trainer(object):
                 else:
                     train_loss.backward()
                 self.optimizer.step()
+                break
 
             with torch.no_grad():
                 valid_epoch_loss = 0.0
                 for batch in self.valid_loader:
                     valid_loss = self.model.loss(batch)
                     valid_epoch_loss += valid_loss.item()
+                    break
                 average_train_epoch_loss = train_epoch_loss / len(self.train_dataset)
                 average_valid_epoch_loss = valid_epoch_loss / len(self.valid_dataset)
                 self.average_train_epoch_loss_list.append(average_train_epoch_loss)
