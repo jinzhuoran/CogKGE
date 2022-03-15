@@ -41,7 +41,7 @@ class UnifNegativeSampler():
     def create_negative(self,batch_pos_tuple):
         batch_pos_dict = self.tuple_to_dict(batch_pos_tuple)
         batch_neg_dict = self._create_negative(batch_pos_dict)
-        return tuple(batch_neg_dict.values())
+        return list(tuple(batch_neg_dict.values()))
 
     def _create_negative(self, batch_pos_dict):
         # {"h":tensor(batch,),"r":tensor(batch,),"t":tensor(batch,),...}
