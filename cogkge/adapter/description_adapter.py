@@ -20,14 +20,14 @@ import torch
 
 import torch.nn as nn
 from transformers import RobertaModel
-def description(func):
+def description_adapter(func):
     def inner(*args, **kwargs):
         h_embedding, r_embedding, t_embedding = func(*args, **kwargs)
         model=args[0]
-        h_token=kwargs["batch"]["h_token"].to(model.model_device)
-        t_token=kwargs["batch"]["t_token"].to(model.model_device)
-        h_mask=kwargs["batch"]["h_mask"].to(model.model_device)
-        t_mask=kwargs["batch"]["t_mask"].to(model.model_device)
+        h_token=kwargs["data"][3]
+        t_token=kwargs["data"][4]
+        h_mask=kwargs["data"][5]
+        t_mask=kwargs["data"][6]
         if not model.init_description_adapter:
             model.pre_training_model_name = "roberta-base"
             model.pre_training_model = RobertaModel.from_pretrained(model.pre_training_model_name).to(model.model_device)

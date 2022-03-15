@@ -18,7 +18,7 @@ node_lut, relation_lut, time_lut = loader.load_all_lut()
 
 processor = EVENTKG240KProcessor(node_lut, relation_lut, time_lut,
                                  reprocess=True,
-                                 mode="type",
+                                 mode="description",
                                  # nodetype=True, time=True, relationtype=True, description=True,
                                  graph=False,time_unit="year", pretrain_model_name="roberta-base", token_len=10)
 train_dataset = processor.process(train_data)
@@ -31,7 +31,7 @@ test_sampler = RandomSampler(test_dataset)
 
 model = TransE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=50,
+               embedding_dim=768,
                p_norm=1)
 loss = MarginLoss(margin=1.0, reverse=False)
 
@@ -64,9 +64,10 @@ trainer = Trainer(
     output_path="../dataset",
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
+    time_lut=time_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    trainer_batch_size=2048 * 2,
+    trainer_batch_size=2 * 2,
     total_epoch=1000,
     apex=True,
     dataloaderX=True,

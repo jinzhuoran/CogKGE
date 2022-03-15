@@ -15,7 +15,8 @@ class BaseModel(nn.Module):
         self.init_time_adapter=False
         self.init_graph_adapter=False
         self.time_dict_len=0
-        self.type_dict_len=0
+        self.nodetype_dict_len=0
+        self.relationtype_dict_len = 0
 
     def set_model_config(self,
                          model_loss=None,
@@ -23,14 +24,16 @@ class BaseModel(nn.Module):
                          model_negative_sampler=None,
                          model_device="cpu",
                          time_dict_len=0,
-                         type_dict_len=0):
+                         nodetype_dict_len=0,
+                         relationtype_dict_len=0):
         # 设置模型使用的metric和loss
         self.model_loss = model_loss
         self.model_metrci = model_metric
         self.model_negative_sampler = model_negative_sampler
         self.model_device = model_device
         self.time_dict_len=time_dict_len
-        self.type_dict_len=type_dict_len
+        self.nodetype_dict_len=nodetype_dict_len
+        self.relationtype_dict_len = relationtype_dict_len
 
     def _reset_param(self):
         # 重置参数
@@ -48,21 +51,14 @@ class BaseModel(nn.Module):
         # 得到实体的embedding
         pass
 
-    def get_triplet_embedding(self, h, r, t,batch):
+    def get_triplet_embedding(self, data):
         # 得到三元组的embedding
         pass
 
-    def get_batch(self, data):
-        # 得到一个batch的数据
-        return data
 
     def loss(self, data):
         # 计算损失
         data = self.get_batch(data)
-        pass
-
-    def negative_sample(self, data):
-        # 负采样
         pass
 
     def penalty(self):
@@ -71,6 +67,10 @@ class BaseModel(nn.Module):
         for param in self.parameters():
             penalty_loss += torch.sum(param ** 2)
         return self.penalty_weight * penalty_loss
+
+    def data_to_device(self,data):
+        for index,item in enumerate(data):
+            data[index]=item.to(self.model_device)
 
     def metric(self, data):
         # 模型评价
