@@ -46,17 +46,19 @@ class Cog_Dataset(Dataset):
         if self.time:
             sample.update({"start":self.data[index][3],
                             "end":self.data[index][4]})
+        sample = tuple(sample.values())
         return sample
 
 
     def __getitem__(self, index):
         if self.task == 'kr':
             sample = {}
-            if self.train_pattern == "classification_based":
-                sample.update({"label":self.label_data[index]})
             sample.update({"h": self.data[index][0],
                            "r": self.data[index][1],
                            "t": self.data[index][2]})
+            if self.train_pattern == "classification_based":
+                sample["t"] = self.label_data[index]
+                # sample.update({"label":self.label_data[index]})
             return self.update_sample(sample,index)
         else:
             raise ValueError("{} currently are not supported!".format(self.task))

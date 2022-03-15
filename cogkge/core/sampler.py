@@ -10,7 +10,40 @@ class UnifNegativeSampler():
         self.device = device
         self.node_lut = node_lut
 
-    def create_negative(self, batch_pos_dict):
+    def tuple_to_dict(self,data_tuple):
+        data_dict = {
+            "h":data_tuple[0],
+            "r":data_tuple[1],
+            "t":data_tuple[2],
+        }
+        if len(data_tuple) == 5: # time info
+            data_dict.update({
+                "start":data_tuple[3],
+                "end":data_tuple[4],
+            })
+        elif len(data_tuple) == 6: # type info
+            data_dict.update({
+                "h_type":data_tuple[3],
+                "t_type":data_tuple[4],
+                "r_type":data_tuple[5],
+            })
+        elif len(data_tuple) == 7: # descriptions info
+            data_dict.update({
+                "h_token":data_tuple[3],
+                "t_token":data_tuple[4],
+                "h_mask":data_tuple[5],
+                "t_mask":data_tuple[6],
+            })
+        else:
+            raise ValueError("Length of data_tuple {} unexpected!".format(len(data_tuple)))
+        return data_dict
+
+    def create_negative(self,batch_pos_tuple):
+        batch_pos_dict = self.tuple_to_dict(batch_pos_tuple)
+        batch_neg_dict = self._create_negative(batch_pos_dict)
+        return tuple(batch_neg_dict.values())
+
+    def _create_negative(self, batch_pos_dict):
         # {"h":tensor(batch,),"r":tensor(batch,),"t":tensor(batch,),...}
         h,r,t = batch_pos_dict["h"],batch_pos_dict["r"],batch_pos_dict["t"]
         batch_pos  = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1).to(self.device) # tensor(batch,3)

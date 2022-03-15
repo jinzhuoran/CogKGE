@@ -104,12 +104,18 @@ class TransE(BaseModel):
         t_embedding = self.e_embedding(t)
         return h_embedding, r_embedding, t_embedding
 
-    def get_batch(self, data):
-        # 得到一个batch的数据
-        h = data["h"].to(self.model_device)
-        r = data["r"].to(self.model_device)
-        t = data["t"].to(self.model_device)
-        return h, r, t
+    def get_batch(self,data):
+        h = data[0].to(self.model_device)
+        r = data[1].to(self.model_device)
+        t = data[2].to(self.model_device)
+        return h,r,t
+
+    # def get_batch(self, data):
+    #     # 得到一个batch的数据
+    #     h = data["h"].to(self.model_device)
+    #     r = data["r"].to(self.model_device)
+    #     t = data["t"].to(self.model_device)
+    #     return h, r, t
 
     def penalty(self):
         # 正则项
