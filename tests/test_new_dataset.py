@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 from cogkge import *
 
-device = init_cogkge(device_id="3", seed=1)
+device = init_cogkge(device_id="0", seed=1)
 
 loader = EVENTKG240KLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -18,7 +18,7 @@ node_lut, relation_lut, time_lut = loader.load_all_lut()
 
 processor = EVENTKG240KProcessor(node_lut, relation_lut, time_lut,
                                  reprocess=True,
-                                 mode="description",
+                                 mode="type",
                                  # nodetype=True, time=True, relationtype=True, description=True,
                                  graph=False,time_unit="year", pretrain_model_name="roberta-base", token_len=10)
 train_dataset = processor.process(train_data)
@@ -35,9 +35,12 @@ model = TransE(entity_dict_len=len(node_lut),
                p_norm=1)
 loss = MarginLoss(margin=1.0, reverse=False)
 
-metric = Link_Prediction(link_prediction_raw=True,
+metric = Link_Prediction(node_lut=node_lut,
+                         relation_lut=relation_lut,
+                         time_lut = time_lut,
+                         link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=5000,
                          reverse=False)
 negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
