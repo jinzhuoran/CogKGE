@@ -99,18 +99,13 @@ class TransE(BaseModel):
     # @graph_adapter
     # @type_adapter
     # @time_adapter
+
     def get_triplet_embedding(self, data):
         # 得到三元组的embedding
         h_embedding = self.e_embedding(data[0])
         r_embedding = self.r_embedding(data[1])
         t_embedding = self.e_embedding(data[2])
         return h_embedding, r_embedding, t_embedding
-
-    def get_batch(self,data):
-        h = data[0].to(self.model_device)
-        r = data[1].to(self.model_device)
-        t = data[2].to(self.model_device)
-        return h,r,t
 
     def penalty(self):
         # 正则项

@@ -165,9 +165,9 @@ class EVENTKG240KProcessor(BaseProcessor):
                                   relation_type=self.relationtype,
                                   )
             dataset.data_name = self.data_name
-            file = open(path, "wb")
-            file.write(pickle.dumps(dataset))
-            file.close()
+            # file = open(path, "wb")
+            # file.write(pickle.dumps(dataset))
+            # file.close()
             return dataset
 
     def process_lut(self):

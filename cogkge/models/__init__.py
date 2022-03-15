@@ -15,7 +15,6 @@ from .tucker import *
 from .rgcn import *
 from .compgcn import *
 from .hitter import *
-from .transe_adapter import *
 
 __all__ = [
     # transe
@@ -55,5 +54,4 @@ __all__ = [
 
     "Entity_Transformer",
 
-    "TransE_Adapter",
 ]

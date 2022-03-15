@@ -70,7 +70,6 @@ __all__ = [
     "CompGCN",
     "HittER",
     "Entity_Transformer",
-    "TransE_Adapter",
 
     # utils
     "Download_Data",
@@ -86,10 +85,10 @@ __all__ = [
     "Vocabulary",
 
     # adapter
-    "description",
-    "graph",
-    "nodetype",
-    "time",
+    "type_adapter",
+    "description_adapter",
+    "time_adapter",
+    "graph_adapter",
    
 
     "GAT",
