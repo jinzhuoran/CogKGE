@@ -16,7 +16,9 @@ class UnifNegativeSampler():
             "r":data_tuple[1],
             "t":data_tuple[2],
         }
-        if len(data_tuple) == 5: # time info
+        if len(data_tuple) == 3:
+            pass
+        elif len(data_tuple) == 5: # time info
             data_dict.update({
                 "start":data_tuple[3],
                 "end":data_tuple[4],

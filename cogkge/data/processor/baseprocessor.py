@@ -52,6 +52,7 @@ class BaseProcessor:
     def convert_label_construct(self,triplet_label_dict):
         h_r_t_list=list()
         t_list=list()
+        print("convert_label_construct...")
         for key,value in tqdm(triplet_label_dict.items()):
             h_r_t_list.append(np.array(key))
             vector_label=np.zeros((len(self.node_lut)))
@@ -66,6 +67,7 @@ class BaseProcessor:
 
     def create_triplet_label(self,data):
         triplet_label_dict=defaultdict(list)
+        print("create_triplet_label...")
         for i in tqdm(range(len(data))):
             triplet_h_r=tuple(data[i][:])
             triplet_t=int(data[i][2].item())
