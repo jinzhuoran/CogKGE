@@ -13,19 +13,23 @@ from ..vocabulary import Vocabulary
 
 
 class EVENTKG240KProcessor(BaseProcessor):
-    def __init__(self, node_lut, relation_lut, time_lut,
+    def __init__(self, node_lut, relation_lut, time_lut,mode,
                  reprocess=True,
-                 time=False, nodetype=False, description=False, graph=False,relationtype=False,
+                 # time=False, nodetype=False, description=False,,relationtype=False,
+                 graph=False,
                  time_unit="year",
                  pretrain_model_name="roberta-base", token_len=10):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """
+        if mode not in ["type","description","time","normal"]:
+            raise ValueError("{} mode is not supported!".format(mode))
+        node_dict = {"type": False, "description": False, "time": False, "normal": False, mode: True}
         super().__init__("EVENTKG240K", node_lut, relation_lut, reprocess,
-                         time, nodetype, description, graph)
+                         time=node_dict["time"], nodetype=node_dict["type"], description=node_dict["description"], graph=graph)
         self.time_lut = time_lut
         self.time_vocab = time_lut.vocab
-        self.relationtype = relationtype
+        self.relationtype = node_dict["type"]
 
         self.time_unit = time_unit
         self.pre_training_model_name = pretrain_model_name
@@ -161,9 +165,9 @@ class EVENTKG240KProcessor(BaseProcessor):
                                   relation_type=self.relationtype,
                                   )
             dataset.data_name = self.data_name
-            file = open(path, "wb")
-            file.write(pickle.dumps(dataset))
-            file.close()
+            # file = open(path, "wb")
+            # file.write(pickle.dumps(dataset))
+            # file.close()
             return dataset
 
     def process_lut(self):

@@ -49,6 +49,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 from cogkge.models.basemodel import BaseModel
+from ..adapter import *
 
 
 class TransE(BaseModel):
@@ -76,11 +77,7 @@ class TransE(BaseModel):
 
     def forward(self, data):
         # 前向传播
-        h = data[:, 0]
-        r = data[:, 1]
-        t = data[:, 2]
-
-        h_embedding, r_embedding, t_embedding = self.get_triplet_embedding(h=h, r=r, t=t)
+        h_embedding, r_embedding, t_embedding = self.get_triplet_embedding(data=data)
 
         h_embedding = F.normalize(h_embedding, p=2, dim=1)
         t_embedding = F.normalize(t_embedding, p=2, dim=1)
@@ -97,19 +94,18 @@ class TransE(BaseModel):
         # 得到实体的embedding
         return self.e_embedding(entity_ids)
 
-    def get_triplet_embedding(self, h, r, t):
-        # 得到三元组的embedding
-        h_embedding = self.e_embedding(h)
-        r_embedding = self.r_embedding(r)
-        t_embedding = self.e_embedding(t)
-        return h_embedding, r_embedding, t_embedding
 
-    def get_batch(self, data):
-        # 得到一个batch的数据
-        h = data["h"].to(self.model_device)
-        r = data["r"].to(self.model_device)
-        t = data["t"].to(self.model_device)
-        return h, r, t
+    # @description_adapter
+    # @graph_adapter
+    # @type_adapter
+    # @time_adapter
+
+    def get_triplet_embedding(self, data):
+        # 得到三元组的embedding
+        h_embedding = self.e_embedding(data[0])
+        r_embedding = self.r_embedding(data[1])
+        t_embedding = self.e_embedding(data[2])
+        return h_embedding, r_embedding, t_embedding
 
     def penalty(self):
         # 正则项
@@ -120,16 +116,20 @@ class TransE(BaseModel):
 
     def loss(self, data):
         # 计算损失
-        h, r, t = self.get_batch(data)
-        h_, r_, t_ = self.get_batch(self.model_negative_sampler.create_negative(data))
-
-        pos_data = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1)
-        neg_data = torch.cat((h_.unsqueeze(1), r_.unsqueeze(1), t_.unsqueeze(1)), dim=1)
+        pos_data=data
+        pos_data= self.data_to_device(pos_data)
+        neg_data=self.model_negative_sampler.create_negative(data)
+        neg_data = self.data_to_device(neg_data)
 
         pos_score = self.forward(pos_data)
         neg_score = self.forward(neg_data)
 
         return self.model_loss(pos_score, neg_score) + self.penalty()
+
+    def data_to_device(self,data):
+        for index,item in enumerate(data):
+            data[index]=item.to(self.model_device)
+        return data
 
     def metric(self, data):
         # 模型评价

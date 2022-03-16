@@ -13,6 +13,9 @@ class Link_Prediction(object):
     def __init__(self,
                  batch_size,
                  reverse,
+                 node_lut=None,
+                 relation_lut=None,
+                 time_lut = None,
                  link_prediction_raw=True,
                  link_prediction_filt=False,
                  metric_pattern="score_based",
@@ -28,6 +31,9 @@ class Link_Prediction(object):
         """
         self.batch_size = batch_size
         self.reverse = reverse
+        self.node_lut = node_lut
+        self.relation_lut = relation_lut
+        self.time_lut = time_lut
         self.link_prediction_raw = link_prediction_raw
         self.link_prediction_filt = link_prediction_filt
         if metric_pattern not in ["classification_based", "score_based"]:
@@ -48,6 +54,8 @@ class Link_Prediction(object):
         self.test_dataset = None
         self.correct_triplets_dict = None
         self._metric_result_list = list()
+
+        self.mode = None
 
         self.empty_result = {
             "raw_rank": -1,
@@ -174,12 +182,13 @@ class Link_Prediction(object):
                 ranks = [np.where(sort_idxs[j] == e2_idx[j].item())[0][0] + 1 for j in range(data_batch.shape[0])]
                 self._filt_rank_list.append(ranks)
 
-    def _caculate_rank(self, single_sample, entity_type):
+    def _caculate_rank(self, single_sample, entity_type, data_dict):
         """
         计算batch的验证结果
 
         :param single_sample: 待验证的batch数据(1,3,self._outer_batch_size)
         :param entity_type: 替换的是head或者tail
+        :param data_dict: {"h":tensor,"r":tensor","t":tensor,...}
         :return:
         """
         column_index_dict = {"head": 0, "tail": 2}
@@ -208,6 +217,7 @@ class Link_Prediction(object):
             start = i * self.batch_size
             end = min((i + 1) * self.batch_size, self.node_dict_len * self._single_batch_len)
             data_input = expanded_triplet[start:end, :]
+            data_input = self.tensor_to_tuple(data_input,data_dict)
             with torch.no_grad():
                 result = self._model(data_input)
                 score_list.append(result)
@@ -255,6 +265,82 @@ class Link_Prediction(object):
     def get_batch(self,data_batch):
         return torch.cat([torch.unsqueeze(data_batch[index],dim=1) for index in ["h","r","t"]],dim=1) # (batch,3)
 
+    def record_mode(self,test_sample):
+        """
+        test_sample:(tensor_h,tensor_r,tensor_t,...)
+        """
+        len2mode = {3:"normal",
+                    5:"time",
+                    6:"type",
+                    7:"description"}
+        self.mode = len2mode[len(test_sample)]
+
+    def tensor_to_tuple(self,data_tensor,data_dict):
+        """
+        data_tensor:  tensor(batch_size,3|5|6|7)
+        return: (tensor(batch_size,),tensor(batch_size,),tensor(batch_size,),...)
+        """
+        sample = {"h": data_tensor[:,0],
+                  "r": data_tensor[:,1],
+                  "t": data_tensor[:,2]}
+        return self.update_sample(sample,data_dict)
+
+    def update_sample(self,sample,data_dict):
+        if self.mode == "type":
+            sample.update({"h_type":self.node_lut.type[list(sample["h"])],
+                           "t_type":self.node_lut.type[list(sample["t"])],
+                           "r_type":self.relation_lut.type[list(sample["r"])]})
+        elif self.mode == "description":
+            sample.update({"h_token": self.node_lut.token[list(sample["h"])],
+                           "t_token": self.node_lut.token[list(sample["t"])],
+                           "h_mask": self.node_lut.mask[list(sample["h"])],
+                           "t_mask": self.node_lut.mask[list(sample["t"])]})
+        elif self.mode == "time":
+            sample.update({"start":self.expand_tensor(data_dict["start"]),
+                           "end":self.expand_tensor(data_dict["end"])})
+        elif self.mode == "normal":
+            pass
+        else:
+            raise ValueError("Mode {} is not defined!".format(self.mode))
+        return list(sample.values())
+
+    def expand_tensor(self,target):
+        """
+        target: tensor(self._single_batch_len,)
+        return: tensor(self._single_batch_len * self.node_dict_len,)
+        """
+        return torch.flatten(target.expand(self.node_dict_len , self._single_batch_len).T)
+
+    def tuple_to_dict(self,data_tuple):
+        data_dict = {
+            "h":data_tuple[0],
+            "r":data_tuple[1],
+            "t":data_tuple[2],
+        }
+        if len(data_tuple) == 3:
+            pass
+        elif len(data_tuple) == 5: # time info
+            data_dict.update({
+                "start":data_tuple[3],
+                "end":data_tuple[4],
+            })
+        elif len(data_tuple) == 6: # type info
+            data_dict.update({
+                "h_type":data_tuple[3],
+                "t_type":data_tuple[4],
+                "r_type":data_tuple[5],
+            })
+        elif len(data_tuple) == 7: # descriptions info
+            data_dict.update({
+                "h_token":data_tuple[3],
+                "t_token":data_tuple[4],
+                "h_mask":data_tuple[5],
+                "t_mask":data_tuple[6],
+            })
+        else:
+            raise ValueError("Length of data_tuple {} unexpected!".format(len(data_tuple)))
+        return data_dict
+
     def caculate(self, model, current_epoch):
         """
         验证当前模型
@@ -281,15 +367,18 @@ class Link_Prediction(object):
         metric_loader = Data.DataLoader(dataset=metric_dataset,
                                         batch_size=self._outer_batch_size,
                                         shuffle=False)
+        test_sample = next(iter(metric_loader))
+        self.record_mode(test_sample)
         for step, single_sample in enumerate(tqdm(metric_loader)):
-            single_sample = self.get_batch(single_sample)
+            data_dict = self.tuple_to_dict(single_sample)
+            single_sample = self.get_batch(data_dict)
             if self.metric_pattern == "score_based":
                 self._single_batch_len = single_sample.shape[0] # (self._outer_batch_size,3)
                 single_sample = single_sample.permute(1, 0)  # (3,self._outer_batch_size)
                 single_sample = torch.unsqueeze(single_sample, dim=0)  # (1,3,self._outer_batch_size)
                 single_sample = single_sample.to(self.device)
-                self._caculate_rank(single_sample, "tail")
-                self._caculate_rank(single_sample, "head")
+                self._caculate_rank(single_sample, "tail",data_dict)
+                self._caculate_rank(single_sample, "head",data_dict)
                 # if step>3:
                 #     break
             if self.metric_pattern == "classification_based":
