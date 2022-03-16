@@ -54,11 +54,11 @@ class Cog_Dataset(Dataset):
         if self.task == 'kr':
             sample = {}
             sample.update({"h": self.data[index][0],
-                           "r": self.data[index][1],
-                           "t": self.data[index][2]})
+                           "r": self.data[index][1],})
             if self.train_pattern == "classification_based":
                 sample["t"] = self.label_data[index]
-                # sample.update({"label":self.label_data[index]})
+            else:
+                sample["t"] = self.data[index][2]
             return self.update_sample(sample,index)
         else:
             raise ValueError("{} currently are not supported!".format(self.task))
