@@ -217,7 +217,7 @@ class Link_Prediction(object):
             start = i * self.batch_size
             end = min((i + 1) * self.batch_size, self.node_dict_len * self._single_batch_len)
             data_input = expanded_triplet[start:end, :]
-            data_input = self.tensor_to_tuple(data_input)
+            data_input = self.tensor_to_tuple(data_input,data_dict)
             with torch.no_grad():
                 result = self._model(data_input)
                 score_list.append(result)
@@ -275,7 +275,7 @@ class Link_Prediction(object):
                     7:"description"}
         self.mode = len2mode[len(test_sample)]
 
-    def tensor_to_tuple(self,data_tensor):
+    def tensor_to_tuple(self,data_tensor,data_dict):
         """
         data_tensor:  tensor(batch_size,3|5|6|7)
         return: (tensor(batch_size,),tensor(batch_size,),tensor(batch_size,),...)
@@ -283,9 +283,9 @@ class Link_Prediction(object):
         sample = {"h": data_tensor[:,0],
                   "r": data_tensor[:,1],
                   "t": data_tensor[:,2]}
-        return self.update_sample(sample)
+        return self.update_sample(sample,data_dict)
 
-    def update_sample(self,sample):
+    def update_sample(self,sample,data_dict):
         if self.mode == "type":
             sample.update({"h_type":self.node_lut.type[list(sample["h"])],
                            "t_type":self.node_lut.type[list(sample["t"])],
@@ -296,13 +296,20 @@ class Link_Prediction(object):
                            "h_mask": self.node_lut.mask[list(sample["h"])],
                            "t_mask": self.node_lut.mask[list(sample["t"])]})
         elif self.mode == "time":
-            sample.update({"start":self.time_lut[:,3],
-                            "end":self.time_lut[:,4]})
+            sample.update({"start":self.expand_tensor(data_dict["start"]),
+                           "end":self.expand_tensor(data_dict["end"])})
         elif self.mode == "normal":
             pass
         else:
             raise ValueError("Mode {} is not defined!".format(self.mode))
         return list(sample.values())
+
+    def expand_tensor(self,target):
+        """
+        target: tensor(self._single_batch_len,)
+        return: tensor(self._single_batch_len * self.node_dict_len,)
+        """
+        return torch.flatten(target.expand(self.node_dict_len , self._single_batch_len).T)
 
     def tuple_to_dict(self,data_tuple):
         data_dict = {
