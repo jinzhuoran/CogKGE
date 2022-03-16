@@ -1,16 +1,17 @@
 import math
+
 import torch
 import torch.nn as nn
 
 
 class HittER(torch.nn.Module):
-    def __init__(self, embedding_dim=320, dropout=0.1,entity_dict_len=100,relation_dict_len=10):
+    def __init__(self, embedding_dim=320, dropout=0.1, entity_dict_len=100, relation_dict_len=10):
         super(HittER, self).__init__()
         self.name = "HittER"
         self.embedding_dim = embedding_dim
         self.dropout = dropout
-        self.entity_dict_len=entity_dict_len
-        self.relation_dict_len=relation_dict_len
+        self.entity_dict_len = entity_dict_len
+        self.relation_dict_len = relation_dict_len
 
         self.gcls_emb = torch.nn.parameter.Parameter(torch.zeros(self.embedding_dim))
         nn.init.uniform_(self.gcls_emb.data)
@@ -18,9 +19,9 @@ class HittER(torch.nn.Module):
         nn.init.uniform_(self.inter_type_emb.data)
         self.other_type_emb = torch.nn.parameter.Parameter(torch.zeros(self.embedding_dim))
         nn.init.uniform_(self.other_type_emb.data)
-        self.transform=torch.nn.Linear(embedding_dim,self.entity_dict_len)
+        self.transform = torch.nn.Linear(embedding_dim, self.entity_dict_len)
         self.et = Entity_Transformer(entity_dict_len=entity_dict_len,
-                                     relation_dict_len= relation_dict_len,
+                                     relation_dict_len=relation_dict_len,
                                      embedding_dim=embedding_dim,
                                      dropout=dropout)
 
@@ -54,18 +55,18 @@ class HittER(torch.nn.Module):
 
     def get_score(self, embeddings):
         out = self.get_embedding(embeddings)
-        out=self.transform(out)
+        out = self.transform(out)
         score = torch.nn.functional.softmax(out, dim=1)
         return score
 
     def forward(self, embeddings):
-        batch_size=embeddings.shape[0]
-        et_embedding = self.et.get_embedding(embeddings)[:(int(math.floor(batch_size/3))*3)].reshape((int(math.floor(batch_size/3)), 3,self.embedding_dim))
+        batch_size = embeddings.shape[0]
+        et_embedding = self.et.get_embedding(embeddings)[:(int(math.floor(batch_size / 3)) * 3)].reshape(
+            (int(math.floor(batch_size / 3)), 3, self.embedding_dim))
         return self.get_score(et_embedding)
 
-    def get_sampel_label_index(self,batch_size):
-        return torch.arange(0, (batch_size//3)*3, step = 3)
-
+    def get_sampel_label_index(self, batch_size):
+        return torch.arange(0, (batch_size // 3) * 3, step=3)
 
 
 # [CLS] embedding
@@ -154,12 +155,12 @@ class Entity_Transformer(torch.nn.Module):
 
 if __name__ == '__main__':
     # et = Entity_Transformer(entity_dict_len=100, relation_dict_len=10, embedding_dim=320, dropout=0.1)
-    hitter = HittER(embedding_dim=320, dropout=0.1, entity_dict_len=100,relation_dict_len=10)
-    input=torch.IntTensor([[1, 2], [3, 5], [66, 7], [11, 2], [31, 6], [66, 4]])
+    hitter = HittER(embedding_dim=320, dropout=0.1, entity_dict_len=100, relation_dict_len=10)
+    input = torch.IntTensor([[1, 2], [3, 5], [66, 7], [11, 2], [31, 6], [66, 4]])
     # input = torch.IntTensor([[1, 2, 3], [3, 5, 6], [66, 7, 86], [11, 2, 31], [31, 6, 61], [66, 4, 86]])
     # et_embedding = et.get_embedding(input).reshape((2,3,320))
-    output=hitter(input )
-    id=hitter.get_sampel_label_index(5)
+    output = hitter(input)
+    id = hitter.get_sampel_label_index(5)
     print(1)
 
 # import torch.nn as nn

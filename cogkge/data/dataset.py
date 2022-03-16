@@ -3,23 +3,23 @@ from torch.utils.data import Dataset
 
 
 class Cog_Dataset(Dataset):
-    def __init__(self, data, task, descriptions=None,train_pattern="score_based",
-                 lookuptable_E=None,lookuptable_R=None,
-                 node_type=False,relation_type=False,time=False):
+    def __init__(self, data, task, descriptions=None, train_pattern="score_based",
+                 lookuptable_E=None, lookuptable_R=None,
+                 node_type=False, relation_type=False, time=False):
         """
         :param data: numpy array  (len,5) or (len,3)
         :param task: kr tr or ktr  currently only kr are supported
         """
         self.label_data = None
-        if isinstance(data,tuple):
-            self.label_data = torch.tensor(data[1],dtype=torch.float)
+        if isinstance(data, tuple):
+            self.label_data = torch.tensor(data[1], dtype=torch.float)
             self.data = data[0]
         else:
             self.data = data
         self.task = task
         self.descriptions = descriptions
         self.data_name = 'dataset'
-        self.train_pattern=train_pattern
+        self.train_pattern = train_pattern
         self.lookuptable_E = lookuptable_E
         self.lookuptable_R = lookuptable_R
         self.node_type = node_type
@@ -29,7 +29,7 @@ class Cog_Dataset(Dataset):
     def __len__(self):
         return self.data.shape[0]
 
-    def update_sample(self,sample,index):
+    def update_sample(self, sample, index):
         if self.lookuptable_E:
             if self.node_type:
                 sample.update({"h_type": self.lookuptable_E.type[self.data[index][0]],
@@ -44,20 +44,18 @@ class Cog_Dataset(Dataset):
                 sample.update({"r_type": self.lookuptable_R.type[self.data[index][1]]})
 
         if self.time:
-            sample.update({"start":self.data[index][3],
-                            "end":self.data[index][4]})
+            sample.update({"start": self.data[index][3],
+                           "end": self.data[index][4]})
         return sample
-
 
     def __getitem__(self, index):
         if self.task == 'kr':
             sample = {}
             if self.train_pattern == "classification_based":
-                sample.update({"label":self.label_data[index]})
+                sample.update({"label": self.label_data[index]})
             sample.update({"h": self.data[index][0],
                            "r": self.data[index][1],
                            "t": self.data[index][2]})
-            return self.update_sample(sample,index)
+            return self.update_sample(sample, index)
         else:
             raise ValueError("{} currently are not supported!".format(self.task))
-
