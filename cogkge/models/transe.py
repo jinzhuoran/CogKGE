@@ -49,7 +49,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 from cogkge.models.basemodel import BaseModel
-from ..adapter import *
+from cogkge.adapter import *
 
 
 class TransE(BaseModel):
@@ -131,63 +131,3 @@ class TransE(BaseModel):
             data[index]=item.to(self.model_device)
         return data
 
-    def metric(self, data):
-        # 模型评价
-        self.model_metric(data)
-
-
-if __name__ == "__main__":
-    import torch
-    from tqdm import tqdm
-    from cogkge.core.loss import MarginLoss
-    from cogkge.core.sampler import UnifNegativeSampler
-    from cogkge.core.metric import Link_Prediction
-    from torch.utils.data import DataLoader, Dataset
-
-
-    # trainer外部
-    class MyDataset(Dataset):
-        def __init__(self, data):
-            super().__init__()
-            self.data = data
-
-        def __len__(self):
-            return data.shape[0]
-
-        def __getitem__(self, index):
-            return {"h": self.data[index][0],
-                    "r": self.data[index][1],
-                    "t": self.data[index][2]}
-
-
-    data = torch.ones((100, 3), dtype=torch.long)
-    model = TransE(entity_dict_len=3,
-                   relation_dict_len=2,
-                   embedding_dim=50,
-                   p_norm=1)
-    loss = MarginLoss(margin=1.0, reverse=False)
-    metric = Link_Prediction(link_prediction_raw=True,
-                             link_prediction_filt=False,
-                             batch_size=5000000,
-                             reverse=False)
-    negative_sampler = UnifNegativeSampler(triples=data,
-                                           entity_dict_len=3,
-                                           relation_dict_len=2,
-                                           device="cpu")
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
-    train_dataset = MyDataset(data)
-
-    # trainer内部
-    model.set_model_config(model_loss=loss,
-                           model_metric=metric,
-                           model_negative_sampler=negative_sampler,
-                           model_device="cpu")
-    train_loader = DataLoader(dataset=train_dataset, batch_size=10)
-    train_epoch_loss = 0.0
-    for batch in tqdm(train_loader):
-        train_loss = model.loss(batch)
-        optimizer.zero_grad()
-        train_loss.backward()
-        optimizer.step()
-        train_epoch_loss += train_loss.item()
-    print("end")
