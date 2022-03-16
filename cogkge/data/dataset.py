@@ -3,13 +3,14 @@ from torch.utils.data import Dataset
 
 
 class Cog_Dataset(Dataset):
-    def __init__(self, data, task, descriptions=None,train_pattern="score_based",
+    def __init__(self, data, task, mode=None,descriptions=None,train_pattern="score_based",
                  lookuptable_E=None,lookuptable_R=None,
                  node_type=False,relation_type=False,time=False):
         """
         :param data: numpy array  (len,5) or (len,3)
         :param task: kr tr or ktr  currently only kr are supported
         """
+        self.mode = mode
         self.label_data = None
         if isinstance(data,tuple):
             self.label_data = torch.tensor(data[1],dtype=torch.float)
@@ -49,17 +50,33 @@ class Cog_Dataset(Dataset):
         sample = tuple(sample.values())
         return sample
 
-
-    def __getitem__(self, index):
-        if self.task == 'kr':
-            sample = {}
-            sample.update({"h": self.data[index][0],
-                           "r": self.data[index][1],})
-            if self.train_pattern == "classification_based":
-                sample["t"] = self.label_data[index]
-            else:
-                sample["t"] = self.data[index][2]
-            return self.update_sample(sample,index)
+    def __getitem__(self,index):
+        if self.mode == "type":
+            return (self.data[index][0],
+                    self.data[index][1],
+                    self.data[index][2],)
+        elif self.mode == "description":
+            pass
+        elif self.mode == "normal":
+            return (self.data[index][0],
+                    self.data[index][1],
+                    self.data[index][2],)
+        elif self.mode == "time":
+            pass
         else:
-            raise ValueError("{} currently are not supported!".format(self.task))
+            raise ValueError("{} mode not supported!".format(self.mode))
+
+
+    # def __getitem__(self, index):
+    #     if self.task == 'kr':
+    #         sample = {}
+    #         sample.update({"h": self.data[index][0],
+    #                        "r": self.data[index][1],})
+    #         if self.train_pattern == "classification_based":
+    #             sample["t"] = self.label_data[index]
+    #         else:
+    #             sample["t"] = self.data[index][2]
+    #         return self.update_sample(sample,index)
+    #     else:
+    #         raise ValueError("{} currently are not supported!".format(self.task))
 

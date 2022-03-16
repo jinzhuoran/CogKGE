@@ -51,7 +51,8 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
 
 negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
+                                       relation_dict_len=len(relation_lut),
+                                       node_lut=node_lut)
 
 trainer = Trainer(
     train_dataset=train_dataset,

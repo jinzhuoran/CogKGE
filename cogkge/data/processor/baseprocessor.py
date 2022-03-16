@@ -8,11 +8,12 @@ import numpy as np
 
 
 class BaseProcessor:
-    def __init__(self, data_name, node_lut, relation_lut, reprocess=True,
+    def __init__(self, data_name, node_lut, relation_lut, reprocess=True,mode=None,
                  time=None, nodetype=None, description=None, graph=None,train_pattern="score_based"):
         """
         :param vocabs: node_vocab,relation_vocab from node_lut relation_lut
         """
+        self.mode = mode
         self.data_name = data_name
         self.node_vocab = node_lut.vocab
         self.relation_vocab = relation_lut.vocab
@@ -40,7 +41,7 @@ class BaseProcessor:
             if self.train_pattern=="classification_based":
                 triplet_label_dict=self.create_triplet_label(data)
                 data=self.convert_label_construct(triplet_label_dict)
-            dataset = Cog_Dataset(data, task='kr',train_pattern=self.train_pattern)
+            dataset = Cog_Dataset(data, task='kr',train_pattern=self.train_pattern,mode=self.mode)
             dataset.data_name = self.data_name
             if self.train_pattern == "scored_based":
                 file = open(path, "wb")
