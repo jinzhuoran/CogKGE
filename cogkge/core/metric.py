@@ -106,6 +106,7 @@ class Link_Prediction(object):
         self.train_dataset = train_dataset
         self.valid_dataset = valid_dataset
         self.test_dataset = test_dataset
+        self.er_vocab = None
 
         if not train_dataset and not valid_dataset and not test_dataset:
             raise ValueError("Not one dataset is specified in metric!")
@@ -160,6 +161,15 @@ class Link_Prediction(object):
             print("Creating correct index in test_dataset...")
             self._correct_test_node_dict = self._create_correct_node_dict(self.test_dataset)
 
+        er_vocab = defaultdict(list)
+        for word in {"train", "valid", "test"}:
+            name = "_correct_{}_node_dict".format(word)
+            if hasattr(self, name):
+                tmp_node_dict = getattr(self, name)
+                for key, value_list in tmp_node_dict["tail"].items():
+                    er_vocab[key] = er_vocab[key] + value_list
+        self.er_vocab = er_vocab
+
     def _calculate_rank_classification_based(self, single_sample):
         with torch.no_grad():
             # data_batch = single_sample.to(self.device)
@@ -169,34 +179,32 @@ class Link_Prediction(object):
             data_batch = data_batch.to(self.device)
             predictions = self._model(data_batch)
 
-
             if self.link_prediction_raw:
                 sort_values, sort_idxs = torch.sort(predictions, dim=1, descending=True)
                 sort_idxs = sort_idxs.cpu().numpy()
                 ranks = []
                 for j in range(data_batch.shape[0]):
-                    for e2_idx in self.label_to_idx(label[j]):
+                    for elem in torch.nonzero(label[j]):
+                        e2_idx = elem.item()
                         ranks.append(np.where(sort_idxs[j] == e2_idx)[0][0] + 1 )
                 # ranks = [np.where(sort_idxs[j] == e2_idx[j].item())[0][0] + 1 for j in range(data_batch.shape[0])]
                 self._raw_rank_list.append(ranks)
 
             if self.link_prediction_filt:
-                er_vocab = {}
-                for word in {"train", "valid", "test"}:
-                    name = "_correct_{}_node_dict".format(word)
-                    if hasattr(self, name):
-                        tmp_node_dict = getattr(self, name)
-                        er_vocab.update(tmp_node_dict["tail"])
-
+                er_vocab = self.er_vocab
+                ranks = []
                 for j in range(data_batch.shape[0]):
-                    filt = er_vocab[(data_batch[j][0].item(), data_batch[j][1].item())]
-                    target_value = predictions[j, e2_idx[j]].item()
-                    predictions[j, filt] = 0.0
-                    predictions[j, e2_idx[j]] = target_value
+                    filt = er_vocab[(data_batch[j][0].item(),data_batch[j][1].item())]
+                    filt_values = predictions[j,filt]
+                    predictions[j,filt] = 0.0
+                    for index,elem in enumerate(torch.nonzero(label[j])):
+                        e2_idx = elem.item()
+                        predictions[j,e2_idx] = filt_values[index]
+                        sort_values,sort_idxs = torch.sort(predictions[j],descending=True)
+                        sort_idxs = sort_idxs.cpu().numpy()
+                        ranks.append(np.where(sort_idxs == e2_idx)[0][0] + 1)
+                        predictions[j,e2_idx] = 0
 
-                sort_values, sort_idxs = torch.sort(predictions, dim=1, descending=True)
-                sort_idxs = sort_idxs.cpu().numpy()
-                ranks = [np.where(sort_idxs[j] == e2_idx[j].item())[0][0] + 1 for j in range(data_batch.shape[0])]
                 self._filt_rank_list.append(ranks)
 
     def _caculate_rank(self, single_sample, entity_type, data_dict):
