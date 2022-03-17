@@ -12,7 +12,7 @@ from cogkge import *
 
 device = init_cogkge(device_id="2", seed=1)
 
-loader = FB15KLoader(dataset_path="../dataset", download=False)
+loader = FB15KLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
 
@@ -39,7 +39,7 @@ loss = torch.nn.BCELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
-                         link_prediction_filt=True,
+                         link_prediction_filt=False,
                          batch_size=5000000,
                          reverse=False,
                          metric_pattern="classification_based")
@@ -78,7 +78,7 @@ trainer = Trainer(
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
     use_savemodel_epoch=100,
-    use_metric_epoch=50
+    use_metric_epoch=1
 )
 trainer.train()
 

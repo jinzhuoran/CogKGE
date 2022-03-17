@@ -110,18 +110,24 @@ class Link_Prediction(object):
         if not train_dataset and not valid_dataset and not test_dataset:
             raise ValueError("Not one dataset is specified in metric!")
 
+    def label_to_idx(self,label):
+        """
+        label: 1-dim tensor;the label of one triple
+
+        """
+        idx = torch.nonzero(label)
+        return [elem.item() for elem in idx]
+
+
     def _create_correct_node_dict(self, dataset):
-        print("Creating correct index...")
         if self.metric_pattern == "classification_based":
             hr_t_vocab = defaultdict(list)
-            rt_h_vocab = defaultdict(list)
 
             for index in tqdm(range(len(dataset))):
-                h,r,t = dataset.data[index]
-                # h, r, t = dataset.data[0][index]
-                hr_t_vocab[(h, r)].append(t)
-                rt_h_vocab[(r, t)].append(h)
-            node_dict = {"head": rt_h_vocab, "tail": hr_t_vocab}
+                h,r,label = dataset[index]
+                t_idx = self.label_to_idx(label)
+                hr_t_vocab[(h, r)] = hr_t_vocab[(h,r)] + t_idx
+            node_dict = {"tail": hr_t_vocab}
 
         if self.metric_pattern == "score_based":
             node_dict = defaultdict(dict)
@@ -145,22 +151,33 @@ class Link_Prediction(object):
         {(correct_tail,correct_relation):correct_head}
         """
         if self.train_dataset != None:
+            print("Creating correct index in train_dataset...")
             self._correct_train_node_dict = self._create_correct_node_dict(self.train_dataset)
         if self.valid_dataset != None:
+            print("Creating correct index in valid_dataset...")
             self._correct_valid_node_dict = self._create_correct_node_dict(self.valid_dataset)
         if self.test_dataset != None:
+            print("Creating correct index in test_dataset...")
             self._correct_test_node_dict = self._create_correct_node_dict(self.test_dataset)
 
     def _calculate_rank_classification_based(self, single_sample):
         with torch.no_grad():
-            data_batch = single_sample.to(self.device)
-            e2_idx = data_batch[:, 2]
+            # data_batch = single_sample.to(self.device)
+            # e2_idx = data_batch[:, 2]
+            h,r,label = single_sample
+            data_batch = torch.cat([h.unsqueeze(1), r.unsqueeze(1)],dim=1)
+            data_batch = data_batch.to(self.device)
             predictions = self._model(data_batch)
+
 
             if self.link_prediction_raw:
                 sort_values, sort_idxs = torch.sort(predictions, dim=1, descending=True)
                 sort_idxs = sort_idxs.cpu().numpy()
-                ranks = [np.where(sort_idxs[j] == e2_idx[j].item())[0][0] + 1 for j in range(data_batch.shape[0])]
+                ranks = []
+                for j in range(data_batch.shape[0]):
+                    for e2_idx in self.label_to_idx(label[j]):
+                        ranks.append(np.where(sort_idxs[j] == e2_idx)[0][0] + 1 )
+                # ranks = [np.where(sort_idxs[j] == e2_idx[j].item())[0][0] + 1 for j in range(data_batch.shape[0])]
                 self._raw_rank_list.append(ranks)
 
             if self.link_prediction_filt:
@@ -371,8 +388,8 @@ class Link_Prediction(object):
         self.record_mode(test_sample)
         for step, single_sample in enumerate(tqdm(metric_loader)):
             data_dict = self.tuple_to_dict(single_sample)
-            single_sample = self.get_batch(data_dict)
             if self.metric_pattern == "score_based":
+                single_sample = self.get_batch(data_dict)
                 self._single_batch_len = single_sample.shape[0] # (self._outer_batch_size,3)
                 single_sample = single_sample.permute(1, 0)  # (3,self._outer_batch_size)
                 single_sample = torch.unsqueeze(single_sample, dim=0)  # (1,3,self._outer_batch_size)

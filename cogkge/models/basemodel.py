@@ -28,7 +28,7 @@ class BaseModel(nn.Module):
                          relationtype_dict_len=0):
         # 设置模型使用的metric和loss
         self.model_loss = model_loss
-        self.model_metrci = model_metric
+        self.model_metric = model_metric
         self.model_negative_sampler = model_negative_sampler
         self.model_device = model_device
         self.time_dict_len=time_dict_len
