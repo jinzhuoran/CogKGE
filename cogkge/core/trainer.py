@@ -690,7 +690,7 @@ class Trainer(object):
                                            self.model.model_name) + "--{}epochs".format(total_epoch)
         self.lookuptable_E = lookuptable_E
         self.lookuptable_R = lookuptable_R
-        self.time_lut=time_lut
+        self.time_lut = time_lut
         self.lr_scheduler = lr_scheduler
         self.apex = apex
         self.dataloaderX = dataloaderX
@@ -721,9 +721,9 @@ class Trainer(object):
             os.makedirs(self.visualization_path)
 
         # Set Model
-        time_dict_len=0
-        nodetype_dict_len=0
-        relationtype_dict_len=0
+        time_dict_len = 0
+        nodetype_dict_len = 0
+        relationtype_dict_len = 0
         if hasattr(time_lut, "vocab") and time_lut.vocab is not None:
             time_dict_len = len(time_lut.vocab)
         if hasattr(lookuptable_E, "type") and lookuptable_E.type is not None:
@@ -813,7 +813,11 @@ class Trainer(object):
 
             # Train Progress
             train_epoch_loss = 0.0
+            import time
+            start = time.time()
             for train_step, batch in enumerate(tqdm(self.train_loader)):
+                end = time.time()
+                print(end - start)
                 train_loss = self.model.loss(batch)
                 train_epoch_loss += train_loss.item()
                 self.optimizer.zero_grad()
@@ -825,6 +829,7 @@ class Trainer(object):
                     train_loss.backward()
                 self.optimizer.step()
                 break
+                start = time.time()
 
             with torch.no_grad():
                 valid_epoch_loss = 0.0
