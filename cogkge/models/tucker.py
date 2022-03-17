@@ -16,8 +16,10 @@ class TuckER(BaseModel):
 
         self.E = torch.nn.Embedding(entity_dict_len, d1)
         self.R = torch.nn.Embedding(relation_dict_len, d2)
+        # self.W = torch.nn.Parameter(torch.tensor(np.random.uniform(-1, 1, (d2, d1, d1)),
+        #                                          dtype=torch.float, device="cuda", requires_grad=True))
         self.W = torch.nn.Parameter(torch.tensor(np.random.uniform(-1, 1, (d2, d1, d1)),
-                                                 dtype=torch.float, device="cuda", requires_grad=True))
+                                                 dtype=torch.float, requires_grad=True))
 
         self.input_dropout = torch.nn.Dropout(input_dropout)
         self.hidden_dropout1 = torch.nn.Dropout(hidden_dropout1)

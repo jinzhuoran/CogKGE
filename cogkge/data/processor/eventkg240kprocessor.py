@@ -18,7 +18,7 @@ class EVENTKG240KProcessor(BaseProcessor):
                  # time=False, nodetype=False, description=False,,relationtype=False,
                  graph=False,
                  time_unit="year",
-                 pretrain_model_name="roberta-base", token_len=10):
+                 pretrain_model_name="roberta-base", token_len=10,train_pattern="score_based"):
         """
         :param vocabs: node_vocab,relation_vocab,time_vocab
         """
@@ -26,7 +26,7 @@ class EVENTKG240KProcessor(BaseProcessor):
             raise ValueError("{} mode is not supported!".format(mode))
         node_dict = {"type": False, "description": False, "time": False, "normal": False, mode: True}
         super().__init__("EVENTKG240K", node_lut, relation_lut, reprocess,
-                         time=node_dict["time"], nodetype=node_dict["type"], description=node_dict["description"], graph=graph)
+                         time=node_dict["time"], nodetype=node_dict["type"], description=node_dict["description"], graph=graph,train_pattern=train_pattern)
         self.time_lut = time_lut
         self.time_vocab = time_lut.vocab
         self.relationtype = node_dict["type"]
@@ -156,6 +156,9 @@ class EVENTKG240KProcessor(BaseProcessor):
             data = self._datable2numpy(data)
             if not self.time:
                 data = data[:, :3]
+            if self.train_pattern=="classification_based":
+                triplet_label_dict=self.create_triplet_label(data)
+                data=self.convert_label_construct(triplet_label_dict)
             dataset = Cog_Dataset(data, task='kr',
                                   lookuptable_E=self.node_lut,
                                   lookuptable_R=self.relation_lut,
@@ -165,9 +168,10 @@ class EVENTKG240KProcessor(BaseProcessor):
                                   relation_type=self.relationtype,
                                   )
             dataset.data_name = self.data_name
-            # file = open(path, "wb")
-            # file.write(pickle.dumps(dataset))
-            # file.close()
+            if self.train_pattern == "score_based":
+                file = open(path, "wb")
+                file.write(pickle.dumps(dataset))
+                file.close()
             return dataset
 
     def process_lut(self):

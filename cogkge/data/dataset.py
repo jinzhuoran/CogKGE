@@ -30,39 +30,50 @@ class Cog_Dataset(Dataset):
     def __len__(self):
         return self.data.shape[0]
 
-    def update_sample(self,sample,index):
-        if self.lookuptable_E:
-            if self.node_type:
-                sample.update({"h_type": self.lookuptable_E.type[self.data[index][0]],
-                               "t_type": self.lookuptable_E.type[self.data[index][2]]})
-            if self.descriptions:
-                sample.update({"h_token": self.lookuptable_E.token[self.data[index][0]],
-                               "t_token": self.lookuptable_E.token[self.data[index][2]],
-                               "h_mask": self.lookuptable_E.mask[self.data[index][0]],
-                               "t_mask": self.lookuptable_E.mask[self.data[index][2]]})
-        if self.lookuptable_R:
-            if self.relation_type:
-                sample.update({"r_type": self.lookuptable_R.type[self.data[index][1]]})
-
-        if self.time:
-            sample.update({"start":self.data[index][3],
-                            "end":self.data[index][4]})
-        sample = tuple(sample.values())
-        return sample
+    # def update_sample(self,sample,index):
+    #     if self.lookuptable_E:
+    #         if self.node_type:
+    #             sample.update({"h_type": self.lookuptable_E.type[self.data[index][0]],
+    #                            "t_type": self.lookuptable_E.type[self.data[index][2]]})
+    #         if self.descriptions:
+    #             sample.update({"h_token": self.lookuptable_E.token[self.data[index][0]],
+    #                            "t_token": self.lookuptable_E.token[self.data[index][2]],
+    #                            "h_mask": self.lookuptable_E.mask[self.data[index][0]],
+    #                            "t_mask": self.lookuptable_E.mask[self.data[index][2]]})
+    #     if self.lookuptable_R:
+    #         if self.relation_type:
+    #             sample.update({"r_type": self.lookuptable_R.type[self.data[index][1]]})
+    #
+    #     if self.time:
+    #         sample.update({"start":self.data[index][3],
+    #                         "end":self.data[index][4]})
+    #     sample = tuple(sample.values())
+    #     return sample
 
     def __getitem__(self,index):
+        h,r = self.data[index][0],self.data[index][1]
+        if self.train_pattern == 'score_based':
+            t = self.data[index][2] # tail index
+        else:
+            t = self.label_data[index]  # label
+
         if self.mode == "type":
-            return (self.data[index][0],
-                    self.data[index][1],
-                    self.data[index][2],)
+            return (h,r,t,
+                    self.lookuptable_E.type[self.data[index][0]],  # h_type
+                    self.lookuptable_E.type[self.data[index][2]],  # t_type
+                    self.lookuptable_R.type[self.data[index][1]])  # r_type
         elif self.mode == "description":
-            pass
+            return (h,r,t,
+                    self.lookuptable_E.token[self.data[index][0]], # h_token
+                    self.lookuptable_E.token[self.data[index][2]], # r_token
+                    self.lookuptable_E.mask[self.data[index][0]], # h_mask
+                    self.lookuptable_E.mask[self.data[index][2]]) # t_mask
         elif self.mode == "normal":
-            return (self.data[index][0],
-                    self.data[index][1],
-                    self.data[index][2],)
+            return (h,r,t)
         elif self.mode == "time":
-            pass
+            return (h,r,t,
+                    self.data[index][3], # start
+                    self.data[index][4]) # end
         else:
             raise ValueError("{} mode not supported!".format(self.mode))
 

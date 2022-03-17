@@ -734,6 +734,7 @@ class Trainer(object):
         # time_dict_len=len(time_lut.vocab) if hasattr(time_lut,"vocab") else 0
         # nodetype_dict_len = len(set(lookuptable_E.type.numpy()))if hasattr(lookuptable_E,"type") else 0
         # relationtype_dict_len = len(set(lookuptable_R.type.numpy())) if hasattr(lookuptable_R, "type") else 0
+        self.model = self.model.to(self.device)
         self.model.set_model_config(model_loss=self.loss,
                                     model_metric=metric,
                                     model_negative_sampler=negative_sampler,
@@ -741,7 +742,6 @@ class Trainer(object):
                                     time_dict_len=time_dict_len,
                                     nodetype_dict_len=nodetype_dict_len,
                                     relationtype_dict_len=relationtype_dict_len)
-        self.model = self.model.to(self.device)
 
         # Set Apex
         if self.apex:
@@ -779,7 +779,7 @@ class Trainer(object):
                                             pin_memory=self.pin_memory)
             self.valid_loader = DataLoaderX(dataset=self.valid_dataset, sampler=self.valid_sampler,
                                             batch_size=self.trainer_batch_size, num_workers=self.num_workers,
-                                            pin_memory=self.pin_memory)
+                                                   pin_memory=self.pin_memory)
         else:
             self.train_loader = Data.DataLoader(dataset=self.train_dataset, sampler=self.train_sampler,
                                                 batch_size=self.trainer_batch_size, num_workers=self.num_workers,
@@ -824,12 +824,14 @@ class Trainer(object):
                 else:
                     train_loss.backward()
                 self.optimizer.step()
+                break
 
             with torch.no_grad():
                 valid_epoch_loss = 0.0
                 for batch in self.valid_loader:
                     valid_loss = self.model.loss(batch)
                     valid_epoch_loss += valid_loss.item()
+                    break
                 average_train_epoch_loss = train_epoch_loss / len(self.train_dataset)
                 average_valid_epoch_loss = valid_epoch_loss / len(self.valid_dataset)
                 self.average_train_epoch_loss_list.append(average_train_epoch_loss)

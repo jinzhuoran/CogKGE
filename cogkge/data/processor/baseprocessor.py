@@ -8,7 +8,7 @@ import numpy as np
 
 
 class BaseProcessor:
-    def __init__(self, data_name, node_lut, relation_lut, reprocess=True,mode=None,
+    def __init__(self, data_name, node_lut, relation_lut, reprocess=True,mode="normal",
                  time=None, nodetype=None, description=None, graph=None,train_pattern="score_based"):
         """
         :param vocabs: node_vocab,relation_vocab from node_lut relation_lut
@@ -47,7 +47,6 @@ class BaseProcessor:
                 file = open(path, "wb")
                 file.write(pickle.dumps(dataset))
                 file.close()
-
             return dataset
 
     def convert_label_construct(self,triplet_label_dict):
