@@ -17,7 +17,6 @@ train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
 
 processor = FB15KProcessor(node_lut, relation_lut, reprocess=True,train_pattern="classification_based")
-# processor = FB15KProcessor(node_lut, relation_lut, reprocess=True,train_pattern="score_based")
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
@@ -52,7 +51,8 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
 
 negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
+                                       relation_dict_len=len(relation_lut),
+                                       node_lut=node_lut)
 
 trainer = Trainer(
     train_dataset=train_dataset,

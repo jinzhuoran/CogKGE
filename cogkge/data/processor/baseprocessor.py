@@ -8,11 +8,12 @@ import numpy as np
 
 
 class BaseProcessor:
-    def __init__(self, data_name, node_lut, relation_lut, reprocess=True,
+    def __init__(self, data_name, node_lut, relation_lut, reprocess=True,mode=None,
                  time=None, nodetype=None, description=None, graph=None,train_pattern="score_based"):
         """
         :param vocabs: node_vocab,relation_vocab from node_lut relation_lut
         """
+        self.mode = mode
         self.data_name = data_name
         self.node_vocab = node_lut.vocab
         self.relation_vocab = relation_lut.vocab
@@ -40,7 +41,7 @@ class BaseProcessor:
             if self.train_pattern=="classification_based":
                 triplet_label_dict=self.create_triplet_label(data)
                 data=self.convert_label_construct(triplet_label_dict)
-            dataset = Cog_Dataset(data, task='kr',train_pattern=self.train_pattern)
+            dataset = Cog_Dataset(data, task='kr',train_pattern=self.train_pattern,mode=self.mode)
             dataset.data_name = self.data_name
             if self.train_pattern == "scored_based":
                 file = open(path, "wb")
@@ -50,26 +51,26 @@ class BaseProcessor:
             return dataset
 
     def convert_label_construct(self,triplet_label_dict):
-        h_r_t_list=list()
+        h_r_list=list()
         t_list=list()
         print("convert_label_construct...")
         for key,value in tqdm(triplet_label_dict.items()):
-            h_r_t_list.append(np.array(key))
+            h_r_list.append(np.array(key))
             vector_label=np.zeros((len(self.node_lut)))
             for index in value:
                 vector_label[index]=1
             t_list.append(vector_label)
 
         t=np.array(t_list)
-        h_r_t=np.array(h_r_t_list)
-        return (h_r_t,t)
+        h_r=np.array(h_r_list)
+        return (h_r,t)
 
 
     def create_triplet_label(self,data):
         triplet_label_dict=defaultdict(list)
         print("create_triplet_label...")
         for i in tqdm(range(len(data))):
-            triplet_h_r=tuple(data[i][:])
+            triplet_h_r=tuple(data[i][:2])
             triplet_t=int(data[i][2].item())
             triplet_label_dict[triplet_h_r].append(triplet_t)
         return triplet_label_dict
