@@ -72,7 +72,3 @@ class BaseModel(nn.Module):
         for index,item in enumerate(data):
             data[index]=item.to(self.model_device)
         return data
-
-    def metric(self, data):
-        # 模型评价
-        pass
