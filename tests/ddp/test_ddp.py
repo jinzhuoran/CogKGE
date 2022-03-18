@@ -1,3 +1,6 @@
+# command:python -m torch.distributed.launch --nproc_per_node 2 test_ddp.py
+
+
 import sys
 from pathlib import Path
 FILE = Path(__file__).resolve()
