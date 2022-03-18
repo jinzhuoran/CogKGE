@@ -3,6 +3,7 @@
 
 import sys
 from pathlib import Path
+
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0].parents[0].parents[0]  # CogKGE root directory
 if str(ROOT) not in sys.path:
@@ -11,7 +12,6 @@ if str(ROOT) not in sys.path:
 import os
 import torch
 import torch.distributed as dist
-import torch.nn as nn
 import random
 import numpy as np
 from torch.utils.data import DataLoader
@@ -29,8 +29,8 @@ def init_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
-def demo_basic(local_world_size, local_rank):
 
+def demo_basic(local_world_size, local_rank):
     # setup devices for this process. For local_world_size = 2, num_gpus = 8,
     # rank 0 uses GPUs [0, 1, 2, 3] and
     # rank 1 uses GPUs [4, 5, 6, 7].
@@ -38,7 +38,7 @@ def demo_basic(local_world_size, local_rank):
     torch.cuda.set_device(local_rank)
 
     device = torch.device("cuda:0")
-    print("Total device count:",torch.cuda.device_count()," And current device:",torch.cuda.current_device())
+    print("Total device count:", torch.cuda.device_count(), " And current device:", torch.cuda.current_device())
 
     loader = FB15KLoader(dataset_path="../../dataset", download=True)
     train_data, valid_data, test_data = loader.load_all_data()
@@ -49,7 +49,6 @@ def demo_basic(local_world_size, local_rank):
     valid_dataset = processor.process(valid_data)
     test_dataset = processor.process(test_data)
     node_lut, relation_lut = processor.process_lut()
-
 
     train_sampler = DistributedSampler(train_dataset)
     valid_sampler = DistributedSampler(valid_dataset)
@@ -83,14 +82,14 @@ def demo_basic(local_world_size, local_rank):
                                            relation_dict_len=len(relation_lut),
                                            node_lut=node_lut)
     train_loader = DataLoader(dataset=train_dataset, sampler=train_sampler,
-                                        batch_size=1024, num_workers=1,shuffle=False)
-
-    model = model.cuda(local_rank)
-    model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+                              batch_size=1024, num_workers=1, shuffle=False)
     model.set_model_config(model_loss=loss,
                            model_metric=None,
                            model_negative_sampler=negative_sampler,
-                           model_device=device,)
+                           model_device=device, )
+    model = model.cuda(local_rank)
+    model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+
     model = DDP(model,
                 device_ids=[local_rank],
                 output_device=local_rank,
@@ -105,7 +104,6 @@ def demo_basic(local_world_size, local_rank):
             optimizer.zero_grad()
             train_loss.backward()
             optimizer.step()
-
 
 
 def spmd_main(local_world_size, local_rank):
@@ -126,6 +124,7 @@ def spmd_main(local_world_size, local_rank):
     # Tear down the process group
     dist.destroy_process_group()
 
+
 if __name__ == "__main__":
     # parser = argparse.ArgumentParser()
     local_rank = int(os.environ["LOCAL_RANK"])
@@ -135,5 +134,3 @@ if __name__ == "__main__":
     # parser.add_argument("--local_world_size", type=int, default=1)
     # args = parser.parse_args()
     spmd_main(local_world_size, local_rank)
-
-

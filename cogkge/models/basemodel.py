@@ -71,3 +71,12 @@ class BaseModel(nn.Module):
         for index, item in enumerate(data):
             data[index] = item.to(self.model_device)
         return data
+
+    def cal_gpu(self):
+        if isinstance(self, torch.nn.DataParallel):
+            self = self.module
+        for submodule in self.children():
+            if hasattr(submodule, "_parameters"):
+                parameters = submodule._parameters
+                if "weight" in parameters:
+                    return parameters["weight"].device

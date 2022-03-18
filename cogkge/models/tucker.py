@@ -1,7 +1,9 @@
-import torch
 import numpy as np
+import torch
 from torch.nn.init import xavier_normal_
+
 from cogkge.models.basemodel import BaseModel
+
 
 class TuckER(BaseModel):
     def __init__(self,
@@ -33,8 +35,8 @@ class TuckER(BaseModel):
         xavier_normal_(self.R.weight.data)
 
     def forward(self, h_r_true):
-        e1_idx=h_r_true[:,0]
-        r_idx=h_r_true[:,1]
+        e1_idx = h_r_true[:, 0]
+        r_idx = h_r_true[:, 1]
         e1 = self.E(e1_idx)
         x = self.bn0(e1)
         x = self.input_dropout(x)
@@ -53,13 +55,14 @@ class TuckER(BaseModel):
         pred = torch.sigmoid(x)
         return pred
 
-    def get_batch(self,data):
+    def get_batch(self, data):
+        self.model_device = self.cal_gpu()
         h = data[0].to(self.model_device)
         r = data[1].to(self.model_device)
         label = data[2].to(self.model_device)
-        return h,r,label
+        return h, r, label
 
-    def loss(self,data):
-        h,r,label = self.get_batch(data)
-        pred = self.forward(torch.cat([h.unsqueeze(1),r.unsqueeze(1)],dim=1))
-        return self.model_loss(pred,label)
+    def loss(self, data):
+        h, r, label = self.get_batch(data)
+        pred = self.forward(torch.cat([h.unsqueeze(1), r.unsqueeze(1)], dim=1))
+        return self.model_loss(pred, label)
