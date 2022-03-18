@@ -39,7 +39,7 @@ class NegSamplingLoss(torch.nn.Module):
         self.neg_per_pos = neg_per_pos
         self.C = C
 
-    def forward(self, p_score, n_score, penalty):
+    def forward(self, p_score, n_score):
         """
         p_score: (batch,)
         n_score: (batch * neg_per_pos,)

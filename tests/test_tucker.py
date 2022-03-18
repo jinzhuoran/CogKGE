@@ -10,9 +10,9 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 from cogkge import *
 
-device = init_cogkge(device_id="2", seed=1)
+device = init_cogkge(device_id="3", seed=1)
 
-loader = FB15KLoader(dataset_path="../dataset", download=False)
+loader = FB15KLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut = loader.load_all_lut()
 

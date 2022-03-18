@@ -17,7 +17,7 @@ train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut, time_lut = loader.load_all_lut()
 
 processor = EVENTKG240KProcessor(node_lut, relation_lut, time_lut,
-                                 reprocess=True,
+                                 reprocess=False,
                                  mode="time",
                                  # nodetype=True, time=True, relationtype=True, description=True,
                                  graph=False,time_unit="year", pretrain_model_name="roberta-base", token_len=10)
@@ -38,8 +38,8 @@ loss = MarginLoss(margin=1.0, reverse=False)
 metric = Link_Prediction(node_lut=node_lut,
                          relation_lut=relation_lut,
                          time_lut = time_lut,
-                         link_prediction_raw=True,
-                         link_prediction_filt=False,
+                         link_prediction_raw=False,
+                         link_prediction_filt=True,
                          batch_size=2389110,
                          reverse=False)
 negative_sampler = UnifNegativeSampler(triples=train_dataset,
