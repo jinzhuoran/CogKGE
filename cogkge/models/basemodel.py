@@ -10,12 +10,12 @@ class BaseModel(nn.Module):
         self.model_negative_sampler = None
         self.model_name = model_name
         self.penalty_weight = penalty_weight
-        self.init_description_adapter=False
-        self.init_type_adapter=False
-        self.init_time_adapter=False
-        self.init_graph_adapter=False
-        self.time_dict_len=0
-        self.nodetype_dict_len=0
+        self.init_description_adapter = False
+        self.init_type_adapter = False
+        self.init_time_adapter = False
+        self.init_graph_adapter = False
+        self.time_dict_len = 0
+        self.nodetype_dict_len = 0
         self.relationtype_dict_len = 0
 
     def set_model_config(self,
@@ -31,8 +31,8 @@ class BaseModel(nn.Module):
         self.model_metric = model_metric
         self.model_negative_sampler = model_negative_sampler
         self.model_device = model_device
-        self.time_dict_len=time_dict_len
-        self.nodetype_dict_len=nodetype_dict_len
+        self.time_dict_len = time_dict_len
+        self.nodetype_dict_len = nodetype_dict_len
         self.relationtype_dict_len = relationtype_dict_len
 
     def _reset_param(self):
@@ -55,7 +55,6 @@ class BaseModel(nn.Module):
         # 得到三元组的embedding
         pass
 
-
     def loss(self, data):
         # 计算损失
         data = self.get_batch(data)
@@ -68,7 +67,16 @@ class BaseModel(nn.Module):
             penalty_loss += torch.sum(param ** 2)
         return self.penalty_weight * penalty_loss
 
-    def data_to_device(self,data):
-        for index,item in enumerate(data):
-            data[index]=item.to(self.model_device)
+    def data_to_device(self, data):
+        for index, item in enumerate(data):
+            data[index] = item.to(self.model_device)
         return data
+
+    def cal_gpu(self):
+        if isinstance(self, torch.nn.DataParallel):
+            self = self.module
+        for submodule in self.children():
+            if hasattr(submodule, "_parameters"):
+                parameters = submodule._parameters
+                if "weight" in parameters:
+                    return parameters["weight"].device

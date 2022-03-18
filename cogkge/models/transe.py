@@ -45,11 +45,11 @@
 #
 #         return output  # (batch,3,embedding_dim)
 
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch
+
 from cogkge.models.basemodel import BaseModel
-from cogkge.adapter import *
 
 
 class TransE(BaseModel):
@@ -94,7 +94,6 @@ class TransE(BaseModel):
         # 得到实体的embedding
         return self.e_embedding(entity_ids)
 
-
     # @description_adapter
     # @graph_adapter
     # @type_adapter
@@ -116,9 +115,9 @@ class TransE(BaseModel):
 
     def loss(self, data):
         # 计算损失
-        pos_data=data
-        pos_data= self.data_to_device(pos_data)
-        neg_data=self.model_negative_sampler.create_negative(data)
+        pos_data = data
+        pos_data = self.data_to_device(pos_data)
+        neg_data = self.model_negative_sampler.create_negative(data)
         neg_data = self.data_to_device(neg_data)
 
         pos_score = self.forward(pos_data)
@@ -126,8 +125,7 @@ class TransE(BaseModel):
 
         return self.model_loss(pos_score, neg_score) + self.penalty()
 
-    def data_to_device(self,data):
-        for index,item in enumerate(data):
-            data[index]=item.to(self.model_device)
+    def data_to_device(self, data):
+        for index, item in enumerate(data):
+            data[index] = item.to(self.model_device)
         return data
-

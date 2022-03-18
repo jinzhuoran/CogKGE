@@ -2,7 +2,7 @@ import torch
 
 
 class UnifNegativeSampler():
-    def __init__(self, triples, entity_dict_len, relation_dict_len, node_lut,device=torch.device('cuda:0')):
+    def __init__(self, triples, entity_dict_len, relation_dict_len, node_lut=None, device=torch.device('cuda:0')):
         # tensor(len,3)
         self.triples = triples
         self.entity_dict_len = entity_dict_len
@@ -10,45 +10,46 @@ class UnifNegativeSampler():
         self.device = device
         self.node_lut = node_lut
 
-    def tuple_to_dict(self,data_tuple):
+    def tuple_to_dict(self, data_tuple):
         data_dict = {
-            "h":data_tuple[0],
-            "r":data_tuple[1],
-            "t":data_tuple[2],
+            "h": data_tuple[0],
+            "r": data_tuple[1],
+            "t": data_tuple[2],
         }
         if len(data_tuple) == 3:
             pass
-        elif len(data_tuple) == 5: # time info
+        elif len(data_tuple) == 5:  # time info
             data_dict.update({
-                "start":data_tuple[3],
-                "end":data_tuple[4],
+                "start": data_tuple[3],
+                "end": data_tuple[4],
             })
-        elif len(data_tuple) == 6: # type info
+        elif len(data_tuple) == 6:  # type info
             data_dict.update({
-                "h_type":data_tuple[3],
-                "t_type":data_tuple[4],
-                "r_type":data_tuple[5],
+                "h_type": data_tuple[3],
+                "t_type": data_tuple[4],
+                "r_type": data_tuple[5],
             })
-        elif len(data_tuple) == 7: # descriptions info
+        elif len(data_tuple) == 7:  # descriptions info
             data_dict.update({
-                "h_token":data_tuple[3],
-                "t_token":data_tuple[4],
-                "h_mask":data_tuple[5],
-                "t_mask":data_tuple[6],
+                "h_token": data_tuple[3],
+                "t_token": data_tuple[4],
+                "h_mask": data_tuple[5],
+                "t_mask": data_tuple[6],
             })
         else:
             raise ValueError("Length of data_tuple {} unexpected!".format(len(data_tuple)))
         return data_dict
 
-    def create_negative(self,batch_pos_tuple):
+    def create_negative(self, batch_pos_tuple):
         batch_pos_dict = self.tuple_to_dict(batch_pos_tuple)
         batch_neg_dict = self._create_negative(batch_pos_dict)
         return list(tuple(batch_neg_dict.values()))
 
     def _create_negative(self, batch_pos_dict):
         # {"h":tensor(batch,),"r":tensor(batch,),"t":tensor(batch,),...}
-        h,r,t = batch_pos_dict["h"],batch_pos_dict["r"],batch_pos_dict["t"]
-        batch_pos  = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1).to(self.device) # tensor(batch,3)
+        h, r, t = batch_pos_dict["h"], batch_pos_dict["r"], batch_pos_dict["t"]
+        batch_pos = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1).to(
+            self.device)  # tensor(batch,3)
         batch_neg = batch_pos.clone().to(self.device)
         entity_number = torch.randint(self.entity_dict_len, (batch_neg.size()[0],)).to(self.device)
         mask = torch.rand(batch_neg.size()[0])
@@ -57,15 +58,15 @@ class UnifNegativeSampler():
         batch_neg[head_mask, 0] = entity_number[head_mask].to(self.device)
         batch_neg[tail_mask, 2] = entity_number[tail_mask].to(self.device)
 
-        index_dict = {"h":0,"t":2}
+        index_dict = {"h": 0, "t": 2}
         batch_neg_dict = {}
-        for key,values in batch_pos_dict.items():
+        for key, values in batch_pos_dict.items():
             if len(key.split("_")) > 1 and key != "r_type":
-                index,attribute = key.split("_")
-                lut_values = getattr(self.node_lut,attribute)
-                batch_neg_dict.update({key:lut_values[batch_neg[:,index_dict[index]]]})
+                index, attribute = key.split("_")
+                lut_values = getattr(self.node_lut, attribute)
+                batch_neg_dict.update({key: lut_values[batch_neg[:, index_dict[index]]]})
             else:
-                batch_neg_dict.update({key:batch_pos_dict[key]})
+                batch_neg_dict.update({key: batch_pos_dict[key]})
         batch_neg_dict.update({"h": batch_neg[:, 0],
                                "r": batch_neg[:, 1],
                                "t": batch_neg[:, 2]})
