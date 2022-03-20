@@ -2,6 +2,7 @@
 
 
 import sys
+from time import time
 from pathlib import Path
 
 FILE = Path(__file__).resolve()
@@ -67,7 +68,7 @@ def demo_basic(local_world_size, local_rank):
     optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=0)
 
     metric = Link_Prediction(link_prediction_raw=True,
-                             link_prediction_filt=True,
+                             link_prediction_filt=False,
                              batch_size=5000000,
                              reverse=False,
                              metric_pattern="classification_based")
@@ -96,14 +97,51 @@ def demo_basic(local_world_size, local_rank):
                 find_unused_parameters=False,
                 broadcast_buffers=False
                 )
-    for epoch in range(50):
+    total_epoch = 500
+    metric_epoch = 50
+    if local_rank in [-1,0]:
+        logger = save_logger("trainer.log")
+    dist.barrier()
+
+    for epoch in range(total_epoch):
+        if local_rank in [-1,0]:
+            start = time()
+        dist.barrier()
         train_sampler.set_epoch(epoch)
         model.train()
-        for train_step, batch in enumerate(tqdm(train_loader)):
+        for train_step, batch in enumerate(train_loader):
+            # print(train_step)
             train_loss = model.module.loss(batch)
             optimizer.zero_grad()
             train_loss.backward()
             optimizer.step()
+        if local_rank in [-1,0]:
+            end = time()
+            print("Epoch:{} cost {} seconds.".format(epoch,end-start))
+            if (epoch+1) % metric_epoch == 0:
+                print("Evaluating Model {} on Valid Dataset...".format(model.module.model_name))
+                valid_model = model.module
+                valid_model.eval()
+                metric.initialize(device=device,
+                                  total_epoch=100,
+                                  metric_type="valid",
+                                  node_dict_len=len(node_lut),
+                                  model_name=valid_model.model_name,
+                                  logger=logger,
+                                  writer=None,
+                                  train_dataset=train_dataset,
+                                  valid_dataset=valid_dataset)
+
+                metric.caculate(model=valid_model, current_epoch=50)
+                metric.print_current_table()
+                metric.log()
+                metric.write()
+
+
+
+        dist.barrier()
+
+
 
 
 def spmd_main(local_world_size, local_rank):
