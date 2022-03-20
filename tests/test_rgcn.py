@@ -11,7 +11,7 @@ if str(ROOT) not in sys.path:
 
 from cogkge import *
 
-device = init_cogkge(device_id="0", seed=1)
+device = init_cogkge(device_id="1", seed=1)
 loader = FB15KLoader(dataset_path="../dataset", download=True)
 
 train_data, valid_data, test_data = loader.load_all_data()
@@ -27,7 +27,9 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
+print("Constructing adjacency matrix...")
 edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut))
+print("Adjacency matrix construction finished.")
 
 model = RGCN(edge_index=edge_index,
              edge_type=edge_type,
@@ -80,7 +82,7 @@ trainer = Trainer(
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
     use_savemodel_epoch=100,
-    use_metric_epoch=100
+    use_metric_epoch=50
 )
 trainer.train()
 

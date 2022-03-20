@@ -122,15 +122,26 @@ def ccorr(a, b):
 
 def construct_adj(train_dataset, relation_dict_len):
     edge_index, edge_type = [], []
-    for sub, rel, obj in train_dataset.data:
-        edge_index.append((sub, obj))
-        edge_type.append(rel)
+    if train_dataset.data.shape[1] == 3: # score_based
+        for sub, rel, obj in train_dataset.data:
+            edge_index.append((sub, obj))
+            edge_type.append(rel)
 
-    for sub, rel, obj in train_dataset.data:
-        edge_index.append((obj, sub))
-        edge_type.append(rel + relation_dict_len)
+        for sub, rel, obj in train_dataset.data:
+            edge_index.append((obj, sub))
+            edge_type.append(rel + relation_dict_len)
+    else:  # classification-based
+        label = train_dataset.label_data
+        for j,(sub, rel) in enumerate(train_dataset.data):
+            for elem in torch.nonzero(label[j]):
+                e2_idx = elem.item()
+                edge_index.append((sub,e2_idx))
+                edge_type.append(rel)
 
-    # edge_index = torch.LongTensor(edge_index).to(device).t()
-    # edge_type = torch.LongTensor(edge_type).to(device)
+        for j,(sub, rel) in enumerate(train_dataset.data):
+            for elem in torch.nonzero(label[j]):
+                e2_idx = elem.item()
+                edge_index.append((e2_idx,sub))
+                edge_type.append(rel + relation_dict_len)
 
-    return edge_index, edge_type
+    return edge_index,edge_type

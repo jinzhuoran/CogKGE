@@ -33,19 +33,13 @@ class RGCN(BaseModel):
         self.conv1 = RGCNConv(self.init_dim, self.init_dim, relation_dict_len,act=self.act,params=self.p)
         self.linear = nn.Linear(3 * embedding_dim,entity_dict_len)
 
-    def set_model_config(self,model_loss=None,model_metric=None,model_negative_sampler=None,model_device=None):
-        #设置模型使用的metric和loss
-        self.model_loss=model_loss
-        self.model_metric=model_metric
-        self.model_negative_sampler=model_negative_sampler
-        self.model_device=model_device
 
     def loss(self,data):
         h, r, t,batch_label = self.get_batch(data)
+
         data_batch = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1)
         output = self.forward(data_batch)
         return self.model_loss(output,batch_label)
-
 
 
     def forward(self,data_batch):
@@ -65,9 +59,10 @@ class RGCN(BaseModel):
         xavier_normal_(param.data)
         return param
 
-    def get_batch(self,data):
-        h=data["h"].to(self.model_device)
-        r=data["r"].to(self.model_device)
-        t=data["t"].to(self.model_device)
-        label = data["label"].to(self.model_device)
-        return h,r,t,label
+    # def get_batch(self,data):
+        # h = data[0].to(self.model_device)
+        # h=data["h"].to(self.model_device)
+        # r=data["r"].to(self.model_device)
+        # t=data["t"].to(self.model_device)
+        # label = data["label"].to(self.model_device)
+        # return h,r,t,label
