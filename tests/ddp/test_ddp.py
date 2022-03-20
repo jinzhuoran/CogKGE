@@ -5,6 +5,7 @@
 import sys
 from time import time
 from pathlib import Path
+import logging
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0].parents[0].parents[0]  # CogKGE root directory
@@ -101,24 +102,25 @@ def demo_basic(local_world_size, local_rank):
     total_epoch = 500
     metric_epoch = 50
     if local_rank in [-1,0]:
+        logging.basicConfig(level=logging.INFO if local_rank in [-1, 0] else logging.WARN)
         logger = save_logger("trainer.log")
     dist.barrier()
 
     for epoch in range(total_epoch):
+        logging.info("Epoch:{}".format(epoch))
         if local_rank in [-1,0]:
             start = time()
         dist.barrier()
         train_sampler.set_epoch(epoch)
         model.train()
         for train_step, batch in enumerate(train_loader):
-            # print(train_step)
             train_loss = model.module.loss(batch)
             optimizer.zero_grad()
             train_loss.backward()
             optimizer.step()
         if local_rank in [-1,0]:
             end = time()
-            print("Epoch:{} cost {} seconds.".format(epoch,end-start))
+            # print("Epoch:{} cost {} seconds.".format(epoch+1,end-start))
             if (epoch+1) % metric_epoch == 0:
                 print("Evaluating Model {} on Valid Dataset...".format(model.module.model_name))
                 valid_model = model.module
