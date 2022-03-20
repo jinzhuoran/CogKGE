@@ -68,14 +68,17 @@ class BaseModel(nn.Module):
         return self.penalty_weight * penalty_loss
 
     def data_to_device(self, data):
+        self.model_device = self.cal_gpu()
         for index, item in enumerate(data):
             data[index] = item.to(self.model_device)
         return data
 
     def cal_gpu(self):
         if isinstance(self, torch.nn.DataParallel):
-            self = self.module
-        for submodule in self.children():
+            module = self.module
+        else:
+            module = self
+        for submodule in module.children():
             if hasattr(submodule, "_parameters"):
                 parameters = submodule._parameters
                 if "weight" in parameters:
