@@ -1,4 +1,5 @@
 # command:python -m torch.distributed.launch --nproc_per_node 2 test_ddp.py
+# or choose specific gpus: CUDA_VISIBLE_DEVICES="2,3,4,5,6,7,8,9"  python -m torch.distributed.launch --nproc_per_node 8 test_ddp.py
 
 
 import sys
@@ -132,7 +133,7 @@ def demo_basic(local_world_size, local_rank):
                                   train_dataset=train_dataset,
                                   valid_dataset=valid_dataset)
 
-                metric.caculate(model=valid_model, current_epoch=50)
+                metric.caculate(model=valid_model, current_epoch=epoch)
                 metric.print_current_table()
                 metric.log()
                 metric.write()
