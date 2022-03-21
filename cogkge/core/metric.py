@@ -395,8 +395,8 @@ class Link_Prediction(object):
         test_sample = next(iter(metric_loader))
         self.record_mode(test_sample)
         for step, single_sample in enumerate(tqdm(metric_loader)):
-            data_dict = self.tuple_to_dict(single_sample)
             if self.metric_pattern == "score_based":
+                data_dict = self.tuple_to_dict(single_sample)
                 single_sample = self.get_batch(data_dict)
                 self._single_batch_len = single_sample.shape[0] # (self._outer_batch_size,3)
                 single_sample = single_sample.permute(1, 0)  # (3,self._outer_batch_size)

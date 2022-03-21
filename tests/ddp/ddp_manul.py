@@ -9,6 +9,10 @@ import torch.multiprocessing as mp
 
 from torch.nn.parallel import DistributedDataParallel as DDP
 
+def hello(rank):
+    print(rank)
+    print("Hello!")
+
 def setup(rank, world_size):
     os.environ['MASTER_ADDR'] = 'localhost'
     os.environ['MASTER_PORT'] = '12355'
@@ -56,6 +60,9 @@ def run_demo(demo_fn, world_size):
              nprocs=world_size,
              join=True)
 
-if __name__ == "__main__":
-    print("Hello World!")
-    run_demo(demo_basic,2)
+
+
+
+print("Hello World!")
+run_demo(hello,2)
+

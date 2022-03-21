@@ -31,26 +31,28 @@ class RGCN(BaseModel):
         self.init_rel = self.get_param((relation_dict_len,self.init_dim))
 
         self.conv1 = RGCNConv(self.init_dim, self.init_dim, relation_dict_len,act=self.act,params=self.p)
-        self.linear = nn.Linear(3 * embedding_dim,entity_dict_len)
+        self.linear = nn.Linear(2 * embedding_dim,entity_dict_len)
 
 
     def loss(self,data):
-        h, r, t,batch_label = self.get_batch(data)
-
-        data_batch = torch.cat((h.unsqueeze(1), r.unsqueeze(1), t.unsqueeze(1)), dim=1)
-        output = self.forward(data_batch)
+        data = self.data_to_device(data)
+        h,r,batch_label = data
+        # data_batch = torch.cat(data)
+        output = self.forward(torch.cat([h.unsqueeze(1), r.unsqueeze(1)], dim=1))
         return self.model_loss(output,batch_label)
 
 
     def forward(self,data_batch):
-        batch_h,batch_r,batch_t = data_batch[:,0],data_batch[:,1],data_batch[:,2]
+        # batch_h,batch_r,batch_label = data_batch
+        batch_h,batch_r  = data_batch[:,0],data_batch[:,1]
         x = self.conv1(self.init_embed,self.edge_index)
 
         head_embedding = torch.index_select(x, 0, batch_h)
-        tail_embedding = torch.index_select(x, 0, batch_t)
+        # tail_embedding = torch.index_select(x, 0, batch_t)
+        # tail_embedding = torch.matmul(batch_label,x)
         relation_embedding = torch.index_select(self.init_rel,0,batch_r)
 
-        output = F.relu(torch.cat([head_embedding, tail_embedding, relation_embedding], dim=1))
+        output = F.relu(torch.cat([head_embedding, relation_embedding], dim=1))
         return torch.sigmoid(self.linear(output))
 
 
