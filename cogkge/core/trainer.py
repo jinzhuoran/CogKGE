@@ -643,6 +643,14 @@ from cogkge.core import DataLoaderX
 from .log import save_logger
 from ..utils.kr_utils import cal_output_path
 
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
+
+def reduce_mean(tensor,nprocs):
+    rt = tensor.clone()
+    dist.all_reduce(rt,op=dist.ReduceOp.SUM)
+    rt = rt/nprocs
+    return rt
 
 class Trainer(object):
     def __init__(self,
@@ -671,7 +679,8 @@ class Trainer(object):
                  use_tensorboard_epoch=0.1,
                  use_savemodel_epoch=0.1,
                  use_matplotlib_epoch=0.1,
-                 checkpoint_path=None
+                 checkpoint_path=None,
+                 rank=-1,
                  ):
         # 传入参数
         self.train_dataset = train_dataset
@@ -713,12 +722,14 @@ class Trainer(object):
         self.log_path = os.path.join(self.output_path, "trainer_run.log")
         self.data_name = train_dataset.data_name
         self.model_name = self.model.model_name
+        self.rank = rank
 
         # Set path
-        if not os.path.exists(self.output_path):
-            os.makedirs(self.output_path)
-        if not os.path.exists(self.visualization_path):
-            os.makedirs(self.visualization_path)
+        if self.rank in [-1,0]:
+            if not os.path.exists(self.output_path):
+                os.makedirs(self.output_path)
+            if not os.path.exists(self.visualization_path):
+                os.makedirs(self.visualization_path)
 
         # Set Model
         time_dict_len=0
@@ -734,7 +745,6 @@ class Trainer(object):
         # time_dict_len=len(time_lut.vocab) if hasattr(time_lut,"vocab") else 0
         # nodetype_dict_len = len(set(lookuptable_E.type.numpy()))if hasattr(lookuptable_E,"type") else 0
         # relationtype_dict_len = len(set(lookuptable_R.type.numpy())) if hasattr(lookuptable_R, "type") else 0
-        self.model = self.model.to(self.device)
         self.model.set_model_config(model_loss=self.loss,
                                     model_metric=metric,
                                     model_negative_sampler=negative_sampler,
@@ -742,18 +752,28 @@ class Trainer(object):
                                     time_dict_len=time_dict_len,
                                     nodetype_dict_len=nodetype_dict_len,
                                     relationtype_dict_len=relationtype_dict_len)
+        if self.rank == -1:
+            self.model = self.model.to(self.device)
+        else:
+            self.model = self.model.cuda(self.rank)
+            self.model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(self.model)
+            self.model = DDP(self.model,
+                             device_ids=[self.rank],
+                             output_device=self.rank,
+                             find_unused_parameters=False,
+                             broadcast_buffers=False)
 
         # Set Apex
         if self.apex:
             if "apex" not in sys.modules:
-                print("Please install apex!")
+                # print("Please install apex!")
                 self.apex = False
             else:
                 from apex import amp
                 self.model, self.optimizer = amp.initialize(self.model, self.optimizer, opt_level="O1")
         # Set log
-        self.logger = save_logger(self.log_path)
-        self.logger.info("Data Experiment Output Path:{}".format(self.output_path))
+        self.logger = save_logger(self.log_path,rank=self.rank)
+        self.logger.info("Data Experiment Output Path:{}".format(os.path.abspath(self.output_path)))
 
         # Set Checkpoint
         if self.checkpoint_path != None:
@@ -794,12 +814,12 @@ class Trainer(object):
                                    total_epoch=self.total_epoch,
                                    metric_type="valid",
                                    node_dict_len=len(self.lookuptable_E),
-                                   model_name=self.model.model_name,
+                                   model_name=self.model_name,
                                    logger=self.logger,
                                    writer=self.writer,
                                    train_dataset=self.train_dataset,
                                    valid_dataset=self.valid_dataset)
-            if self.metric.link_prediction_filt:
+            if self.metric.link_prediction_filt and self.rank in [-1,0]:
                 self.metric.establish_correct_triplets_dict()
 
         # Set Multi GPU
@@ -813,37 +833,55 @@ class Trainer(object):
 
             # Train Progress
             train_epoch_loss = 0.0
-            for train_step, batch in enumerate(tqdm(self.train_loader)):
-                train_loss = self.model.loss(batch)
-                train_epoch_loss += train_loss.item()
-                self.optimizer.zero_grad()
-                if self.apex:
-                    from apex import amp
-                    with amp.scale_loss(train_loss, self.optimizer) as scaled_loss:
-                        scaled_loss.backward()
-                else:
-                    train_loss.backward()
-                self.optimizer.step()
-                # break
+            if self.rank == -1:
+                for train_step, batch in enumerate(tqdm(self.train_loader)):
+                    train_loss = self.model.loss(batch)
+                    train_epoch_loss += train_loss.item()
+                    self.optimizer.zero_grad()
+                    if self.apex:
+                        from apex import amp
+                        with amp.scale_loss(train_loss, self.optimizer) as scaled_loss:
+                            scaled_loss.backward()
+                    else:
+                        train_loss.backward()
+                    self.optimizer.step()
+            else:
+                self.train_sampler.set_epoch(epoch)
+                self.model.train()
+                for train_step, batch in enumerate(self.train_loader):
+                    train_loss = self.model.module.loss(batch)
+                    train_epoch_loss += reduce_mean(train_loss,dist.get_world_size()).item()
+                    self.optimizer.zero_grad()
+                    if self.apex:
+                        from apex import amp
+                        with amp.scale_loss(train_loss, self.optimizer) as scaled_loss:
+                            scaled_loss.backward()
+                    else:
+                        train_loss.backward()
+                    self.optimizer.step()
 
-            with torch.no_grad():
-                valid_epoch_loss = 0.0
-                for batch in self.valid_loader:
-                    valid_loss = self.model.loss(batch)
-                    valid_epoch_loss += valid_loss.item()
-                    # break
-                average_train_epoch_loss = train_epoch_loss / len(self.train_dataset)
-                average_valid_epoch_loss = valid_epoch_loss / len(self.valid_dataset)
-                self.average_train_epoch_loss_list.append(average_train_epoch_loss)
-                self.average_valid_epoch_loss_list.append(average_valid_epoch_loss)
-                self.current_epoch_list.append(self.current_epoch)
-                print("Epoch{}/{}   Train Loss: {}   Valid Loss: {}".format(self.current_epoch,
-                                                                            self.total_epoch,
-                                                                            average_train_epoch_loss,
-                                                                            average_valid_epoch_loss))
+            # Valid Process
+            if self.rank in [-1,0]:
+                with torch.no_grad():
+                    valid_epoch_loss = 0.0
+                    valid_model = self.model if self.rank == -1 else self.model.module
+                    valid_model.eval()
+                    for batch in self.valid_loader:
+                        valid_loss = valid_model.loss(batch)
+                        valid_epoch_loss += valid_loss.item()
+                        # break
+                    average_train_epoch_loss = train_epoch_loss / len(self.train_dataset)
+                    average_valid_epoch_loss = valid_epoch_loss / len(self.valid_dataset)
+                    self.average_train_epoch_loss_list.append(average_train_epoch_loss)
+                    self.average_valid_epoch_loss_list.append(average_valid_epoch_loss)
+                    self.current_epoch_list.append(self.current_epoch)
+                    self.logger.info("Epoch{}/{}   Train Loss: {}   Valid Loss: {}".format(self.current_epoch,
+                                                                                self.total_epoch,
+                                                                                average_train_epoch_loss,
+                                                                                average_valid_epoch_loss))
 
             # Metric Progress
-            if self.use_metric_epoch and self.current_epoch % self.use_metric_epoch == 0:
+            if self.use_metric_epoch and self.current_epoch % self.use_metric_epoch == 0 and self.rank in [-1,0]:
                 self.use_metric()
             # Tensorboard Process
             if self.current_epoch % self.use_tensorboard_epoch == 0:
@@ -856,7 +894,7 @@ class Trainer(object):
                 self.use_matplotlib()
 
     def use_metric(self):
-        print("Evaluating Model {} on Valid Dataset...".format(self.model.model_name))
+        print("Evaluating Model {} on Valid Dataset...".format(self.model_name))
         self.metric.caculate(model=self.model, current_epoch=self.current_epoch)
         self.metric.print_current_table()
         self.metric.log()

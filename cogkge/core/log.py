@@ -48,8 +48,12 @@ def save_logger(logfile_path="../dataset/cogkge.log",rank=-1):
     }
 
     # logfile_path = "../dataset/cogkge.log"
-    LOGGING_DIC['handlers']['file']['filename'] = logfile_path
     LOGGING_DIC['loggers']['']['level'] = 'INFO' if rank in [-1,0] else 'WARN'
+    LOGGING_DIC['handlers']['file']['filename'] = logfile_path
+    if rank not in [-1,0]:
+        # 其余进程仅向stream中打印Log,不创建文件
+        LOGGING_DIC['loggers']['']['handlers'] = ['stream']
+        del LOGGING_DIC['handlers']['file']
     logging.config.dictConfig(LOGGING_DIC)
     logger = logging.getLogger(__name__)
     return logger

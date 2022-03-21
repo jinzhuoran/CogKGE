@@ -34,20 +34,17 @@ def init_seed(seed):
 
 
 def demo_basic(local_world_size, local_rank):
-    # setup devices for this process. For local_world_size = 2, num_gpus = 8,
-    # rank 0 uses GPUs [0, 1, 2, 3] and
-    # rank 1 uses GPUs [4, 5, 6, 7].
-
+    init_seed(1)
     torch.cuda.set_device(local_rank)
-
     device = torch.device("cuda:0")
-    print("Total device count:", torch.cuda.device_count(), " And current device:", torch.cuda.current_device())
+
+    # put your own code from here
 
     loader = FB15KLoader(dataset_path="../../dataset", download=True)
     train_data, valid_data, test_data = loader.load_all_data()
     node_lut, relation_lut = loader.load_all_lut()
 
-    processor = FB15KProcessor(node_lut, relation_lut, reprocess=True, train_pattern="classification_based")
+    processor = FB15KProcessor(node_lut, relation_lut, reprocess=True, train_pattern="classification_based",rank=local_rank)
     train_dataset = processor.process(train_data)
     valid_dataset = processor.process(valid_data)
     test_dataset = processor.process(test_data)
@@ -70,79 +67,114 @@ def demo_basic(local_world_size, local_rank):
     optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=0)
 
     metric = Link_Prediction(link_prediction_raw=True,
-                             link_prediction_filt=False,
+                             link_prediction_filt=True,
                              batch_size=5000000,
                              reverse=False,
                              metric_pattern="classification_based")
+    negative_sampler = UnifNegativeSampler(triples=train_dataset,
+                                           entity_dict_len=len(node_lut),
+                                           relation_dict_len=len(relation_lut),
+                                           node_lut=node_lut)
 
     lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
         factor=0.5, min_lr=1e-9, verbose=True
     )
 
-    negative_sampler = UnifNegativeSampler(triples=train_dataset,
-                                           entity_dict_len=len(node_lut),
-                                           relation_dict_len=len(relation_lut),
-                                           node_lut=node_lut)
-    train_loader = DataLoader(dataset=train_dataset, sampler=train_sampler,
-                              batch_size=1024, num_workers=1, shuffle=False)
-    model.set_model_config(model_loss=loss,
-                           model_metric=None,
-                           model_negative_sampler=negative_sampler,
-                           model_device=device, )
-    model = model.cuda(local_rank)
-    model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
-
-    model = DDP(model,
-                device_ids=[local_rank],
-                output_device=local_rank,
-                find_unused_parameters=False,
-                broadcast_buffers=False
-                )
-    total_epoch = 500
-    metric_epoch = 50
-    if local_rank in [-1,0]:
-        logging.basicConfig(level=logging.INFO if local_rank in [-1, 0] else logging.WARN)
-        logger = save_logger("trainer.log")
+    trainer = Trainer(
+        train_dataset=train_dataset,
+        valid_dataset=test_dataset,
+        train_sampler=train_sampler,
+        valid_sampler=test_sampler,
+        model=model,
+        loss=loss,
+        optimizer=optimizer,
+        negative_sampler=negative_sampler,
+        device=device,
+        output_path="../../dataset",
+        lookuptable_E=node_lut,
+        lookuptable_R=relation_lut,
+        metric=metric,
+        lr_scheduler=lr_scheduler,
+        trainer_batch_size=2048 * 2,
+        total_epoch=1000,
+        apex=True,
+        dataloaderX=True,
+        num_workers=1,
+        pin_memory=True,
+        use_tensorboard_epoch=0.1,
+        use_matplotlib_epoch=0.1,
+        use_savemodel_epoch=0.1,
+        use_metric_epoch=10,
+        rank=local_rank,
+    )
     dist.barrier()
+    trainer.train()
 
-    for epoch in range(total_epoch):
-        logging.info("Epoch:{}".format(epoch))
-        if local_rank in [-1,0]:
-            start = time()
-        dist.barrier()
-        train_sampler.set_epoch(epoch)
-        model.train()
-        for train_step, batch in enumerate(train_loader):
-            train_loss = model.module.loss(batch)
-            optimizer.zero_grad()
-            train_loss.backward()
-            optimizer.step()
-        if local_rank in [-1,0]:
-            end = time()
-            # print("Epoch:{} cost {} seconds.".format(epoch+1,end-start))
-            if (epoch+1) % metric_epoch == 0:
-                print("Evaluating Model {} on Valid Dataset...".format(model.module.model_name))
-                valid_model = model.module
-                valid_model.eval()
-                metric.initialize(device=device,
-                                  total_epoch=100,
-                                  metric_type="valid",
-                                  node_dict_len=len(node_lut),
-                                  model_name=valid_model.model_name,
-                                  logger=logger,
-                                  writer=None,
-                                  train_dataset=train_dataset,
-                                  valid_dataset=valid_dataset)
-
-                metric.caculate(model=valid_model, current_epoch=epoch)
-                metric.print_current_table()
-                metric.log()
-                metric.write()
-
-
-
-        dist.barrier()
+    # lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    #     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
+    #     factor=0.5, min_lr=1e-9, verbose=True
+    # )
+    #
+    # train_loader = DataLoader(dataset=train_dataset, sampler=train_sampler,
+    #                           batch_size=1024, num_workers=1, shuffle=False)
+    # model.set_model_config(model_loss=loss,
+    #                        model_metric=None,
+    #                        model_negative_sampler=negative_sampler,
+    #                        model_device=device, )
+    # model = model.cuda(local_rank)
+    # model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+    #
+    # model = DDP(model,
+    #             device_ids=[local_rank],
+    #             output_device=local_rank,
+    #             find_unused_parameters=False,
+    #             broadcast_buffers=False
+    #             )
+    # total_epoch = 500
+    # metric_epoch = 50
+    # if local_rank in [-1,0]:
+    #     logging.basicConfig(level=logging.INFO if local_rank in [-1, 0] else logging.WARN)
+    #     logger = save_logger("trainer.log")
+    # dist.barrier()
+    #
+    # for epoch in range(total_epoch):
+    #     logging.info("Epoch:{}".format(epoch))
+    #     if local_rank in [-1,0]:
+    #         start = time()
+    #     dist.barrier()
+    #     train_sampler.set_epoch(epoch)
+    #     model.train()
+    #     for train_step, batch in enumerate(train_loader):
+    #         train_loss = model.module.loss(batch)
+    #         optimizer.zero_grad()
+    #         train_loss.backward()
+    #         optimizer.step()
+    #     if local_rank in [-1,0]:
+    #         end = time()
+    #         # print("Epoch:{} cost {} seconds.".format(epoch+1,end-start))
+    #         if (epoch+1) % metric_epoch == 0:
+    #             print("Evaluating Model {} on Valid Dataset...".format(model.module.model_name))
+    #             valid_model = model.module
+    #             valid_model.eval()
+    #             metric.initialize(device=device,
+    #                               total_epoch=100,
+    #                               metric_type="valid",
+    #                               node_dict_len=len(node_lut),
+    #                               model_name=valid_model.model_name,
+    #                               logger=logger,
+    #                               writer=None,
+    #                               train_dataset=train_dataset,
+    #                               valid_dataset=valid_dataset)
+    #
+    #             metric.caculate(model=valid_model, current_epoch=epoch)
+    #             metric.print_current_table()
+    #             metric.log()
+    #             metric.write()
+    #
+    #
+    #
+    #     dist.barrier()
 
 
 
