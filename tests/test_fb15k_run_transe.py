@@ -68,7 +68,6 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    lr_scheduler=lr_scheduler,
     trainer_batch_size=2000000,
     total_epoch=2,
     apex=True,

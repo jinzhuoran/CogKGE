@@ -672,7 +672,6 @@ class Trainer(object):
                  lookuptable_E=None,
                  lookuptable_R=None,
                  time_lut=None,
-                 lr_scheduler=None,
                  apex=False,
                  dataloaderX=False,
                  num_workers=0,
@@ -704,7 +703,6 @@ class Trainer(object):
         self.lookuptable_E = lookuptable_E
         self.lookuptable_R = lookuptable_R
         self.time_lut=time_lut
-        self.lr_scheduler = lr_scheduler
         self.apex = apex
         self.dataloaderX = dataloaderX
         self.num_workers = num_workers
@@ -768,7 +766,6 @@ class Trainer(object):
                 self.trained_epoch = int(match.group(1))
                 self.model.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Model.pkl")))
                 self.optimizer.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Optimizer.pkl")))
-                self.lr_scheduler.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Lr_Scheduler.pkl")))
             else:
                 raise FileExistsError("Checkpoint path doesn't exist!")
 
@@ -941,7 +938,6 @@ class Trainer(object):
         model = self.model.module if self.rank == 0 else self.model
         torch.save(model.state_dict(), os.path.join(checkpoint_path, "Model.pkl"))
         torch.save(self.optimizer.state_dict(), os.path.join(checkpoint_path, "Optimizer.pkl"))
-        torch.save(self.lr_scheduler.state_dict(), os.path.join(checkpoint_path, "Lr_Scheduler.pkl"))
 
     def use_matplotlib(self):
         plt.figure()
@@ -967,9 +963,9 @@ class Trainer(object):
             print("Select {} epoch model to evaluate on test dataset".format(self.best_epoch))
             test_model = self.best_model.module if self.rank == 0 else self.best_model
             test_model.eval()
+            self.metric.caculate(model=test_model, current_epoch=self.current_epoch)
             self.metric.total_epoch=0
             self.metric.current_epoch=0
-            self.metric.caculate(model=test_model, current_epoch=self.current_epoch)
             self.metric.print_current_table()
             self.metric.log()
             self.metric.write()
