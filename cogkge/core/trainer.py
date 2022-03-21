@@ -789,7 +789,7 @@ class Trainer(object):
                 raise FileExistsError("Checkpoint path doesn't exist!")
 
         # Set Tensorboard
-        if use_tensorboard_epoch != 0.1:
+        if use_tensorboard_epoch != 0.1 and self.rank in [-1,0]:
             self.writer = SummaryWriter(self.visualization_path)
 
         # Set DataLoader
@@ -809,7 +809,7 @@ class Trainer(object):
                                                 pin_memory=self.pin_memory)
 
         # Set Metric
-        if self.metric:
+        if self.metric and self.rank in [-1,0]:
             self.metric.initialize(device=self.device,
                                    total_epoch=self.total_epoch,
                                    metric_type="valid",
@@ -819,7 +819,7 @@ class Trainer(object):
                                    writer=self.writer,
                                    train_dataset=self.train_dataset,
                                    valid_dataset=self.valid_dataset)
-            if self.metric.link_prediction_filt and self.rank in [-1,0]:
+            if self.metric.link_prediction_filt:
                 self.metric.establish_correct_triplets_dict()
 
         # Set Multi GPU
@@ -834,6 +834,7 @@ class Trainer(object):
             # Train Progress
             train_epoch_loss = 0.0
             if self.rank == -1:
+                self.model.train()
                 for train_step, batch in enumerate(tqdm(self.train_loader)):
                     train_loss = self.model.loss(batch)
                     train_epoch_loss += train_loss.item()
@@ -881,21 +882,24 @@ class Trainer(object):
                                                                                 average_valid_epoch_loss))
 
             # Metric Progress
-            if self.use_metric_epoch and self.current_epoch % self.use_metric_epoch == 0 and self.rank in [-1,0]:
-                self.use_metric()
-            # Tensorboard Process
-            if self.current_epoch % self.use_tensorboard_epoch == 0:
-                self.use_tensorboard(average_train_epoch_loss, average_valid_epoch_loss)
-            # Savemodel Process
-            if self.current_epoch % self.use_savemodel_epoch == 0:
-                self.use_savemodel()
-            # Matlotlib Process
-            if self.current_epoch % self.use_matplotlib_epoch == 0:
-                self.use_matplotlib()
+            if self.rank in [-1,0]:
+                if self.use_metric_epoch and self.current_epoch % self.use_metric_epoch == 0:
+                    self.use_metric()
+                # Tensorboard Process
+                if self.current_epoch % self.use_tensorboard_epoch == 0:
+                    self.use_tensorboard(average_train_epoch_loss, average_valid_epoch_loss)
+                # Savemodel Process
+                if self.current_epoch % self.use_savemodel_epoch == 0:
+                    self.use_savemodel()
+                # Matlotlib Process
+                if self.current_epoch % self.use_matplotlib_epoch == 0:
+                    self.use_matplotlib()
 
     def use_metric(self):
         print("Evaluating Model {} on Valid Dataset...".format(self.model_name))
-        self.metric.caculate(model=self.model, current_epoch=self.current_epoch)
+        valid_model = self.model.module if self.rank == 0 else self.model
+        valid_model.eval()
+        self.metric.caculate(model=valid_model, current_epoch=self.current_epoch)
         self.metric.print_current_table()
         self.metric.log()
         self.metric.write()

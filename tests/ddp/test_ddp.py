@@ -102,10 +102,10 @@ def demo_basic(local_world_size, local_rank):
         dataloaderX=True,
         num_workers=1,
         pin_memory=True,
-        use_tensorboard_epoch=0.1,
-        use_matplotlib_epoch=0.1,
-        use_savemodel_epoch=0.1,
-        use_metric_epoch=10,
+        use_tensorboard_epoch=100,
+        use_matplotlib_epoch=100,
+        use_savemodel_epoch=100,
+        use_metric_epoch=50,
         rank=local_rank,
     )
     dist.barrier()
