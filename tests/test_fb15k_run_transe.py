@@ -39,7 +39,7 @@ metric = Link_Prediction(node_lut=node_lut,
                          relation_lut=relation_lut,
                          link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=10000,
+                         batch_size=1000000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -54,9 +54,11 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
 
 trainer = Trainer(
     train_dataset=train_dataset,
-    valid_dataset=test_dataset,
+    valid_dataset=valid_dataset,
+    test_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=test_sampler,
+    valid_sampler=valid_sampler,
+    test_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
@@ -67,8 +69,8 @@ trainer = Trainer(
     lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    trainer_batch_size=2048 * 2,
-    total_epoch=1000,
+    trainer_batch_size=2000000,
+    total_epoch=2,
     apex=True,
     dataloaderX=True,
     num_workers=1,
