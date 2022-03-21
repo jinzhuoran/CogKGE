@@ -752,6 +752,19 @@ class Trainer(object):
                                     time_dict_len=time_dict_len,
                                     nodetype_dict_len=nodetype_dict_len,
                                     relationtype_dict_len=relationtype_dict_len)
+        # Set Checkpoint
+        if self.checkpoint_path != None:
+            if os.path.exists(self.checkpoint_path):
+                string = self.checkpoint_path
+                pattern = r"^.*?/checkpoints/.*?_(.*?)epochs$"
+                match = re.search(pattern, string)
+                self.trained_epoch = int(match.group(1))
+                self.model.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Model.pkl")))
+                self.optimizer.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Optimizer.pkl")))
+                self.lr_scheduler.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Lr_Scheduler.pkl")))
+            else:
+                raise FileExistsError("Checkpoint path doesn't exist!")
+
         if self.rank == -1:
             self.model = self.model.to(self.device)
         else:
@@ -774,19 +787,6 @@ class Trainer(object):
         # Set log
         self.logger = save_logger(self.log_path,rank=self.rank)
         self.logger.info("Data Experiment Output Path:{}".format(os.path.abspath(self.output_path)))
-
-        # Set Checkpoint
-        if self.checkpoint_path != None:
-            if os.path.exists(self.checkpoint_path):
-                string = self.checkpoint_path
-                pattern = r"^.*?/checkpoints/.*?_(.*?)epochs$"
-                match = re.search(pattern, string)
-                self.trained_epoch = int(match.group(1))
-                self.model.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Model.pkl")))
-                self.optimizer.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Optimizer.pkl")))
-                self.lr_scheduler.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Lr_Scheduler.pkl")))
-            else:
-                raise FileExistsError("Checkpoint path doesn't exist!")
 
         # Set Tensorboard
         if use_tensorboard_epoch != 0.1 and self.rank in [-1,0]:
@@ -915,7 +915,8 @@ class Trainer(object):
                                        "{}_{}epochs".format(self.model_name, self.current_epoch))
         if not os.path.exists(checkpoint_path):
             os.makedirs(checkpoint_path)
-        torch.save(self.model.state_dict(), os.path.join(checkpoint_path, "Model.pkl"))
+        model = self.model.module if self.rank == 0 else self.model
+        torch.save(model.state_dict(), os.path.join(checkpoint_path, "Model.pkl"))
         torch.save(self.optimizer.state_dict(), os.path.join(checkpoint_path, "Optimizer.pkl"))
         torch.save(self.lr_scheduler.state_dict(), os.path.join(checkpoint_path, "Lr_Scheduler.pkl"))
 
