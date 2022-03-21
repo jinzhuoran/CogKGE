@@ -1,6 +1,6 @@
 import logging.config
 
-def save_logger(logfile_path="../dataset/cogkge.log"):
+def save_logger(logfile_path="../dataset/cogkge.log",rank=-1):
 
     standard_format = '[%(asctime)s][%(threadName)s:%(thread)d][task_id:%(name)s][%(filename)s:%(lineno)d]' \
                     '[%(levelname)s][%(message)s]'
@@ -49,6 +49,7 @@ def save_logger(logfile_path="../dataset/cogkge.log"):
 
     # logfile_path = "../dataset/cogkge.log"
     LOGGING_DIC['handlers']['file']['filename'] = logfile_path
+    LOGGING_DIC['loggers']['']['level'] = 'INFO' if rank in [-1,0] else 'WARN'
     logging.config.dictConfig(LOGGING_DIC)
     logger = logging.getLogger(__name__)
     return logger
