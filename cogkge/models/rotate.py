@@ -140,13 +140,6 @@ class RotatE(BaseModel):
         t_embedding = self.e_embedding(data[2])
         return h_embedding, r_embedding, t_embedding
 
-    def penalty(self):
-        # 正则项
-        penalty_loss = torch.tensor(0.0).to(self.model_device)
-        for param in self.parameters():
-            penalty_loss += torch.sum(param ** 2)
-        return self.penalty_weight * penalty_loss
-
     def loss(self, data):
         # 计算损失
         pos_data=data
@@ -157,7 +150,7 @@ class RotatE(BaseModel):
         pos_score = self.forward(pos_data)
         neg_score = self.forward(neg_data)
 
-        return self.model_loss(pos_score, neg_score) + self.penalty()
+        return self.model_loss(pos_score, neg_score) + self.penalty(data)
 
     def data_to_device(self,data):
         for index,item in enumerate(data):

@@ -18,18 +18,17 @@ class MarginLoss(torch.nn.Module):
 
 
 class NegLogLikehoodLoss(torch.nn.Module):
-    def __init__(self, C=0):
+    def __init__(self):
         super(NegLogLikehoodLoss, self).__init__()
-        self.C = C
 
-    def forward(self, positive_score, negative_score, penalty=0):
+    def forward(self, positive_score, negative_score):
         """
         positive_score: (batch,)
         negative_score: (batch,)
         """
         softplus = lambda x: torch.log(1 + torch.exp(x))
         output = softplus(- positive_score) + softplus(negative_score)  # (batch,)
-        return torch.mean(output) + self.C * penalty
+        return torch.mean(output)
 
 
 class NegSamplingLoss(torch.nn.Module):

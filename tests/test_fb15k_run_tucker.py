@@ -10,13 +10,13 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-device=init_cogkge(device_id="7",seed=1)
+device=init_cogkge(device_id="6",seed=1)
 
 loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut= loader.load_all_lut()
 
-processor = FB15KProcessor(node_lut, relation_lut,reprocess=True,mode="normal")
+processor = FB15KProcessor(node_lut, relation_lut,reprocess=True,mode="normal",train_pattern="classification_based")
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
@@ -25,19 +25,23 @@ node_lut,relation_lut=processor.process_lut()
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
- 
-model = SimplE(entity_dict_len=len(node_lut),
-               relation_dict_len=len(relation_lut),
-               embedding_dim=50)
 
-loss = NegLogLikehoodLoss(C=0.03)
+model=TuckER(entity_dict_len=len(node_lut),
+             relation_dict_len=len(relation_lut),
+             d1=50,
+             d2=50)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
+loss = torch.nn.BCELoss()
 
-metric = Link_Prediction(link_prediction_raw=True,
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+
+metric = Link_Prediction(node_lut=node_lut,
+                         relation_lut=relation_lut,
+                         link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=50000,
-                         reverse=True)
+                         batch_size=1000000,
+                         reverse=False,
+                         metric_pattern="classification_based")
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
@@ -46,7 +50,8 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
 
 negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
+                                       relation_dict_len=len(relation_lut),
+                                       node_lut=node_lut)
 
 trainer = Trainer(
     train_dataset=train_dataset,
@@ -64,7 +69,7 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    trainer_batch_size=2000000,
+    trainer_batch_size=20000,
     total_epoch=2,
     lr_scheduler=lr_scheduler,
     apex=True,
