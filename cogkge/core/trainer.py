@@ -667,10 +667,11 @@ class Trainer(object):
                  total_epoch,
                  device,
                  output_path,
+                 test_dataset=None,
+                 test_sampler=None,
                  lookuptable_E=None,
                  lookuptable_R=None,
                  time_lut=None,
-                 lr_scheduler=None,
                  apex=False,
                  dataloaderX=False,
                  num_workers=0,
@@ -697,10 +698,11 @@ class Trainer(object):
         self.device = device
         self.output_path = cal_output_path(os.path.join(output_path, train_dataset.data_name),
                                            self.model.model_name) + "--{}epochs".format(total_epoch)
+        self.test_dataset=test_dataset
+        self.test_sampler = test_sampler
         self.lookuptable_E = lookuptable_E
         self.lookuptable_R = lookuptable_R
         self.time_lut=time_lut
-        self.lr_scheduler = lr_scheduler
         self.apex = apex
         self.dataloaderX = dataloaderX
         self.num_workers = num_workers
@@ -718,11 +720,14 @@ class Trainer(object):
         self.writer = None  # tensorboard
         self.trained_epoch = 0  # 已经训练的轮数
         self.logger = None  # log
-        self.visualization_path = os.path.join(self.output_path, "visualization", self.model.model_name)
-        self.log_path = os.path.join(self.output_path, "trainer_run.log")
+        self.visualization_path = os.path.join(self.output_path, "visualization", self.model.model_name) #可视化路径
+        self.log_path = os.path.join(self.output_path, "trainer_run.log") #log路径
         self.data_name = train_dataset.data_name
         self.model_name = self.model.model_name
         self.rank = rank
+        self.best_model=None #最好的模型
+        self.best_metric=None #最好的验证指标
+        self.best_epoch=0 #最好的轮数
 
         # Set path
         if self.rank in [-1,0]:
@@ -761,7 +766,6 @@ class Trainer(object):
                 self.trained_epoch = int(match.group(1))
                 self.model.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Model.pkl")))
                 self.optimizer.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Optimizer.pkl")))
-                self.lr_scheduler.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Lr_Scheduler.pkl")))
             else:
                 raise FileExistsError("Checkpoint path doesn't exist!")
 
@@ -799,7 +803,11 @@ class Trainer(object):
                                             pin_memory=self.pin_memory)
             self.valid_loader = DataLoaderX(dataset=self.valid_dataset, sampler=self.valid_sampler,
                                             batch_size=self.trainer_batch_size, num_workers=self.num_workers,
-                                                   pin_memory=self.pin_memory)
+                                            pin_memory=self.pin_memory)
+            if self.test_dataset and self.test_sampler:
+                self.test_loader = DataLoaderX(dataset=self.test_dataset, sampler=self.test_sampler,
+                                               batch_size=self.trainer_batch_size, num_workers=self.num_workers,
+                                               pin_memory=self.pin_memory)
         else:
             self.train_loader = Data.DataLoader(dataset=self.train_dataset, sampler=self.train_sampler,
                                                 batch_size=self.trainer_batch_size, num_workers=self.num_workers,
@@ -807,6 +815,10 @@ class Trainer(object):
             self.valid_loader = Data.DataLoader(dataset=self.valid_dataset, sampler=self.valid_sampler,
                                                 batch_size=self.trainer_batch_size, num_workers=self.num_workers,
                                                 pin_memory=self.pin_memory)
+            if self.test_dataset and self.test_sampler:
+                self.test_loader = Data.DataLoader(dataset=self.test_dataset, sampler=self.test_sampler,
+                                                   batch_size=self.trainer_batch_size, num_workers=self.num_workers,
+                                                   pin_memory=self.pin_memory)
 
         # Set Metric
         if self.metric and self.rank in [-1,0]:
@@ -818,12 +830,12 @@ class Trainer(object):
                                    logger=self.logger,
                                    writer=self.writer,
                                    train_dataset=self.train_dataset,
-                                   valid_dataset=self.valid_dataset)
+                                   valid_dataset=self.valid_dataset,
+                                   test_dataset=self.test_dataset)
             if self.metric.link_prediction_filt:
                 self.metric.establish_correct_triplets_dict()
 
         # Set Multi GPU
-
     def train(self):
         if self.total_epoch <= self.trained_epoch:
             raise ValueError("Trained_epoch is bigger than total_epoch!")
@@ -896,6 +908,10 @@ class Trainer(object):
                 if self.current_epoch % self.use_matplotlib_epoch == 0:
                     self.use_matplotlib()
 
+        # Summary Train Progress
+        self.summary_final_metric()
+        self.evaluate_on_test_dataset()
+
     def use_metric(self):
         print("Evaluating Model {} on Valid Dataset...".format(self.model_name))
         valid_model = self.model.module if self.rank == 0 else self.model
@@ -905,6 +921,10 @@ class Trainer(object):
         self.metric.log()
         self.metric.write()
         print("-----------------------------------------------------------------------")
+        if self.metric.current_model_is_better(self.best_metric) or self.best_metric == None:
+            self.best_model = self.model
+            self.best_metric = self.metric.get_current_metric()
+            self.best_epoch=self.current_epoch
 
     def use_tensorboard(self, average_train_epoch_loss, average_valid_epoch_loss):
         self.writer.add_scalars("Loss", {"train_loss": average_train_epoch_loss,
@@ -919,7 +939,6 @@ class Trainer(object):
         model = self.model.module if self.rank == 0 else self.model
         torch.save(model.state_dict(), os.path.join(checkpoint_path, "Model.pkl"))
         torch.save(self.optimizer.state_dict(), os.path.join(checkpoint_path, "Optimizer.pkl"))
-        torch.save(self.lr_scheduler.state_dict(), os.path.join(checkpoint_path, "Lr_Scheduler.pkl"))
 
     def use_matplotlib(self):
         plt.figure()
@@ -934,3 +953,25 @@ class Trainer(object):
         plt.yscale('log')
         plt.legend(loc="upper right")
         plt.show()
+
+    def summary_final_metric(self):
+        self.metric.print_best_table()
+
+    def evaluate_on_test_dataset(self):
+        if self.test_dataset and self.test_sampler:
+            self.metric.metric_type="test"
+            print("Evaluating Model {} on Test Dataset...".format(self.model_name))
+            print("Select {} epoch model to evaluate on test dataset".format(self.best_epoch))
+            test_model = self.best_model.module if self.rank == 0 else self.best_model
+            test_model.eval()
+            self.metric.caculate(model=test_model, current_epoch=self.current_epoch)
+            self.metric.total_epoch=0
+            self.metric.current_epoch=0
+            self.metric.print_current_table()
+            self.metric.log()
+            self.metric.write()
+            print("-----------------------------------------------------------------------")
+
+
+
+
