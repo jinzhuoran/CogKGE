@@ -125,7 +125,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-device=init_cogkge(device_id="7",seed=1)
+device=init_cogkge(device_id="8",seed=1)
 
 loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -144,11 +144,11 @@ test_sampler = RandomSampler(test_dataset)
 
 model = RotatE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=1000,
-               gamma=24)
+               embedding_dim=50,
+               gamma=12)
 loss = NegSamplingLoss(alpha=1,neg_per_pos=256)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
@@ -165,16 +165,13 @@ negative_sampler = AdversarialSampler(triples=train_dataset,
                                       relation_dict_len=len(relation_lut),
                                       neg_per_pos=256)
 
-# negative_sampler = UnifNegativeSampler(triples=train_dataset,
-#                                        entity_dict_len=len(node_lut),
-#                                        relation_dict_len=len(relation_lut),
-#                                        node_lut=node_lut)
-
 trainer = Trainer(
     train_dataset=train_dataset,
-    valid_dataset=test_dataset,
+    valid_dataset=valid_dataset,
+    test_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=test_sampler,
+    valid_sampler=valid_sampler,
+    test_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
@@ -184,16 +181,16 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    lr_scheduler=lr_scheduler,
     trainer_batch_size=1024,
-    total_epoch=1000,
+    total_epoch=2,
+    lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
-    num_workers=1,
+    num_workers=4,
     pin_memory=True,
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
     use_savemodel_epoch=100,
-    use_metric_epoch=30
+    use_metric_epoch=1
 )
 trainer.train()
