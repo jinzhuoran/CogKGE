@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-device=init_cogkge(device_id="5",seed=1)
+device=init_cogkge(device_id="4",seed=0)
 
 loader =COGNET360KLoader(dataset_path="../../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -35,7 +35,7 @@ model = TransE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50)
 
-loss = MarginLoss(margin=1.0,C=0)
+loss = MarginLoss(margin=1.0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
@@ -69,16 +69,16 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    # lr_scheduler=lr_scheduler,
-    trainer_batch_size=100000,
+    lr_scheduler=lr_scheduler,
+    trainer_batch_size=1024,
     total_epoch=1000,
     apex=True,
     dataloaderX=True,
     num_workers=1,
     pin_memory=True,
-    use_tensorboard_epoch=100,
-    use_matplotlib_epoch=100,
-    use_savemodel_epoch=100,
+    use_tensorboard_epoch=50,
+    use_matplotlib_epoch=50,
+    use_savemodel_epoch=50,
     use_metric_epoch=50
 )
 trainer.train()
