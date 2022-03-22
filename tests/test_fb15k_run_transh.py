@@ -29,9 +29,10 @@ test_sampler = RandomSampler(test_dataset)
 model = TransH(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50,
-               p_norm=1)
+               p_norm=1,
+               penalty_weight=0.3)
 
-loss = MarginLoss(margin=1.0,C=0)
+loss = MarginLoss(margin=1.0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 

@@ -30,7 +30,7 @@ model = Rescal(entity_dict_len=len(node_lut),
              relation_dict_len=len(relation_lut),
              embedding_dim=50)
 
-loss = MarginLoss(margin=1.0,C=0)
+loss = MarginLoss(margin=1.0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
