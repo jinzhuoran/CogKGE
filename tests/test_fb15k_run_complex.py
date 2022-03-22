@@ -32,8 +32,9 @@ valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
 model = ComplEx(entity_dict_len=len(node_lut),
-               relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+                relation_dict_len=len(relation_lut),
+                embedding_dim=50,
+                penalty_weight=0.1)
 
 loss = NegLogLikehoodLoss()
 
@@ -55,9 +56,11 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
 
 trainer = Trainer(
     train_dataset=train_dataset,
-    valid_dataset=test_dataset,
+    valid_dataset=valid_dataset,
+    test_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=test_sampler,
+    valid_sampler=valid_sampler,
+    test_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
@@ -67,17 +70,17 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
+    trainer_batch_size=1024,
+    total_epoch=2,
     lr_scheduler=lr_scheduler,
-    trainer_batch_size=4096,
-    total_epoch=1000,
     apex=True,
     dataloaderX=True,
-    num_workers=1,
+    num_workers=4,
     pin_memory=True,
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
     use_savemodel_epoch=100,
-    use_metric_epoch=50,
+    use_metric_epoch=50
 )
 trainer.train()
 
