@@ -27,8 +27,8 @@ valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
  
 model = SimplE(entity_dict_len=len(node_lut),
-             relation_dict_len=len(relation_lut),
-             embedding_dim=50)
+               relation_dict_len=len(relation_lut),
+               embedding_dim=50)
 
 loss = NegLogLikehoodLoss(C=0.03)
 
