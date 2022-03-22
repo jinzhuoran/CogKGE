@@ -1,5 +1,5 @@
 # command:python -m torch.distributed.launch --nproc_per_node 2 test_ddp.py
-# or choose specific gpus: CUDA_VISIBLE_DEVICES="2,3,4,5,6,7,8,9"  python -m torch.distributed.launch --nproc_per_node 8 test_ddp.py
+# or choose specific gpus: CUDA_VISIBLE_DEVICES="4,5,6,7"  python -m torch.distributed.launch --nproc_per_node 4 test_ddp.py
 
 
 import sys
@@ -97,7 +97,7 @@ def demo_basic(local_world_size, local_rank):
         lookuptable_R=relation_lut,
         metric=metric,
         lr_scheduler=lr_scheduler,
-        trainer_batch_size=2048 * 2,
+        trainer_batch_size=128,
         total_epoch=500,
         apex=True,
         dataloaderX=False,
