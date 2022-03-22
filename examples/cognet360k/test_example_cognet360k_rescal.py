@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-pdevice=init_cogkge(device_id="9",seed=0)
+device=init_cogkge(device_id="9",seed=0)
 
 loader =COGNET360KLoader(dataset_path="../../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
