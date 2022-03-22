@@ -32,7 +32,7 @@ model = TransR(entity_dict_len=len(node_lut),
                relation_embedding_dim=50,
                p_norm=1)
 
-loss = MarginLoss(margin=1.0,C=0)
+loss = MarginLoss(margin=1.0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 

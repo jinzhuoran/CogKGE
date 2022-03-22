@@ -111,16 +111,14 @@ class TransH(BaseModel):
         # 前向传播
         r=data[1]
         h_embedding, r_embedding, t_embedding = self.get_triplet_embedding(data=data)
-        h_transfer=self.w(r)
-        t_transfer=self.w(r)
+        w=self.w(r)
 
         h_embedding = F.normalize(h_embedding, p=2, dim=1)
         t_embedding = F.normalize(t_embedding, p=2, dim=1)
-        h_transfer = F.normalize(h_transfer, p=2, dim=1)
-        t_transfer = F.normalize(t_transfer, p=2, dim=1)
+        w = F.normalize(w, p=2, dim=1)
 
-        h_embedding=h_embedding-torch.sum(h_embedding*h_transfer,dim=1,keepdim=True)*h_embedding
-        t_embedding=t_embedding-torch.sum(t_embedding*t_transfer,dim=1,keepdim=True)*t_embedding
+        h_embedding=h_embedding-torch.sum(h_embedding*w,dim=1,keepdim=True)*h_embedding
+        t_embedding=t_embedding-torch.sum(t_embedding*w,dim=1,keepdim=True)*t_embedding
 
         score = F.pairwise_distance(h_embedding + r_embedding, t_embedding, p=self.p_norm)
 
@@ -159,4 +157,13 @@ class TransH(BaseModel):
         neg_score = self.forward(neg_data)
 
         return self.model_loss(pos_score, neg_score) + self.penalty(data)
+
+    def penalty(self,data):
+        batch_h, batch_r, batch_t = data[0], data[1], data[2]
+        h = self.h_embedding(batch_h)
+        r = self.r_embedding(batch_r)
+        t = self.t_embedding(batch_t)
+        w= self.w (batch_r)
+        penalty=(torch.mean(h ** 2) +torch.mean(t ** 2) +torch.mean(r ** 2) +torch.mean(w ** 2)) / 4
+        return penalty
 

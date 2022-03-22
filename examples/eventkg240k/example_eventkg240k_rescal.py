@@ -35,7 +35,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=500000,
                          reverse=False)
 
 negative_sampler = UnifNegativeSampler(triples=train_dataset,
@@ -67,6 +67,6 @@ trainer = Trainer(
     use_tensorboard_epoch=200,
     use_matplotlib_epoch=200,
     use_savemodel_epoch=200,
-    use_metric_epoch=200
+    use_metric_epoch=1
 )
 trainer.train()

@@ -128,7 +128,6 @@ class TransR(BaseModel):
     # @graph_adapter
     # @type_adapter
     # @time_adapter
-
     def get_triplet_embedding(self, data):
         # 得到三元组的embedding
         h_embedding = self.e_embedding(data[0])

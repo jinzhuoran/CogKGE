@@ -12,9 +12,9 @@ class TuckER(BaseModel):
                  relation_dict_len,
                  d1,
                  d2,
-                 input_dropout=0.3,
-                 hidden_dropout1=0.4,
-                 hidden_dropout2=0.5,
+                 input_dropout=0.2,
+                 hidden_dropout1=0.2,
+                 hidden_dropout2=0.3,
                  penalty_weight=0.0):
         super().__init__(model_name="TuckER",penalty_weight=penalty_weight)
         self.entity_dict_len=entity_dict_len

@@ -28,11 +28,12 @@ test_sampler = RandomSampler(test_dataset)
  
 model = SimplE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+               embedding_dim=50,
+               penalty_weight=0)
 
-loss = NegLogLikehoodLoss(C=0.03)
+loss = NegLogLikehoodLoss()
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
@@ -64,8 +65,8 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    trainer_batch_size=2000000,
-    total_epoch=2,
+    trainer_batch_size=2000,
+    total_epoch=100,
     lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
@@ -74,7 +75,7 @@ trainer = Trainer(
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
     use_savemodel_epoch=100,
-    use_metric_epoch=1
+    use_metric_epoch=25
 )
 trainer.train()
 

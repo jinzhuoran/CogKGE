@@ -17,9 +17,6 @@ __all__ = [
 
     # loss
     "MarginLoss",
-    "RotatELoss",
-    "TuckERLoss",
-    # "KEPLERLoss",
     "NegLogLikehoodLoss",
     "NegSamplingLoss",
 
