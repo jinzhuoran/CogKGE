@@ -862,6 +862,7 @@ class Trainer(object):
                         train_loss.backward()
                     self.optimizer.step()
             else:
+                self.logger.info("hahahahahah  Epoch:{}".format(self.current_epoch))
                 self.train_sampler.set_epoch(epoch)
                 self.model.train()
                 for train_step, batch in enumerate(self.train_loader):
