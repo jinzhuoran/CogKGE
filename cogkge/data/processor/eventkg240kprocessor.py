@@ -13,7 +13,8 @@ from ..vocabulary import Vocabulary
 
 
 class EVENTKG240KProcessor(BaseProcessor):
-    def __init__(self, node_lut, relation_lut, time_lut,mode,
+    def __init__(self, node_lut, relation_lut, time_lut,
+                 mode,
                  reprocess=True,
                  # time=False, nodetype=False, description=False,,relationtype=False,
                  graph=False,
@@ -30,6 +31,7 @@ class EVENTKG240KProcessor(BaseProcessor):
         self.time_lut = time_lut
         self.time_vocab = time_lut.vocab
         self.relationtype = node_dict["type"]
+        self.mode=mode
 
         self.time_unit = time_unit
         self.pre_training_model_name = pretrain_model_name
@@ -164,6 +166,7 @@ class EVENTKG240KProcessor(BaseProcessor):
                                   lookuptable_R=self.relation_lut,
                                   node_type=self.nodetype,
                                   descriptions=self.description,
+                                  mode=self.mode,
                                   time=self.time,
                                   relation_type=self.relationtype,
                                   )

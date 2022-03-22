@@ -27,7 +27,8 @@ test_sampler = RandomSampler(test_dataset)
 
 model = TransE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+               embedding_dim=50,
+               p_norm=1)
 
 loss = MarginLoss(margin=1.0, C=0)
 
@@ -38,20 +39,22 @@ metric = Link_Prediction(link_prediction_raw=True,
                          batch_size=5000000,
                          reverse=False)
 
+negative_sampler = UnifNegativeSampler(triples=train_dataset,
+                                       entity_dict_len=len(node_lut),
+                                       relation_dict_len=len(relation_lut))
+
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
     factor=0.5, min_lr=1e-9, verbose=True
 )
 
-negative_sampler = UnifNegativeSampler(triples=train_dataset,
-                                       entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
-
 trainer = Trainer(
     train_dataset=train_dataset,
-    valid_dataset=test_dataset,
+    valid_dataset=valid_dataset,
+    test_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=test_sampler,
+    valid_sampler=valid_sampler,
+    test_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
@@ -61,19 +64,16 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    lr_scheduler=lr_scheduler,
-    log=True,
     trainer_batch_size=100000,
-    epoch=3000,
-    visualization=1,
+    total_epoch=5,
+    lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=200,
-    save_step=200,
-    metric_final_model=True,
-    save_final_model=True,
-    load_checkpoint=None
+    use_tensorboard_epoch=200,
+    use_matplotlib_epoch=200,
+    use_savemodel_epoch=200,
+    use_metric_epoch=6
 )
 trainer.train()

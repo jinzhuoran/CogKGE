@@ -672,6 +672,7 @@ class Trainer(object):
                  lookuptable_E=None,
                  lookuptable_R=None,
                  time_lut=None,
+                 lr_scheduler=None,
                  apex=False,
                  dataloaderX=False,
                  num_workers=0,
@@ -703,6 +704,7 @@ class Trainer(object):
         self.lookuptable_E = lookuptable_E
         self.lookuptable_R = lookuptable_R
         self.time_lut=time_lut
+        self.lr_scheduler=lr_scheduler
         self.apex = apex
         self.dataloaderX = dataloaderX
         self.num_workers = num_workers
@@ -766,6 +768,7 @@ class Trainer(object):
                 self.trained_epoch = int(match.group(1))
                 self.model.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Model.pkl")))
                 self.optimizer.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Optimizer.pkl")))
+                self.lr_scheduler.load_state_dict(torch.load(os.path.join(self.checkpoint_path, "Lr_Scheduler.pkl")))
             else:
                 raise FileExistsError("Checkpoint path doesn't exist!")
 
@@ -901,7 +904,7 @@ class Trainer(object):
                 if self.current_epoch % self.use_tensorboard_epoch == 0:
                     self.use_tensorboard(average_train_epoch_loss, average_valid_epoch_loss)
                 # Savemodel Process
-                if self.current_epoch % self.use_savemodel_epoch == 0:
+                if self.current_epoch % self.use_savemodel_epoch == 0 or (self.current_epoch!=0.1 and self.current_epoch==self.total_epoch):
                     self.use_savemodel()
                 # Matlotlib Process
                 if self.current_epoch % self.use_matplotlib_epoch == 0:
@@ -938,6 +941,7 @@ class Trainer(object):
         model = self.model.module if self.rank == 0 else self.model
         torch.save(model.state_dict(), os.path.join(checkpoint_path, "Model.pkl"))
         torch.save(self.optimizer.state_dict(), os.path.join(checkpoint_path, "Optimizer.pkl"))
+        torch.save(self.lr_scheduler.state_dict(), os.path.join(checkpoint_path, "Lr_Scheduler.pkl"))
 
     def use_matplotlib(self):
         plt.figure()
@@ -959,8 +963,8 @@ class Trainer(object):
     def evaluate_on_test_dataset(self):
         if self.test_dataset and self.test_sampler:
             self.metric.metric_type="test"
-            print("Evaluating Model {} on Test Dataset...".format(self.model_name))
-            print("Select {} epoch model to evaluate on test dataset".format(self.best_epoch))
+            self.logger.info("Evaluating Model {} on Test Dataset...".format(self.model_name))
+            self.logger.info("Select {} epoch model to evaluate on test dataset".format(self.best_epoch))
             test_model = self.best_model.module if self.rank == 0 else self.best_model
             test_model.eval()
             self.metric.caculate(model=test_model, current_epoch=self.current_epoch)
