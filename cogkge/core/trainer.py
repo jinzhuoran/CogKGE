@@ -862,7 +862,7 @@ class Trainer(object):
                         train_loss.backward()
                     self.optimizer.step()
             else:
-                self.logger.info("hahahahahah  Epoch:{}".format(self.current_epoch))
+                # self.logger.info("hahahahahah  Epoch:{}".format(self.current_epoch))
                 self.train_sampler.set_epoch(epoch)
                 self.model.train()
                 for train_step, batch in enumerate(self.train_loader):
@@ -911,9 +911,10 @@ class Trainer(object):
                 if self.current_epoch % self.use_matplotlib_epoch == 0:
                     self.use_matplotlib()
 
-        # Summary Train Progress
-        self.summary_final_metric()
-        self.evaluate_on_test_dataset()
+        if self.rank in [-1,0]:
+            # Summary Train Progress
+            self.summary_final_metric()
+            self.evaluate_on_test_dataset()
 
     def use_metric(self):
         print("Evaluating Model {} on Valid Dataset...".format(self.model_name))

@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-device=init_cogkge(device_id="4",seed=1)
+device=init_cogkge(device_id="9",seed=1)
 
 loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -32,10 +32,11 @@ valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
 model = ComplEx(entity_dict_len=len(node_lut),
-               relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+                relation_dict_len=len(relation_lut),
+                embedding_dim=50,
+                penalty_weight=0.1)
 
-loss = NegLogLikehoodLoss(C=0.1)
+loss = NegLogLikehoodLoss()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
@@ -55,53 +56,32 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
 
 trainer = Trainer(
     train_dataset=train_dataset,
-    valid_dataset=test_dataset,
+    valid_dataset=valid_dataset,
+    test_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=test_sampler,
+    valid_sampler=valid_sampler,
+    test_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
     negative_sampler=negative_sampler,
     device=device,
     output_path="../dataset",
-    lookuptable_E= node_lut,
-    lookuptable_R= relation_lut,
+    lookuptable_E=node_lut,
+    lookuptable_R=relation_lut,
     metric=metric,
+    trainer_batch_size=1024,
+    total_epoch=2,
     lr_scheduler=lr_scheduler,
-    log=True,
-    trainer_batch_size=100000,
-    epoch=1000,
-    visualization=False,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    metric_step=100,
-    save_step=100,
-    metric_final_model=True,
-    save_final_model=True,
-    load_checkpoint= None
+    use_tensorboard_epoch=100,
+    use_matplotlib_epoch=100,
+    use_savemodel_epoch=100,
+    use_metric_epoch=50
 )
 trainer.train()
-
-evaluator = Evaluator(
-    test_dataset=test_dataset,
-    test_sampler=test_sampler,
-    model=model,
-    device=device,
-    metric=metric,
-    output_path="../dataset",
-    train_dataset=train_dataset,
-    valid_dataset=valid_dataset,
-    lookuptable_E= node_lut,
-    lookuptable_R= relation_lut,
-    log=True,
-    evaluator_batch_size=50000,
-    dataloaderX=True,
-    num_workers= 4,
-    pin_memory=True,
-    trained_model_path=None
-)
-evaluator.evaluate()
 
 
