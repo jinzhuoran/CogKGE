@@ -925,9 +925,10 @@ class Trainer(object):
         self.metric.write()
         print("-----------------------------------------------------------------------")
         if self.metric.current_model_is_better(self.best_metric) or self.best_metric == None:
-            checkpoint_path=os.path.join(self.output_path, "checkpoints","best_model_{}_{}epochs".format(self.model_name, self.current_epoch))
+            checkpoint_path=os.path.join(self.output_path, "checkpoints","best_model_{}".format(self.model_name))
             if not os.path.exists(checkpoint_path):
                 os.makedirs(checkpoint_path)
+            self.logger.info("save {} epoch model as best model".format(self.current_epoch))
             torch.save(self.model.state_dict(), os.path.join(checkpoint_path, "Model.pkl"))
             self.best_metric = self.metric.get_current_metric()
             self.best_epoch=self.current_epoch
@@ -969,8 +970,7 @@ class Trainer(object):
             self.metric.metric_type="test"
             self.logger.info("Evaluating Model {} on Test Dataset...".format(self.model_name))
             self.logger.info("Select {} epoch model to evaluate on test dataset".format(self.best_epoch))
-            self.model.load_state_dict(torch.load(os.path.join(os.path.join(self.output_path, "checkpoints",
-                                                                            "best_model_{}_{}epochs".format(self.model_name, self.best_epoch)), "Model.pkl")))
+            self.model.load_state_dict(torch.load(os.path.join(os.path.join(self.output_path, "checkpoints","best_model_{}".format(self.model_name)), "Model.pkl")))
             test_model = self.model.module if self.rank == 0 else self.model
             test_model.eval()
             self.metric.caculate(model=test_model, current_epoch=self.current_epoch)
