@@ -80,7 +80,7 @@ trainer = Trainer(
     use_tensorboard_epoch=50,
     use_matplotlib_epoch=50,
     use_savemodel_epoch=50,
-    use_metric_epoch=1,
+    use_metric_epoch=50,
 )
 trainer.train()
 
