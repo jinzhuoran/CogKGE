@@ -40,7 +40,7 @@ class Rescal(BaseModel):
         return h_embedding, r_embedding, t_embedding
 
     def forward(self, data):
-        batch_h, batch_r, batch_t = data[:, 0], data[:, 1], data[:, 2]
+        batch_h, batch_r, batch_t = data[ 0], data[1], data[2]
         A = self.entity_embedding(batch_h)  # (batch,embedding)
         A = F.normalize(A, p=2, dim=-1)
         R = self.relation_embedding(batch_r).view(-1, self.embedding_dim,self.embedding_dim)  # (batch,embedding,embedding)
