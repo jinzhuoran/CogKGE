@@ -160,9 +160,9 @@ class TransH(BaseModel):
 
     def penalty(self,data):
         batch_h, batch_r, batch_t = data[0], data[1], data[2]
-        h = self.h_embedding(batch_h)
+        h = self.e_embedding(batch_h)
         r = self.r_embedding(batch_r)
-        t = self.t_embedding(batch_t)
+        t = self.e_embedding(batch_t)
         w= self.w (batch_r)
         penalty=(torch.mean(h ** 2) +torch.mean(t ** 2) +torch.mean(r ** 2) +torch.mean(w ** 2)) / 4
         return penalty
