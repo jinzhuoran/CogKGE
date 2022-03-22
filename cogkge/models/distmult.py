@@ -46,9 +46,9 @@ class DistMult(BaseModel):
 
     def get_penalty(self):
         penalty = (
-                          torch.mean(self.head_batch_embedding ** 2,dim=-1) +
-                          torch.mean(self.relation_batch_embedding ** 2,dim=-1) +
-                          torch.mean(self.tail_batch_embedding ** 2,dim=-1)
+                          torch.mean(self.head_batch_embedding ** 2) +
+                          torch.mean(self.relation_batch_embedding ** 2) +
+                          torch.mean(self.tail_batch_embedding ** 2)
                   ) / 3
         return penalty
 
