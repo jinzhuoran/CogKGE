@@ -508,9 +508,9 @@ class Link_Prediction(object):
                         self._current_result["Filt_Hits10"],
                         self._current_result["Filt_MR"],
                         self._current_result["Filt_MRR"]])
-        print(tb)
+        self.logger.info(tb)
 
-    def print_best_table(self, front=3):
+    def print_best_table(self, front=5):
         front = len(self._metric_result_list) if len(self._metric_result_list) < front else front
         strat_index = 5 if self.link_prediction_raw and self.link_prediction_filt else 0
         type_dict = {"Raw_Hits@1": [1, True],
@@ -532,23 +532,23 @@ class Link_Prediction(object):
                        "5th"]
         tb = pt.PrettyTable()
         tb.field_names = table_title[:front + 2]
-        last_result = self._metric_result_list[-1]
-        self._metric_result_list.sort(key=lambda x: x[type_dict[self.key_metric][0]], reverse=type_dict[self.key_metric][1])
-        self._metric_result_list = [last_result] + self._metric_result_list
-        result_list_T = np.array(self._metric_result_list).T.tolist()
-        table_row_title = list()
-        raw_table_row_title = list()
-        filt_table_row_title = list()
-        if self.link_prediction_raw:
-            raw_table_row_title = ["Raw_Hits@1", "Raw_Hits@3", "Raw_Hits@10", "Raw_MR", "Raw_MRR"]
-        if self.link_prediction_filt:
-            filt_table_row_title = ["Filt_Hits@1", "Filt_Hits@3", "Filt_Hits@10", "Filt_MR", "Filt_MRR"]
-        if self.link_prediction_raw or self.link_prediction_filt:
-            table_row_title = ["Epoch"] + raw_table_row_title + filt_table_row_title
-        for i in range(len(table_row_title)):
-            tb.add_row([table_row_title[i]] + result_list_T[i][:front + 1])
-        self.logger.info("\n")
-        self.logger.info(tb)
+        if len(self._metric_result_list) >0:
+            last_result = self._metric_result_list[-1]
+            self._metric_result_list.sort(key=lambda x: x[type_dict[self.key_metric][0]], reverse=type_dict[self.key_metric][1])
+            self._metric_result_list = [last_result] + self._metric_result_list
+            result_list_T = np.array(self._metric_result_list).T.tolist()
+            table_row_title = list()
+            raw_table_row_title = list()
+            filt_table_row_title = list()
+            if self.link_prediction_raw:
+                raw_table_row_title = ["Raw_Hits@1", "Raw_Hits@3", "Raw_Hits@10", "Raw_MR", "Raw_MRR"]
+            if self.link_prediction_filt:
+                filt_table_row_title = ["Filt_Hits@1", "Filt_Hits@3", "Filt_Hits@10", "Filt_MR", "Filt_MRR"]
+            if self.link_prediction_raw or self.link_prediction_filt:
+                table_row_title = ["Epoch"] + raw_table_row_title + filt_table_row_title
+            for i in range(len(table_row_title)):
+                tb.add_row([table_row_title[i]] + result_list_T[i][:front + 1])
+            self.logger.info(tb)
         # if self.link_prediction_raw:
         #     self.logger.info(tb)
         # self.logger.info("Best: Epoch {}  Raw_Hits@1:{}   Raw_Hits@3:{}   Raw_Hits@10:{}   Raw_MR:{}   Raw_MRR:{}".format(

@@ -66,6 +66,7 @@ trainer = Trainer(
     metric=metric,
     trainer_batch_size=100000,
     total_epoch=3000,
+    lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
     num_workers=4,

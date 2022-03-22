@@ -65,7 +65,7 @@ trainer = Trainer(
     lookuptable_R=relation_lut,
     metric=metric,
     trainer_batch_size=100000,
-    total_epoch=5,
+    total_epoch=3000,
     lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
@@ -74,6 +74,6 @@ trainer = Trainer(
     use_tensorboard_epoch=200,
     use_matplotlib_epoch=200,
     use_savemodel_epoch=200,
-    use_metric_epoch=6
+    use_metric_epoch=200
 )
 trainer.train()

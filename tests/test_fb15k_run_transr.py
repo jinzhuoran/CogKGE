@@ -26,9 +26,10 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransH(entity_dict_len=len(node_lut),
+model = TransR(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=50,
+               entity_embedding_dim=50,
+               relation_embedding_dim=50,
                p_norm=1)
 
 loss = MarginLoss(margin=1.0,C=0)
@@ -68,11 +69,12 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    trainer_batch_size=2000000,
+    trainer_batch_size=20000,
     total_epoch=2,
+    lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
-    num_workers=1,
+    num_workers=4,
     pin_memory=True,
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
@@ -80,4 +82,5 @@ trainer = Trainer(
     use_metric_epoch=1
 )
 trainer.train()
+
 

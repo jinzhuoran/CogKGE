@@ -70,9 +70,10 @@ trainer = Trainer(
     metric=metric,
     trainer_batch_size=2000000,
     total_epoch=2,
+    lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
-    num_workers=1,
+    num_workers=4,
     pin_memory=True,
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
@@ -80,4 +81,5 @@ trainer = Trainer(
     use_metric_epoch=1
 )
 trainer.train()
+
 
