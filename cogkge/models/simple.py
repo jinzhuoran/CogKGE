@@ -107,13 +107,6 @@ class SimplE(BaseModel):
         t_ = self.t_embedding(batch_h)
         return torch.norm(torch.mean(r + r_ + t + t_ + h + h_))
 
-    def get_triplet_embedding(self, data):
-        # 得到三元组的embedding
-        h_embedding = self.e_embedding(data[0])
-        r_embedding = self.r_embedding(data[1])
-        t_embedding = self.e_embedding(data[2])
-        return h_embedding, r_embedding, t_embedding
-
     def loss(self, data):
         # 计算损失
         pos_data = data
@@ -124,4 +117,4 @@ class SimplE(BaseModel):
         pos_score = self.forward(pos_data)
         neg_score = self.forward(neg_data)
 
-        return self.model_loss(pos_score, neg_score) + self.penalty(data)
+        return self.model_loss(pos_score, neg_score) + self.penalty_weight*self.penalty(data)

@@ -12,9 +12,6 @@ __all__ = [
     # "logger",
     "save_logger",
     "MarginLoss",
-    "RotatELoss",
-    "TuckERLoss",
-    # "KEPLERLoss",
     "NegLogLikehoodLoss",
     "NegSamplingLoss",
 
