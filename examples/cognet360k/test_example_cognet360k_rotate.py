@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 
 FILE = Path(__file__).resolve()
-ROOT = FILE.parents[0].parents[0]  # CogKGE root directory
+ROOT = FILE.parents[0].parents[0].parents[0] # CogKGE root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 

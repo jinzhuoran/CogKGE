@@ -4,13 +4,13 @@ from pathlib import Path
 import sys
 
 FILE = Path(__file__).resolve()
-ROOT = FILE.parents[0].parents[0]  # CogKGE root directory
+ROOT = FILE.parents[0].parents[0].parents[0]  # CogKGE root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 
 
 from cogkge import *
-device=init_cogkge(device_id="9",seed=0)
+pdevice=init_cogkge(device_id="9",seed=0)
 
 loader =COGNET360KLoader(dataset_path="../../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
