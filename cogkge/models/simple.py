@@ -65,7 +65,6 @@ class SimplE(BaseModel):
                  embedding_dim,
                  penalty_weight=0.0):
         super().__init__(model_name="SimplE", penalty_weight=penalty_weight)
-        super(SimplE, self).__init__()
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.embedding_dim=embedding_dim

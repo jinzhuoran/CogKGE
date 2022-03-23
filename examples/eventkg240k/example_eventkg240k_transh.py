@@ -28,15 +28,18 @@ test_sampler = RandomSampler(test_dataset)
 model = TransH(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50,
-               p_norm=2)
+               p_norm=1,
+               penalty_weight=0.3)
 
-loss = MarginLoss(margin=1.0, C=0)
+loss = MarginLoss(margin=1.0)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
-metric = Link_Prediction(link_prediction_raw=True,
+metric = Link_Prediction(node_lut=node_lut,
+                         relation_lut=relation_lut,
+                         link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
+                         batch_size=1000000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -46,14 +49,15 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
 
 negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
+                                       relation_dict_len=len(relation_lut),
+                                       node_lut=node_lut)
 
 trainer = Trainer(
     train_dataset=train_dataset,
     valid_dataset=valid_dataset,
-    test_dataset=test_dataset,
     train_sampler=train_sampler,
     valid_sampler=valid_sampler,
+    test_dataset=test_dataset,
     test_sampler=test_sampler,
     model=model,
     loss=loss,
@@ -64,16 +68,18 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    trainer_batch_size=100000,
-    total_epoch=3000,
     lr_scheduler=lr_scheduler,
+    trainer_batch_size=1024,
+    total_epoch=1000,
     apex=True,
     dataloaderX=True,
-    num_workers=4,
+    num_workers=1,
     pin_memory=True,
-    use_tensorboard_epoch=200,
-    use_matplotlib_epoch=200,
-    use_savemodel_epoch=200,
-    use_metric_epoch=200
+    use_tensorboard_epoch=50,
+    use_matplotlib_epoch=50,
+    use_savemodel_epoch=50,
+    use_metric_epoch=50
 )
 trainer.train()
+
+

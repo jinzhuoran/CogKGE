@@ -113,8 +113,8 @@ class TransH(BaseModel):
         h_embedding, r_embedding, t_embedding = self.get_triplet_embedding(data=data)
         w=self.w(r)
 
-        h_embedding = F.normalize(h_embedding, p=2, dim=1)
-        t_embedding = F.normalize(t_embedding, p=2, dim=1)
+        # h_embedding = F.normalize(h_embedding, p=2, dim=1)
+        # t_embedding = F.normalize(t_embedding, p=2, dim=1)
         w = F.normalize(w, p=2, dim=1)
 
         h_embedding=h_embedding-torch.sum(h_embedding*w,dim=1,keepdim=True)*h_embedding
@@ -165,5 +165,5 @@ class TransH(BaseModel):
         t = self.e_embedding(batch_t)
         w= self.w (batch_r)
         penalty=(torch.mean(h ** 2) +torch.mean(t ** 2) +torch.mean(r ** 2) +torch.mean(w ** 2)) / 4
-        return penalty
+        return self.penalty_weight*penalty
 
