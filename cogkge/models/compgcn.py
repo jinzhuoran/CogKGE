@@ -5,12 +5,11 @@ from torch.nn.init import xavier_normal_
 import torch.nn.functional as F
 from ..modules import CompGCNConv, CompGCNConvBasis
 from argparse import Namespace
+from .basemodel import BaseModel
 
-
-class CompGCN(nn.Module):
+class CompGCN(BaseModel):
     def __init__(self, edge_index, edge_type, entity_dict_len, relation_dict_len, embedding_dim, num_bases=-1,opn="sub",dropout=0.1):
-        super(CompGCN, self).__init__()
-        self.name = "CompGCN"
+        super(CompGCN, self).__init__(model_name="CompGCN")
 
         if opn not in ["sub","corr","mult"]:
             raise ValueError("Operation {} is not supported!Please choose sub,corr or mult!".format(opn))
@@ -34,15 +33,10 @@ class CompGCN(nn.Module):
             requires_grad=False
         )
 
-        # edge_index = torch.LongTensor(edge_index).t()
-        # edge_type = torch.LongTensor(edge_type)
-        #
-        # self.edge_index = edge_index
-        # self.edge_type = edge_type
         self.num_bases = num_bases
 
         self.gcn_dim = embedding_dim
-        self.init_dim = embedding_dim  # 暂时还不太清楚这两者有什么区别 先保持一致
+        self.init_dim = embedding_dim
         self.init_embed = self.get_param((entity_dict_len, self.init_dim))
 
         if self.num_bases > 0:
@@ -58,6 +52,7 @@ class CompGCN(nn.Module):
             self.drop1 = nn.Dropout(self.p.dropout)
 
         self.register_parameter('bias', Parameter(torch.zeros(entity_dict_len)))
+        self.empty = nn.Embedding(1,2)
 
     def get_param(self, shape):
         param = Parameter(torch.Tensor(*shape))
@@ -66,7 +61,7 @@ class CompGCN(nn.Module):
 
     def forward(self, sample):
         # print("Hello World!")
-        batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
+        batch_h,batch_r,batch_t = sample[0],sample[1],sample[2]
 
         r = torch.cat([self.init_rel, -self.init_rel], dim=0)
         x, r = self.conv1(self.init_embed, self.edge_index, self.edge_type, rel_embed=r)
@@ -77,6 +72,88 @@ class CompGCN(nn.Module):
 
         score = F.pairwise_distance(head_embeddimg + relation_embeddimg, tail_embedding, 2)
         return score
+
+    def loss(self, data):
+        pos_data= self.data_to_device(data)
+        neg_data=self.model_negative_sampler.create_negative(data)
+        neg_data = self.data_to_device(neg_data)
+
+        pos_score = self.forward(pos_data)
+        neg_score = self.forward(neg_data)
+
+        return self.model_loss(pos_score, neg_score)
+
+
+# class CompGCN(nn.Module):
+#     def __init__(self, edge_index, edge_type, entity_dict_len, relation_dict_len, embedding_dim, num_bases=-1,opn="sub",dropout=0.1):
+#         super(CompGCN, self).__init__()
+#         self.name = "CompGCN"
+#
+#         if opn not in ["sub","corr","mult"]:
+#             raise ValueError("Operation {} is not supported!Please choose sub,corr or mult!".format(opn))
+#
+#         args = Namespace(bias=True,
+#                          dropout=dropout,
+#                          opn=opn,
+#                          b_norm=False,
+#                          )
+#         self.p = args
+#
+#         self.act = torch.tanh
+#         self.bceloss = torch.nn.BCELoss()
+#
+#         self.edge_index = nn.Parameter(
+#             torch.LongTensor(edge_index).t(),
+#             requires_grad=False
+#         )
+#         self.edge_type = nn.Parameter(
+#             torch.LongTensor(edge_type),
+#             requires_grad=False
+#         )
+#
+#         # edge_index = torch.LongTensor(edge_index).t()
+#         # edge_type = torch.LongTensor(edge_type)
+#         #
+#         # self.edge_index = edge_index
+#         # self.edge_type = edge_type
+#         self.num_bases = num_bases
+#
+#         self.gcn_dim = embedding_dim
+#         self.init_dim = embedding_dim  # 暂时还不太清楚这两者有什么区别 先保持一致
+#         self.init_embed = self.get_param((entity_dict_len, self.init_dim))
+#
+#         if self.num_bases > 0:
+#             self.init_rel = self.get_param((self.num_bases, self.init_dim))
+#         else:  # 先类似transe的写法
+#             self.init_rel = self.get_param((relation_dict_len, self.init_dim))
+#
+#         if self.num_bases > 0:  # 先固定为一层的GCN网络
+#             self.conv1 = CompGCNConvBasis(self.init_dim, self.gcn_dim, relation_dict_len, self.num_bases, act=self.act,
+#                                           params=self.p)
+#         else:
+#             self.conv1 = CompGCNConv(self.init_dim, self.gcn_dim, relation_dict_len, act=self.act, params=self.p)
+#             self.drop1 = nn.Dropout(self.p.dropout)
+#
+#         self.register_parameter('bias', Parameter(torch.zeros(entity_dict_len)))
+#
+#     def get_param(self, shape):
+#         param = Parameter(torch.Tensor(*shape))
+#         xavier_normal_(param.data)
+#         return param
+#
+#     def forward(self, sample):
+#         # print("Hello World!")
+#         batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
+#
+#         r = torch.cat([self.init_rel, -self.init_rel], dim=0)
+#         x, r = self.conv1(self.init_embed, self.edge_index, self.edge_type, rel_embed=r)
+#
+#         head_embeddimg = torch.index_select(x, 0, batch_h)
+#         tail_embedding = torch.index_select(x, 0, batch_t)
+#         relation_embeddimg = torch.index_select(r, 0, batch_r)
+#
+#         score = F.pairwise_distance(head_embeddimg + relation_embeddimg, tail_embedding, 2)
+#         return score
 
 # class CompGCN(nn.Module):
 #     def __init__(self, entity_dict_len, relation_dict_len, embedding_dim, gamma=6.0):
