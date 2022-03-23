@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-device=init_cogkge(device_id="7",seed=1)
+device=init_cogkge(device_id="9",seed=1)
 
 loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -29,8 +29,7 @@ test_sampler = RandomSampler(test_dataset)
 model = TransH(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50,
-               p_norm=1,
-               penalty_weight=0.3)
+               p_norm=1)
 
 loss = MarginLoss(margin=1.0)
 
@@ -69,8 +68,8 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    trainer_batch_size=2000000,
-    total_epoch=2,
+    trainer_batch_size=1024,
+    total_epoch=500,
     lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
@@ -79,6 +78,8 @@ trainer = Trainer(
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
     use_savemodel_epoch=100,
-    use_metric_epoch=1
+    use_metric_epoch=100
 )
 trainer.train()
+
+

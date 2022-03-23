@@ -31,7 +31,7 @@ model = Rescal(entity_dict_len=len(node_lut),
 
 loss = MarginLoss(margin=1.0)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
 metric = Link_Prediction(node_lut=node_lut,
                          relation_lut=relation_lut,
@@ -66,16 +66,16 @@ trainer = Trainer(
     lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    trainer_batch_size=1024,
-    total_epoch=1000,
+    trainer_batch_size=100000,
+    total_epoch=3000,
     apex=True,
     dataloaderX=True,
     num_workers=1,
     pin_memory=True,
-    use_tensorboard_epoch=50,
-    use_matplotlib_epoch=50,
-    use_savemodel_epoch=50,
-    use_metric_epoch=50,
+    use_tensorboard_epoch=100,
+    use_matplotlib_epoch=100,
+    use_savemodel_epoch=100,
+    use_metric_epoch=100,
 )
 trainer.train()
 
