@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-device=init_cogkge(device_id="5",seed=0)
+device=init_cogkge(device_id="7",seed=0)
 
 loader =COGNET360KLoader(dataset_path="../../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -72,15 +72,15 @@ trainer = Trainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     trainer_batch_size=1024,
-    total_epoch=1000,
+    total_epoch=3000,
     apex=True,
     dataloaderX=True,
     num_workers=1,
     pin_memory=True,
-    use_tensorboard_epoch=50,
-    use_matplotlib_epoch=50,
-    use_savemodel_epoch=50,
-    use_metric_epoch=50,
+    use_tensorboard_epoch=100,
+    use_matplotlib_epoch=100,
+    use_savemodel_epoch=100,
+    use_metric_epoch=100,
 )
 trainer.train()
 
