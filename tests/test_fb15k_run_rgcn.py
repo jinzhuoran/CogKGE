@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-device=init_cogkge(device_id="9",seed=1)
+device=init_cogkge(device_id="7",seed=1)
 
 loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -33,16 +33,13 @@ test_sampler = RandomSampler(test_dataset)
 
 edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut))
 
-model = CompGCN(edge_index=edge_index,
-                edge_type=edge_type,
-                entity_dict_len=len(node_lut),
-                relation_dict_len=len(relation_lut),
-                embedding_dim=50,
-                num_bases=-1, # num_bases>0 or num_base=-1
-                opn="sub"  # options:sub,mult,corr
-                )
+model = RGCN(edge_index=edge_index,
+             edge_type=edge_type,
+             entity_dict_len=len(node_lut),
+             relation_dict_len=len(relation_lut),
+             embedding_dim=50,
+             )
 
-# loss = NegLogLikehoodLoss()
 loss = MarginLoss(margin=1.0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
