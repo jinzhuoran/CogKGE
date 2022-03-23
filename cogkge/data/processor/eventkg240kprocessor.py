@@ -36,8 +36,8 @@ class EVENTKG240KProcessor(BaseProcessor):
         self.time_unit = time_unit
         self.pre_training_model_name = pretrain_model_name
         self.token_length = token_len
-        self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
-        self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
+        # self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
+        # self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
 
         self.node_type_vocab = Vocabulary()
         self.relation_type_vocab = Vocabulary()
@@ -55,6 +55,8 @@ class EVENTKG240KProcessor(BaseProcessor):
             self.relation_lut.read_from_pickle(preprocessed_relation_lut_file)
 
         if self.description:
+            self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
+            self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
             if self.reprocess or not os.path.exists(preprocessed_node_lut_file):
                 tokens_list = []
                 masks_list = []
