@@ -152,10 +152,8 @@ class TransH(BaseModel):
         pos_data= self.data_to_device(pos_data)
         neg_data=self.model_negative_sampler.create_negative(data)
         neg_data = self.data_to_device(neg_data)
-
         pos_score = self.forward(pos_data)
         neg_score = self.forward(neg_data)
-
         return self.model_loss(pos_score, neg_score) + self.penalty(data)
 
     def penalty(self,data):
@@ -164,6 +162,5 @@ class TransH(BaseModel):
         r = self.r_embedding(batch_r)
         t = self.e_embedding(batch_t)
         w= self.w (batch_r)
-        penalty=(torch.mean(h ** 2) +torch.mean(t ** 2) +torch.mean(r ** 2) +torch.mean(w ** 2)) / 4
+        penalty=(torch.mean(h ** 2) +torch.mean(t ** 2) ) / 2
         return self.penalty_weight*penalty
-
