@@ -66,15 +66,15 @@ trainer = Trainer(
     metric=metric,
     lr_scheduler=lr_scheduler,
     trainer_batch_size=1024,
-    total_epoch=1000,
+    total_epoch=200,
     apex=True,
     dataloaderX=True,
     num_workers=1,
     pin_memory=True,
-    use_tensorboard_epoch=50,
-    use_matplotlib_epoch=50,
-    use_savemodel_epoch=50,
-    use_metric_epoch=50,
+    use_tensorboard_epoch=25,
+    use_matplotlib_epoch=25,
+    use_savemodel_epoch=25,
+    use_metric_epoch=25,
 )
 trainer.train()
 
