@@ -6,10 +6,10 @@ from torch.utils.data import RandomSampler
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0].parents[0].parents[0]  # CogKGE root directory
 if str(ROOT) not in sys.path:
-    sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
+    sys.path.append(str(ROOT))  # add CogKGE root directory to PATHs
 from cogkge import *
 
-device = init_cogkge(device_id="9", seed=0)
+device = init_cogkge(device_id="7", seed=0)
 
 loader = COGNET360KLoader(dataset_path="../../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -33,9 +33,10 @@ test_sampler = RandomSampler(test_dataset)
 model = SimplE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
                embedding_dim=50,
-               penalty_weight=0)
+               penalty_weight=0.03)
 
-loss = NegLogLikehoodLoss()
+loss = NegSamplingLoss(alpha=1,neg_per_pos=8)
+
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
@@ -49,9 +50,10 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     factor=0.5, min_lr=1e-9, verbose=True
 )
 
-negative_sampler = UnifNegativeSampler(triples=train_dataset,
-                                       entity_dict_len=len(node_lut),
-                                       relation_dict_len=len(relation_lut))
+negative_sampler = AdversarialSampler(triples=train_dataset,
+                                      entity_dict_len=len(node_lut),
+                                      relation_dict_len=len(relation_lut),
+                                      neg_per_pos=8)
 
 trainer = Trainer(
     train_dataset=train_dataset,

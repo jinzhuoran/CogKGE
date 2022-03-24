@@ -1,68 +1,79 @@
+import sys
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
+from pathlib import Path
+from torch.utils.data import RandomSampler
 
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[0].parents[0].parents[0]  # CogKGE root directory
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add CogKGE root directory to PATHs
+from cogkge import *
 
-class Rescal(nn.Module):
-    def __init__(self, entity_dict_len, relation_dict_len, embedding_dim):
-        super(Rescal, self).__init__()
-        self.embedding_dim = embedding_dim
-        self.name = "Rescal"
-        self.entity_dict_len = entity_dict_len
-        self.relation_dict_len = relation_dict_len
-        self.entity_embedding = nn.Embedding(entity_dict_len, embedding_dim)
-        self.relation_embedding = nn.Embedding(relation_dict_len, embedding_dim * embedding_dim)
-        nn.init.xavier_uniform_(self.entity_embedding.weight.data)
-        nn.init.xavier_uniform_(self.relation_embedding.weight.data)
+device = init_cogkge(device_id="9", seed=0)
 
-    def forward(self, sample):
-        batch_h, batch_r, batch_t = sample[:, 0], sample[:, 1], sample[:, 2]
-        # A = self.entity_embedding(batch_h).view(-1,1,self.embedding_dim) # (batch,1,embedding)
-        A = self.entity_embedding(batch_h)  # (batch,embedding)
-        A = F.normalize(A, p=2, dim=-1)
-        R = self.relation_embedding(batch_r).view(-1, self.embedding_dim,
-                                                  self.embedding_dim)  # (batch,embedding,embedding)
-        A_T = self.entity_embedding(batch_t).view(-1, self.embedding_dim, 1)  # (batch,embedding,1)
-        A_T = F.normalize(A_T, p=2, dim=1)
+loader =FB15KLoader(dataset_path="../dataset",download=True)
+train_data, valid_data, test_data = loader.load_all_data()
+node_lut, relation_lut= loader.load_all_lut()
 
-        tr = torch.matmul(R, A_T)  # (batch,embedding_dim,1)
-        tr = tr.view(-1, self.embedding_dim)  # (batch,embedding_dim)
+processor = FB15KProcessor(node_lut, relation_lut,reprocess=True,mode="normal")
+train_dataset = processor.process(train_data)
+valid_dataset = processor.process(valid_data)
+test_dataset = processor.process(test_data)
+node_lut,relation_lut=processor.process_lut()
 
-        return -torch.sum(A * tr, dim=-1)  # (batch,)
+train_sampler = RandomSampler(train_dataset)
+valid_sampler = RandomSampler(valid_dataset)
+test_sampler = RandomSampler(test_dataset)
 
-        # return torch.squeeze(torch.matmul(torch.matmul(A,R),A_T)) # (batch,)
+model = PairRE(entity_dict_len=len(node_lut),
+               relation_dict_len=len(relation_lut),
+               embedding_dim=50)
 
-    def get_score(self, sample):
-        return self.forward(sample)
+loss = NegSamplingLoss(alpha=1,neg_per_pos=8)
 
-    # def get_score(self,sample):
-    #     output = self._forward(sample)
-    #     score = F.pairwise_distance(output[:, 0] + output[:, 1], output[:, 2], p=2)
-    #     return score  # (batch,)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
-    # def get_embedding(self,sample):
-    #     return self._forward(sample)
+metric = Link_Prediction(link_prediction_raw=True,
+                         link_prediction_filt=False,
+                         batch_size=500000,
+                         reverse=True)
 
-    # def forward(self,sample):
-    #     return self.get_score(sample)
+lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
+    factor=0.5, min_lr=1e-9, verbose=True
+)
 
-    # def _forward(self, sample):  # sample:(batch,3)
-    #     batch_h,batch_r,batch_t =  sample[:, 0], sample[:, 1], sample[:, 2]
-    #     h = self.entity_embedding(batch_h)
-    #     r = self.relation_embedding(batch_r)
-    #     t = self.entity_embedding(batch_t)
+negative_sampler = AdversarialSampler(triples=train_dataset,
+                                      entity_dict_len=len(node_lut),
+                                      relation_dict_len=len(relation_lut),
+                                      neg_per_pos=8)
 
-    #     r_norm = self.norm_vector(batch_r)
-
-    #     h = self.transfer(h,r_norm)
-    #     t = self.transfer(t,r_norm)
-
-    #     h = F.normalize(h, p=2.0,dim=-1)
-    #     r = F.normalize(r, p=2.0, dim=-1)
-    #     t = F.normalize(t, p=2.0, dim=-1)
-
-    #     h = torch.unsqueeze(h,1)
-    #     r = torch.unsqueeze(r,1)
-    #     t = torch.unsqueeze(t,1)
-
-    #     return torch.cat((h,r,t),dim=1) # return:(batch,3,embedding_dim)
+trainer = Trainer(
+    train_dataset=train_dataset,
+    valid_dataset=valid_dataset,
+    train_sampler=train_sampler,
+    valid_sampler=valid_sampler,
+    test_dataset=test_dataset,
+    test_sampler=test_sampler,
+    model=model,
+    loss=loss,
+    optimizer=optimizer,
+    negative_sampler=negative_sampler,
+    device=device,
+    output_path="../dataset",
+    lookuptable_E=node_lut,
+    lookuptable_R=relation_lut,
+    metric=metric,
+    lr_scheduler=lr_scheduler,
+    trainer_batch_size=2048,
+    total_epoch=1000,
+    apex=True,
+    dataloaderX=True,
+    num_workers=1,
+    pin_memory=True,
+    use_tensorboard_epoch=50,
+    use_matplotlib_epoch=50,
+    use_savemodel_epoch=50,
+    use_metric_epoch=50
+)
+trainer.train()
