@@ -9,7 +9,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 from cogkge import *
 
-device = init_cogkge(device_id="2", seed=0)
+device = init_cogkge(device_id="4", seed=0)
 
 loader = EVENTKG240KLoader(dataset_path="../../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -25,20 +25,30 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = TransR(entity_dict_len=len(node_lut),
-               relation_dict_len=len(relation_lut),
-               entity_embedding_dim=50,
-               relation_embedding_dim=50,
-               p_norm=1)
+print("Constructing adjacency matrix...")
+edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut))
+print("Adjacency matrix construction finished.")
 
-loss = MarginLoss(margin=1.0, C=0)
+model = RGCN(edge_index=edge_index,
+             edge_type=edge_type,
+             entity_dict_len=len(node_lut),
+             relation_dict_len=len(relation_lut),
+             embedding_dim=50,
+             )
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+loss = MarginLoss(margin=1.0)
+
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
                          batch_size=50000,
                          reverse=False)
+
+lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
+    factor=0.5, min_lr=1e-9, verbose=True
+)
 
 negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                        entity_dict_len=len(node_lut),
@@ -60,15 +70,16 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    trainer_batch_size=100000,
-    total_epoch=3000,
+    trainer_batch_size=1024,
+    total_epoch=1000,
+    lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
     num_workers=4,
     pin_memory=True,
-    use_tensorboard_epoch=200,
-    use_matplotlib_epoch=200,
-    use_savemodel_epoch=200,
-    use_metric_epoch=200
+    use_tensorboard_epoch=50,
+    use_matplotlib_epoch=50,
+    use_savemodel_epoch=50,
+    use_metric_epoch=50
 )
 trainer.train()
