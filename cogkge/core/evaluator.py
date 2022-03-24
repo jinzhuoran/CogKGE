@@ -288,6 +288,7 @@ class Evaluator(object):
             # Summary Train Progress
             # self.summary_final_metric()
             self.evaluate_on_test_dataset()
+        print("Evaluation Finished.")
 
     def use_metric(self):
         print("Evaluating Model {} on Valid Dataset...".format(self.model_name))
@@ -350,7 +351,7 @@ class Evaluator(object):
             self.metric.caculate(model=test_model, current_epoch=1)
             self.metric.total_epoch=0
             self.metric.current_epoch=0
-            self.metric.print_current_table()
+            self.metric.print_current_table_in_evaluator()
             # self.metric.log()
             # self.metric.write()
             # print("-----------------------------------------------------------------------")

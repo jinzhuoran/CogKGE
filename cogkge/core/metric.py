@@ -480,6 +480,36 @@ class Link_Prediction(object):
     def get_Filt_Hits10(self):
         return self._current_result["Filt_Hits10"]
 
+    def print_current_table_in_evaluator(self):
+        tb = pt.PrettyTable()
+        tb.field_names = [self.model_name,
+                          "Data",
+                          "Epoch/Total",
+                          "Hits@1",
+                          "Hits@3",
+                          "Hits@10",
+                          "MR",
+                          "MRR"]
+        if self.link_prediction_raw:
+            tb.add_row(["Raw",
+                        self.metric_type,
+                        str(self.current_epoch) + "/" + str(self.total_epoch),
+                        self._current_result["Raw_Hits1"],
+                        self._current_result["Raw_Hits3"],
+                        self._current_result["Raw_Hits10"],
+                        self._current_result["Raw_MR"],
+                        self._current_result["Raw_MRR"]])
+        if self.link_prediction_filt:
+            tb.add_row(["Filt",
+                        self.metric_type,
+                        str(self.current_epoch) + "/" + str(self.total_epoch),
+                        self._current_result["Filt_Hits1"],
+                        self._current_result["Filt_Hits3"],
+                        self._current_result["Filt_Hits10"],
+                        self._current_result["Filt_MR"],
+                        self._current_result["Filt_MRR"]])
+        print(tb)
+
     def print_current_table(self):
         tb = pt.PrettyTable()
         tb.field_names = [self.model_name,
