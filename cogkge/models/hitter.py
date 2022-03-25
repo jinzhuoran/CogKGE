@@ -130,7 +130,7 @@ import torch
 import torch.nn as nn
 
 
-# TODO: add classification trainer
+
 class HittER(torch.nn.Module):
     def __init__(self, embedding_dim=320, dropout=0.1):
         super(HittER, self).__init__()
