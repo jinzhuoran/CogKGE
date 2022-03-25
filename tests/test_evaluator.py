@@ -1,31 +1,25 @@
-import torch
-from torch.utils.data import RandomSampler
-from pathlib import Path
 import sys
+import torch
+from pathlib import Path
+from torch.utils.data import RandomSampler
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0].parents[0].parents[0]  # CogKGE root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
-
-
 from cogkge import *
-device=init_cogkge(device_id="4",seed=0)
 
-loader =COGNET360KLoader(dataset_path="../dataset",download=True)
+device = init_cogkge(device_id="2", seed=0)
+
+loader = EVENTKG240KLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
-node_lut, relation_lut = loader.load_all_lut()
-# loader.describe()
-# train_data.describe()
-# node_lut.describe()
+node_lut, relation_lut, time_lut = loader.load_all_lut()
 
-processor = COGNET360KProcessor(node_lut, relation_lut)
+processor = EVENTKG240KProcessor(node_lut, relation_lut, time_lut, reprocess=True,mode="normal")
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
-node_lut,relation_lut=processor.process_lut()
-# node_lut.print_table(front=3)
-# relation_lut.print_table(front=3)
+node_lut, relation_lut, time_lut = processor.process_lut()
 
 train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
@@ -61,7 +55,7 @@ evaluator = Evaluator(
     valid_sampler=valid_sampler,
     test_dataset=test_dataset,
     test_sampler=test_sampler,
-    checkpoint_path="/data/hongbang/CogKGE/dataset/COGNET360K/experimental_output/DistMult2022-03-22--14-46-15.51--1000epochs/checkpoints/best_model_DistMult",
+    checkpoint_path="/data/mentianyi/code/CogKGE/dataset/EVENTKG240K/experimental_output/DistMult2022-03-23--08-47-12.29--3000epochs/checkpoints/DistMult_3000epochs",
     model=model,
     loss=loss,
     optimizer=optimizer,
