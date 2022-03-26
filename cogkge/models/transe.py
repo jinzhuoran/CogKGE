@@ -50,6 +50,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from cogkge.models.basemodel import BaseModel
+from ..adapter import graph_adapter
+from torch.nn import Parameter
+from torch.nn.init import xavier_normal_
+from ..modules import RGCNConv
+from argparse import Namespace
 
 
 class TransE(BaseModel):
@@ -58,12 +63,42 @@ class TransE(BaseModel):
                  relation_dict_len,
                  embedding_dim=50,
                  p_norm=1,
-                 penalty_weight=0.0):
+                 penalty_weight=0.0,
+                 edge_index=None,
+                 edge_type=None):
         super().__init__(model_name="TransE", penalty_weight=penalty_weight)
         self.entity_dict_len = entity_dict_len
         self.relation_dict_len = relation_dict_len
         self.embedding_dim = embedding_dim
         self.p_norm = p_norm
+        self.edge_index = edge_type
+        self.edge_type = edge_type
+
+        if self.edge_index is not None and self.edge_type is not None:
+            args = Namespace(bias=False,
+                             dropout=0.1,
+                             b_norm=False,
+                             )
+            self.p = args
+            self.act = torch.tanh
+
+            self.edge_index = nn.Parameter(
+                torch.LongTensor(edge_index).t(),
+                requires_grad=False
+            )
+            self.edge_type = nn.Parameter(
+                torch.LongTensor(edge_type),
+                requires_grad=False
+            )
+
+            self.init_dim = embedding_dim
+            self.init_embed = self.get_param((entity_dict_len, self.init_dim))
+            self.init_rel = self.get_param((relation_dict_len, self.init_dim))
+
+            self.conv1 = RGCNConv(self.init_dim, self.init_dim, relation_dict_len, act=self.act, params=self.p)
+            # self.linear = nn.Linear(2 * embedding_dim, entity_dict_len)
+
+            self.empty = nn.Embedding(1, 2)
 
         self.e_embedding = nn.Embedding(num_embeddings=self.entity_dict_len, embedding_dim=self.embedding_dim)
         self.r_embedding = nn.Embedding(num_embeddings=self.relation_dict_len, embedding_dim=self.embedding_dim)
@@ -95,7 +130,7 @@ class TransE(BaseModel):
         return self.e_embedding(entity_ids)
 
     # @description_adapter
-    # @graph_adapter
+    @graph_adapter
     # @type_adapter
     # @time_adapter
 
@@ -118,3 +153,8 @@ class TransE(BaseModel):
         neg_score = self.forward(neg_data)
 
         return self.model_loss(pos_score, neg_score) + self.penalty(data)
+
+    def get_param(self, shape):
+        param = Parameter(torch.Tensor(*shape))
+        xavier_normal_(param.data)
+        return param
