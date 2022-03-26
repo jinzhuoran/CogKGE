@@ -288,7 +288,7 @@ evaluator.evaluate()
         </tr>
         <tr>
             <td>
-                <a href="https://arxiv.org/pdf/1802.04868.pdf">SimpleIE</a> 
+                <a href="https://arxiv.org/pdf/1802.04868.pdf">SimplE</a> 
             </td>
             <td>NIPS 2018</td>
             <td>SimplE Embedding for Link Prediction in Knowledge Graphs</td>
