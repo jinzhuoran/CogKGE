@@ -130,7 +130,7 @@ class TransE(BaseModel):
         return self.e_embedding(entity_ids)
 
     # @description_adapter
-    @graph_adapter
+    # @graph_adapter
     # @type_adapter
     # @time_adapter
 
