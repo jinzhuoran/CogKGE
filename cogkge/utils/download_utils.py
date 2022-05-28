@@ -19,15 +19,15 @@ def download_unzip_data(data_path, zip_name, data_url):
 
 def download_data(data_name, zip_name, dataset_path, url_path):
     raw_data_path = os.path.join(dataset_path,  data_name, "raw_data")
-    data_url = os.path.join(url_path, "data", zip_name)
+    data_url = os.path.join(url_path, "cogkge/data", zip_name)
     check_make_file(raw_data_path)
     download_unzip_data(data_path=raw_data_path, zip_name=zip_name, data_url=data_url)
 
 
 class Download_Data:
     def __init__(self, dataset_path):
-        self.url = "http://49.232.8.218" #旧服务器
-        # self.url = "http://43.154.73.63" #新服务器
+        #self.url = "http://49.232.8.218" #旧服务器
+        self.url = "http://43.154.73.63:9000/" #新服务器
         self.dataset_path = dataset_path
         if not os.path.exists(self.dataset_path):
             response = input("Do you want to creat a new file?y/n\n")
