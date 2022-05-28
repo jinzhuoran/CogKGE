@@ -19,6 +19,7 @@ class Link_Prediction(object):
                  link_prediction_raw=True,
                  link_prediction_filt=False,
                  metric_pattern="score_based",
+                 key_metric="Raw_Hits@10",
                  ):
         """
         验证器的参数设置
@@ -36,6 +37,7 @@ class Link_Prediction(object):
         self.time_lut = time_lut
         self.link_prediction_raw = link_prediction_raw
         self.link_prediction_filt = link_prediction_filt
+        self.key_metric=key_metric
         if metric_pattern not in ["classification_based", "score_based"]:
             raise ValueError(
                 "Metric pattern {} is not supported.Use \"classification_based\" or \"score_based\" instead."
@@ -376,7 +378,7 @@ class Link_Prediction(object):
 
         torch.cuda.empty_cache()
         self._model = model
-        self._current_epoch = current_epoch
+        self.current_epoch = current_epoch
         self._current_result = self.empty_result.copy()
         self._raw_rank_list = list()
         self._filt_rank_list = list()
@@ -395,8 +397,8 @@ class Link_Prediction(object):
         test_sample = next(iter(metric_loader))
         self.record_mode(test_sample)
         for step, single_sample in enumerate(tqdm(metric_loader)):
-            data_dict = self.tuple_to_dict(single_sample)
             if self.metric_pattern == "score_based":
+                data_dict = self.tuple_to_dict(single_sample)
                 single_sample = self.get_batch(data_dict)
                 self._single_batch_len = single_sample.shape[0] # (self._outer_batch_size,3)
                 single_sample = single_sample.permute(1, 0)  # (3,self._outer_batch_size)
@@ -435,7 +437,7 @@ class Link_Prediction(object):
             self._current_result["Filt_MR"] = round(torch.mean(current_filt_rank).item(), 3)
             self._current_result["Filt_MRR"] = round(torch.mean(1 / current_filt_rank).item(), 3)
         if self.link_prediction_raw or self.link_prediction_filt:
-            self._metric_result_list.append([self._current_epoch,
+            self._metric_result_list.append([self.current_epoch,
                                              self._current_result["Raw_Hits1"],
                                              self._current_result["Raw_Hits3"],
                                              self._current_result["Raw_Hits10"],
@@ -478,6 +480,36 @@ class Link_Prediction(object):
     def get_Filt_Hits10(self):
         return self._current_result["Filt_Hits10"]
 
+    def print_current_table_in_evaluator(self):
+        tb = pt.PrettyTable()
+        tb.field_names = [self.model_name,
+                          "Data",
+                          "Epoch/Total",
+                          "Hits@1",
+                          "Hits@3",
+                          "Hits@10",
+                          "MR",
+                          "MRR"]
+        if self.link_prediction_raw:
+            tb.add_row(["Raw",
+                        self.metric_type,
+                        str(self.current_epoch) + "/" + str(self.total_epoch),
+                        self._current_result["Raw_Hits1"],
+                        self._current_result["Raw_Hits3"],
+                        self._current_result["Raw_Hits10"],
+                        self._current_result["Raw_MR"],
+                        self._current_result["Raw_MRR"]])
+        if self.link_prediction_filt:
+            tb.add_row(["Filt",
+                        self.metric_type,
+                        str(self.current_epoch) + "/" + str(self.total_epoch),
+                        self._current_result["Filt_Hits1"],
+                        self._current_result["Filt_Hits3"],
+                        self._current_result["Filt_Hits10"],
+                        self._current_result["Filt_MR"],
+                        self._current_result["Filt_MRR"]])
+        print(tb)
+
     def print_current_table(self):
         tb = pt.PrettyTable()
         tb.field_names = [self.model_name,
@@ -491,7 +523,7 @@ class Link_Prediction(object):
         if self.link_prediction_raw:
             tb.add_row(["Raw",
                         self.metric_type,
-                        str(self._current_epoch) + "/" + str(self.total_epoch),
+                        str(self.current_epoch) + "/" + str(self.total_epoch),
                         self._current_result["Raw_Hits1"],
                         self._current_result["Raw_Hits3"],
                         self._current_result["Raw_Hits10"],
@@ -500,15 +532,15 @@ class Link_Prediction(object):
         if self.link_prediction_filt:
             tb.add_row(["Filt",
                         self.metric_type,
-                        str(self._current_epoch) + "/" + str(self.total_epoch),
+                        str(self.current_epoch) + "/" + str(self.total_epoch),
                         self._current_result["Filt_Hits1"],
                         self._current_result["Filt_Hits3"],
                         self._current_result["Filt_Hits10"],
                         self._current_result["Filt_MR"],
                         self._current_result["Filt_MRR"]])
-        print(tb)
+        self.logger.info(tb)
 
-    def print_best_table(self, front=3, key="Filt_Hits@10"):
+    def print_best_table(self, front=5):
         front = len(self._metric_result_list) if len(self._metric_result_list) < front else front
         strat_index = 5 if self.link_prediction_raw and self.link_prediction_filt else 0
         type_dict = {"Raw_Hits@1": [1, True],
@@ -530,23 +562,23 @@ class Link_Prediction(object):
                        "5th"]
         tb = pt.PrettyTable()
         tb.field_names = table_title[:front + 2]
-        last_result = self._metric_result_list[-1]
-        self._metric_result_list.sort(key=lambda x: x[type_dict[key][0]], reverse=type_dict[key][1])
-        self._metric_result_list = [last_result] + self._metric_result_list
-        result_list_T = np.array(self._metric_result_list).T.tolist()
-        table_row_title = list()
-        raw_table_row_title = list()
-        filt_table_row_title = list()
-        if self.link_prediction_raw:
-            raw_table_row_title = ["Raw_Hits@1", "Raw_Hits@3", "Raw_Hits@10", "Raw_MR", "Raw_MRR"]
-        if self.link_prediction_filt:
-            filt_table_row_title = ["Filt_Hits@1", "Filt_Hits@3", "Filt_Hits@10", "Filt_MR", "Filt_MRR"]
-        if self.link_prediction_raw or self.link_prediction_filt:
-            table_row_title = ["Epoch"] + raw_table_row_title + filt_table_row_title
-        for i in range(len(table_row_title)):
-            tb.add_row([table_row_title[i]] + result_list_T[i][:front + 1])
-        self.logger.info("\n")
-        self.logger.info(tb)
+        if len(self._metric_result_list) >0:
+            last_result = self._metric_result_list[-1]
+            self._metric_result_list.sort(key=lambda x: x[type_dict[self.key_metric][0]], reverse=type_dict[self.key_metric][1])
+            self._metric_result_list = [last_result] + self._metric_result_list
+            result_list_T = np.array(self._metric_result_list).T.tolist()
+            table_row_title = list()
+            raw_table_row_title = list()
+            filt_table_row_title = list()
+            if self.link_prediction_raw:
+                raw_table_row_title = ["Raw_Hits@1", "Raw_Hits@3", "Raw_Hits@10", "Raw_MR", "Raw_MRR"]
+            if self.link_prediction_filt:
+                filt_table_row_title = ["Filt_Hits@1", "Filt_Hits@3", "Filt_Hits@10", "Filt_MR", "Filt_MRR"]
+            if self.link_prediction_raw or self.link_prediction_filt:
+                table_row_title = ["Epoch"] + raw_table_row_title + filt_table_row_title
+            for i in range(len(table_row_title)):
+                tb.add_row([table_row_title[i]] + result_list_T[i][:front + 1])
+            self.logger.info(tb)
         # if self.link_prediction_raw:
         #     self.logger.info(tb)
         # self.logger.info("Best: Epoch {}  Raw_Hits@1:{}   Raw_Hits@3:{}   Raw_Hits@10:{}   Raw_MR:{}   Raw_MRR:{}".format(
@@ -570,44 +602,58 @@ class Link_Prediction(object):
         if self.link_prediction_raw:
             self.logger.info(
                 "{} Epoch {}/{}  Raw_Hits@1:{}   Raw_Hits@3:{}   Raw_Hits@10:{}   Raw_MR:{}   Raw_MRR:{}".format(
-                    self.metric_type, self._current_epoch, self.total_epoch, self._current_result["Raw_Hits1"],
+                    self.metric_type, self.current_epoch, self.total_epoch, self._current_result["Raw_Hits1"],
                     self._current_result["Raw_Hits3"], self._current_result["Raw_Hits10"],
                     self._current_result["Raw_MR"], self._current_result["Raw_MRR"]))
         if self.link_prediction_filt:
             self.logger.info(
                 "{} Epoch {}/{}  Filt_Hits@1:{}   Filt_Hits@3:{}   Filt_Hits@10:{}   Filt_MR:{}   Filt_MRR:{}   ".format(
-                    self.metric_type, self._current_epoch, self.total_epoch, self._current_result["Filt_Hits1"],
+                    self.metric_type, self.current_epoch, self.total_epoch, self._current_result["Filt_Hits1"],
                     self._current_result["Filt_Hits3"], self._current_result["Filt_Hits10"],
                     self._current_result["Filt_MR"], self._current_result["Filt_MRR"]))
+    def current_model_is_better(self,best_metric):
+        metric_up_list=["Raw_Hits@1", "Raw_Hits@3", "Raw_Hits@10",  "Raw_MRR","Filt_Hits@1", "Filt_Hits@3", "Filt_Hits@10",  "Filt_MRR"]
+        metric_down_list = ["Raw_MR",  "Filt_MR"]
+        if self.key_metric not in metric_up_list and self.key_metric not in metric_down_list:
+            raise ValueError("{} is incorrect!".format(self.key_metric))
+        if best_metric==None:
+            best_metric=self._current_result[self.key_metric.replace("@","")]
+        if self.key_metric in metric_up_list:
+            return self._current_result[self.key_metric.replace("@","")]>best_metric
+        if self.key_metric in metric_down_list:
+            return self._current_result[self.key_metric.replace("@","")]<best_metric
+
+    def get_current_metric(self):
+        return  self._current_result[self.key_metric.replace("@","")]
 
     def write(self):
         if self.writer != None:
             if self.link_prediction_raw:
                 self.writer.add_scalars("Hits@1",
                                         {"{}_Raw_Hits@1".format(self.metric_type): self._current_result["Raw_Hits1"]},
-                                        self._current_epoch)
+                                        self.current_epoch)
                 self.writer.add_scalars("Hits@3",
                                         {"{}_Raw_Hits@3".format(self.metric_type): self._current_result["Raw_Hits3"]},
-                                        self._current_epoch)
+                                        self.current_epoch)
                 self.writer.add_scalars("Hits@10",
                                         {"{}_Raw_Hits@10".format(self.metric_type): self._current_result["Raw_Hits10"]},
-                                        self._current_epoch)
+                                        self.current_epoch)
                 self.writer.add_scalars("MR", {"{}_Raw_MR".format(self.metric_type): self._current_result["Raw_MR"]},
-                                        self._current_epoch)
+                                        self.current_epoch)
                 self.writer.add_scalars("MRR", {"{}_Raw_MRR".format(self.metric_type): self._current_result["Raw_MRR"]},
-                                        self._current_epoch)
+                                        self.current_epoch)
             if self.link_prediction_filt:
                 self.writer.add_scalars("Hits@1",
                                         {"{}_Filt_Hits@1".format(self.metric_type): self._current_result["Filt_Hits1"]},
-                                        self._current_epoch)
+                                        self.current_epoch)
                 self.writer.add_scalars("Hits@3",
                                         {"{}_Filt_Hits@3".format(self.metric_type): self._current_result["Filt_Hits3"]},
-                                        self._current_epoch)
+                                        self.current_epoch)
                 self.writer.add_scalars("Hits@10", {
                     "{}_Filt_Hits@10".format(self.metric_type): self._current_result["Filt_Hits10"]},
-                                        self._current_epoch)
+                                        self.current_epoch)
                 self.writer.add_scalars("MR", {"{}_Filt_MR".format(self.metric_type): self._current_result["Filt_MR"]},
-                                        self._current_epoch)
+                                        self.current_epoch)
                 self.writer.add_scalars("MRR",
                                         {"{}_Filt_MRR".format(self.metric_type): self._current_result["Filt_MRR"]},
-                                        self._current_epoch)
+                                        self.current_epoch)

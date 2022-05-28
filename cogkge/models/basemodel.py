@@ -60,11 +60,9 @@ class BaseModel(nn.Module):
         data = self.get_batch(data)
         pass
 
-    def penalty(self):
+    def penalty(self,data):
         # 正则项
         penalty_loss = torch.tensor(0.0)
-        for param in self.parameters():
-            penalty_loss += torch.sum(param ** 2)
         return self.penalty_weight * penalty_loss
 
     def data_to_device(self, data):

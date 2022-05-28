@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-device=init_cogkge(device_id="7",seed=1)
+device=init_cogkge(device_id="9",seed=1)
 
 loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -31,7 +31,7 @@ model = TransE(entity_dict_len=len(node_lut),
                embedding_dim=50,
                p_norm=1)
 
-loss = MarginLoss(margin=1.0,C=0)
+loss = MarginLoss(margin=1.0)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
 
@@ -39,7 +39,7 @@ metric = Link_Prediction(node_lut=node_lut,
                          relation_lut=relation_lut,
                          link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=10000,
+                         batch_size=1000000,
                          reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -54,9 +54,11 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
 
 trainer = Trainer(
     train_dataset=train_dataset,
-    valid_dataset=test_dataset,
+    valid_dataset=valid_dataset,
+    test_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=test_sampler,
+    valid_sampler=valid_sampler,
+    test_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
@@ -66,17 +68,18 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
+    trainer_batch_size=2000000,
+    total_epoch=500,
     lr_scheduler=lr_scheduler,
-    trainer_batch_size=2048 * 2,
-    total_epoch=1000,
     apex=True,
     dataloaderX=True,
-    num_workers=1,
+    num_workers=4,
     pin_memory=True,
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
     use_savemodel_epoch=100,
-    use_metric_epoch=1
+    use_metric_epoch=100
 )
 trainer.train()
+
 

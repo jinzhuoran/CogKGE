@@ -13,7 +13,7 @@ def download_unzip_data(data_path, zip_name, data_url):
         os.system('wget -P ' + data_path + ' ' + data_url)
         os.system("cd %s && unzip %s" % (data_path, zip_name))
     else:
-        print("%s file exists in %s" % (zip_name, os.path.join(data_path, zip_name)))
+        print("%s file exists in %s" % (zip_name, os.path.join(os.path.abspath(data_path), zip_name)))
     pass
 
 
@@ -30,11 +30,11 @@ class Download_Data:
         self.url = "http://43.154.73.63:9000/" #新服务器
         self.dataset_path = dataset_path
         if not os.path.exists(self.dataset_path):
-            response = input("Do you want to creat a new file?y/n\n")
+            response = input("Do you want to creat a new file in directory {}?y/n\n".format(os.path.abspath(dataset_path)))
             if response == "y":
                 os.makedirs(self.dataset_path)
             elif response == "n":
-                raise FileExistsError(self.dataset_path, "Dataset path does not exist!")
+                raise FileExistsError(os.path.abspath(self.dataset_path), "Dataset path does not exist!")
             else:
                 raise ValueError("Please input y or n.")
 

@@ -1,7 +1,6 @@
 import sys
-from pathlib import Path
-
 import torch
+from pathlib import Path
 from torch.utils.data import RandomSampler
 
 FILE = Path(__file__).resolve()
@@ -10,13 +9,13 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 from cogkge import *
 
-device = init_cogkge(device_id="4", seed=1)
+device = init_cogkge(device_id="6", seed=0)
 
 loader = EVENTKG240KLoader(dataset_path="../../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
 node_lut, relation_lut, time_lut = loader.load_all_lut()
 
-processor = EVENTKG240KProcessor(node_lut, relation_lut, time_lut, reprocess=True)
+processor = EVENTKG240KProcessor(node_lut, relation_lut, time_lut, reprocess=True,mode="normal")
 train_dataset = processor.process(train_data)
 valid_dataset = processor.process(valid_data)
 test_dataset = processor.process(test_data)
@@ -28,15 +27,15 @@ test_sampler = RandomSampler(test_dataset)
 
 model = RotatE(entity_dict_len=len(node_lut),
                relation_dict_len=len(relation_lut),
-               embedding_dim=50)
+               embedding_dim=50,
+               gamma=12)
+loss = NegSamplingLoss(alpha=1,neg_per_pos=256)
 
-loss = NegSamplingLoss(alpha=1, neg_per_pos=3)
-
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=500000,
+                         batch_size=50000,
                          reverse=True)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -47,13 +46,15 @@ lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
 negative_sampler = AdversarialSampler(triples=train_dataset,
                                       entity_dict_len=len(node_lut),
                                       relation_dict_len=len(relation_lut),
-                                      neg_per_pos=3)
+                                      neg_per_pos=256)
 
 trainer = Trainer(
     train_dataset=train_dataset,
-    valid_dataset=test_dataset,
+    valid_dataset=valid_dataset,
     train_sampler=train_sampler,
-    valid_sampler=test_sampler,
+    valid_sampler=valid_sampler,
+    test_dataset=test_dataset,
+    test_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
@@ -64,18 +65,16 @@ trainer = Trainer(
     lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    log=True,
-    trainer_batch_size=100000,
-    epoch=3000,
-    visualization=1,
+    trainer_batch_size=1024,
+    total_epoch=200,
     apex=True,
     dataloaderX=True,
-    num_workers=4,
+    num_workers=1,
     pin_memory=True,
-    metric_step=200,
-    save_step=200,
-    metric_final_model=True,
-    save_final_model=True,
-    load_checkpoint=None
+    use_tensorboard_epoch=25,
+    use_matplotlib_epoch=25,
+    use_savemodel_epoch=25,
+    use_metric_epoch=25,
 )
 trainer.train()
+

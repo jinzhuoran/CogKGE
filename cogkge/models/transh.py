@@ -111,16 +111,14 @@ class TransH(BaseModel):
         # 前向传播
         r=data[1]
         h_embedding, r_embedding, t_embedding = self.get_triplet_embedding(data=data)
-        h_transfer=self.w(r)
-        t_transfer=self.w(r)
+        w=self.w(r)
 
-        h_embedding = F.normalize(h_embedding, p=2, dim=1)
-        t_embedding = F.normalize(t_embedding, p=2, dim=1)
-        h_transfer = F.normalize(h_transfer, p=2, dim=1)
-        t_transfer = F.normalize(t_transfer, p=2, dim=1)
+        # h_embedding = F.normalize(h_embedding, p=2, dim=1)
+        # t_embedding = F.normalize(t_embedding, p=2, dim=1)
+        w = F.normalize(w, p=2, dim=1)
 
-        h_embedding=h_embedding-torch.sum(h_embedding*h_transfer,dim=1,keepdim=True)*h_embedding
-        t_embedding=t_embedding-torch.sum(t_embedding*t_transfer,dim=1,keepdim=True)*t_embedding
+        h_embedding=h_embedding-torch.sum(h_embedding*w,dim=1,keepdim=True)*h_embedding
+        t_embedding=t_embedding-torch.sum(t_embedding*w,dim=1,keepdim=True)*t_embedding
 
         score = F.pairwise_distance(h_embedding + r_embedding, t_embedding, p=self.p_norm)
 
@@ -147,12 +145,6 @@ class TransH(BaseModel):
         t_embedding = self.e_embedding(data[2])
         return h_embedding, r_embedding, t_embedding
 
-    def penalty(self):
-        # 正则项
-        penalty_loss = torch.tensor(0.0).to(self.model_device)
-        for param in self.parameters():
-            penalty_loss += torch.sum(param ** 2)
-        return self.penalty_weight * penalty_loss
 
     def loss(self, data):
         # 计算损失
@@ -160,14 +152,15 @@ class TransH(BaseModel):
         pos_data= self.data_to_device(pos_data)
         neg_data=self.model_negative_sampler.create_negative(data)
         neg_data = self.data_to_device(neg_data)
-
         pos_score = self.forward(pos_data)
         neg_score = self.forward(neg_data)
+        return self.model_loss(pos_score, neg_score) + self.penalty(data)
 
-        return self.model_loss(pos_score, neg_score) + self.penalty()
-
-    def data_to_device(self,data):
-        for index,item in enumerate(data):
-            data[index]=item.to(self.model_device)
-        return data
-
+    def penalty(self,data):
+        batch_h, batch_r, batch_t = data[0], data[1], data[2]
+        h = self.e_embedding(batch_h)
+        r = self.r_embedding(batch_r)
+        t = self.e_embedding(batch_t)
+        w= self.w (batch_r)
+        penalty=(torch.mean(h ** 2) +torch.mean(t ** 2) ) / 2
+        return self.penalty_weight*penalty

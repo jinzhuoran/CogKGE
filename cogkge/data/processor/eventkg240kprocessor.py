@@ -13,7 +13,8 @@ from ..vocabulary import Vocabulary
 
 
 class EVENTKG240KProcessor(BaseProcessor):
-    def __init__(self, node_lut, relation_lut, time_lut,mode,
+    def __init__(self, node_lut, relation_lut, time_lut,
+                 mode,
                  reprocess=True,
                  # time=False, nodetype=False, description=False,,relationtype=False,
                  graph=False,
@@ -30,12 +31,13 @@ class EVENTKG240KProcessor(BaseProcessor):
         self.time_lut = time_lut
         self.time_vocab = time_lut.vocab
         self.relationtype = node_dict["type"]
+        self.mode=mode
 
         self.time_unit = time_unit
         self.pre_training_model_name = pretrain_model_name
         self.token_length = token_len
-        self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
-        self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
+        # self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
+        # self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
 
         self.node_type_vocab = Vocabulary()
         self.relation_type_vocab = Vocabulary()
@@ -53,6 +55,8 @@ class EVENTKG240KProcessor(BaseProcessor):
             self.relation_lut.read_from_pickle(preprocessed_relation_lut_file)
 
         if self.description:
+            self.tokenizer = RobertaTokenizer.from_pretrained(self.pre_training_model_name)
+            self.pre_training_model = RobertaModel.from_pretrained(self.pre_training_model_name)
             if self.reprocess or not os.path.exists(preprocessed_node_lut_file):
                 tokens_list = []
                 masks_list = []
@@ -164,6 +168,7 @@ class EVENTKG240KProcessor(BaseProcessor):
                                   lookuptable_R=self.relation_lut,
                                   node_type=self.nodetype,
                                   descriptions=self.description,
+                                  mode=self.mode,
                                   time=self.time,
                                   relation_type=self.relationtype,
                                   )

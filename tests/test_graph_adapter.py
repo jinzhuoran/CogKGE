@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 
 from cogkge import *
-device=init_cogkge(device_id="8",seed=1)
+device=init_cogkge(device_id="9",seed=1)
 
 loader =FB15KLoader(dataset_path="../dataset",download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -31,19 +31,23 @@ train_sampler = RandomSampler(train_dataset)
 valid_sampler = RandomSampler(valid_dataset)
 test_sampler = RandomSampler(test_dataset)
 
-model = DistMult(entity_dict_len=len(node_lut),
-                 relation_dict_len=len(relation_lut),
-                 embedding_dim=50,
-                 penalty_weight=0.1)
+edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut))
 
-loss = NegLogLikehoodLoss()
+model = TransE(entity_dict_len=len(node_lut),
+               relation_dict_len=len(relation_lut),
+               embedding_dim=50,
+               p_norm=1,
+               edge_index=edge_index,
+               edge_type=edge_type)
 
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+loss = MarginLoss(margin=1.0)
+
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0)
 
 metric = Link_Prediction(link_prediction_raw=True,
                          link_prediction_filt=False,
-                         batch_size=5000000,
-                         reverse=True)
+                         batch_size=50000,
+                         reverse=False)
 
 lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
@@ -56,9 +60,11 @@ negative_sampler = UnifNegativeSampler(triples=train_dataset,
 
 trainer = Trainer(
     train_dataset=train_dataset,
-    valid_dataset=test_dataset,
+    valid_dataset=valid_dataset,
+    test_dataset=test_dataset,
     train_sampler=train_sampler,
-    valid_sampler=test_sampler,
+    valid_sampler=valid_sampler,
+    test_sampler=test_sampler,
     model=model,
     loss=loss,
     optimizer=optimizer,
@@ -68,17 +74,18 @@ trainer = Trainer(
     lookuptable_E=node_lut,
     lookuptable_R=relation_lut,
     metric=metric,
-    lr_scheduler=lr_scheduler,
-    trainer_batch_size=100000,
+    trainer_batch_size=1024,
     total_epoch=1000,
+    lr_scheduler=lr_scheduler,
     apex=True,
     dataloaderX=True,
-    num_workers=1,
+    num_workers=4,
     pin_memory=True,
-    use_tensorboard_epoch=100,
-    use_matplotlib_epoch=100,
-    use_savemodel_epoch=100,
-    use_metric_epoch=50,
+    use_tensorboard_epoch=50,
+    use_matplotlib_epoch=50,
+    use_savemodel_epoch=50,
+    use_metric_epoch=1
 )
 trainer.train()
+
 

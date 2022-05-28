@@ -1,5 +1,5 @@
 # command:python -m torch.distributed.launch --nproc_per_node 2 test_ddp.py
-# or choose specific gpus: CUDA_VISIBLE_DEVICES="4,5,6,7"  python -m torch.distributed.launch --nproc_per_node 4 test_ddp.py
+# or choose specific gpus: CUDA_VISIBLE_DEVICES="2,3,4,5,6,7,8,9"  python -m torch.distributed.launch --nproc_per_node 8 test_ddp.py
 
 
 import sys
@@ -34,84 +34,60 @@ def init_seed(seed):
 
 
 def demo_basic(local_world_size, local_rank):
-    init_seed(1+local_rank)
-    # init_seed(1)
-    torch.cuda.set_device(local_rank)
-    device = torch.device("cuda:0")
+    # setup devices for this process. For local_world_size = 2, num_gpus = 8,
+    # rank 0 uses GPUs [0, 1, 2, 3] and
+    # rank 1 uses GPUs [4, 5, 6, 7].
+    logger = save_logger("trainer.log",rank=local_rank)
+    logger.info("Local rank:{}".format(local_rank))
+    # logging.info("Local rank:{}".format(local_rank))
+    # logger.info("Total device count:{}   And current device:{}".format(torch.cuda.device_count(), torch.cuda.current_device()))
 
-    # put your own code from here
-
-    loader = FB15KLoader(dataset_path="../../dataset", download=True)
-    train_data, valid_data, test_data = loader.load_all_data()
-    node_lut, relation_lut = loader.load_all_lut()
-
-    processor = FB15KProcessor(node_lut, relation_lut, reprocess=True, train_pattern="classification_based",rank=local_rank)
-    train_dataset = processor.process(train_data)
-    valid_dataset = processor.process(valid_data)
-    test_dataset = processor.process(test_data)
-    node_lut, relation_lut = processor.process_lut()
-
-    train_sampler = DistributedSampler(train_dataset)
-    valid_sampler = DistributedSampler(valid_dataset)
-    test_sampler = DistributedSampler(test_dataset)
-
-    model = TuckER(entity_dict_len=len(node_lut),
-                   relation_dict_len=len(relation_lut),
-                   d1=200,
-                   d2=200,
-                   input_dropout=0.2,
-                   hidden_dropout1=0.2,
-                   hidden_dropout2=0.3)
-
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=0)
-
-    loss = torch.nn.BCELoss()
-
-    metric = Link_Prediction(link_prediction_raw=True,
-                             link_prediction_filt=False,
-                             batch_size=5000000,
-                             reverse=False,
-                             metric_pattern="classification_based")
-    negative_sampler = UnifNegativeSampler(triples=train_dataset,
-                                           entity_dict_len=len(node_lut),
-                                           relation_dict_len=len(relation_lut),
-                                           node_lut=node_lut)
-
-    lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
-        factor=0.5, min_lr=1e-9, verbose=True
-    )
-
-    trainer = Trainer(
-        train_dataset=train_dataset,
-        valid_dataset=test_dataset,
-        train_sampler=train_sampler,
-        valid_sampler=test_sampler,
-        model=model,
-        loss=loss,
-        optimizer=optimizer,
-        negative_sampler=negative_sampler,
-        device=device,
-        output_path="../../dataset",
-        lookuptable_E=node_lut,
-        lookuptable_R=relation_lut,
-        metric=metric,
-        lr_scheduler=lr_scheduler,
-        trainer_batch_size=128,
-        total_epoch=500,
-        apex=True,
-        dataloaderX=False,
-        num_workers=1,
-        pin_memory=True,
-        use_tensorboard_epoch=100,
-        use_matplotlib_epoch=100,
-        use_savemodel_epoch=100,
-        use_metric_epoch=50,
-        rank=local_rank,
-    )
-    dist.barrier()
-    trainer.train()
-
+    # torch.cuda.set_device(local_rank)
+    #
+    # device = torch.device("cuda:0")
+    #
+    # logging.basicConfig(level=logging.INFO if local_rank in [-1, 0] else logging.WARN)
+    # logging.info("Total device count:{}   And current device:{}".format(torch.cuda.device_count(), torch.cuda.current_device()))
+    #
+    # loader = FB15KLoader(dataset_path="../../dataset", download=True)
+    # train_data, valid_data, test_data = loader.load_all_data()
+    # node_lut, relation_lut = loader.load_all_lut()
+    #
+    # processor = FB15KProcessor(node_lut, relation_lut, reprocess=True, train_pattern="classification_based")
+    # train_dataset = processor.process(train_data)
+    # valid_dataset = processor.process(valid_data)
+    # test_dataset = processor.process(test_data)
+    # node_lut, relation_lut = processor.process_lut()
+    #
+    # train_sampler = DistributedSampler(train_dataset)
+    #
+    # model = TuckER(entity_dict_len=len(node_lut),
+    #                relation_dict_len=len(relation_lut),
+    #                d1=200,
+    #                d2=200,
+    #                input_dropout=0.2,
+    #                hidden_dropout1=0.2,
+    #                hidden_dropout2=0.3)
+    #
+    # loss = torch.nn.BCELoss()
+    #
+    # optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=0)
+    #
+    # metric = Link_Prediction(link_prediction_raw=True,
+    #                          link_prediction_filt=False,
+    #                          batch_size=5000000,
+    #                          reverse=False,
+    #                          metric_pattern="classification_based")
+    #
+    # lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    #     optimizer, mode='min', patience=3, threshold_mode='abs', threshold=5,
+    #     factor=0.5, min_lr=1e-9, verbose=True
+    # )
+    #
+    # negative_sampler = UnifNegativeSampler(triples=train_dataset,
+    #                                        entity_dict_len=len(node_lut),
+    #                                        relation_dict_len=len(relation_lut),
+    #                                        node_lut=node_lut)
     # train_loader = DataLoader(dataset=train_dataset, sampler=train_sampler,
     #                           batch_size=1024, num_workers=1, shuffle=False)
     # model.set_model_config(model_loss=loss,
@@ -127,21 +103,16 @@ def demo_basic(local_world_size, local_rank):
     #             find_unused_parameters=False,
     #             broadcast_buffers=False
     #             )
-    #
-    # optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=0)
-    #
-    # total_epoch = 150
+    # total_epoch = 500
     # metric_epoch = 50
-    # logger = save_logger("trainer.log",rank=local_rank)
-    # dist.barrier()
+    #
     #
     # for epoch in range(total_epoch):
-    #     # logging.info("Epoch:{}".format(epoch))
+    #     logging.info("Epoch:{}".format(epoch))
     #     if local_rank in [-1,0]:
     #         start = time()
     #     dist.barrier()
-    #     train_loader.sampler.set_epoch(epoch)
-    #     # train_sampler.set_epoch(epoch)
+    #     train_sampler.set_epoch(epoch)
     #     model.train()
     #     for train_step, batch in enumerate(train_loader):
     #         train_loss = model.module.loss(batch)
@@ -150,7 +121,7 @@ def demo_basic(local_world_size, local_rank):
     #         optimizer.step()
     #     if local_rank in [-1,0]:
     #         end = time()
-    #         print("Epoch:{} cost {} seconds.".format(epoch+1,end-start))
+    #         # print("Epoch:{} cost {} seconds.".format(epoch+1,end-start))
     #         if (epoch+1) % metric_epoch == 0:
     #             print("Evaluating Model {} on Valid Dataset...".format(model.module.model_name))
     #             valid_model = model.module

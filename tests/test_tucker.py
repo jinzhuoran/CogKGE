@@ -5,12 +5,12 @@ import torch
 from torch.utils.data import RandomSampler
 
 FILE = Path(__file__).resolve()
-ROOT = FILE.parents[0].parents[0].parents[0]  # CogKGE root directory
+ROOT = FILE.parents[0].parents[0]   # CogKGE root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add CogKGE root directory to PATH
 from cogkge import *
 
-device = init_cogkge(device_id="3", seed=1)
+device = init_cogkge(device_id="4", seed=1)
 
 loader = FB15KLoader(dataset_path="../dataset", download=True)
 train_data, valid_data, test_data = loader.load_all_data()
@@ -69,8 +69,8 @@ trainer = Trainer(
     lookuptable_R=relation_lut,
     metric=metric,
     lr_scheduler=lr_scheduler,
-    trainer_batch_size=2048*2,
-    total_epoch=1000,
+    trainer_batch_size=128,
+    total_epoch=150,
     apex=True,
     dataloaderX=True,
     num_workers=1,
@@ -78,7 +78,10 @@ trainer = Trainer(
     use_tensorboard_epoch=100,
     use_matplotlib_epoch=100,
     use_savemodel_epoch=100,
-    use_metric_epoch=50
+    use_metric_epoch=20,
+    # checkpoint_path="/data/hongbang/CogKGE/dataset/FB15K/experimental_output/TuckER2022-03-21--11-49-34.34--1000epochs/checkpoints/TuckER_100epochs",
+    # checkpoint_path="/data/hongbang/CogKGE/dataset/FB15K/experimental_output/TuckER2022-03-21--12-53-11.90--1000epochs/checkpoints/TuckER_100epochs",
+    # checkpoint_path="/data/hongbang/CogKGE/dataset/FB15K/experimental_output/TuckER2022-03-21--13-36-17.11--1000epochs/checkpoints/TuckER_100epochs", # 新的ddp结果
 )
 trainer.train()
 

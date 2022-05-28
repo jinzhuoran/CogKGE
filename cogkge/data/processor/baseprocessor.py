@@ -9,7 +9,7 @@ import numpy as np
 
 class BaseProcessor:
     def __init__(self, data_name, node_lut, relation_lut, reprocess=True,mode="normal",
-                 time=None, nodetype=None, description=None, graph=None,train_pattern="score_based"):
+                 time=None, nodetype=None, description=None, graph=None,train_pattern="score_based",rank=-1):
         """
         :param vocabs: node_vocab,relation_vocab from node_lut relation_lut
         """
@@ -26,13 +26,15 @@ class BaseProcessor:
         self.graph = graph
         self.processed_path = node_lut.processed_path
         self.train_pattern=train_pattern
+        self.rank = rank
         # self.node_vocab = node_vocab
         # self.relation_vocab = relation_vocab
 
     def process(self, data):
         path = os.path.join(self.processed_path, "{}_dataset.pkl".format(data.data_type))
         if os.path.exists(path) and not self.reprocess:
-            print("load {} dataset".format(data.data_type))
+            if self.rank in {-1,0}:
+                print("load {} dataset".format(data.data_type))
             with open(path, "rb") as new_file:
                 new_data = pickle.loads(new_file.read())
             return new_data
@@ -52,13 +54,22 @@ class BaseProcessor:
     def convert_label_construct(self,triplet_label_dict):
         h_r_list=list()
         t_list=list()
-        print("convert_label_construct...")
-        for key,value in tqdm(triplet_label_dict.items()):
-            h_r_list.append(np.array(key))
-            vector_label=np.zeros((len(self.node_lut)))
-            for index in value:
-                vector_label[index]=1
-            t_list.append(vector_label)
+        if self.rank in [-1,0]:
+            print("convert_label_construct...")
+            for key,value in tqdm(triplet_label_dict.items()):
+                h_r_list.append(np.array(key))
+                vector_label=np.zeros((len(self.node_lut)))
+                for index in value:
+                    vector_label[index]=1
+                t_list.append(vector_label)
+        else:
+            for key,value in triplet_label_dict.items():
+                h_r_list.append(np.array(key))
+                vector_label=np.zeros((len(self.node_lut)))
+                for index in value:
+                    vector_label[index]=1
+                t_list.append(vector_label)
+
 
         t=np.array(t_list)
         h_r=np.array(h_r_list)
@@ -67,11 +78,18 @@ class BaseProcessor:
 
     def create_triplet_label(self,data):
         triplet_label_dict=defaultdict(list)
-        print("create_triplet_label...")
-        for i in tqdm(range(len(data))):
-            triplet_h_r=tuple(data[i][:2])
-            triplet_t=int(data[i][2].item())
-            triplet_label_dict[triplet_h_r].append(triplet_t)
+        if self.rank in [-1,0]:
+            print("create_triplet_label...")
+            for i in tqdm(range(len(data))):
+                triplet_h_r=tuple(data[i][:2])
+                triplet_t=int(data[i][2].item())
+                triplet_label_dict[triplet_h_r].append(triplet_t)
+        else:
+            for i in range(len(data)):
+                triplet_h_r=tuple(data[i][:2])
+                triplet_t=int(data[i][2].item())
+                triplet_label_dict[triplet_h_r].append(triplet_t)
+
         return triplet_label_dict
 
 

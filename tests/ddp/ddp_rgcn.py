@@ -1,5 +1,5 @@
 # command:python -m torch.distributed.launch --nproc_per_node 2 test_ddp.py
-# or choose specific gpus: CUDA_VISIBLE_DEVICES="4,5,6,7"  python -m torch.distributed.launch --nproc_per_node 4 test_ddp.py
+# or choose specific gpus: CUDA_VISIBLE_DEVICES="5,6,7,8"  python -m torch.distributed.launch --nproc_per_node 4 ddp_rgcn.py
 
 
 import sys
@@ -55,23 +55,29 @@ def demo_basic(local_world_size, local_rank):
     valid_sampler = DistributedSampler(valid_dataset)
     test_sampler = DistributedSampler(test_dataset)
 
-    model = TuckER(entity_dict_len=len(node_lut),
-                   relation_dict_len=len(relation_lut),
-                   d1=200,
-                   d2=200,
-                   input_dropout=0.2,
-                   hidden_dropout1=0.2,
-                   hidden_dropout2=0.3)
+    if local_rank in [-1,0]:
+        print("Constructing adjacency matrix...")
+    edge_index, edge_type = construct_adj(train_dataset, relation_dict_len=len(relation_lut))
+    if local_rank in [-1,0]:
+        print("Adjacency matrix construction finished.")
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.003, weight_decay=0)
+    model = RGCN(edge_index=edge_index,
+                 edge_type=edge_type,
+                 entity_dict_len=len(node_lut),
+                 relation_dict_len=len(relation_lut),
+                 embedding_dim=200,
+                 )
 
     loss = torch.nn.BCELoss()
 
     metric = Link_Prediction(link_prediction_raw=True,
-                             link_prediction_filt=False,
+                             link_prediction_filt=True,
                              batch_size=5000000,
                              reverse=False,
                              metric_pattern="classification_based")
+
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=0)
+
     negative_sampler = UnifNegativeSampler(triples=train_dataset,
                                            entity_dict_len=len(node_lut),
                                            relation_dict_len=len(relation_lut),
@@ -96,8 +102,8 @@ def demo_basic(local_world_size, local_rank):
         lookuptable_E=node_lut,
         lookuptable_R=relation_lut,
         metric=metric,
-        lr_scheduler=lr_scheduler,
-        trainer_batch_size=128,
+        # lr_scheduler=lr_scheduler,
+        trainer_batch_size=2048 * 2,
         total_epoch=500,
         apex=True,
         dataloaderX=False,
