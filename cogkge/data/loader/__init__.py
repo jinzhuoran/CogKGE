@@ -10,6 +10,7 @@ from .codexlloader import *
 from .codexmloader import *
 from .codexsloader import *
 from .cskgloader import *
+from .wikipedia5mloader import *
 
 __all__=[
     "FB15KLoader",
@@ -23,5 +24,6 @@ __all__=[
     "CODEXLLoader",
     "CODEXMLoader",
     "CODEXSLoader",
-    "CSKGLoader"
+    "CSKGLoader",
+    "WIKIPEDIA5MLoader",
 ]

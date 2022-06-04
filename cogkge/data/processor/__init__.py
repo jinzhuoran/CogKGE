@@ -10,6 +10,7 @@ from .codexlprocessor import *
 from .codexmprocessor import *
 from .codexsprocessor import *
 from .cskgprocessor import *
+from .wikipedia5mprocessor import *
 
 __all__=[
     "FB15KProcessor",
@@ -23,6 +24,7 @@ __all__=[
     "CODEXLProcessor",
     "CODEXSProcessor",
     "CODEXMProcessor",
-    "CSKGProcessor"
+    "CSKGProcessor",
+    "WIKIPEDIA5MProcessor",
 
 ]

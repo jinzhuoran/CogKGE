@@ -83,7 +83,10 @@ class Predictor:
         self.model = self.model.to(self.device)
         self.all_node_index_column_matrix = torch.unsqueeze(torch.arange(self.node_len).to(self.device), dim=1)
         self.all_node_index_row_vector = torch.arange(self.node_len).to(self.device)
-        self.all_node_embedding = self.model.entity_embedding_base(self.all_node_index_row_vector)
+        if hasattr(self.model,"entity_embedding_base"):
+            self.all_node_embedding = self.model.entity_embedding_base(self.all_node_index_row_vector)
+        else:
+            self.all_node_embedding = self.model.e_embedding(self.all_node_index_row_vector)
         self.all_relation_index_column_matrix = torch.unsqueeze(torch.arange(self.relation_len).to(self.device), dim=1)
 
         self._create_summary_dict()  # 建立模糊查询字典

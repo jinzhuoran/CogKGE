@@ -18,6 +18,7 @@ __all__ = [
     "CODEXMLoader",
     "CODEXSLoader",
     "CSKGLoader",
+    "WIKIPEDIA5MLoader",
 
     # processor
     "FB15KProcessor",
@@ -32,6 +33,7 @@ __all__ = [
     "CODEXSProcessor",
     "CODEXMProcessor",
     "CSKGProcessor",
+    "WIKIPEDIA5MProcessor",
 
     "Cog_Dataset",
 
